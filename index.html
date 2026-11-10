@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rishikesh Ombase | Agentic AI Architect</title>
+  <meta name="description" content="Rishikesh Ombase designs agentic AI systems: multi-agent orchestration, MCP tool layers, RAG and memory, evals, guardrails and observability.">
+  <meta property="og:title" content="Rishikesh Ombase | Agentic AI Architect">
+  <meta property="og:description" content="Multi-agent orchestration, MCP tool layers, RAG and memory, and the evals and guardrails that make agents dependable.">
+  <meta name="theme-color" content="#04050d">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%2322d3ee'/><stop offset='.5' stop-color='%238b5cf6'/><stop offset='1' stop-color='%23f472b6'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='%2304050d'/><circle cx='16' cy='16' r='8' fill='none' stroke='url(%23g)' stroke-width='3'/><circle cx='16' cy='16' r='3' fill='url(%23g)'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Hide hero intro items until the intro animation runs; reveal anyway after 2.5s as a safety net.
+    document.documentElement.classList.add("intro-pending");
+    setTimeout(function () { document.documentElement.classList.remove("intro-pending"); }, 2500);
+  </script>
+</head>
+<body>
+  <!-- Living background: glows + grid + 3D particle core -->
+  <div class="bg" aria-hidden="true">
+    <canvas id="bg-canvas"></canvas>
+  </div>
+  <div class="spotlight" aria-hidden="true"></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Navigation -->
+  <header class="nav" id="nav">
+    <div class="nav-pill">
+      <a class="brand" href="#top" aria-label="Rishikesh Ombase, home">
+        <span class="brand-orb" aria-hidden="true"></span>
+        <span>Rishikesh<span class="brand-dim">.ai</span></span>
+      </a>
+      <nav class="nav-links" id="nav-links" aria-label="Primary">
+        <a href="#work">Projects</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#ask">Ask my AI</a>
+        <a href="resume.pdf" target="_blank" rel="noopener">Résumé</a>
+        <a href="#contact" class="nav-cta">Let's talk</a>
+      </nav>
+      <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="top" data-shape="0" data-x="2.3" data-alpha="1">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="badge" data-intro>
+            <span class="badge-dot"></span>
+            <span>Open to AI Architect roles · Kolhapur, India</span>
+          </div>
+
+          <p class="hero-hello mono" data-intro>&gt; hello world, I'm</p>
+
+          <h1 class="hero-name" aria-label="Rishikesh Ombase">
+            <span class="line" data-scramble="Rishikesh">Rishikesh</span>
+            <span class="line grad-text" data-scramble="Ombase">Ombase</span>
+          </h1>
+
+          <p class="hero-role" data-intro>
+            <span class="mono role-bracket">&lt;</span><span id="role">Agentic AI Architect</span><span class="mono role-bracket">/&gt;</span>
+          </p>
+
+          <p class="hero-intro" data-intro>
+            I design agentic AI systems: multi-agent orchestration, MCP tool layers,
+            RAG and memory, and the evals and guardrails that make agents safe to put in production.
+          </p>
+
+          <div class="hero-cta" data-intro>
+            <a class="btn btn-glow" href="#architecture">
+              <span>See my architecture</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn-glass" href="resume.pdf" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Download résumé</span>
+            </a>
+          </div>
+          <a class="text-cta" href="#ask" data-intro><span class="spark" aria-hidden="true">✦</span> or ask my AI twin a question</a>
+
+          <dl class="stats" data-intro>
+            <div class="stat"><dd><span data-count="6">0</span>+</dd><dt>years in AI &amp; ML</dt></div>
+            <div class="stat"><dd><span data-count="9">0</span></dd><dt>AI systems designed</dt></div>
+            <div class="stat"><dd><span data-count="4">0</span></dd><dt>companies</dt></div>
+          </dl>
+        </div>
+
+        <!-- Floating HUD around the 3D core -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hud hud-1" data-intro>
+            <div class="hud-head"><span class="hud-led"></span>orchestrator.live</div>
+            <div class="hud-row"><span>agents</span><b>5 active</b></div>
+            <div class="hud-row"><span>mcp tools</span><b>18</b></div>
+            <div class="hud-row"><span>temp</span><b id="hud-temp">0.70</b></div>
+          </div>
+          <div class="hud hud-2" data-intro>
+            <div class="hud-head">training loss</div>
+            <div class="hud-big" id="hud-loss">0.2140</div>
+            <svg class="spark-line" viewBox="0 0 120 36" preserveAspectRatio="none"><path id="hud-spark" d=""/></svg>
+          </div>
+          <div class="hud hud-3" data-intro>
+            <div class="hud-head">inference</div>
+            <div class="hud-row"><span>tokens/s</span><b id="hud-tps">142</b></div>
+            <div class="hud-row"><span>latency</span><b id="hud-lat">38ms</b></div>
+            <div class="hud-meter"><span id="hud-meter"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <a class="scroll-cue" href="#work" aria-label="Scroll to projects">
+        <span class="mouse"><span></span></span>
+        <span class="mono">scroll to explore</span>
+      </a>
+    </section>
+
+    <!-- ================= TECH MARQUEE ================= -->
+    <div class="marquee" aria-label="Tools I work with">
+      <div class="marquee-track">
+        <ul>
+          <li>Multi-agent systems</li><li>MCP</li><li>A2A</li><li>LangGraph</li><li>Claude</li><li>GPT</li><li>Gemini</li><li>Voice AI</li><li>Whisper</li><li>Llama</li><li>Qwen</li><li>DeepSeek</li><li>CrewAI</li><li>LlamaIndex</li><li>GraphRAG</li><li>vLLM</li><li>Langfuse</li><li>Guardrails</li><li>Bedrock</li><li>Vertex AI</li><li>Kubernetes</li>
+        </ul>
+        <ul aria-hidden="true">
+          <li>Multi-agent systems</li><li>MCP</li><li>A2A</li><li>LangGraph</li><li>Claude</li><li>GPT</li><li>Gemini</li><li>Voice AI</li><li>Whisper</li><li>Llama</li><li>Qwen</li><li>DeepSeek</li><li>CrewAI</li><li>LlamaIndex</li><li>GraphRAG</li><li>vLLM</li><li>Langfuse</li><li>Guardrails</li><li>Bedrock</li><li>Vertex AI</li><li>Kubernetes</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ================= PROJECTS ================= -->
+    <section class="section" id="work" data-shape="1" data-x="0" data-alpha="0.18">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="kicker mono">// agentic_projects</p>
+          <h2 class="title">AI systems, architected <span class="grad-text">for the agentic era</span></h2>
+          <p class="lede">From voice agents and video dubbing to document AI and quant research: each system is designed with agent orchestration, MCP tools and eval-driven guardrails.</p>
+        </header>
+
+        <div class="cards" data-stagger>
+          <!-- Flagship -->
+          <article class="card card-flagship">
+            <div class="card-top">
+              <span class="chip">Flagship · Multi-agent · Finance</span>
+              <span class="pattern mono">pattern: hierarchical supervisor</span>
+            </div>
+            <div class="flagship-grid">
+              <div>
+                <h3>AlphaDesk: multi-agent quant research platform</h3>
+                <p>A supervisor agent breaks a research question into tasks and hands them to specialists. A market-data agent pulls prices and fundamentals through MCP servers. A research agent runs GraphRAG over filings and news. A quant agent writes and runs forecasting and backtest code in a sandbox. A risk agent checks exposure before anything reaches a human.</p>
+                <ul class="arch-points">
+                  <li>LangGraph supervisor with checkpointed state, so long research runs can pause and resume</li>
+                  <li>Model routing: frontier models plan, small open-weight models extract and summarise</li>
+                  <li>Every run traced in Langfuse and scored by an eval suite before a release ships</li>
+                  <li>Human approval required before any signal leaves the system</li>
+                </ul>
+              </div>
+              <div class="agent-graph" aria-label="Agent flow: supervisor delegates to market data, research, quant and risk agents, then a report goes to human approval">
+                <div class="ag-node ag-main">Supervisor</div>
+                <div class="ag-row">
+                  <div class="ag-node">Market data<small>MCP</small></div>
+                  <div class="ag-node">Research<small>GraphRAG</small></div>
+                  <div class="ag-node">Quant<small>sandbox</small></div>
+                  <div class="ag-node">Risk<small>limits</small></div>
+                </div>
+                <div class="ag-node">Report writer</div>
+                <div class="ag-node ag-human">Human approval</div>
+              </div>
+            </div>
+            <ul class="tags"><li>LangGraph</li><li>MCP</li><li>Claude</li><li>Qwen</li><li>GraphRAG</li><li>Qdrant</li><li>Neo4j</li><li>Code sandbox</li><li>Langfuse</li><li>Kubernetes</li></ul>
+            <p class="evolved mono">evolved from: Quantitative Stock Price Prediction (regression and time-series models on yfinance data)</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Voice AI · Real-time</span><span class="pattern mono">listen → reason → act → speak</span></div>
+            <h3>EchoAgent: real-time voice agent</h3>
+            <p>A voice agent that holds natural phone and web conversations. Streaming speech-to-text feeds an LLM agent that calls tools to look up, book and update records, and streaming text-to-speech replies with low latency. It copes with interruptions mid-sentence and hands off to a person when asked.</p>
+            <ol class="flow"><li>Speech-to-text</li><li>LLM agent</li><li>Tools</li><li>Text-to-speech</li><li>Handoff</li></ol>
+            <ul class="tags"><li>Whisper</li><li>Streaming STT / TTS</li><li>LLM function calling</li><li>WebSockets</li><li>FastAPI</li></ul>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Speech · Video</span><span class="pattern mono">multi-stage media pipeline</span></div>
+            <h3>DubFlow: AI video dubbing pipeline</h3>
+            <p>Takes a video in one language and returns it dubbed in another. Whisper transcribes with timestamps, speaker diarization separates the voices, an LLM translates while keeping context and timing, and text-to-speech generates a voice for each speaker that is aligned to the original timing and mixed back with the background audio.</p>
+            <ol class="flow"><li>Transcribe</li><li>Diarize</li><li>Translate</li><li>Voice</li><li>Align &amp; mix</li></ol>
+            <ul class="tags"><li>Whisper</li><li>Speaker diarization</li><li>LLM translation</li><li>Text-to-speech</li><li>FFmpeg</li></ul>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Multimodal · Real estate</span><span class="pattern mono">classify → generate → critique</span></div>
+            <h3>ListingStudio: multimodal listing generator</h3>
+            <p>It goes beyond tagging photos. Vision models classify every image by room and feature, then LLM agents generate the rest of each listing at scale: the view and surroundings, amenities, neighbourhood details and the full description. A critic agent checks every claim against the photos and listing data, and screens out non-compliant language before anything is published.</p>
+            <ol class="flow"><li>Classify photos</li><li>Extract details</li><li>Generate</li><li>Critic</li><li>Publish</li></ol>
+            <ul class="tags"><li>Vision LLM</li><li>Image classification</li><li>LangGraph</li><li>Batch generation</li><li>Structured outputs</li><li>Guardrails</li></ul>
+            <p class="evolved mono">evolved from: Real Estate AI Content Engine</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Document AI · Ops</span><span class="pattern mono">extract → act + HITL</span></div>
+            <h3>InvoiceOps: document and computer-use agent</h3>
+            <p>A vision LLM extracts invoices into a typed schema, a validator agent reconciles totals and vendors, and a computer-use agent enters the data into the target portal. Low-confidence documents go to a human review queue.</p>
+            <ol class="flow"><li>Extract</li><li>Validate</li><li>Computer use</li><li>Review</li></ol>
+            <ul class="tags"><li>Vision LLM</li><li>Pydantic</li><li>Computer use</li><li>MCP</li><li>Langfuse</li></ul>
+            <p class="evolved mono">evolved from: Invoice Data Automation (OCR, regex, Selenium)</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Document AI · Finance</span><span class="pattern mono">multi-agent document pipeline</span></div>
+            <h3>FundDocs Studio: agentic styling for fund filings</h3>
+            <p>Prospectuses, summary prospectuses and SAI documents go in alongside the client's style guide. Vision-language models read the layout of every page, a style-guide agent decides which rule applies to each heading, table and footnote, and LLM agents apply the formatting and check the result against the guide before a person signs off.</p>
+            <ol class="flow"><li>Ingest</li><li>VLM layout</li><li>Style rules</li><li>Apply</li><li>Verify</li><li>Review</li></ol>
+            <ul class="tags"><li>Vision-language models</li><li>LLMs</li><li>LangGraph</li><li>Style-guide RAG</li><li>Structured outputs</li><li>Human review</li></ul>
+            <p class="evolved mono">evolved from: Automated Data Pipeline for Mutual Funds</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Vision · Edge</span><span class="pattern mono">perceive → reason → act</span></div>
+            <h3>SkyWatch: aerial vision agent</h3>
+            <p>A fast detector flags drones in video streams, a vision-language model describes what it sees, and a reasoning agent decides whether to escalate, calling alerting tools over MCP. Inference runs on vLLM close to the cameras.</p>
+            <ol class="flow"><li>Detect</li><li>Describe</li><li>Reason</li><li>Alert</li></ol>
+            <ul class="tags"><li>YOLO</li><li>Qwen-VL</li><li>vLLM</li><li>Event-driven agents</li><li>MCP</li></ul>
+            <p class="evolved mono">evolved from: Drone Recognition Model (OpenCV on Spark)</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Recommendations · OTT</span><span class="pattern mono">cluster → rank → serve</span></div>
+            <h3>CineMind: OTT recommendation engine</h3>
+            <p>The recommendation backend for an OTT platform. Viewers are grouped into taste clusters from their watch history, so people with similar habits are shown similar films, and a conversational agent on top explains each pick in plain language.</p>
+            <ul class="arch-points">
+              <li>Watch events become user embeddings, clustered into taste groups that refresh on a schedule</li>
+              <li>Candidates come from the viewer's cluster plus item similarity, then a ranker personalises the list</li>
+              <li>Redis serves precomputed recommendations, sessions and trending lists for fast reads</li>
+              <li>FastAPI microservices on PostgreSQL, packaged with Docker</li>
+            </ul>
+            <ol class="flow"><li>Events</li><li>Embed</li><li>Cluster</li><li>Rank</li><li>Redis</li><li>Serve</li></ol>
+            <ul class="tags"><li>FastAPI</li><li>PostgreSQL</li><li>Redis</li><li>Embeddings</li><li>Clustering</li><li>Docker</li><li>LangGraph</li></ul>
+            <p class="evolved mono">evolved from: AI Recommendation App Backend</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top"><span class="chip">Platform · Security</span><span class="pattern mono">secure tool gateway</span></div>
+            <h3>Enterprise MCP Gateway</h3>
+            <p>One gateway that exposes analytics data and BI tools to any agent through MCP, with per-agent permissions, audit logs, rate limits and PII redaction, so teams can add new agents without building new integrations.</p>
+            <ol class="flow"><li>Agent</li><li>Auth + RBAC</li><li>MCP servers</li><li>Audit</li></ol>
+            <ul class="tags"><li>MCP</li><li>OAuth</li><li>RBAC</li><li>OpenTelemetry</li><li>Kubernetes</li></ul>
+            <p class="evolved mono">evolved from: FOX Channel Data Integration</p>
+          </article>
+        </div>
+
+        <div class="more-row" data-reveal>
+          <a class="btn btn-glass" href="https://github.com/Rishikesh32" target="_blank" rel="noopener">See more on GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REFERENCE ARCHITECTURE ================= -->
+    <section class="section" id="architecture" data-shape="2" data-x="0" data-alpha="0.25">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="kicker mono">// reference_architecture</p>
+          <h2 class="title">How I architect <span class="grad-text">agentic systems</span></h2>
+          <p class="lede">The blueprint I start every design from. Each layer can be swapped out, every hop is traced, and nothing irreversible happens without a person.</p>
+        </header>
+
+        <div class="arch" data-reveal>
+          <aside class="arch-rail rail-left">
+            <p class="rail-title">Security &amp; governance</p>
+            <ul><li>Identity &amp; RBAC</li><li>PII redaction</li><li>Prompt-injection defence</li><li>Audit trail</li></ul>
+          </aside>
+
+          <div class="arch-stack">
+            <div class="arch-beam" aria-hidden="true"><span></span></div>
+            <div class="arch-layer" style="--i:0">
+              <p class="layer-name">Interfaces</p>
+              <div class="layer-items"><span>Chat</span><span>API</span><span>Slack / Teams</span><span>Voice</span></div>
+            </div>
+            <div class="arch-layer" style="--i:1">
+              <p class="layer-name">Guardrails</p>
+              <div class="layer-items"><span>Input validation</span><span>Policy checks</span><span>Output filters</span></div>
+            </div>
+            <div class="arch-layer layer-core" style="--i:2">
+              <p class="layer-name">Orchestration</p>
+              <div class="layer-items"><span>Supervisor agent</span><span>LangGraph state machine</span><span>Checkpoints</span><span class="hitl">Human approval</span></div>
+            </div>
+            <div class="arch-layer" style="--i:3">
+              <p class="layer-name">Specialist agents</p>
+              <div class="layer-items"><span>Planner</span><span>Researcher</span><span>Analyst</span><span>Executor</span><span>Critic</span></div>
+            </div>
+            <div class="arch-layer" style="--i:4">
+              <p class="layer-name">Tools via MCP</p>
+              <div class="layer-items"><span>APIs</span><span>Databases</span><span>Browser &amp; computer use</span><span>Code sandbox</span><span>A2A agents</span></div>
+            </div>
+            <div class="arch-layer" style="--i:5">
+              <p class="layer-name">Knowledge &amp; memory</p>
+              <div class="layer-items"><span>Vector + graph RAG</span><span>Session state</span><span>Long-term memory</span></div>
+            </div>
+            <div class="arch-layer" style="--i:6">
+              <p class="layer-name">Model gateway</p>
+              <div class="layer-items"><span>Routing</span><span>Frontier LLMs</span><span>Open-weight on vLLM</span><span>Semantic cache</span></div>
+            </div>
+          </div>
+
+          <aside class="arch-rail rail-right">
+            <p class="rail-title">Observability &amp; evals</p>
+            <ul><li>Langfuse traces</li><li>Eval suites</li><li>Cost &amp; latency budgets</li><li>Drift alerts</li></ul>
+          </aside>
+        </div>
+
+        <ul class="principles" data-stagger>
+          <li>
+            <span class="p-icon" aria-hidden="true">⇢</span>
+            <h3>Workflows before agents</h3>
+            <p>Use deterministic workflows where they work, and add autonomy only where it pays for itself.</p>
+          </li>
+          <li>
+            <span class="p-icon" aria-hidden="true">✓</span>
+            <h3>Evals are the spec</h3>
+            <p>Golden datasets and automated scoring gate every prompt, model and tool change.</p>
+          </li>
+          <li>
+            <span class="p-icon" aria-hidden="true">⌘</span>
+            <h3>Tools through MCP</h3>
+            <p>One standard, least-privilege tool layer that any agent or model can use.</p>
+          </li>
+          <li>
+            <span class="p-icon" aria-hidden="true">◉</span>
+            <h3>Humans on the irreversible</h3>
+            <p>Agents propose; people approve payments, trades and anything that can't be undone.</p>
+          </li>
+          <li>
+            <span class="p-icon" aria-hidden="true">⇅</span>
+            <h3>Route for cost</h3>
+            <p>Frontier models plan, small models execute, and a semantic cache handles repeat questions.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= SKILLS ================= -->
+    <!-- EDIT: skills for the network live in script.js (SKILL_LAYERS); the list below is shown on phones -->
+    <section class="section" id="skills" data-shape="2" data-x="0" data-alpha="0.14">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="kicker mono">// skills.forward()</p>
+          <h2 class="title">My stack, wired like a <span class="grad-text">neural network</span></h2>
+          <p class="lede">Signals flow from foundations to production platforms.<span class="net-hint"> Hover any node to see its connections.</span></p>
+        </header>
+
+        <div class="net-panel" data-reveal>
+          <canvas id="skills-canvas" aria-hidden="true"></canvas>
+        </div>
+
+        <div class="skill-groups">
+          <div class="skill-group"><h3>Architecture &amp; design</h3><ul><li>AI system design</li><li>Python</li><li>Pydantic</li><li>FastAPI</li><li>ML &amp; forecasting</li></ul></div>
+          <div class="skill-group"><h3>Models</h3><ul><li>Claude</li><li>GPT</li><li>Gemini</li><li>Llama, Qwen, DeepSeek</li><li>Model routing</li><li>Fine-tuning (LoRA, QLoRA, DPO)</li><li>Multimodal &amp; vision</li><li>Speech AI (STT, TTS)</li><li>Whisper</li></ul></div>
+          <div class="skill-group"><h3>Knowledge &amp; memory</h3><ul><li>RAG &amp; GraphRAG</li><li>Hybrid search &amp; reranking</li><li>Vector databases</li><li>Knowledge graphs</li><li>Agent memory</li><li>Context engineering</li></ul></div>
+          <div class="skill-group"><h3>Agents &amp; orchestration</h3><ul><li>Multi-agent systems</li><li>LangGraph</li><li>CrewAI</li><li>OpenAI Agents SDK</li><li>Claude Agent SDK</li><li>MCP servers</li><li>A2A protocol</li><li>Computer use</li><li>Human-in-the-loop</li></ul></div>
+          <div class="skill-group"><h3>LLMOps &amp; governance</h3><ul><li>LLM evals (Ragas, DeepEval)</li><li>Langfuse &amp; LangSmith</li><li>Guardrails</li><li>Prompt-injection defence</li><li>Cost &amp; latency optimisation</li></ul></div>
+          <div class="skill-group"><h3>Platform &amp; cloud</h3><ul><li>vLLM &amp; Ollama</li><li>Docker &amp; Kubernetes</li><li>AWS Bedrock</li><li>Azure AI Foundry</li><li>Vertex AI</li><li>Claude Code &amp; Cursor</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= EXPERIENCE ================= -->
+    <section class="section" id="experience" data-shape="3" data-x="3.4" data-alpha="0.75">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="kicker mono">// experience.log</p>
+          <h2 class="title">Where I've <span class="grad-text">trained</span></h2>
+        </header>
+
+        <div class="timeline">
+          <div class="tl-line"><span class="tl-fill"></span></div>
+
+          <article class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <p class="tl-date mono">Dec 2023 — present</p>
+              <h3>Senior Data Scientist</h3>
+              <p class="tl-org">AIT Global India</p>
+              <ul>
+                <li>Designed and built LLM-integrated API services that extract insights from financial reports.</li>
+                <li>Developed generative AI modules for financial commentary summarisation and sentiment analysis.</li>
+                <li>Collaborated on risk-scoring models with AI-augmented forecasting.</li>
+                <li>Designed and deployed the APIs behind portfolio intelligence dashboards.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <p class="tl-date mono">Jul 2023 — Oct 2023</p>
+              <h3>AI Data Specialist</h3>
+              <p class="tl-org">Futurense Technologies</p>
+              <ul>
+                <li>Built real-time web data collection that fed pricing models and market-trend analysis.</li>
+                <li>Delivered decision dashboards for executives.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <p class="tl-date mono">Jul 2022 — Mar 2023</p>
+              <h3>Software Engineer</h3>
+              <p class="tl-org">Systech Solutions</p>
+              <ul>
+                <li>Designed data frameworks for large-scale trading datasets on AWS.</li>
+                <li>Enabled real-time updates to the analytics that monitor asset performance.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <p class="tl-date mono">Jan 2020 — Mar 2022</p>
+              <h3>Data Scientist</h3>
+              <p class="tl-org">Varilligence Technologies</p>
+              <ul>
+                <li>Researched and built machine learning models for stock-price movement prediction using financial indicators.</li>
+                <li>Built alpha-generating trading signals from historical equities data, macro indicators and sentiment variables.</li>
+                <li>Contributed to model validation and A/B testing of quant strategies in simulation environments.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="extras" data-stagger>
+          <div class="extra">
+            <h3><span class="extra-icon" aria-hidden="true">◆</span>Education</h3>
+            <ul>
+              <li><b>M.Sc. Computer Science</b><span>Shivaji University, Kolhapur · 2022</span></li>
+              <li><b>B.Sc. Computer Science</b><span>Mahavir College, Kolhapur · 2019</span></li>
+            </ul>
+          </div>
+          <div class="extra">
+            <h3><span class="extra-icon" aria-hidden="true">★</span>Recognition</h3>
+            <ul>
+              <li><b>Best Performer of the Month</b></li>
+              <li><b>Spot Award</b></li>
+              <li><b>GOM Award</b></li>
+            </ul>
+          </div>
+          <div class="extra">
+            <h3><span class="extra-icon" aria-hidden="true">✓</span>Certifications</h3>
+            <ul>
+              <li><b>Machine Learning in Python</b></li>
+              <li><b>Data Analysis with Python</b></li>
+              <li><b>Data Visualization</b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ASK MY AI ================= -->
+    <section class="section" id="ask" data-shape="4" data-x="-3.6" data-alpha="0.35">
+      <div class="container ask-grid">
+        <div class="ask-copy" data-reveal>
+          <p class="kicker mono">// rishi-ai.chat()</p>
+          <h2 class="title">Ask my <span class="grad-text">AI twin</span></h2>
+          <p class="lede">Short on time? Ask about my architecture approach, projects or experience and get an answer in seconds.</p>
+          <div class="chips" id="chips">
+            <button type="button" class="chip-btn">How do you architect agents?</button>
+            <button type="button" class="chip-btn">Tell me about AlphaDesk</button>
+            <button type="button" class="chip-btn">Tell me about the voice agent</button>
+            <button type="button" class="chip-btn">Why hire Rishikesh as an AI architect?</button>
+          </div>
+        </div>
+
+        <div class="chat" data-reveal>
+          <div class="chat-head">
+            <span class="chat-avatar" aria-hidden="true"></span>
+            <div>
+              <p class="chat-name">rishi-ai</p>
+              <p class="chat-status mono"><span class="badge-dot"></span>online · trained on this portfolio</p>
+            </div>
+          </div>
+          <div class="chat-log" id="chat-log" aria-live="polite">
+            <div class="msg msg-ai">
+              <span class="msg-avatar" aria-hidden="true"></span>
+              <div class="bubble">Hi, I'm Rishikesh's AI twin. Ask me about agentic architecture, the projects, the stack or how to get in touch.</div>
+            </div>
+          </div>
+          <form class="chat-form" id="chat-form" autocomplete="off">
+            <label class="sr-only" for="chat-input">Ask a question</label>
+            <input id="chat-input" type="text" placeholder="Ask about architecture, projects, experience…" maxlength="200">
+            <button type="submit" aria-label="Send">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7-7-1Z" fill="currentColor"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section class="section contact" id="contact" data-shape="4" data-x="0" data-alpha="0.45">
+      <div class="container contact-inner" data-reveal>
+        <p class="kicker mono">// contact.init()</p>
+        <h2 class="contact-title">Need an architect for your <span class="grad-text">agentic AI platform?</span></h2>
+        <p class="lede">Tell me about the workflow you want to automate. I'll help you design agents that are safe, observable and worth the tokens.</p>
+        <div class="email-row">
+          <a class="btn btn-glow btn-lg" href="mailto:rishikeshombase4@gmail.com">rishikeshombase4@gmail.com</a>
+          <button class="btn btn-glass" type="button" id="copy-email" data-email="rishikeshombase4@gmail.com">Copy email</button>
+        </div>
+        <ul class="socials">
+          <li><a href="https://www.linkedin.com/in/rishikesh-ombase-11989b1ab/" target="_blank" rel="me noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/Rishikesh32" target="_blank" rel="me noopener">GitHub</a></li>
+          <li><a href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="year">2026</span> Rishikesh Ombase · Kolhapur, India</p>
+      <p class="mono">agents: idle · guardrails: on · 0 hallucinations</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="neural.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
