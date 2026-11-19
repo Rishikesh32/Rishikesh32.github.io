@@ -16,7 +16,20 @@
   /* ---- theme (applied immediately to avoid a flash) ---- */
   var root = document.documentElement;
   var savedTheme = store.get("atlas:theme");
-  if (savedTheme === "dark" || savedTheme === "light") root.setAttribute("data-theme", savedTheme);
+  // warm light is the default; dark mode is an opt-in that's remembered
+  root.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+  var ICON_MOON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 12.3A6.8 6.8 0 0 1 7.7 3.5a6.8 6.8 0 1 0 8.8 8.8z"/></svg>';
+  var ICON_SUN = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>';
+  function syncToggles() {
+    var dark = root.getAttribute("data-theme") === "dark";
+    document.querySelectorAll("[data-theme-toggle]").forEach(function (b) {
+      b.innerHTML = dark ? ICON_SUN : ICON_MOON;
+      b.setAttribute("aria-label", dark ? "Switch to warm light mode" : "Switch to dark mode");
+      b.setAttribute("title", dark ? "Warm light mode" : "Dark mode");
+      b.setAttribute("aria-pressed", dark ? "true" : "false");
+    });
+  }
+  document.addEventListener("DOMContentLoaded", syncToggles);
   function currentTheme() {
     var t = root.getAttribute("data-theme");
     if (t) return t;
@@ -28,6 +41,7 @@
     var next = currentTheme() === "dark" ? "light" : "dark";
     root.setAttribute("data-theme", next);
     store.set("atlas:theme", next);
+    syncToggles();
     document.dispatchEvent(new CustomEvent("atlas:theme", { detail: next }));
   });
 
