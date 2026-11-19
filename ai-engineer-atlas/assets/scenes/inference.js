@@ -258,3 +258,70 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
     ]
   };
 })();
+
+/* Overview scene: serving 200 users from one GPU (plays on the Inference & optimization overview). */
+window.ATLAS_SCENES["inference/overview"] = {
+  unit: 32,
+  metrics: [
+    { id: "tps", label: "Tokens / s", tone: "good" },
+    { id: "ttft", label: "First token", tone: "accent" },
+    { id: "mem", label: "GPU memory" },
+    { id: "users", label: "Users served" }
+  ],
+  legend: { req: "request", data: "weights / cache", token: "tokens", miss: "waiting" },
+  nodes: {
+    users:   { type: "block", x: 0,    y: 0,    w: 1.6, d: 1.6, h: 0.9, color: "t5", label: "200 users", icon: "◉" },
+    server:  { type: "block", x: 3.6,  y: 0,    w: 1.8, d: 1.8, h: 1.1, color: "t2", label: "API server" },
+    queue:   { type: "stack", x: 3.8,  y: 4.4,  w: 1.6, d: 1.2, n: 4, color: "t4", label: "Queue" },
+    sched:   { type: "block", x: 7.2,  y: 0.1,  w: 1.7, d: 1.7, h: 1.0, color: "t1", label: "Scheduler" },
+    gpu:     { type: "slab",  x: 10.2, y: -2.2, w: 6.6, d: 6.0, color: "t3", label: "GPU", sub: "80 GB" },
+    weights: { type: "block", x: 10.8, y: -1.4, w: 2.2, d: 2.2, h: 1.6, z: 0.15, color: "t3", label: "Weights" },
+    kv:      { type: "stack", x: 14.2, y: -1.2, w: 1.7, d: 1.4, n: 3, z: 0.15, color: "accent", label: "KV cache" },
+    draft:   { type: "block", x: 11.4, y: 2.4,  w: 1.3, d: 1.1, h: 0.7, z: 0.15, color: "good", label: "Draft model" },
+    out:     { type: "block", x: 19,   y: 0.2,  w: 1.5, d: 1.5, h: 0.9, color: "t2", label: "Stream" }
+  },
+  steps: [
+    { title: "One GPU, 200 people waiting", tag: "Problem", add: ["users", "server", "gpu", "weights"], links: [["users", "server"], ["server", "weights"]], badges: { weights: "fp16 · 16 GB" },
+      text: "<p>An 8B model on one 80 GB GPU. Served one request at a time, it makes about <b>35 tokens per second</b>, enough for one user. 200 users would wait minutes. This area is about closing that gap.</p>",
+      flows: [["users", "server", "req", { count: 3 }], ["server", "weights", "req"]],
+      metrics: { tps: "35", ttft: "—", mem: "16 / 80 GB", users: "1" } },
+    { title: "Prefill, then decode", tag: "Idea", add: ["kv"], links: [["weights", "kv", "data", { dashed: true }]], focus: ["server", "weights", "kv"],
+      text: "<p><b>Prefill</b> reads the whole prompt in parallel and writes the <b>KV cache</b>; this sets the time to first token. <b>Decode</b> then makes one token at a time, and each step is limited by memory bandwidth, not by compute.</p>",
+      flows: [["server", "weights", "req", { label: "prefill 1,850 tokens" }], ["weights", "kv", "data", { label: "keys + values", delay: 0.8 }]],
+      metrics: { ttft: "380 ms" } },
+    { title: "Quantize the weights", tag: "Solution", focus: ["weights"], badges: { weights: "int4 · 4.5 GB" },
+      text: "<p>Storing weights in <b>4 bits</b> instead of 16 shrinks them from 16 GB to about 4.5 GB, with a small, measurable quality cost. Less memory to read per token also means faster decoding.</p>",
+      metrics: { mem: "4.5 / 80 GB", tps: "60" },
+      changed: ["~ Weights 16 GB → 4.5 GB", "~ 35 → 60 tokens / s"] },
+    { title: "Requests pile up", tag: "Problem", add: ["queue"], links: [["server", "queue", "miss", { dashed: true }]], focus: ["users", "server", "queue"],
+      text: "<p>One request at a time leaves the GPU mostly idle while it waits on memory, and everyone else queues. Time to first token climbs to <b>several seconds</b>.</p>",
+      flows: [["users", "server", "req", { count: 4, dur: 1.2 }], ["server", "queue", "miss", { label: "waiting" }]],
+      metrics: { ttft: "6.2 s" } },
+    { title: "Continuous batching", tag: "Solution", add: ["sched"], links: [["server", "sched"], ["queue", "sched"], ["sched", "weights"]], focus: ["queue", "sched", "weights"],
+      text: "<p>The <b>scheduler</b> runs many requests through the model in the same pass, adding new ones the moment others finish. Each pass reads the weights once for 64 users, so throughput jumps.</p>",
+      flows: [["queue", "sched", "req", { label: "join batch", count: 3 }], ["sched", "weights", "req", { count: 3 }]],
+      metrics: { tps: "2,400", ttft: "450 ms", users: "64" } },
+    { title: "The KV cache fills the GPU", tag: "Idea", focus: ["kv", "weights"], badges: { kv: "48 GB" },
+      text: "<p>Now the limit is memory for the <b>KV cache</b>: every active user holds their own. PagedAttention stores it in small pages so almost none is wasted, which lets more users fit.</p>",
+      metrics: { mem: "52 / 80 GB" },
+      note: "The KV cache lesson in this area does this memory math step by step." },
+    { title: "Speculative decoding", tag: "Solution", add: ["draft"], links: [["draft", "weights", "token", { dashed: true }]], focus: ["draft", "weights"],
+      text: "<p>A small <b>draft model</b> guesses the next 4 tokens; the big model checks all 4 in one pass and keeps the ones it agrees with. Same output, about <b>1.5× faster</b> decoding.</p>",
+      flows: [["draft", "weights", "token", { label: "4 guesses" }], ["weights", "draft", "res", { label: "3 accepted", delay: 0.9 }]],
+      metrics: { tps: "3,600" } },
+    { title: "Stream to everyone", tag: "Solution", add: ["out"], links: [["weights", "out"]], focus: ["weights", "out", "users"],
+      text: "<p>Tokens stream back the moment they're made. The same GPU now serves <b>200 users</b> with first tokens in under half a second.</p>",
+      flows: [["weights", "out", "token", { count: 3, dur: 1.1 }], ["out", "users", "token", { count: 3, dur: 1.6, lift: 110 }]],
+      metrics: { users: "200" } },
+    { title: "The whole server", tag: "Recap",
+      text: "<p>From 35 tokens per second for one user to 3,600 for 200, on the same hardware. The lessons in this area cover each step:</p><ul><li><b>Quantization</b> and <b>GPU memory math</b></li><li>The <b>KV cache</b> and <b>batching</b></li><li><b>Speculative decoding</b></li><li><b>Serving engines</b> and <b>running locally</b></li></ul>",
+      flows: [["users", "server", "req", { count: 1 }], ["sched", "weights", "req", { count: 1 }], ["weights", "out", "token", { count: 1 }], ["out", "users", "token", { count: 1, lift: 110 }]] }
+  ],
+  learn: [
+    "Why decoding is limited by memory, not compute",
+    "How quantization shrinks and speeds up a model",
+    "How continuous batching serves many users at once",
+    "Why the KV cache decides how many users fit",
+    "How speculative decoding speeds up generation"
+  ]
+};

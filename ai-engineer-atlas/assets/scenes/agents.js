@@ -165,3 +165,74 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
     ]
   };
 })();
+
+/* Overview scene: how an agent gets real work done (plays on the AI agents overview). */
+window.ATLAS_SCENES["agents/overview"] = {
+  unit: 32,
+  metrics: [
+    { id: "steps", label: "Agent steps" },
+    { id: "tools", label: "Tool calls" },
+    { id: "ctx", label: "Context tokens", tone: "accent" },
+    { id: "cost", label: "Cost so far", tone: "signal" }
+  ],
+  legend: { req: "goal / action", res: "result", data: "observation / memory", miss: "blocked / limit" },
+  nodes: {
+    user:    { type: "block", x: 0,    y: 0,    w: 1.5, d: 1.5, h: 0.9, color: "t5", label: "You", icon: "◉" },
+    agent:   { type: "block", x: 4,    y: 0,    w: 2.2, d: 2.2, h: 1.8, color: "t3", label: "Agent", sub: "LLM" },
+    harness: { type: "block", x: 8.4,  y: 0.1,  w: 2.0, d: 2.0, h: 1.0, color: "t2", label: "Harness" },
+    db:      { type: "cyl",   x: 13.4, y: -2.6, r: 0.8, h: 1.1, color: "t4", label: "CRM" },
+    code:    { type: "block", x: 12.6, y: 1.2,  w: 1.6, d: 1.6, h: 1.0, color: "t1", label: "Code runner" },
+    mcp:     { type: "block", x: 8.6,  y: -4.6, w: 1.8, d: 1.4, h: 0.8, color: "accent", label: "MCP server" },
+    search:  { type: "cyl",   x: 13.2, y: -6.2, r: 0.7, h: 0.9, color: "t4", label: "Web search" },
+    memory:  { type: "stack", x: 4.4,  y: 4.4,  w: 1.6, d: 1.2, n: 3, color: "t1", label: "Memory" },
+    worker:  { type: "block", x: 4.2,  y: -4.6, w: 1.6, d: 1.4, h: 1.0, color: "t3", label: "Worker agent" },
+    human:   { type: "block", x: 0.2,  y: 4.2,  w: 1.4, d: 1.4, h: 0.9, color: "good", label: "Approver" }
+  },
+  steps: [
+    { title: "A goal, not a question", tag: "Problem", add: ["user", "agent"], links: [["user", "agent"]],
+      text: "<p>You ask: <i>find customers likely to cancel this month and draft a check-in email for each</i>. That needs data lookups, a calculation and writing. One model call can't do all of it.</p>",
+      flows: [["user", "agent", "req", { label: "find churn risks + draft emails" }]],
+      metrics: { steps: "0", tools: "0", ctx: "2,100", cost: "$0.00" } },
+    { title: "The loop: think, act, observe", tag: "Idea", add: ["harness"], links: [["agent", "harness"]], focus: ["agent", "harness"],
+      text: "<p>The model doesn't run anything itself. It proposes an <b>action</b> as a tool call. The <b>harness</b>, your code, runs it and returns the result as an <b>observation</b>. Then the model decides the next step.</p>",
+      flows: [["agent", "harness", "req", { label: "tool call" }], ["harness", "agent", "data", { label: "observation", delay: 0.8 }]],
+      key: "An agent is a model in a loop with tools. Your code decides what actually runs.",
+      metrics: { steps: "1" } },
+    { title: "Tools do the real work", tag: "Idea", add: ["db", "code"], links: [["harness", "db"], ["harness", "code"]], focus: ["harness", "db", "code"],
+      text: "<p>Step 2 queries the CRM for accounts with falling usage. Step 3 runs a small scoring script. Each result comes back as text the model can read.</p>",
+      flows: [["harness", "db", "req", { label: "query usage" }], ["db", "harness", "res"], ["harness", "code", "req", { label: "score churn", delay: 0.9 }], ["code", "harness", "res", { delay: 1.4 }]],
+      metrics: { steps: "3", tools: "2", ctx: "6,800", cost: "$0.04" } },
+    { title: "Context grows every step", tag: "Idea", add: ["memory"], links: [["agent", "memory", "data", { dashed: true }]], focus: ["agent", "memory"], badges: { memory: "notes" },
+      text: "<p>Every observation is appended to the context, so each call costs more. Good agents <b>summarise</b> old steps and keep durable facts in <b>memory</b> instead of rereading everything.</p>",
+      flows: [["harness", "memory", "data", { label: "save findings" }], ["memory", "agent", "data", { delay: 0.8 }]],
+      metrics: { ctx: "4,900" },
+      changed: ["~ Context compacted 6,800 → 4,900 tokens"] },
+    { title: "MCP plugs in more tools", tag: "Idea", add: ["mcp", "search"], links: [["harness", "mcp"], ["mcp", "search"]], focus: ["harness", "mcp", "search"],
+      text: "<p>The <b>Model Context Protocol</b> lets the harness discover tools from separate servers. Here an MCP server exposes web search, used to check each customer's latest news.</p>",
+      flows: [["harness", "mcp", "req", { label: "tools/call" }], ["mcp", "search", "req", { delay: 0.6 }], ["search", "mcp", "res", { delay: 1.2 }]],
+      metrics: { steps: "5", tools: "4", ctx: "7,200", cost: "$0.08" } },
+    { title: "Hand off to a worker", tag: "Idea", add: ["worker"], links: [["agent", "worker", "req", { dashed: true }]], focus: ["agent", "worker"],
+      text: "<p>Drafting 12 emails is separate, parallel work. The orchestrator hands it to a <b>worker agent</b> with a short brief, then reviews what comes back.</p>",
+      flows: [["agent", "worker", "req", { label: "draft 12 emails" }], ["worker", "agent", "res", { label: "12 drafts", delay: 1.2 }]],
+      metrics: { steps: "7", cost: "$0.13" } },
+    { title: "A human approves the risky step", tag: "Solution", add: ["human"], links: [["agent", "human"]], focus: ["agent", "human"],
+      text: "<p>Sending email is hard to undo, so the harness pauses for <b>approval</b>. You review the drafts and approve 11 of 12.</p>",
+      flows: [["agent", "human", "req", { label: "approve sending?" }], ["human", "agent", "res", { label: "11 approved", delay: 1.0 }]],
+      note: "Approvals, step limits and budgets are guardrails in the harness, not in the prompt." },
+    { title: "When the loop won't stop", tag: "Problem", focus: ["agent", "harness"],
+      text: "<p>In a bad run, the model keeps retrying a failing query. The harness enforces a <b>step limit</b> and a <b>budget</b>, stops the run and reports what happened, so it doesn't loop forever.</p>",
+      flows: [["agent", "harness", "miss", { label: "step 15 / 15: stopped" }]],
+      metrics: { steps: "15", cost: "$0.31" } },
+    { title: "The whole agent", tag: "Recap",
+      text: "<p>A model in a loop, with tools, memory and guardrails around it. The lessons in this area take each part in turn:</p><ul><li>The <b>loop</b> and <b>tool design</b></li><li><b>Planning</b>, <b>memory</b> and <b>context</b></li><li><b>Multi-agent</b> systems and <b>MCP</b></li><li><b>Computer use</b> and <b>guardrails</b></li></ul>",
+      flows: [["user", "agent", "req", { count: 1 }], ["agent", "harness", "req", { count: 1 }], ["harness", "db", "req", { count: 1 }], ["harness", "agent", "data", { count: 1 }], ["agent", "human", "req", { count: 1 }]],
+      metrics: { steps: "8", cost: "$0.15" } }
+  ],
+  learn: [
+    "Why an agent is a model in a loop with tools",
+    "How the harness runs tools and returns observations",
+    "How memory and compaction keep context small",
+    "How MCP and worker agents extend an agent",
+    "Why guardrails and approvals live in your code"
+  ]
+};

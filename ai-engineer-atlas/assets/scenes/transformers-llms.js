@@ -215,3 +215,69 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
     ]
   };
 })();
+
+/* Overview scene: from text to the next token (plays on the Transformers & LLMs overview). */
+window.ATLAS_SCENES["transformers-llms/overview"] = {
+  unit: 32,
+  metrics: [
+    { id: "tok", label: "Tokens in context" },
+    { id: "layers", label: "Layers" },
+    { id: "params", label: "Parameters" },
+    { id: "top", label: "Top next token", tone: "good" }
+  ],
+  legend: { req: "text", data: "numbers", token: "tokens" },
+  nodes: {
+    text:    { type: "block", x: 0,    y: 0,    w: 1.6, d: 1.6, h: 0.8, color: "t5", label: "Prompt", icon: "¶" },
+    tok:     { type: "block", x: 3.4,  y: 0,    w: 1.6, d: 1.6, h: 1.0, color: "t2", label: "Tokenizer" },
+    emb:     { type: "stack", x: 6.8,  y: 0.2,  w: 1.6, d: 1.2, n: 4, color: "t1", label: "Embeddings" },
+    blocks:  { type: "block", x: 10,   y: -0.3, w: 2.4, d: 2.4, h: 2.3, color: "t3", label: "Transformer", sub: "×32" },
+    weights: { type: "stack", x: 10.4, y: -4.6, w: 1.8, d: 1.3, n: 5, color: "t3", label: "Weights" },
+    kv:      { type: "cyl",   x: 11.2, y: 4.6,  r: 0.8, h: 1.0, color: "accent", label: "KV cache" },
+    logits:  { type: "block", x: 14.4, y: 0,    w: 1.6, d: 1.6, h: 0.9, color: "t4", label: "Logits" },
+    sample:  { type: "block", x: 17.6, y: 0,    w: 1.4, d: 1.4, h: 0.8, color: "good", label: "Sampler" }
+  },
+  steps: [
+    { title: "One job: predict the next token", tag: "Problem", add: ["text", "blocks"],
+      text: "<p>Every LLM, from autocomplete to a coding agent, does one thing over and over: given the text so far, predict the <b>next token</b>. Follow <code>The cat sat on the</code> through the machine.</p>",
+      key: "Chat, reasoning and tool use are all next-token prediction run in a loop.",
+      flows: [["text", "blocks", "req", { label: "The cat sat on the", lift: 50 }]],
+      metrics: { tok: "—", layers: "32", params: "8B", top: "—" } },
+    { title: "Text becomes token ids", tag: "Idea", add: ["tok"], links: [["text", "tok"]], focus: ["text", "tok"], badges: { tok: "5 ids" },
+      text: "<p>The <b>tokenizer</b> splits the text into pieces from a fixed vocabulary and maps each piece to an integer id. Common words are one token; rare words are several.</p>",
+      flows: [["text", "tok", "req", { label: "The cat sat on the" }]],
+      metrics: { tok: "5" } },
+    { title: "Ids become vectors", tag: "Idea", add: ["emb"], links: [["tok", "emb"]], focus: ["tok", "emb"], badges: { emb: "5 × 4,096" },
+      text: "<p>Each id looks up a learned <b>embedding</b>: a vector of 4,096 numbers. Position information is mixed in, so the model knows that \"cat\" comes before \"sat\".</p>",
+      flows: [["tok", "emb", "data", { label: "[791, 8415, 7731, 389, 279]" }]] },
+    { title: "32 blocks of attention + MLP", tag: "Idea", links: [["emb", "blocks"]], focus: ["emb", "blocks"],
+      text: "<p>The vectors pass through 32 identical <b>transformer blocks</b>. In each one, <b>attention</b> lets every token pull in context from earlier tokens, and an <b>MLP</b> transforms each vector on its own.</p>",
+      flows: [["emb", "blocks", "token", { count: 3 }]],
+      note: "The self-attention lesson in this area plays this step in slow motion." },
+    { title: "Where the knowledge lives", tag: "Idea", add: ["weights"], links: [["weights", "blocks", "data", { dashed: true }]], focus: ["weights", "blocks"],
+      text: "<p>Those blocks are defined by about <b>8 billion learned numbers</b>, the weights. Pretraining on trillions of tokens set them; instruction tuning and RLHF taught the model to follow requests.</p>",
+      flows: [["weights", "blocks", "data", { label: "8B weights" }]] },
+    { title: "Scores for every possible token", tag: "Idea", add: ["logits"], links: [["blocks", "logits"]], focus: ["blocks", "logits"], badges: { logits: "128k scores" },
+      text: "<p>The last vector is turned into a <b>logit</b>, a raw score, for every token in the vocabulary. Softmax turns the scores into probabilities.</p>",
+      flows: [["blocks", "logits", "token"]],
+      metrics: { top: "mat · 0.62" } },
+    { title: "Pick one, append, repeat", tag: "Solution", add: ["sample"], links: [["logits", "sample"]], focus: ["logits", "sample", "text"],
+      text: "<p>The <b>sampler</b> picks a token using temperature and top-p. The chosen token, \"mat\", is appended to the prompt, and the whole loop runs again for the next one.</p>",
+      flows: [["logits", "sample", "token"], ["sample", "text", "token", { label: "mat", lift: 90, delay: 0.6 }]],
+      metrics: { tok: "6" },
+      changed: ["+ \"mat\" appended", "~ Context 5 → 6 tokens"] },
+    { title: "The KV cache keeps the loop fast", tag: "Solution", add: ["kv"], links: [["blocks", "kv", "data", { dashed: true }]], focus: ["blocks", "kv"],
+      text: "<p>Without help, every new token would recompute attention over the whole history. The <b>KV cache</b> stores each token's keys and values, so each step only computes the newest token.</p>",
+      flows: [["blocks", "kv", "data", { label: "keys + values" }], ["kv", "blocks", "data", { delay: 0.8 }]],
+      metrics: { tok: "7" } },
+    { title: "The whole machine", tag: "Recap",
+      text: "<p>Text → tokens → vectors → 32 blocks → scores → one sampled token → repeat. Each lesson in this area opens one of these boxes:</p><ul><li><b>Tokenization</b> and <b>embeddings</b></li><li><b>Attention</b> and the <b>transformer block</b></li><li><b>Training</b>: pretraining, tuning, RLHF</li><li><b>Decoding</b> and <b>choosing a model</b></li></ul>",
+      flows: [["text", "tok", "req", { count: 1 }], ["tok", "emb", "data", { count: 1 }], ["emb", "blocks", "token", { count: 1 }], ["blocks", "logits", "token", { count: 1 }], ["logits", "sample", "token", { count: 1 }], ["sample", "text", "token", { count: 1, lift: 90 }]] }
+  ],
+  learn: [
+    "Why an LLM is a next-token predictor run in a loop",
+    "How text becomes token ids and vectors",
+    "What the transformer blocks and weights do",
+    "How logits and sampling pick the next token",
+    "Why the KV cache makes generation fast"
+  ]
+};

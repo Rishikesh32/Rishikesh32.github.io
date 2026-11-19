@@ -154,3 +154,70 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
     ]
   };
 })();
+
+/* Overview scene: when and how to change the weights (plays on the Fine-tuning overview). */
+window.ATLAS_SCENES["fine-tuning/overview"] = {
+  unit: 32,
+  metrics: [
+    { id: "fmt", label: "Correct format", tone: "good" },
+    { id: "ex", label: "Training examples" },
+    { id: "train", label: "Trainable params" },
+    { id: "mem", label: "GPU memory", tone: "accent" }
+  ],
+  legend: { req: "request", data: "data", grad: "training update", miss: "failure" },
+  nodes: {
+    app:     { type: "block", x: 0,    y: 0,    w: 1.6, d: 1.6, h: 1.0, color: "t5", label: "Your app" },
+    prompt:  { type: "block", x: 3.6,  y: -4.2, w: 1.6, d: 1.4, h: 0.8, color: "t2", label: "Better prompt" },
+    rag:     { type: "cyl",   x: 4.4,  y: 4.6,  r: 0.75, h: 1.0, color: "t4", label: "RAG" },
+    data:    { type: "stack", x: 4.2,  y: 0.2,  w: 1.7, d: 1.3, n: 5, color: "t1", label: "Training pairs" },
+    base:    { type: "block", x: 8.4,  y: -0.2, w: 2.4, d: 2.4, h: 2.0, color: "t3", label: "Base model", sub: "frozen" },
+    adapter: { type: "block", x: 9.0,  y: 4.4,  w: 1.6, d: 1.0, h: 0.5, color: "good", label: "LoRA adapter" },
+    pref:    { type: "block", x: 13,   y: -3.6, w: 1.6, d: 1.4, h: 0.9, color: "signal", label: "Preferences", sub: "DPO" },
+    teacher: { type: "block", x: 3.8,  y: -8.2, w: 2.0, d: 1.6, h: 1.6, color: "t3", label: "Teacher model" },
+    evals:   { type: "block", x: 13.2, y: 0.6,  w: 1.6, d: 1.6, h: 1.0, color: "accent", label: "Evals" },
+    serve:   { type: "block", x: 16.8, y: 0.4,  w: 1.6, d: 1.6, h: 1.0, color: "t2", label: "Serve" }
+  },
+  steps: [
+    { title: "The model keeps breaking your format", tag: "Problem", add: ["app", "base"], links: [["app", "base"]],
+      text: "<p>Your support app needs replies as strict JSON in your brand's tone. The model gets it right about <b>70%</b> of the time. The rest break the parser or sound off.</p>",
+      flows: [["app", "base", "req"], ["base", "app", "miss", { label: "wrong format 30%", delay: 0.8 }]],
+      metrics: { fmt: "70%", ex: "0", train: "—", mem: "—" } },
+    { title: "Try the cheap fixes first", tag: "Idea", add: ["prompt", "rag"], links: [["app", "prompt", "req", { dashed: true }], ["app", "rag", "data", { dashed: true }]], focus: ["app", "prompt", "rag"],
+      text: "<p>A clearer prompt with examples lifts it to 84%. RAG fixes <b>missing knowledge</b>, but this is a <b>behaviour</b> problem, so it doesn't help here. Persistent behaviour and format problems are what fine-tuning is for.</p>",
+      flows: [["app", "prompt", "req", { label: "few-shot examples" }], ["app", "rag", "data", { label: "facts, not format" }]],
+      metrics: { fmt: "84%" },
+      key: "Missing knowledge → RAG. Wrong behaviour or format → fine-tune." },
+    { title: "Collect training pairs", tag: "Idea", add: ["data"], links: [["app", "data", "data"]], focus: ["app", "data"], badges: { data: "2,000" },
+      text: "<p>Gather about <b>2,000</b> real requests paired with the ideal reply. Quality beats quantity: every pair teaches the exact format and tone you want.</p>",
+      flows: [["app", "data", "data", { label: "prompt → ideal reply" }]],
+      metrics: { ex: "2,000" } },
+    { title: "Fine-tune with LoRA", tag: "Solution", add: ["adapter"], links: [["data", "base"], ["base", "adapter", "grad", { dashed: true }]], focus: ["data", "base", "adapter"],
+      text: "<p>Supervised fine-tuning shows the model each pair. With <b>LoRA</b> the base weights stay frozen and only a small adapter learns, about <b>0.25%</b> of the parameters, so it fits on one 24 GB GPU.</p>",
+      flows: [["data", "base", "data", { label: "SFT" }], ["base", "adapter", "grad", { label: "update adapter only", delay: 0.7 }]],
+      metrics: { train: "16.8M", mem: "17 GB" },
+      note: "The LoRA & QLoRA lesson plays this step in detail." },
+    { title: "Teach preferences", tag: "Idea", add: ["pref"], links: [["pref", "adapter", "grad", { dashed: true }]], focus: ["pref", "adapter"],
+      text: "<p>Some replies are valid JSON but still worse than others. <b>Preference tuning</b> (DPO) trains on pairs of a better and a worse reply, nudging the model toward the better style.</p>",
+      flows: [["pref", "adapter", "grad", { label: "chosen > rejected" }]] },
+    { title: "Prove it with evals", tag: "Solution", add: ["evals"], links: [["adapter", "evals"]], focus: ["adapter", "evals", "base"],
+      text: "<p>A held-out eval set checks format, tone <b>and general skills</b>. Format jumps to <b>97%</b>. A drop in general ability would mean catastrophic forgetting, so that's watched too.</p>",
+      flows: [["adapter", "evals", "req"], ["evals", "app", "res", { label: "format 97%", lift: 70, delay: 0.9 }]],
+      metrics: { fmt: "97%" } },
+    { title: "Or distil a bigger model", tag: "Idea", add: ["teacher"], links: [["teacher", "data", "data", { dashed: true }]], focus: ["teacher", "data"],
+      text: "<p>No labelled data? A large <b>teacher</b> model can write the ideal replies, and a small student learns from them. This is <b>distillation</b>: it often matches the teacher on one task at a fraction of the cost.</p>",
+      flows: [["teacher", "data", "data", { label: "synthetic replies" }]] },
+    { title: "Ship the adapter", tag: "Solution", add: ["serve"], links: [["adapter", "serve"], ["app", "serve", "req", { dashed: true }]], focus: ["adapter", "serve", "app"],
+      text: "<p>The adapter is a small file, about <b>34 MB</b>, loaded next to the base model at serving time. One base can host many adapters, one per task or customer.</p>",
+      flows: [["adapter", "serve", "data", { label: "34 MB" }], ["app", "serve", "req", { lift: 80, delay: 0.6 }]] },
+    { title: "The whole path", tag: "Recap",
+      text: "<p>Change the weights only when prompting and RAG can't fix it. Then the lessons in this area cover each part:</p><ul><li><b>Prompt vs RAG vs fine-tune</b></li><li><b>SFT</b>, <b>LoRA</b> and <b>QLoRA</b></li><li><b>RLHF, DPO</b> and <b>GRPO</b></li><li><b>Distillation</b> and <b>tooling</b></li></ul>",
+      flows: [["data", "base", "data", { count: 1 }], ["base", "adapter", "grad", { count: 1 }], ["adapter", "evals", "req", { count: 1 }], ["adapter", "serve", "data", { count: 1 }]] }
+  ],
+  learn: [
+    "When fine-tuning beats prompting and RAG",
+    "What good training pairs look like",
+    "How LoRA trains a small adapter on a frozen model",
+    "How preference tuning and distillation fit in",
+    "Why evals must check for forgetting"
+  ]
+};
