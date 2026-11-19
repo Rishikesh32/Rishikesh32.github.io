@@ -237,7 +237,7 @@
   const dustGeo = new THREE.BufferGeometry();
   dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
   const dustMat = new THREE.ShaderMaterial({
-    uniforms: { uPR: { value: dpr }, uTime: uniforms.uTime },
+    uniforms: { uPR: { value: dpr }, uTime: uniforms.uTime, uDust: { value: new THREE.Color(0.75, 0.8, 1.0) } },
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
     vertexShader: `
       uniform float uPR, uTime;
@@ -251,15 +251,31 @@
         vA = 0.35 + 0.35 * sin(uTime + position.z * 3.0);
       }`,
     fragmentShader: `
+      uniform vec3 uDust;
       varying float vA;
       void main() {
         float d = length(gl_PointCoord - 0.5);
         if (d > 0.5) discard;
-        gl_FragColor = vec4(0.75, 0.8, 1.0, pow(1.0 - d * 2.0, 2.0) * vA * 0.5);
+        gl_FragColor = vec4(uDust, pow(1.0 - d * 2.0, 2.0) * vA * 0.5);
       }`,
   });
   const dust = new THREE.Points(dustGeo, dustMat);
   scene.add(dust);
+
+  /* ---------------- theme: neon glow on dark, warm ink on cream ---------------- */
+  const THEMES = {
+    dark:  { c1: "#22d3ee", c2: "#8b5cf6", c3: "#f472b6", line: 0x8b5cf6, dust: [0.75, 0.8, 1.0], blend: THREE.AdditiveBlending },
+    light: { c1: "#C2541B", c2: "#9A3B5C", c3: "#C98A1A", line: 0x9A3B5C, dust: [0.55, 0.42, 0.3], blend: THREE.NormalBlending }
+  };
+  function applyTheme(name) {
+    const t = THEMES[name] || THEMES.dark;
+    uniforms.uC1.value.set(t.c1); uniforms.uC2.value.set(t.c2); uniforms.uC3.value.set(t.c3);
+    lineMat.color.setHex(t.line);
+    dustMat.uniforms.uDust.value.setRGB(t.dust[0], t.dust[1], t.dust[2]);
+    [material, lineMat, dustMat].forEach((m) => { m.blending = t.blend; m.needsUpdate = true; });
+  }
+  applyTheme(document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark");
+  window.neuralBG.setTheme = applyTheme;
 
   /* ---------------- interaction ---------------- */
   const mouse = { x: 9, y: 9, tx: 9, ty: 9, rx: 0, ry: 0 };

@@ -273,7 +273,15 @@
     { title: "llmops", nodes: ["LLM evals", "Observability", "Guardrails", "vLLM serving", "Kubernetes", "Bedrock / Vertex"] },
     { title: "output", nodes: ["Agentic platforms"] },
   ];
-  const LAYER_COLORS = ["#22d3ee", "#38bdf8", "#60a5fa", "#8b5cf6", "#c084fc", "#f472b6"];
+  const isLight = () => document.documentElement.getAttribute("data-theme") === "light";
+  const PALETTES = {
+    dark: { layers: ["#22d3ee", "#38bdf8", "#60a5fa", "#8b5cf6", "#c084fc", "#f472b6"], edge: "rgba(139,92,246,0.09)", edgeHot: "rgba(167,139,250,0.65)",
+            nodeFill: "#0a0c1d", labelBg: "rgba(8,10,24,0.85)", label: "rgba(222,226,255,0.82)", labelHot: "#ffffff", spark: "#ffffff" },
+    light: { layers: ["#C2541B", "#B5671F", "#A8781F", "#9A3B5C", "#7E4A86", "#1F7A72"], edge: "rgba(43,34,25,0.10)", edgeHot: "rgba(194,84,27,0.6)",
+            nodeFill: "#FFFBF4", labelBg: "rgba(255,251,244,0.92)", label: "rgba(43,34,25,0.78)", labelHot: "#2B2219", spark: "#FFFBF4" }
+  };
+  const pal = () => (isLight() ? PALETTES.light : PALETTES.dark);
+  const LAYER_COLORS = new Proxy([], { get: (_, k) => pal().layers[k] });
 
   function skillsNetwork() {
     const canvas = $("#skills-canvas");
@@ -353,7 +361,7 @@
       // edges
       edges.forEach(({ a, b }) => {
         const hl = hover && (a === hover || b === hover);
-        ctx.strokeStyle = hl ? "rgba(167,139,250,0.65)" : "rgba(139,92,246,0.09)";
+        ctx.strokeStyle = hl ? pal().edgeHot : pal().edge;
         ctx.lineWidth = hl ? 1.4 : 1;
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       });
@@ -365,7 +373,7 @@
         g.addColorStop(0, col); g.addColorStop(1, "transparent");
         ctx.fillStyle = g; ctx.globalAlpha = 0.55;
         ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = 1; ctx.fillStyle = "#fff";
+        ctx.globalAlpha = 1; ctx.fillStyle = pal().spark;
         ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
       });
       // nodes + labels
@@ -379,7 +387,7 @@
           ctx.beginPath(); ctx.arc(n.x, n.y, r + 7, 0, Math.PI * 2); ctx.fill();
           ctx.globalAlpha = 1;
         }
-        ctx.fillStyle = "#0a0c1d"; ctx.strokeStyle = col; ctx.lineWidth = 2;
+        ctx.fillStyle = pal().nodeFill; ctx.strokeStyle = col; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
         ctx.fillStyle = col; ctx.globalAlpha = 0.35 + n.act * 0.65;
         ctx.beginPath(); ctx.arc(n.x, n.y, r - 3.5, 0, Math.PI * 2); ctx.fill();
@@ -388,10 +396,10 @@
         ctx.font = (isHover ? "600 " : "500 ") + '14px "Space Grotesk", sans-serif';
         const tw = ctx.measureText(n.label).width;
         const lx = n.x + 16, ly = n.y;
-        ctx.fillStyle = "rgba(8,10,24,0.85)";
+        ctx.fillStyle = pal().labelBg;
         roundRect(lx - 6, ly - 12, tw + 14, 24, 7); ctx.fill();
         if (isHover || n.act > 0.4) { ctx.strokeStyle = col; ctx.globalAlpha = isHover ? 0.9 : n.act * 0.6; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1; }
-        ctx.fillStyle = isHover || n.act > 0.5 ? "#ffffff" : "rgba(222,226,255,0.82)";
+        ctx.fillStyle = isHover || n.act > 0.5 ? pal().labelHot : pal().label;
         ctx.fillText(n.label, lx + 1, ly + 1);
       });
     }
@@ -620,9 +628,36 @@
   }
 
   /* ================================================================
+     Theme: warm light by default, dark is opt-in
+     ================================================================ */
+  function themeToggle() {
+    const btn = $("#theme-btn");
+    if (!btn) return;
+    const MOON = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 12.3A6.8 6.8 0 0 1 7.7 3.5a6.8 6.8 0 1 0 8.8 8.8z"/></svg>';
+    const SUN = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>';
+    const sync = () => {
+      const dark = !isLight();
+      btn.innerHTML = dark ? SUN : MOON;
+      btn.setAttribute("aria-label", dark ? "Switch to warm light mode" : "Switch to dark mode");
+      btn.setAttribute("title", dark ? "Warm light mode" : "Dark mode");
+      const m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute("content", dark ? "#04050d" : "#F6F0E6");
+      if (window.neuralBG && window.neuralBG.setTheme) window.neuralBG.setTheme(dark ? "dark" : "light");
+    };
+    btn.addEventListener("click", () => {
+      const next = isLight() ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("portfolio:theme", next); } catch (e) {}
+      sync();
+    });
+    sync();
+  }
+
+  /* ================================================================
      Boot
      ================================================================ */
   $("#year").textContent = new Date().getFullYear();
+  themeToggle();
   nav();
   initSitesPreview();
   pauseOffscreen();

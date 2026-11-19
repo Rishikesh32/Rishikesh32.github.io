@@ -14,6 +14,16 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>
+    /* Warm theme by default; dark mode is opt-in and remembered. Runs before paint to avoid a flash. */
+    (function () {
+      var t = "light";
+      try { if (localStorage.getItem("portfolio:theme") === "dark") t = "dark"; } catch (e) {}
+      document.documentElement.setAttribute("data-theme", t);
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute("content", t === "dark" ? "#04050d" : "#F6F0E6");
+    })();
+  </script>
+  <script>
     // Hide hero intro items until the intro animation runs; reveal anyway after 2.5s as a safety net.
     document.documentElement.classList.add("intro-pending");
     setTimeout(function () { document.documentElement.classList.remove("intro-pending"); }, 2500);
@@ -47,6 +57,9 @@
         <a href="resume.pdf" target="_blank" rel="noopener">Résumé</a>
         <a href="#contact" class="nav-cta">Let's talk</a>
       </nav>
+      <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch to dark mode" title="Dark mode">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 12.3A6.8 6.8 0 0 1 7.7 3.5a6.8 6.8 0 1 0 8.8 8.8z"/></svg>
+      </button>
       <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
         <span></span><span></span>
       </button>
