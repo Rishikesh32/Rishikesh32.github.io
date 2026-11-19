@@ -1,0 +1,1984 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Foundations · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="foundations">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Foundations</h1>
+    <p class="lede">The math that explains why models learn, and the engineering that lets you build, test and ship them. You do not need a math degree, but you do need to read a shape error, a loss curve and a stack trace without flinching. Everything later in the atlas stands on this page.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Foundations has two tracks that meet at the end. The math track (linear algebra, calculus, probability) explains what a model computes and how optimization nudges its weights toward lower loss. The code track (Python, data structures, software engineering, Linux and containers) is how you turn that model into something other people can run. Study them in parallel: an hour of math, an hour of code. Each track makes the other less abstract.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 320" role="img" aria-label="Linear algebra, calculus and probability feed optimization, which trains models; Python and data structures feed software engineering and Linux, Docker and cloud, which deploy them; both tracks meet in shipped AI systems.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="18">MATH TRACK</text>
+              <rect class="d-box" x="20" y="28" width="140" height="40" rx="8"/>
+              <text class="d-text" x="90" y="53" text-anchor="middle">Linear algebra</text>
+              <rect class="d-box" x="20" y="84" width="140" height="40" rx="8"/>
+              <text class="d-text" x="90" y="109" text-anchor="middle">Calculus</text>
+              <rect class="d-box" x="20" y="140" width="140" height="40" rx="8"/>
+              <text class="d-text" x="90" y="165" text-anchor="middle">Probability</text>
+              <line class="d-line" x1="160" y1="48" x2="218" y2="96" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="160" y1="104" x2="218" y2="104" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="160" y1="160" x2="218" y2="112" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="220" y="84" width="140" height="40" rx="8"/>
+              <text class="d-title" x="290" y="109" text-anchor="middle">Optimization</text>
+              <line class="d-line-accent" x1="360" y1="104" x2="418" y2="104" marker-end="url(#ov-arrow-acc)"/>
+              <text class="d-label" x="389" y="96" text-anchor="middle">steps</text>
+              <rect class="d-box" x="420" y="84" width="140" height="40" rx="8"/>
+              <text class="d-text" x="490" y="109" text-anchor="middle">Trained model</text>
+
+              <text class="d-label" x="20" y="208">CODE TRACK</text>
+              <rect class="d-box" x="20" y="218" width="140" height="40" rx="8"/>
+              <text class="d-text" x="90" y="243" text-anchor="middle">Python</text>
+              <rect class="d-box" x="20" y="272" width="140" height="40" rx="8"/>
+              <text class="d-text" x="90" y="297" text-anchor="middle">Data structures</text>
+              <line class="d-line" x1="160" y1="238" x2="218" y2="258" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="160" y1="292" x2="218" y2="272" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="220" y="245" width="140" height="40" rx="8"/>
+              <text class="d-title" x="290" y="270" text-anchor="middle">Software eng.</text>
+              <line class="d-line-accent" x1="360" y1="265" x2="418" y2="265" marker-end="url(#ov-arrow-acc)"/>
+              <text class="d-label" x="389" y="257" text-anchor="middle">package</text>
+              <rect class="d-box" x="420" y="245" width="140" height="40" rx="8"/>
+              <text class="d-text" x="490" y="270" text-anchor="middle">Linux · Docker · cloud</text>
+
+              <line class="d-line" x1="560" y1="104" x2="618" y2="170" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="604" y="128" text-anchor="middle">weights</text>
+              <line class="d-line" x1="560" y1="265" x2="618" y2="200" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="606" y="246" text-anchor="middle">deploy</text>
+              <rect class="d-good" x="620" y="160" width="140" height="50" rx="8"/>
+              <text class="d-title" x="690" y="183" text-anchor="middle">Shipped AI</text>
+              <text class="d-label" x="690" y="200" text-anchor="middle">system</text>
+            </svg>
+          </div>
+          <figcaption>The math track explains how a model learns; the code track gets it running for real users. They meet in a shipped system.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="linear-algebra">
+        <header class="topic-head">
+          <p class="eyebrow">01.1 · The language of models</p>
+          <h2>Linear algebra</h2>
+        </header>
+
+        <p class="lead">A neural network is mostly a long chain of matrix multiplications with simple nonlinear functions in between. A vector is a list of numbers you can picture as an arrow. A matrix is a machine that takes a vector in and gives a vector out, by stretching, rotating or squashing space. See matrices as transformations and shapes, embeddings and LoRA stop being magic.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Embeddings are vectors and semantic search is a dot product. Every layer and attention head is a matrix multiply. Most PyTorch errors are shape mismatches, and most memory math is counting matrix entries.</p>
+        </div>
+
+        <h3>Vectors and similarity</h3>
+        <p>An embedding model turns a sentence into a <strong>vector</strong> of, say, 768 numbers. The <strong>dot product</strong> multiplies matching entries and sums them. Divided by both lengths it becomes <strong>cosine similarity</strong>: the cosine of the angle between the arrows.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 190" role="img" aria-label="Three pairs of vectors: a small angle gives cosine 0.91, a right angle gives cosine 0, opposite directions give cosine minus 1.">
+              <defs>
+                <marker id="linear-algebra-cos-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+                <marker id="linear-algebra-cos-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/></marker>
+              </defs>
+              <line class="d-line-accent" x1="80" y1="120" x2="174" y2="86" marker-end="url(#linear-algebra-cos-a)"/>
+              <line class="d-line-signal" x1="80" y1="120" x2="150" y2="50" marker-end="url(#linear-algebra-cos-s)"/>
+              <path class="d-line" d="M120 106 A42 42 0 0 0 110 90"/>
+              <text class="d-mono" x="110" y="160" text-anchor="middle">cos = 0.91</text>
+              <text class="d-label" x="110" y="178" text-anchor="middle">similar meaning</text>
+
+              <line class="d-line-accent" x1="290" y1="120" x2="388" y2="120" marker-end="url(#linear-algebra-cos-a)"/>
+              <line class="d-line-signal" x1="290" y1="120" x2="290" y2="32" marker-end="url(#linear-algebra-cos-s)"/>
+              <path class="d-line" d="M290 106 H304 V120"/>
+              <text class="d-mono" x="330" y="160" text-anchor="middle">cos = 0</text>
+              <text class="d-label" x="330" y="178" text-anchor="middle">unrelated</text>
+
+              <line class="d-line-accent" x1="540" y1="100" x2="618" y2="100" marker-end="url(#linear-algebra-cos-a)"/>
+              <line class="d-line-signal" x1="540" y1="100" x2="462" y2="100" marker-end="url(#linear-algebra-cos-s)"/>
+              <circle class="d-dot-muted" cx="540" cy="100" r="3"/>
+              <text class="d-mono" x="540" y="160" text-anchor="middle">cos = −1</text>
+              <text class="d-label" x="540" y="178" text-anchor="middle">opposite</text>
+            </svg>
+          </div>
+          <figcaption>Cosine similarity depends only on direction. Vector search ranks documents by how closely their arrow points along the query's.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ a \cdot b = \sum_i a_i b_i = \lVert a \rVert \lVert b \rVert \cos\theta \]
+          <span class="formula-note">Example: \(a=(1,2)\), \(b=(3,1)\). Dot product \(=5\), lengths \(\sqrt5\) and \(\sqrt{10}\), so \(\cos\theta = 5/\sqrt{50} \approx 0.71\) (about 45°). For unit-length embeddings, dot product and cosine give the same ranking.</span>
+        </div>
+
+        <h3>A matrix is a transformation</h3>
+        <p>Read a matrix column by column. Column 1 is where the unit vector \(e_1=(1,0)\) lands, column 2 is where \(e_2=(0,1)\) lands, and every other point follows because the map is linear.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="The unit square with basis vectors e1 and e2 is mapped by the matrix A with columns (2,0) and (1,1) to a parallelogram of area 2.">
+              <defs>
+                <marker id="linear-algebra-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+                <marker id="linear-algebra-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/></marker>
+                <marker id="linear-algebra-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <path class="d-grid" d="M40 50 V200 M90 50 V200 M140 50 V200 M190 50 V200 M240 50 V200 M40 50 H240 M40 100 H240 M40 150 H240 M40 200 H240"/>
+              <rect class="d-accent" x="90" y="100" width="50" height="50" fill-opacity="0.6"/>
+              <line class="d-line-accent" x1="90" y1="150" x2="138" y2="150" marker-end="url(#linear-algebra-arrow)"/>
+              <line class="d-line-signal" x1="90" y1="150" x2="90" y2="102" marker-end="url(#linear-algebra-arrow-s)"/>
+              <text class="d-text d-text-accent" x="146" y="166">e₁ = (1, 0)</text>
+              <text class="d-text d-text-signal" x="48" y="94">e₂ = (0, 1)</text>
+              <text class="d-label" x="140" y="222" text-anchor="middle">before: unit square, area 1</text>
+              <line class="d-line" x1="262" y1="125" x2="352" y2="125" marker-end="url(#linear-algebra-arrow-g)"/>
+              <text class="d-mono" x="307" y="98" text-anchor="middle">A = [2 1]</text>
+              <text class="d-mono" x="307" y="114" text-anchor="middle">    [0 1]</text>
+              <path class="d-grid" d="M370 50 V200 M420 50 V200 M470 50 V200 M520 50 V200 M570 50 V200 M620 50 V200 M370 50 H620 M370 100 H620 M370 150 H620 M370 200 H620"/>
+              <path class="d-accent" d="M420 150 L520 150 L570 100 L470 100 Z" fill-opacity="0.6"/>
+              <line class="d-line-accent" x1="420" y1="150" x2="518" y2="150" marker-end="url(#linear-algebra-arrow)"/>
+              <line class="d-line-signal" x1="420" y1="150" x2="469" y2="101" marker-end="url(#linear-algebra-arrow-s)"/>
+              <text class="d-text d-text-accent" x="500" y="168">Ae₁ = (2, 0)</text>
+              <text class="d-text d-text-signal" x="420" y="92">Ae₂ = (1, 1)</text>
+              <text class="d-label" x="495" y="222" text-anchor="middle">after: parallelogram, area = det A = 2</text>
+            </svg>
+          </div>
+          <figcaption>The columns of A are the images of the basis vectors. Grid lines stay straight and evenly spaced; the area scales by the determinant.</figcaption>
+        </figure>
+
+        <div class="widget" id="la-demo">
+          <div class="widget-head">
+            <span class="widget-title">A 2×2 matrix bends the grid</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="la-a">a <input type="range" id="la-a" min="-2" max="2" step="0.1" value="1"><output id="la-a-out">1.0</output></label>
+            <label for="la-b">b <input type="range" id="la-b" min="-2" max="2" step="0.1" value="0.5"><output id="la-b-out">0.5</output></label>
+            <label for="la-c">c <input type="range" id="la-c" min="-2" max="2" step="0.1" value="0"><output id="la-c-out">0.0</output></label>
+            <label for="la-d">d <input type="range" id="la-d" min="-2" max="2" step="0.1" value="1"><output id="la-d-out">1.0</output></label>
+          </div>
+          <div class="widget-controls">
+            <button class="btn" type="button" data-la-preset="1,0,0,1">Identity</button>
+            <button class="btn" type="button" data-la-preset="0.7,-0.7,0.7,0.7">Rotate 45°</button>
+            <button class="btn" type="button" data-la-preset="1.5,0,0,0.5">Scale</button>
+            <button class="btn" type="button" data-la-preset="-1,0,0,1">Reflect</button>
+            <button class="btn" type="button" data-la-preset="1,2,0.5,1">Singular</button>
+          </div>
+          <svg id="la-plot" viewBox="0 0 600 300" role="img" aria-label="A grid transformed by the matrix with entries a, b, c, d; the blue arrow is the first column and the orange arrow is the second column."></svg>
+          <p class="readout" id="la-readout"></p>
+        </div>
+        <p>The matrix is \(\begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix}\); its <strong>determinant</strong> \(ad-bc\) is the area scale. Negative means a mirror flip. Try Singular: the columns line up, the plane collapses onto a line, the determinant is 0 and the map has no inverse.</p>
+
+        <h3>Shapes, rank and LoRA</h3>
+        <p>An \((m\times n)\) matrix times an \((n\times p)\) matrix gives \((m\times p)\): inner sizes must match and disappear. A linear layer computes \(Y = XW + b\) on a whole batch at once.</p>
+        <p>The <strong>rank</strong> is how many independent directions survive. LoRA learns a weight update as the product of two thin matrices, so the update has rank at most \(r\) and needs a tiny fraction of the parameters.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Left: a batch X of shape B by d_in times weights W of shape d_in by d_out gives Y of shape B by d_out. Right: a full 4096 by 4096 update with 16.8 million parameters versus LoRA's B times A with 65 thousand parameters.">
+              <rect class="d-box" x="20" y="50" width="96" height="64"/>
+              <path class="d-grid" d="M20 66 H116 M20 82 H116 M20 98 H116"/>
+              <text class="d-mono" x="68" y="138" text-anchor="middle">X</text>
+              <text class="d-label" x="68" y="154" text-anchor="middle">B × d_in</text>
+              <text class="d-title" x="132" y="86" text-anchor="middle">@</text>
+              <rect class="d-accent" x="148" y="34" width="48" height="96"/>
+              <text class="d-mono" x="172" y="152" text-anchor="middle">W</text>
+              <text class="d-label" x="172" y="168" text-anchor="middle">d_in × d_out</text>
+              <text class="d-title" x="214" y="86" text-anchor="middle">=</text>
+              <rect class="d-good" x="232" y="50" width="48" height="64"/>
+              <path class="d-grid" d="M232 66 H280 M232 82 H280 M232 98 H280"/>
+              <text class="d-mono" x="256" y="138" text-anchor="middle">Y</text>
+              <text class="d-label" x="256" y="154" text-anchor="middle">B × d_out</text>
+              <text class="d-label" x="150" y="200" text-anchor="middle">d_in must match, then it disappears</text>
+
+              <line class="d-grid" x1="320" y1="10" x2="320" y2="210"/>
+              <rect class="d-signal" x="340" y="34" width="110" height="110"/>
+              <text class="d-mono" x="395" y="94" text-anchor="middle">ΔW</text>
+              <text class="d-label" x="395" y="164" text-anchor="middle">full: 4096 × 4096</text>
+              <text class="d-mono d-text-signal" x="395" y="182" text-anchor="middle">16.8M params</text>
+              <text class="d-title" x="470" y="94" text-anchor="middle">≈</text>
+              <rect class="d-accent" x="490" y="34" width="12" height="110"/>
+              <text class="d-mono" x="496" y="160" text-anchor="middle">B</text>
+              <text class="d-title" x="514" y="94" text-anchor="middle">·</text>
+              <rect class="d-accent" x="526" y="83" width="110" height="12"/>
+              <text class="d-mono" x="581" y="114" text-anchor="middle">A</text>
+              <text class="d-label" x="563" y="164" text-anchor="middle">LoRA, rank r = 8</text>
+              <text class="d-mono d-text-good" x="563" y="182" text-anchor="middle">65K params (0.4%)</text>
+            </svg>
+          </div>
+          <figcaption>Left: matrix shapes compose like dominoes. Right: a rank-8 LoRA update replaces a 16.8M-entry matrix with two strips totalling \(2 \times 4096 \times 8 = 65{,}536\) entries.</figcaption>
+        </figure>
+
+        <p>The <strong>SVD</strong> \(A = U\Sigma V^\top\) writes any matrix as rotate, scale, rotate. Keeping the largest singular values gives the best low-rank approximation, which is what PCA and compression use.</p>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+docs = np.random.randn(1000, 384)                    <span class="c"># (n_docs, dim)</span>
+query = np.random.randn(384)                         <span class="c"># (dim,)</span>
+docs_n = docs / np.linalg.norm(docs, axis=1, keepdims=True)
+scores = docs_n @ (query / np.linalg.norm(query))    <span class="c"># (n_docs,) cosine scores</span>
+top5 = np.argsort(-scores)[:5]
+
+X, W, b = np.random.randn(32, 128), np.random.randn(128, 64), np.zeros(64)
+Y = X @ W + b                                        <span class="c"># (32, 64); b is broadcast</span>
+
+U, S, Vt = np.linalg.svd(np.random.randn(256, 256))
+r = 16
+M_r = (U[:, :r] * S[:r]) @ Vt[:r, :]                  <span class="c"># best rank-16 approximation</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A matrix's columns are where the basis vectors land; \(Ax\) is a weighted sum of columns.</li>
+            <li>Cosine similarity is the dot product of unit vectors and drives semantic search.</li>
+            <li>\((m \times n)(n \times p) = (m \times p)\): write the expected shape next to every operation.</li>
+            <li>Determinant = area scale; zero means information is lost and there is no inverse.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Using element-wise <code>*</code> when you meant matrix multiply <code>@</code>; both run if shapes broadcast.</li>
+            <li>Silent broadcasting: <code>(32,)</code> plus <code>(32, 1)</code> gives a <code>(32, 32)</code> matrix, not an error.</li>
+            <li>Ranking by raw dot product on embeddings that are not normalized when you meant cosine similarity.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="linear-algebra-1"><span>Compute the cosine similarity of two 3-dimensional vectors by hand and interpret it.</span></label></li>
+          <li><label><input type="checkbox" data-key="linear-algebra-2"><span>Sketch what a given 2×2 matrix does to the unit square and state its determinant.</span></label></li>
+          <li><label><input type="checkbox" data-key="linear-algebra-3"><span>Predict the output shape of a chain of three matrix multiplies and spot the one that fails.</span></label></li>
+          <li><label><input type="checkbox" data-key="linear-algebra-4"><span>Explain why a rank-8 update to a 4096×4096 matrix needs about 65K parameters.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Video</span><a href="https://www.3blue1brown.com/topics/linear-algebra">3Blue1Brown: Essence of linear algebra</a></li>
+          <li><span class="kind">Book</span><a href="https://mml-book.github.io/">Mathematics for Machine Learning (Deisenroth, Faisal, Ong)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2106.09685">LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="calculus">
+        <header class="topic-head">
+          <p class="eyebrow">01.2 · How models know which way to move</p>
+          <h2>Calculus &amp; gradients</h2>
+        </header>
+
+        <p class="lead">Training asks one question millions of times: if I nudge this weight, does the loss go up or down, and by how much? A derivative answers that for one number. A gradient answers it for every weight at once, as a vector pointing uphill. Backpropagation is the chain rule, applied so one backward pass yields every answer.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Autograd does the arithmetic, but you debug it: a loss that turns into NaN, vanishing gradients in a deep stack, a custom loss that does not learn, or why training needs far more memory than inference.</p>
+        </div>
+
+        <h3>Derivatives as sensitivity</h3>
+        <p>The <strong>derivative</strong> \(f'(x)\) is the slope at \(x\): output change per unit of input change. If \(f'(x)=3\), moving \(x\) by 0.01 raises \(f\) by about 0.03.</p>
+        <div class="formula">
+          \[ f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} \qquad \frac{d}{dx}x^n = n x^{n-1}, \quad \frac{d}{dx}e^x = e^x, \quad \frac{d}{dx}\ln x = \frac{1}{x} \]
+          <span class="formula-note">Gradient checks use the centered estimate \(\frac{f(x+h)-f(x-h)}{2h}\).</span>
+        </div>
+        <p>Five rules cover nearly all of deep learning: power, exp, log, sum and the chain rule. The sigmoid's derivative \(\sigma(1-\sigma)\) never exceeds 0.25, one reason deep sigmoid stacks trained poorly.</p>
+
+        <div class="widget" id="calc-demo">
+          <div class="widget-head">
+            <span class="widget-title">Secant slope converges to the derivative</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="calc-x">Point x <input type="range" id="calc-x" min="-2.5" max="2.5" step="0.05" value="1"><output id="calc-x-out">1.00</output></label>
+            <label for="calc-h">Step h <input type="range" id="calc-h" min="0.01" max="2" step="0.01" value="1"><output id="calc-h-out">1.00</output></label>
+          </div>
+          <svg id="calc-plot" viewBox="0 0 600 260" role="img" aria-label="The curve f(x) = x cubed over 3 minus x, with the tangent line at x and a secant line through x and x plus h."></svg>
+          <p class="readout" id="calc-readout"></p>
+        </div>
+        <p>The curve is \(f(x)=x^3/3-x\) with exact slope \(x^2-1\). Shrink \(h\) and the orange secant rotates onto the blue tangent. At \(x=\pm1\) the slope is zero: the flat spots optimizers look for.</p>
+
+        <h3>Partial derivatives and the gradient</h3>
+        <p>A <strong>partial derivative</strong> \(\partial L/\partial w_i\) moves one weight and holds the rest fixed. Stack them all and you get the <strong>gradient</strong> \(\nabla L\), the same shape as the parameters: a 7B model has a 7-billion-entry gradient.</p>
+        <p>The slope in a unit direction \(u\) is \(\nabla f \cdot u = \lVert\nabla f\rVert\cos\theta\), largest when \(u\) points along \(\nabla f\). So the gradient is the direction of <strong>steepest ascent</strong>, perpendicular to the contour lines, and \(-\nabla f\) is the fastest way down.</p>
+        <div class="formula">
+          \[ \nabla f(x, y) = \begin{bmatrix} \partial f / \partial x \\ \partial f / \partial y \end{bmatrix}, \qquad f(x,y) = x^2 + 3y^2 \;\Rightarrow\; \nabla f(1, 1) = \begin{bmatrix} 2 \\ 6 \end{bmatrix} \]
+          <span class="formula-note">At \((1,1)\) the bowl is three times steeper in \(y\), so descent steps mostly along \(-y\).</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="Contour lines of an elongated bowl, with the gradient at a point drawn perpendicular to the contour and pointing outward, and the negative gradient pointing inward.">
+              <defs>
+                <marker id="calculus-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="calculus-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <ellipse class="d-line" cx="200" cy="120" rx="40" ry="23"/>
+              <ellipse class="d-line" cx="200" cy="120" rx="85" ry="49"/>
+              <ellipse class="d-line" cx="200" cy="120" rx="130" ry="75"/>
+              <ellipse class="d-line" cx="200" cy="120" rx="175" ry="101"/>
+              <circle class="d-dot-good" cx="200" cy="120" r="5"/>
+              <text class="d-label" x="200" y="140" text-anchor="middle">minimum</text>
+              <circle class="d-dot" cx="284" cy="63" r="5"/>
+              <line class="d-line-accent" x1="284" y1="63" x2="303" y2="23" marker-end="url(#calculus-arrow)"/>
+              <text class="d-text d-text-accent" x="312" y="26">∇f (uphill)</text>
+              <line class="d-line-signal" x1="284" y1="63" x2="265" y2="103" marker-end="url(#calculus-arrow-s)"/>
+              <text class="d-text d-text-signal" x="258" y="116" text-anchor="end">−∇f</text>
+              <text class="d-label" x="296" y="70">perpendicular to</text>
+              <text class="d-label" x="296" y="83">the contour</text>
+              <text class="d-label" x="200" y="236" text-anchor="middle">contours of f(x, y): each ring is one loss value</text>
+              <rect class="d-box" x="440" y="40" width="180" height="150" rx="8"/>
+              <text class="d-title" x="530" y="64" text-anchor="middle">Reading a contour map</text>
+              <text class="d-label" x="456" y="90">rings close together</text>
+              <text class="d-label" x="456" y="104">= steep, big gradient</text>
+              <text class="d-label" x="456" y="128">rings far apart</text>
+              <text class="d-label" x="456" y="142">= flat, small gradient</text>
+              <text class="d-label" x="456" y="166">elongated rings = ill-</text>
+              <text class="d-label" x="456" y="180">conditioned, zig-zag risk</text>
+            </svg>
+          </div>
+          <figcaption>The gradient is perpendicular to the contour and points uphill. On an elongated bowl, the downhill arrow misses the minimum.</figcaption>
+        </figure>
+
+        <h3>The chain rule and backpropagation</h3>
+        <p>A network is a composition of functions. The <strong>chain rule</strong> multiplies local derivatives along each path and adds the contributions of different paths.</p>
+        <div class="formula">
+          \[ \frac{\partial L}{\partial w} = \frac{\partial L}{\partial z}\,\frac{\partial z}{\partial w} \qquad\text{e.g. } z = wx + b,\; L = z^2 \;\Rightarrow\; \frac{\partial L}{\partial w} = 2z \cdot x \]
+          <span class="formula-note">With \(x=2, w=3, b=1\): \(z = 7\), \(L = 49\), \(\partial L/\partial z = 14\), so \(\partial L/\partial w = 28\), \(\partial L/\partial b = 14\) and \(\partial L/\partial x = 42\).</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Computational graph: x and w multiply, add b to give z equal 7, square to give L equal 49. The forward pass flows left to right with values; the backward pass flows right to left carrying gradients 14, 28, 42 and 14.">
+              <defs>
+                <marker id="calculus-arrow-f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="calculus-arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="80" height="36" rx="8"/><text class="d-mono" x="60" y="53" text-anchor="middle">x = 2</text>
+              <rect class="d-box" x="20" y="96" width="80" height="36" rx="8"/><text class="d-mono" x="60" y="119" text-anchor="middle">w = 3</text>
+              <rect class="d-box" x="190" y="150" width="80" height="36" rx="8"/><text class="d-mono" x="230" y="173" text-anchor="middle">b = 1</text>
+              <circle class="d-accent" cx="190" cy="81" r="24"/><text class="d-title" x="190" y="86" text-anchor="middle">×</text>
+              <circle class="d-accent" cx="330" cy="81" r="24"/><text class="d-title" x="330" y="86" text-anchor="middle">+</text>
+              <circle class="d-accent" cx="480" cy="81" r="24"/><text class="d-title" x="480" y="86" text-anchor="middle">( )²</text>
+              <line class="d-line" x1="100" y1="48" x2="166" y2="74" marker-end="url(#calculus-arrow-f)"/>
+              <line class="d-line" x1="100" y1="114" x2="166" y2="88" marker-end="url(#calculus-arrow-f)"/>
+              <line class="d-line" x1="214" y1="81" x2="304" y2="81" marker-end="url(#calculus-arrow-f)"/>
+              <text class="d-mono" x="259" y="73" text-anchor="middle">6</text>
+              <line class="d-line" x1="250" y1="150" x2="312" y2="100" marker-end="url(#calculus-arrow-f)"/>
+              <line class="d-line" x1="354" y1="81" x2="454" y2="81" marker-end="url(#calculus-arrow-f)"/>
+              <text class="d-mono" x="404" y="73" text-anchor="middle">z = 7</text>
+              <line class="d-line" x1="504" y1="81" x2="570" y2="81" marker-end="url(#calculus-arrow-f)"/>
+              <text class="d-mono" x="600" y="86" text-anchor="middle">L=49</text>
+              <text class="d-label" x="400" y="20" text-anchor="middle">forward: values flow left to right</text>
+              <path class="d-line-signal d-dash" d="M454 104 Q404 128 354 104" marker-end="url(#calculus-arrow-b)"/>
+              <text class="d-mono d-text-signal" x="404" y="140" text-anchor="middle">∂L/∂z = 2z = 14</text>
+              <text class="d-mono d-text-signal" x="12" y="20">∂L/∂x = 14·w = 42</text>
+              <text class="d-mono d-text-signal" x="12" y="152">∂L/∂w = 14·x = 28</text>
+              <text class="d-mono d-text-signal" x="230" y="204" text-anchor="middle">∂L/∂b = 14</text>
+              <text class="d-label" x="520" y="140">backward: gradients</text>
+              <text class="d-label" x="520" y="154">flow right to left</text>
+            </svg>
+          </div>
+          <figcaption>Forward values flow right; gradients flow back, each multiplied by a local derivative.</figcaption>
+        </figure>
+
+        <p><strong>Backpropagation</strong> stores the forward values (activations), then walks the graph in reverse. It costs about two to three forward passes regardless of parameter count, and the stored activations are why training memory grows with batch size and sequence length.</p>
+        <p>Long products of local derivatives shrink toward zero (<strong>vanishing gradients</strong>) or blow up (<strong>exploding</strong>). Residual connections, normalization, careful initialization and gradient clipping keep them healthy.</p>
+
+        <pre class="code" data-lang="python"><code>import torch
+
+<span class="c"># autograd reproduces the hand-computed graph above</span>
+x = torch.tensor(2.0, requires_grad=True)
+w = torch.tensor(3.0, requires_grad=True)
+b = torch.tensor(1.0, requires_grad=True)
+L = (w * x + b) ** 2
+L.backward()
+print(w.grad, x.grad, b.grad)    <span class="c"># tensor(28.) tensor(42.) tensor(14.)</span>
+
+<span class="c"># a gradient check: compare autograd with a centered finite difference</span>
+def f(t):
+    return (t ** 3 / 3 - t).sum()
+
+t = torch.tensor([1.5], dtype=torch.float64, requires_grad=True)
+f(t).backward()
+h = 1e-5
+numeric = (f(t.detach() + h) - f(t.detach() - h)) / (2 * h)
+print(t.grad.item(), numeric.item())   <span class="c"># both about 1.25 = 1.5**2 - 1</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A derivative is local sensitivity: change in output per unit change in input.</li>
+            <li>The gradient stacks all partial derivatives, has the same shape as the parameters and points in the direction of steepest ascent.</li>
+            <li>The chain rule multiplies local derivatives along a path and sums over paths.</li>
+            <li>Backprop computes every gradient in one reverse pass, at the cost of storing activations.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Forgetting <code>optimizer.zero_grad()</code>: PyTorch accumulates gradients across <code>backward()</code> calls by design.</li>
+            <li>Breaking the graph with <code>.item()</code>, <code>.numpy()</code> or <code>.detach()</code> in the middle of a loss and then wondering why weights do not change.</li>
+            <li>Running gradient checks in float32 with a tiny \(h\); rounding error swamps the result. Use float64 and \(h \approx 10^{-5}\).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="calculus-1"><span>Differentiate \(\sigma(x)\), \(\ln x\) and \(x^3\) and evaluate each at a point.</span></label></li>
+          <li><label><input type="checkbox" data-key="calculus-2"><span>Compute the gradient of \(x^2 + 3y^2\) at a point and draw it on a contour sketch.</span></label></li>
+          <li><label><input type="checkbox" data-key="calculus-3"><span>Backpropagate by hand through a 3-node computational graph and confirm it with PyTorch.</span></label></li>
+          <li><label><input type="checkbox" data-key="calculus-4"><span>Explain why the gradient is the direction of steepest ascent using the dot product.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Video</span><a href="https://www.3blue1brown.com/topics/calculus">3Blue1Brown: Essence of calculus</a></li>
+          <li><span class="kind">Video</span><a href="https://www.youtube.com/watch?v=VMj-3S1tku0">Andrej Karpathy: building micrograd (backprop from scratch)</a></li>
+          <li><span class="kind">Docs</span><a href="https://pytorch.org/docs/stable/index.html">PyTorch documentation (autograd)</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="probability-statistics">
+        <header class="topic-head">
+          <p class="eyebrow">01.3 · Reasoning under uncertainty</p>
+          <h2>Probability &amp; statistics</h2>
+        </header>
+
+        <p class="lead">A language model outputs a probability for every possible next token, and a sampler picks one. Probability is the language of that uncertainty. Statistics runs the other way: from a limited sample of data or eval results, how sure can you be about the real world?</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Softmax, temperature, cross-entropy and perplexity are probability. Eval confidence intervals, A/B tests and base-rate reasoning about classifiers are statistics. You will use both weekly.</p>
+        </div>
+
+        <h3>Random variables and distributions</h3>
+        <p>A <strong>random variable</strong> takes values from a random process (a coin flip, the next token). Its <strong>distribution</strong> says how likely each value is. These five cover most AI work:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Distribution</th><th>Describes</th><th>Where you meet it</th></tr></thead>
+            <tbody>
+              <tr><td>Bernoulli(\(p\))</td><td>One yes/no outcome</td><td>Click or no click; a single eval item passed</td></tr>
+              <tr><td>Binomial(\(n, p\))</td><td>Number of successes in \(n\) trials</td><td>Correct answers out of 500 eval items</td></tr>
+              <tr><td>Categorical</td><td>One of \(K\) classes</td><td>Softmax over a vocabulary of ~100K tokens</td></tr>
+              <tr><td>Gaussian \(\mathcal{N}(\mu, \sigma^2)\)</td><td>Sums of many small effects</td><td>Weight initialization, measurement noise, the CLT</td></tr>
+              <tr><td>Uniform</td><td>All values equally likely</td><td>Random seeds, dropout masks, sampling thresholds</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The <strong>expectation</strong> \(\mathbb{E}[X]\) is the probability-weighted average; the <strong>variance</strong> \(\mathbb{E}[(X-\mu)^2]\) measures spread. A Bernoulli with success rate \(p\) has mean \(p\) and variance \(p(1-p)\).</p>
+
+        <h3>Conditional probability and Bayes' rule</h3>
+        <p>\(P(A \mid B)\) is the probability of \(A\) once you know \(B\). The two directions differ: \(P(+\mid\text{sick})\) is not \(P(\text{sick}\mid +)\). <strong>Bayes' rule</strong> converts one into the other using the <strong>prior</strong>, the base rate.</p>
+        <div class="formula">
+          \[ P(\text{sick} \mid +) = \frac{P(+ \mid \text{sick})\,P(\text{sick})}{P(+ \mid \text{sick})\,P(\text{sick}) + P(+ \mid \text{healthy})\,P(\text{healthy})} = \frac{0.99 \times 0.01}{0.99 \times 0.01 + 0.05 \times 0.99} \approx 0.167 \]
+          <span class="formula-note">Prevalence 1%, sensitivity 99%, specificity 95%: a positive test means only about a 17% chance of being sick.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="Of 10,000 people, 100 are sick and 9,900 healthy. 99 of the sick test positive; 495 of the healthy test positive. Of 594 positives, only 99, about 17 percent, are sick.">
+              <defs>
+                <marker id="probability-statistics-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="100" width="120" height="48" rx="8"/>
+              <text class="d-title" x="80" y="121" text-anchor="middle">10,000</text>
+              <text class="d-label" x="80" y="138" text-anchor="middle">people</text>
+              <line class="d-line" x1="140" y1="114" x2="208" y2="60" marker-end="url(#probability-statistics-arrow)"/>
+              <line class="d-line" x1="140" y1="134" x2="208" y2="188" marker-end="url(#probability-statistics-arrow)"/>
+              <text class="d-label" x="160" y="72">1% sick</text>
+              <text class="d-label" x="150" y="206" text-anchor="middle">99% healthy</text>
+              <rect class="d-signal" x="210" y="36" width="110" height="44" rx="8"/>
+              <text class="d-text" x="265" y="63" text-anchor="middle">100 sick</text>
+              <rect class="d-box" x="210" y="168" width="110" height="44" rx="8"/>
+              <text class="d-text" x="265" y="195" text-anchor="middle">9,900 healthy</text>
+              <line class="d-line" x1="320" y1="50" x2="388" y2="30" marker-end="url(#probability-statistics-arrow)"/>
+              <line class="d-line" x1="320" y1="66" x2="388" y2="86" marker-end="url(#probability-statistics-arrow)"/>
+              <line class="d-line" x1="320" y1="182" x2="388" y2="160" marker-end="url(#probability-statistics-arrow)"/>
+              <line class="d-line" x1="320" y1="198" x2="388" y2="220" marker-end="url(#probability-statistics-arrow)"/>
+              <rect class="d-accent" x="390" y="14" width="110" height="32" rx="6"/>
+              <text class="d-mono" x="445" y="35" text-anchor="middle">99 test +</text>
+              <rect class="d-box" x="390" y="72" width="110" height="32" rx="6"/>
+              <text class="d-mono" x="445" y="93" text-anchor="middle">1 test −</text>
+              <rect class="d-accent" x="390" y="144" width="110" height="32" rx="6"/>
+              <text class="d-mono" x="445" y="165" text-anchor="middle">495 test +</text>
+              <rect class="d-box" x="390" y="204" width="110" height="32" rx="6"/>
+              <text class="d-mono" x="445" y="225" text-anchor="middle">9,405 test −</text>
+              <text class="d-label" x="356" y="132" text-anchor="middle">5% false +</text>
+              <line class="d-line-accent d-dash" x1="500" y1="30" x2="548" y2="110"/>
+              <line class="d-line-accent d-dash" x1="500" y1="160" x2="548" y2="126"/>
+              <rect class="d-good" x="550" y="94" width="80" height="48" rx="8"/>
+              <text class="d-title" x="590" y="114" text-anchor="middle">99/594</text>
+              <text class="d-label" x="590" y="131" text-anchor="middle">≈ 17% sick</text>
+            </svg>
+          </div>
+          <figcaption>Natural frequencies make Bayes obvious: the 495 false positives from the huge healthy group outnumber the 99 true positives from the small sick group.</figcaption>
+        </figure>
+        <p>The same arithmetic hits every rare-event classifier. A filter with 99% recall and a 1% false-positive rate, on traffic where 0.1% is bad, raises about ten false alarms per real catch.</p>
+
+        <h3>Likelihood, cross-entropy and perplexity</h3>
+        <p>Training picks parameters that make the observed data likely (<strong>maximum likelihood</strong>). Minimizing the negative log-likelihood of the correct labels is exactly the <strong>cross-entropy</strong> loss.</p>
+        <div class="formula">
+          \[ \mathcal{L} = -\frac{1}{N}\sum_{i=1}^{N} \log p_\theta(y_i \mid x_i) \qquad \text{perplexity} = e^{\mathcal{L}} \]
+          <span class="formula-note">Probability 0.25 on each correct token gives loss \(\ln 4 \approx 1.39\) and perplexity 4, like a fair 4-way guess.</span>
+        </div>
+
+        <h3>Sampling, the central limit theorem and confidence</h3>
+        <p>You see a sample, never the population. The <strong>central limit theorem</strong> says the mean of \(n\) samples is roughly Gaussian whatever the source shape, with spread \(\sigma/\sqrt n\), the <strong>standard error</strong>.</p>
+
+        <div class="widget" id="clt-demo">
+          <div class="widget-head">
+            <span class="widget-title">Central limit theorem: means of samples</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="clt-dist">Source <select id="clt-dist">
+              <option value="uniform">Uniform (0 to 1)</option>
+              <option value="exp" selected>Exponential (skewed)</option>
+              <option value="bimodal">Bimodal</option>
+              <option value="coin">Coin flip (0 or 1)</option>
+            </select></label>
+            <label for="clt-n">Sample size n <input type="range" id="clt-n" min="1" max="50" step="1" value="5"><output id="clt-n-out">5</output></label>
+            <button class="btn primary" type="button" id="clt-resample">Resample</button>
+          </div>
+          <svg id="clt-plot" viewBox="0 0 600 260" role="img" aria-label="Left: histogram of the source distribution. Right: histogram of 2,000 sample means, which becomes bell-shaped and narrower as n grows."></svg>
+          <p class="readout" id="clt-readout"></p>
+        </div>
+        <p>With Exponential and n = 1 the means are just the skewed source. At n = 30 they form a narrow bell. Four times the data halves the width.</p>
+        <p>For an eval accuracy \(\hat p\) on \(n\) items the 95% interval is about \(\hat p \pm 1.96\sqrt{\hat p(1-\hat p)/n}\). At 82% on 500 items that is ±3.4 points, so a prompt scoring 84% is not clearly better.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="95 percent confidence intervals for system A at 82 percent and system B at 84 percent accuracy. At 100 items the intervals overlap almost completely; at 500 they still overlap heavily; at 5,000 they barely touch.">
+              <path class="d-grid" d="M165.6 30 V180 M293.4 30 V180 M421.2 30 V180 M549 30 V180"/>
+              <text class="d-label" x="20" y="58">n = 100</text>
+              <rect class="d-accent" x="152.8" y="48.0" width="383.3" height="4" rx="2"/><circle class="d-dot" cx="344.4" cy="50" r="4"/>
+              <rect class="d-signal" x="211.6" y="62.0" width="368.0" height="4" rx="2"/><circle class="d-dot-signal" cx="395.6" cy="64" r="4"/>
+              <text class="d-label" x="20" y="113">n = 500</text>
+              <rect class="d-accent" x="260.2" y="103.0" width="173.7" height="4" rx="2"/><circle class="d-dot" cx="344.4" cy="105" r="4"/>
+              <rect class="d-signal" x="313.8" y="117.0" width="163.6" height="4" rx="2"/><circle class="d-dot-signal" cx="395.6" cy="119" r="4"/>
+              <text class="d-label" x="20" y="168">n = 5,000</text>
+              <rect class="d-accent" x="317.7" y="158.0" width="53.4" height="4" rx="2"/><circle class="d-dot" cx="344.4" cy="160" r="4"/>
+              <rect class="d-signal" x="370.4" y="172.0" width="50.4" height="4" rx="2"/><circle class="d-dot-signal" cx="395.6" cy="174" r="4"/>
+              <line class="d-line" x1="140" y1="186" x2="610" y2="186"/>
+              <text class="d-label" x="165.6" y="204" text-anchor="middle">75%</text>
+              <text class="d-label" x="293.4" y="204" text-anchor="middle">80%</text>
+              <text class="d-label" x="421.2" y="204" text-anchor="middle">85%</text>
+              <text class="d-label" x="549" y="204" text-anchor="middle">90%</text>
+              <circle class="d-dot" cx="470" cy="20" r="4"/><text class="d-label" x="480" y="24">A: 82%</text>
+              <circle class="d-dot-signal" cx="550" cy="20" r="4"/><text class="d-label" x="560" y="24">B: 84%</text>
+            </svg>
+          </div>
+          <figcaption>A 2-point gap with 95% intervals at three eval sizes. The intervals only separate near 5,000 items.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+def bayes_posterior(prior, sensitivity, specificity):
+    tp = sensitivity * prior
+    fp = (1 - specificity) * (1 - prior)
+    return tp / (tp + fp)
+
+print(round(bayes_posterior(0.01, 0.99, 0.95), 3))   <span class="c"># 0.167</span>
+
+<span class="c"># bootstrap 95% CI for an eval accuracy (1 = correct, 0 = wrong)</span>
+rng = np.random.default_rng(0)
+results = rng.random(500) &lt; 0.82                     <span class="c"># stand-in for real per-item results</span>
+boot = [rng.choice(results, size=len(results), replace=True).mean()
+        for _ in range(5000)]
+lo, hi = np.percentile(boot, [2.5, 97.5])
+print(f"acc={results.mean():.3f}  95% CI=({lo:.3f}, {hi:.3f})")</code></pre>
+
+        <p>A <strong>p-value</strong> is the chance of a difference at least this large if there were no real effect. It is not the probability your change works, and twenty tests at 0.05 will produce about one false win.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Models output distributions; sampling, temperature and loss are all probability.</li>
+            <li>Bayes' rule: posterior is proportional to likelihood times prior. Base rates dominate rare events.</li>
+            <li>Cross-entropy loss is negative log-likelihood; perplexity is its exponential.</li>
+            <li>The CLT makes sample means Gaussian with standard error \(\sigma/\sqrt n\); quadruple the data to halve the error.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Confusing \(P(A \mid B)\) with \(P(B \mid A)\), especially when reading precision and recall.</li>
+            <li>Declaring a winner from a 1 to 2 point difference on a few hundred eval items without an interval.</li>
+            <li>Reading a p-value as "the probability the hypothesis is true", or testing many variants and reporting only the best.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="probability-statistics-1"><span>Redo the medical-test example with a 10% prevalence and explain why the answer changes so much.</span></label></li>
+          <li><label><input type="checkbox" data-key="probability-statistics-2"><span>Compute the cross-entropy and perplexity for a model that gives the right token probability 0.5.</span></label></li>
+          <li><label><input type="checkbox" data-key="probability-statistics-3"><span>Put a 95% confidence interval on an accuracy of 0.9 measured on 300 items.</span></label></li>
+          <li><label><input type="checkbox" data-key="probability-statistics-4"><span>Explain the central limit theorem and the \(1/\sqrt n\) rule to a colleague.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.probabilitycourse.com/">Introduction to Probability, Statistics and Random Processes (Pishro-Nik)</a></li>
+          <li><span class="kind">Course</span><a href="https://seeing-theory.brown.edu/">Seeing Theory: a visual introduction to probability and statistics</a></li>
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="optimization">
+        <header class="topic-head">
+          <p class="eyebrow">01.4 · How learning actually happens</p>
+          <h2>Optimization</h2>
+        </header>
+
+        <p class="lead">Picture a foggy hillside at night. You cannot see the valley, only feel the slope underfoot, so you step downhill, feel again and repeat. That is gradient descent. The step size, the learning rate, decides whether you crawl, arrive or fly off the mountain.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Fine-tuning knobs are optimizer settings: learning rate, warmup, schedule, batch size, weight decay, clipping. A loss curve that spikes, plateaus or hits NaN is an optimization story.</p>
+        </div>
+
+        <h3>Gradient descent and the learning rate</h3>
+        <p>The <strong>loss function</strong> \(L(\theta)\) measures how wrong the model is. <strong>Gradient descent</strong> moves the parameters a small step against the gradient, scaled by the <strong>learning rate</strong> \(\eta\).</p>
+        <div class="formula">
+          \[ \theta_{t+1} = \theta_t - \eta \, \nabla L(\theta_t) \]
+          <span class="formula-note">On \(L = x^2\): \(x_{t+1} = (1 - 2\eta)\,x_t\). Smooth for \(\eta \lt 0.5\), oscillating for \(0.5 \lt \eta \lt 1\), divergent for \(\eta \gt 1\).</span>
+        </div>
+        <p>In general the stable rate is capped by the sharpest curvature (about \(\eta \lt 2/\lambda_{\max}\)). A rate safe for the steep direction crawls along flat ones, causing zig-zags.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="Three parabolas: with a small learning rate the steps creep down slowly; with a good learning rate they reach the bottom in a few steps; with a large learning rate they bounce outward and diverge.">
+              <defs>
+                <marker id="optimization-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="optimization-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <path class="d-line" d="M30 30 Q110 230 190 30"/>
+              <circle class="d-dot" cx="45" cy="64" r="4"/><circle class="d-dot" cx="55" cy="83" r="4"/><circle class="d-dot" cx="64" cy="97" r="4"/><circle class="d-dot" cx="72" cy="107" r="4"/><circle class="d-dot" cx="79" cy="115" r="4"/>
+              <text class="d-title" x="110" y="160" text-anchor="middle">η too small</text>
+              <text class="d-label" x="110" y="178" text-anchor="middle">slow; many steps wasted</text>
+
+              <path class="d-line" d="M240 30 Q320 230 400 30"/>
+              <path class="d-line-accent" d="M255 64 L290 116 L312 128" marker-end="url(#optimization-arrow)"/>
+              <circle class="d-dot" cx="255" cy="64" r="4"/><circle class="d-dot" cx="290" cy="116" r="4"/><circle class="d-dot-good" cx="318" cy="130" r="5"/>
+              <text class="d-title" x="320" y="160" text-anchor="middle">η about right</text>
+              <text class="d-label" x="320" y="178" text-anchor="middle">reaches the bottom fast</text>
+
+              <path class="d-line" d="M450 30 Q530 230 610 30"/>
+              <path class="d-line-signal" d="M500 116 L568 107 L478 88 L594 64" marker-end="url(#optimization-arrow-s)"/>
+              <circle class="d-dot-signal" cx="500" cy="116" r="4"/><circle class="d-dot-signal" cx="568" cy="107" r="4"/><circle class="d-dot-signal" cx="478" cy="88" r="4"/>
+              <text class="d-title" x="530" y="160" text-anchor="middle">η too large</text>
+              <text class="d-label" x="530" y="178" text-anchor="middle">overshoots, loss grows</text>
+            </svg>
+          </div>
+          <figcaption>Same gradient, three step sizes. Too large shows up in a real run as a loss spike or NaN.</figcaption>
+        </figure>
+
+        <div class="widget" id="gd-demo">
+          <div class="widget-head">
+            <span class="widget-title">Gradient descent on a 1-D loss</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="gd-fn">Loss <select id="gd-fn">
+              <option value="bowl">Bowl: x²</option>
+              <option value="valleys" selected>Two valleys (non-convex)</option>
+            </select></label>
+            <label for="gd-lr">Learning rate <input type="range" id="gd-lr" min="0.01" max="1.2" step="0.01" value="0.2"><output id="gd-lr-out">0.20</output></label>
+            <label for="gd-mom">Momentum β <input type="range" id="gd-mom" min="0" max="0.95" step="0.05" value="0"><output id="gd-mom-out">0.00</output></label>
+            <label for="gd-x0">Start x₀ <input type="range" id="gd-x0" min="-2" max="2" step="0.05" value="2"><output id="gd-x0-out">2.00</output></label>
+          </div>
+          <svg id="gd-plot" viewBox="0 0 600 280" role="img" aria-label="A loss curve with the first 30 gradient descent steps drawn as numbered dots connected by lines."></svg>
+          <p class="readout" id="gd-readout"></p>
+        </div>
+        <p>On the bowl, push the rate past 0.5, then past 1.0. On two valleys, start at \(x_0=2\) with rate 0.2 and you stop in the shallow right valley, a <strong>local minimum</strong>. Add momentum 0.8 and the built-up velocity carries you over the hump into the deeper valley.</p>
+
+        <h3>Stochastic, mini-batch, momentum and Adam</h3>
+        <p><strong>Stochastic gradient descent</strong> (SGD) estimates the gradient from a random <strong>mini-batch</strong>. It is noisy but cheap, and the noise helps escape sharp minima.</p>
+        <p><strong>Momentum</strong> averages past gradients like a rolling ball. <strong>Adam</strong> also tracks squared gradients and gives each parameter its own step size. <strong>AdamW</strong>, with decoupled weight decay, is the default for transformers.</p>
+        <div class="formula">
+          \[ m_t = \beta_1 m_{t-1} + (1-\beta_1) g_t, \quad v_t = \beta_2 v_{t-1} + (1-\beta_2) g_t^2, \quad \theta_{t+1} = \theta_t - \eta \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon} - \eta \lambda \theta_t \]
+          <span class="formula-note">AdamW with typical \(\beta_1 = 0.9\), \(\beta_2 = 0.95\) to \(0.999\). Two extra values per parameter: optimizer state is twice the model size.</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Optimizer</th><th>Idea</th><th>Typical use</th><th>Memory per param</th></tr></thead>
+            <tbody>
+              <tr><td>SGD</td><td>Step against the gradient</td><td>Teaching, some vision models</td><td>none extra</td></tr>
+              <tr><td>SGD + momentum</td><td>Average gradients over time</td><td>CNNs, classical training recipes</td><td>1 value</td></tr>
+              <tr><td>Adam / AdamW</td><td>Per-parameter adaptive steps</td><td>Transformers, fine-tuning, default choice</td><td>2 values</td></tr>
+              <tr><td>8-bit / paged AdamW</td><td>Quantized optimizer state</td><td>Fine-tuning on limited GPU memory</td><td>~2 bytes total</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Schedules, clipping and the shape of the landscape</h3>
+        <p>Modern recipes <strong>warm up</strong> the rate linearly, then decay it, usually with a cosine. Full fine-tuning of a large model often peaks near 1e-5; LoRA adapters tolerate about 1e-4 to 2e-4.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="Learning rate over 1,000 steps: a linear warmup to the peak at step 100, then a cosine decay to zero at step 1,000.">
+              <path class="d-grid" d="M60 30 H600 M60 95 H600 M114 30 V160 M330 30 V160"/>
+              <path class="d-signal" d="M60 160 L114 30 L114 160 Z" fill-opacity="0.5" stroke="none"/>
+              <path class="d-line-accent" d="M60.0 160.0 L73.5 127.5 L87.0 95.0 L100.5 62.5 L114.0 30.0 L127.5 30.2 L141.0 31.0 L154.5 32.2 L168.0 33.9 L181.5 36.1 L195.0 38.7 L208.5 41.8 L222.0 45.2 L235.5 49.0 L249.0 53.2 L262.5 57.7 L276.0 62.5 L289.5 67.5 L303.0 72.8 L316.5 78.2 L330.0 83.7 L343.5 89.3 L357.0 95.0 L370.5 100.7 L384.0 106.3 L397.5 111.8 L411.0 117.2 L424.5 122.5 L438.0 127.5 L451.5 132.3 L465.0 136.8 L478.5 141.0 L492.0 144.8 L505.5 148.2 L519.0 151.3 L532.5 153.9 L546.0 156.1 L559.5 157.8 L573.0 159.0 L586.5 159.8 L600.0 160.0"/>
+              <line class="d-line" x1="60" y1="160" x2="600" y2="160"/>
+              <line class="d-line" x1="60" y1="30" x2="60" y2="160"/>
+              <text class="d-label" x="52" y="34" text-anchor="end">peak</text>
+              <text class="d-label" x="52" y="99" text-anchor="end">½ peak</text>
+              <text class="d-label" x="52" y="164" text-anchor="end">0</text>
+              <text class="d-label" x="60" y="180" text-anchor="middle">0</text>
+              <text class="d-label" x="114" y="180" text-anchor="middle">100</text>
+              <text class="d-label" x="330" y="180" text-anchor="middle">500</text>
+              <text class="d-label" x="600" y="180" text-anchor="middle">1,000 steps</text>
+              <text class="d-text d-text-signal" x="122" y="150">warmup</text>
+              <text class="d-text d-text-accent" x="420" y="100">cosine decay</text>
+            </svg>
+          </div>
+          <figcaption>Warmup shields the first steps while Adam's averages are unreliable; the cosine tail settles the model with small steps.</figcaption>
+        </figure>
+        <p><strong>Gradient clipping</strong> rescales the gradient when its norm exceeds a threshold (1.0 is common), turning rare catastrophic steps into normal ones. Neural losses are non-convex, yet in high dimensions most flat points are saddles that SGD noise slides off.</p>
+
+        <pre class="code" data-lang="python"><code>import math
+import torch
+from torch import nn
+
+model = nn.Sequential(nn.Linear(20, 64), nn.ReLU(), nn.Linear(64, 1))
+opt = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=0.01)
+
+total, warmup = 1000, 100
+def lr_lambda(step):                       <span class="c"># linear warmup, then cosine decay</span>
+    if step &lt; warmup:
+        return (step + 1) / warmup
+    progress = (step - warmup) / (total - warmup)
+    return 0.5 * (1 + math.cos(math.pi * progress))
+sched = torch.optim.lr_scheduler.LambdaLR(opt, lr_lambda)
+
+X, y = torch.randn(4096, 20), torch.randn(4096, 1)
+for step in range(total):
+    idx = torch.randint(0, len(X), (64,))   <span class="c"># a random mini-batch</span>
+    loss = nn.functional.mse_loss(model(X[idx]), y[idx])
+    opt.zero_grad()
+    loss.backward()
+    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+    opt.step()
+    sched.step()</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Gradient descent steps against the gradient; the learning rate is the most important hyperparameter.</li>
+            <li>Stability is limited by the sharpest curvature; above that the loss oscillates and diverges.</li>
+            <li>Mini-batch SGD trades exact gradients for speed; the noise is mostly harmless or helpful.</li>
+            <li>Momentum smooths direction; Adam(W) adapts the step per parameter and costs two extra values per weight.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Copying a pretraining learning rate into a fine-tuning run and destroying the pretrained weights in a few hundred steps.</li>
+            <li>Changing batch size without revisiting the learning rate and schedule.</li>
+            <li>Judging a run from the first 50 steps, before warmup has finished.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="optimization-1"><span>Derive the stability limit of gradient descent on \(L(x) = a x^2\).</span></label></li>
+          <li><label><input type="checkbox" data-key="optimization-2"><span>Explain what Adam's two moment estimates do and how much memory they cost for a 7B model.</span></label></li>
+          <li><label><input type="checkbox" data-key="optimization-3"><span>Write a training loop with AdamW, warmup plus cosine decay and gradient clipping.</span></label></li>
+          <li><label><input type="checkbox" data-key="optimization-4"><span>Diagnose a loss curve that spikes and then goes to NaN and propose two fixes.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1412.6980">Adam: A Method for Stochastic Optimization (Kingma &amp; Ba, 2014)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1711.05101">Decoupled Weight Decay Regularization (AdamW)</a></li>
+          <li><span class="kind">Article</span><a href="https://distill.pub/2017/momentum/">Why Momentum Really Works (Distill)</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="python">
+        <header class="topic-head">
+          <p class="eyebrow">01.5 · The working language of AI</p>
+          <h2>Python in depth</h2>
+        </header>
+
+        <p class="lead">Python is the glue of AI: PyTorch, Hugging Face, every major LLM SDK and most vector database clients speak it first. Scripts that run once are easy. Code that runs thousands of concurrent API calls, streams gigabytes in constant memory and validates messy model output needs a deeper model of the language.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>LLM apps are I/O bound: they mostly wait on APIs and databases. So <code>asyncio</code>, generators and typed validation of untrusted model output are everyday skills, and the nastiest bugs are plain Python bugs.</p>
+        </div>
+
+        <h3>Names, objects and mutability</h3>
+        <p>A variable is a <strong>name</strong> bound to an object. <code>b = a</code> copies nothing, so mutating a list, dict, array or tensor through one name shows through every name.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Left: names a and b both point to the same list object, while c points to a separate copy. Right: three API calls of one second each take three seconds sequentially but about one second when awaited concurrently.">
+              <defs>
+                <marker id="python-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="20">NAMES</text>
+              <text class="d-label" x="170" y="20">OBJECTS</text>
+              <rect class="d-box" x="20" y="40" width="50" height="30" rx="6"/><text class="d-mono" x="45" y="60" text-anchor="middle">a</text>
+              <rect class="d-box" x="20" y="90" width="50" height="30" rx="6"/><text class="d-mono" x="45" y="110" text-anchor="middle">b</text>
+              <rect class="d-box" x="20" y="160" width="50" height="30" rx="6"/><text class="d-mono" x="45" y="180" text-anchor="middle">c</text>
+              <rect class="d-accent" x="170" y="60" width="110" height="40" rx="6"/><text class="d-mono" x="225" y="85" text-anchor="middle">[1, 2, 3]</text>
+              <rect class="d-good" x="170" y="155" width="110" height="40" rx="6"/><text class="d-mono" x="225" y="180" text-anchor="middle">[1, 2]</text>
+              <line class="d-line" x1="70" y1="55" x2="168" y2="74" marker-end="url(#python-arrow)"/>
+              <line class="d-line" x1="70" y1="105" x2="168" y2="86" marker-end="url(#python-arrow)"/>
+              <line class="d-line" x1="70" y1="175" x2="168" y2="175" marker-end="url(#python-arrow)"/>
+              <text class="d-label" x="225" y="118" text-anchor="middle">b.append(3) changes it for a too</text>
+              <text class="d-label" x="225" y="213" text-anchor="middle">c = a.copy() made before the append</text>
+
+              <line class="d-grid" x1="330" y1="10" x2="330" y2="220"/>
+              <text class="d-label" x="350" y="20">SEQUENTIAL (3 s)</text>
+              <rect class="d-signal" x="350" y="30" width="90" height="18" rx="4"/><text class="d-mono" x="395" y="43" text-anchor="middle">call 1</text>
+              <rect class="d-signal" x="440" y="52" width="90" height="18" rx="4"/><text class="d-mono" x="485" y="65" text-anchor="middle">call 2</text>
+              <rect class="d-signal" x="530" y="74" width="90" height="18" rx="4"/><text class="d-mono" x="575" y="87" text-anchor="middle">call 3</text>
+              <text class="d-label" x="350" y="124">ASYNC WITH asyncio.gather (~1 s)</text>
+              <rect class="d-good" x="350" y="134" width="94" height="18" rx="4"/><text class="d-mono" x="397" y="147" text-anchor="middle">call 1</text>
+              <rect class="d-good" x="352" y="156" width="90" height="18" rx="4"/><text class="d-mono" x="397" y="169" text-anchor="middle">call 2</text>
+              <rect class="d-good" x="354" y="178" width="92" height="18" rx="4"/><text class="d-mono" x="400" y="191" text-anchor="middle">call 3</text>
+              <line class="d-line" x1="350" y1="210" x2="620" y2="210" marker-end="url(#python-arrow)"/>
+              <text class="d-label" x="620" y="203" text-anchor="end">time</text>
+            </svg>
+          </div>
+          <figcaption>Left: assignment shares objects, so mutation through one name shows up through every name. Right: while one coroutine waits on the network, the event loop runs the others, so I/O waits overlap.</figcaption>
+        </figure>
+
+        <p>Two traps follow: a default like <code>def f(items=[])</code> is created once and shared by every call, and NumPy slices or tensor views share memory with the original. Copy explicitly with <code>copy.deepcopy</code>, <code>np.copy</code> or <code>tensor.clone()</code>.</p>
+
+        <h3>Iterators, generators and functions as values</h3>
+        <p>A <strong>generator</strong> uses <code>yield</code> to produce values one at a time, pausing in between. It streams a 50 GB JSONL file or a token stream in constant memory.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Top: reading a whole file into a list holds all 50 gigabytes in memory before processing. Bottom: a generator yields one batch of 64 records at a time, and processing calls next to get the following batch, so memory stays at one batch.">
+              <defs>
+                <marker id="python-gen-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+                <marker id="python-gen-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+              </defs>
+              <text class="d-label" x="20" y="18">LIST: load everything first</text>
+              <rect class="d-box" x="20" y="28" width="110" height="44" rx="6"/><text class="d-mono" x="75" y="55" text-anchor="middle">data.jsonl</text>
+              <line class="d-line" x1="130" y1="50" x2="178" y2="50" marker-end="url(#python-gen-arrow)"/>
+              <rect class="d-signal" x="180" y="22" width="210" height="56" rx="6"/>
+              <text class="d-mono" x="285" y="46" text-anchor="middle">list(records)</text>
+              <text class="d-label" x="285" y="64" text-anchor="middle">all 50 GB in RAM</text>
+              <line class="d-line" x1="390" y1="50" x2="438" y2="50" marker-end="url(#python-gen-arrow)"/>
+              <rect class="d-box" x="440" y="28" width="100" height="44" rx="6"/><text class="d-text" x="490" y="55" text-anchor="middle">process</text>
+              <text class="d-mono d-text-signal" x="560" y="55">O(n)</text>
+
+              <text class="d-label" x="20" y="116">GENERATOR: one batch at a time</text>
+              <rect class="d-box" x="20" y="128" width="110" height="44" rx="6"/><text class="d-mono" x="75" y="155" text-anchor="middle">data.jsonl</text>
+              <line class="d-line" x1="130" y1="150" x2="178" y2="150" marker-end="url(#python-gen-arrow)"/>
+              <rect class="d-good" x="180" y="132" width="90" height="36" rx="6"/><text class="d-mono" x="225" y="155" text-anchor="middle">64 rows</text>
+              <line class="d-line-accent" x1="270" y1="150" x2="438" y2="150" marker-end="url(#python-gen-arrow-g)"/>
+              <text class="d-mono" x="354" y="142" text-anchor="middle">yield batch</text>
+              <rect class="d-box" x="440" y="128" width="100" height="44" rx="6"/><text class="d-text" x="490" y="155" text-anchor="middle">process</text>
+              <path class="d-line d-dash" d="M490 172 Q490 200 360 200 Q225 200 225 170" marker-end="url(#python-gen-arrow)"/>
+              <text class="d-label" x="360" y="194" text-anchor="middle">next()</text>
+              <text class="d-mono d-text-good" x="560" y="155">O(batch)</text>
+            </svg>
+          </div>
+          <figcaption>A generator keeps only the current batch alive. The same pattern relays tokens from a streaming LLM response as they arrive.</figcaption>
+        </figure>
+        <p><strong>Decorators</strong> wrap functions to add retries, caching or tracing. <strong>Context managers</strong> (<code>with</code>) guarantee cleanup even when an exception is raised.</p>
+
+        <h3>Types, dataclasses and validation</h3>
+        <p>Type hints let mypy or pyright catch mistakes before running. <strong>Pydantic</strong> validates at runtime: parsing an LLM's JSON gives a typed object or a precise error you can send back for a retry.</p>
+
+        <h3>Concurrency: asyncio, threads and processes</h3>
+        <p>CPython's <strong>global interpreter lock</strong> (GIL) lets one thread run Python bytecode at a time (free-threaded builds exist since 3.13 but are not the default). It is released during I/O and inside NumPy and PyTorch kernels, so pick the tool by what you wait on:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tool</th><th>Best for</th><th>AI example</th><th>Watch out for</th></tr></thead>
+            <tbody>
+              <tr><td><code>asyncio</code></td><td>Many concurrent I/O waits</td><td>500 LLM calls with a concurrency cap</td><td>One blocking call stalls the whole loop</td></tr>
+              <tr><td>Threads</td><td>I/O with sync-only libraries</td><td>Parallel downloads with a sync SDK</td><td>Shared state needs locks</td></tr>
+              <tr><td>Processes</td><td>CPU-bound pure Python</td><td>Tokenizing or parsing millions of docs</td><td>Pickling cost, memory per process</td></tr>
+              <tr><td>Vectorization</td><td>Numeric loops</td><td>Cosine similarity over 1M vectors</td><td>Memory of large intermediates</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><code>await</code> pauses a coroutine and lets the event loop run others; <code>asyncio.gather</code> runs many at once and an <code>asyncio.Semaphore</code> caps how many are in flight, keeping you inside rate limits.</p>
+        <div class="widget" id="async-demo">
+          <div class="widget-head">
+            <span class="widget-title">Concurrency cap vs total time</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="async-n">API calls <input type="range" id="async-n" min="5" max="60" step="1" value="24"><output id="async-n-out">24</output></label>
+            <label for="async-cap">Semaphore limit <input type="range" id="async-cap" min="1" max="20" step="1" value="4"><output id="async-cap-out">4</output></label>
+            <label for="async-lat">Mean latency (s) <input type="range" id="async-lat" min="0.2" max="3" step="0.1" value="1"><output id="async-lat-out">1.0</output></label>
+          </div>
+          <svg id="async-plot" viewBox="0 0 600 260" role="img" aria-label="Gantt chart of API calls scheduled onto a limited number of concurrent slots; each bar is one call."></svg>
+          <p class="readout" id="async-readout"></p>
+        </div>
+        <p>Each row is one semaphore slot and each bar one call with a varied latency. Raising the cap shortens the run almost linearly until the provider's rate limit, not your code, becomes the bottleneck.</p>
+
+        <pre class="code" data-lang="python"><code>import asyncio, functools, json, random
+from pydantic import BaseModel, ValidationError
+
+class Verdict(BaseModel):
+    label: str
+    confidence: float
+
+def retry(times=3, base_delay=0.5):
+    def deco(fn):
+        @functools.wraps(fn)
+        async def wrapper(*args, **kwargs):
+            for attempt in range(times):
+                try:
+                    return await fn(*args, **kwargs)
+                except (TimeoutError, ValidationError):
+                    if attempt == times - 1:
+                        raise
+                    await asyncio.sleep(base_delay * 2 ** attempt)   <span class="c"># exponential backoff</span>
+        return wrapper
+    return deco
+
+@retry()
+async def classify(text: str, sem: asyncio.Semaphore) -&gt; Verdict:
+    async with sem:                                  <span class="c"># at most N calls in flight</span>
+        await asyncio.sleep(random.uniform(0.2, 1.0)) <span class="c"># stand-in for an API call</span>
+        raw = json.dumps({"label": "ok", "confidence": 0.9})
+        return Verdict.model_validate_json(raw)      <span class="c"># typed, validated output</span>
+
+def batched(items, size):                            <span class="c"># generator: constant memory</span>
+    for i in range(0, len(items), size):
+        yield items[i:i + size]
+
+async def main():
+    sem = asyncio.Semaphore(10)
+    texts = [f"doc {i}" for i in range(100)]
+    for batch in batched(texts, 25):
+        results = await asyncio.gather(*(classify(t, sem) for t in batch))
+        print(len(results), results[0])
+
+asyncio.run(main())</code></pre>
+
+        <p>Give every project its own virtual environment, a <code>pyproject.toml</code> and a lock file (uv or pip with venv). A minor bump in a tokenizer or CUDA wheel can silently change results.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Variables are names bound to objects; mutation is shared, so copy deliberately.</li>
+            <li>Generators stream data lazily; decorators and context managers package cross-cutting behavior.</li>
+            <li>Type hints plus Pydantic turn untrusted model output into validated, typed objects.</li>
+            <li>Use asyncio with a semaphore for I/O-bound LLM work, processes for CPU-bound Python, and vectorized NumPy for math.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Calling a blocking function (such as <code>time.sleep</code> or a sync HTTP client) inside <code>async def</code>, which freezes every other task.</li>
+            <li>Forgetting <code>await</code>, so you get a coroutine object instead of a result and a "never awaited" warning.</li>
+            <li>Mutable default arguments and accidental array views that change data you thought was separate.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="python-1"><span>Explain why <code>def f(x=[])</code> is a bug and show the fix.</span></label></li>
+          <li><label><input type="checkbox" data-key="python-2"><span>Write a generator that reads a JSONL file and yields batches of 64 records.</span></label></li>
+          <li><label><input type="checkbox" data-key="python-3"><span>Write a retry decorator with exponential backoff and jitter.</span></label></li>
+          <li><label><input type="checkbox" data-key="python-4"><span>Run 200 async API calls with at most 10 in flight and collect results in order.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.python.org/3/tutorial/index.html">The official Python tutorial</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.python.org/3/library/asyncio.html">asyncio documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.pydantic.dev/">Pydantic documentation</a></li>
+          <li><span class="kind">Book</span><a href="https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/">Fluent Python, 2nd edition (Ramalho)</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="dsa">
+        <header class="topic-head">
+          <p class="eyebrow">01.6 · Choosing the right shape for data</p>
+          <h2>Data structures &amp; algorithms</h2>
+        </header>
+
+        <p class="lead">The same task can take a millisecond or an hour depending on how you store the data and which algorithm walks it. Big-O notation describes how work grows as input grows. A handful of structures (arrays, hash maps, heaps, trees and graphs) solve most problems you will meet, including the ones hidden inside tokenizers, vector indexes and agent planners.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Deduplicating a million documents, keeping the top-k search hits, ordering pipeline steps, matching tokens with a trie, approximate nearest-neighbor search: all are DSA. Interviews for AI engineering roles still test it too.</p>
+        </div>
+
+        <h3>Big-O: how work grows</h3>
+        <p><strong>Big-O</strong> keeps only the fastest-growing term: \(3n^2 + 50n\) is \(O(n^2)\). Constants matter in practice, but at scale the growth rate wins.</p>
+
+        <div class="widget" id="bigo-demo">
+          <div class="widget-head">
+            <span class="widget-title">Growth curves</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="bigo-n">Max n on chart <input type="range" id="bigo-n" min="4" max="64" step="1" value="20"><output id="bigo-n-out">20</output></label>
+            <label for="bigo-log"><input type="checkbox" id="bigo-log"> Log scale y</label>
+            <label for="bigo-real">Real input size <select id="bigo-real">
+              <option value="1000">n = 1,000</option>
+              <option value="1000000" selected>n = 1,000,000</option>
+              <option value="100000000">n = 100,000,000</option>
+            </select></label>
+          </div>
+          <svg id="bigo-plot" viewBox="0 0 600 270" role="img" aria-label="Curves for log n, n, n log n, n squared and 2 to the n; the steeper curves leave the chart quickly."></svg>
+          <p class="readout" id="bigo-readout"></p>
+        </div>
+        <p>The readout assumes 100 million simple operations per second. At a million items, \(O(n\log n)\) finishes in a fraction of a second while \(O(n^2)\) takes hours. Toggle log scale to see that \(2^n\) eventually dwarfs everything.</p>
+
+        <h3>The structures you will actually use</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Structure</th><th>Lookup</th><th>Insert</th><th>AI use</th></tr></thead>
+            <tbody>
+              <tr><td>Array / list</td><td>O(1) by index, O(n) search</td><td>O(1) append</td><td>Token ids, embedding matrices</td></tr>
+              <tr><td>Hash map / set</td><td>O(1) average</td><td>O(1) average</td><td>Vocabularies, caches, dedup by hash</td></tr>
+              <tr><td>Heap</td><td>O(1) min</td><td>O(log n)</td><td>Top-k results, priority queues, beam search</td></tr>
+              <tr><td>Sorted array + binary search</td><td>O(log n)</td><td>O(n)</td><td>Range lookups, percentile thresholds</td></tr>
+              <tr><td>Trie</td><td>O(length of key)</td><td>O(length of key)</td><td>Tokenizer prefix matching, autocomplete</td></tr>
+              <tr><td>Graph (DAG)</td><td>O(V + E) traversal</td><td>O(1) add edge</td><td>Pipelines, agent workflows, knowledge graphs</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>A <strong>hash map</strong> runs a key through a hash function to pick a bucket, so lookup cost does not depend on how many keys you store.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Three keys pass through a hash function, which maps each to a bucket index modulo 8; lookups go straight to the bucket, and two keys sharing a bucket form a short chain.">
+              <defs>
+                <marker id="dsa-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="110" height="32" rx="6"/><text class="d-mono" x="75" y="51" text-anchor="middle">"cat"</text>
+              <rect class="d-box" x="20" y="94" width="110" height="32" rx="6"/><text class="d-mono" x="75" y="115" text-anchor="middle">"dog"</text>
+              <rect class="d-box" x="20" y="158" width="110" height="32" rx="6"/><text class="d-mono" x="75" y="179" text-anchor="middle">"emb_42"</text>
+              <line class="d-line" x1="130" y1="46" x2="208" y2="100" marker-end="url(#dsa-arrow)"/>
+              <line class="d-line" x1="130" y1="110" x2="208" y2="110" marker-end="url(#dsa-arrow)"/>
+              <line class="d-line" x1="130" y1="174" x2="208" y2="120" marker-end="url(#dsa-arrow)"/>
+              <rect class="d-accent" x="210" y="82" width="130" height="56" rx="8"/>
+              <text class="d-title" x="275" y="106" text-anchor="middle">hash(key)</text>
+              <text class="d-mono" x="275" y="124" text-anchor="middle">% 8</text>
+              <rect class="d-box" x="440" y="14" width="60" height="24"/><text class="d-label" x="446" y="31">0</text>
+              <rect class="d-good" x="440" y="38" width="60" height="24"/><text class="d-label" x="446" y="55">1</text><text class="d-mono" x="476" y="55" text-anchor="middle">cat</text>
+              <rect class="d-box" x="440" y="62" width="60" height="24"/><text class="d-label" x="446" y="79">2</text>
+              <rect class="d-box" x="440" y="86" width="60" height="24"/><text class="d-label" x="446" y="103">3</text>
+              <rect class="d-good" x="440" y="110" width="60" height="24"/><text class="d-label" x="446" y="127">4</text><text class="d-mono" x="476" y="127" text-anchor="middle">dog</text>
+              <rect class="d-box" x="440" y="134" width="60" height="24"/><text class="d-label" x="446" y="151">5</text>
+              <rect class="d-box" x="440" y="158" width="60" height="24"/><text class="d-label" x="446" y="175">6</text>
+              <rect class="d-box" x="440" y="182" width="60" height="24"/><text class="d-label" x="446" y="199">7</text>
+              <line class="d-line" x1="340" y1="100" x2="438" y2="52" marker-end="url(#dsa-arrow)"/>
+              <line class="d-line" x1="340" y1="110" x2="438" y2="122" marker-end="url(#dsa-arrow)"/>
+              <line class="d-line" x1="340" y1="120" x2="438" y2="122" marker-end="url(#dsa-arrow)"/>
+              <rect class="d-signal" x="530" y="110" width="80" height="24" rx="4"/><text class="d-mono" x="570" y="127" text-anchor="middle">emb_42</text>
+              <line class="d-line" x1="500" y1="122" x2="528" y2="122" marker-end="url(#dsa-arrow)"/>
+              <text class="d-label" x="570" y="152" text-anchor="middle">collision: chain</text>
+            </svg>
+          </div>
+          <figcaption>Hashing jumps straight to a bucket, so lookup is O(1) on average. Collisions are rare when the table is kept less than about two-thirds full.</figcaption>
+        </figure>
+
+        <p>A <strong>heap</strong> keeps its smallest item at the root. To keep the top-k of a stream, hold a min-heap of size k: each new score only has to beat the root.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="A min-heap of the current top three scores, 0.7 at the root with 0.9 and 0.8 below. A new score 0.75 beats the root 0.7, so it replaces it; 0.2 is lower than the root and is discarded.">
+              <defs>
+                <marker id="dsa-heap-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+                <marker id="dsa-heap-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/></marker>
+              </defs>
+              <text class="d-label" x="20" y="22">STREAM OF SCORES</text>
+              <text class="d-mono" x="20" y="44">0.4  0.9  0.1  0.7  0.8 …</text>
+              <rect class="d-good" x="40" y="90" width="64" height="30" rx="6"/><text class="d-mono" x="72" y="110" text-anchor="middle">0.75</text>
+              <rect class="d-signal" x="40" y="150" width="64" height="30" rx="6"/><text class="d-mono" x="72" y="170" text-anchor="middle">0.2</text>
+              <line class="d-line-accent" x1="104" y1="105" x2="270" y2="76" marker-end="url(#dsa-heap-arrow)"/>
+              <text class="d-label" x="180" y="80" text-anchor="middle">0.75 &gt; root: replace</text>
+              <line class="d-line-signal d-dash" x1="104" y1="165" x2="150" y2="165" marker-end="url(#dsa-heap-arrow-s)"/>
+              <text class="d-label" x="40" y="200">0.2 &lt; root: drop</text>
+              <circle class="d-accent" cx="300" cy="70" r="24"/><text class="d-mono" x="300" y="75" text-anchor="middle">0.7</text>
+              <circle class="d-box" cx="250" cy="150" r="24"/><text class="d-mono" x="250" y="155" text-anchor="middle">0.9</text>
+              <circle class="d-box" cx="350" cy="150" r="24"/><text class="d-mono" x="350" y="155" text-anchor="middle">0.8</text>
+              <line class="d-line" x1="287" y1="90" x2="262" y2="129"/>
+              <line class="d-line" x1="313" y1="90" x2="338" y2="129"/>
+              <text class="d-label" x="300" y="36" text-anchor="middle">root = smallest of top-3</text>
+              <rect class="d-box" x="420" y="60" width="200" height="110" rx="8"/>
+              <text class="d-title" x="520" y="84" text-anchor="middle">Cost</text>
+              <text class="d-mono" x="436" y="110">sort all:  O(n log n)</text>
+              <text class="d-mono" x="436" y="132">heap of k: O(n log k)</text>
+              <text class="d-label" x="436" y="156">memory stays at k items</text>
+            </svg>
+          </div>
+          <figcaption>Top-k with a size-k min-heap. Each comparison is with the root; a replacement re-balances in O(log k) steps.</figcaption>
+        </figure>
+
+        <h3>Graphs and dynamic programming</h3>
+        <p>A <strong>DAG</strong> (directed acyclic graph) models steps with dependencies. A <strong>topological sort</strong> orders them so every step runs after its inputs; that is how pipeline orchestrators and agent workflow engines schedule work. <strong>Dynamic programming</strong> solves a problem by filling a table of overlapping subproblems; edit distance, used to compare strings in evals, is the classic example.</p>
+
+        <pre class="code" data-lang="python"><code>import heapq, bisect
+from graphlib import TopologicalSorter
+
+scores = [0.4, 0.9, 0.1, 0.7, 0.8, 0.75]
+print(heapq.nlargest(3, scores))                    <span class="c"># [0.9, 0.8, 0.75], O(n log k)</span>
+
+thresholds = [0.1, 0.3, 0.5, 0.7, 0.9]              <span class="c"># sorted</span>
+print(bisect.bisect_left(thresholds, 0.62))         <span class="c"># 3, binary search O(log n)</span>
+
+deps = {"embed": {"chunk"}, "chunk": {"parse"}, "index": {"embed"}}
+print(list(TopologicalSorter(deps).static_order()))  <span class="c"># ['parse', 'chunk', 'embed', 'index']</span>
+
+def edit_distance(a: str, b: str) -&gt; int:           <span class="c"># dynamic programming, O(len(a)*len(b))</span>
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+print(edit_distance("kitten", "sitting"))           <span class="c"># 3</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Big-O tracks growth; at a million items the gap between \(n\log n\) and \(n^2\) is seconds versus hours.</li>
+            <li>Hash maps and sets give O(1) average lookup: the default for membership tests and dedup.</li>
+            <li>A size-k min-heap keeps the top-k of a stream in O(n log k) time and O(k) memory.</li>
+            <li>DAGs plus topological sort schedule pipelines and agent workflows.</li>
+            <li>Dynamic programming reuses overlapping subproblems, as in edit distance.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Testing membership with <code>x in some_list</code> inside a loop, turning an O(n) job into O(n²).</li>
+            <li>Sorting a whole result set to keep the top 10.</li>
+            <li>Using mutable objects (lists, dicts) as dict keys or set members; they are unhashable.</li>
+            <li>Recursion without memoization on overlapping subproblems, which explodes exponentially.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="dsa-1"><span>Estimate the runtime of an O(n²) loop over one million items at 10⁸ operations per second.</span></label></li>
+          <li><label><input type="checkbox" data-key="dsa-2"><span>Implement streaming top-k with <code>heapq</code> and explain its complexity.</span></label></li>
+          <li><label><input type="checkbox" data-key="dsa-3"><span>Deduplicate a list of documents by content hash in O(n).</span></label></li>
+          <li><label><input type="checkbox" data-key="dsa-4"><span>Topologically sort a small pipeline DAG and detect a cycle.</span></label></li>
+          <li><label><input type="checkbox" data-key="dsa-5"><span>Fill the edit-distance table for two short words by hand.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Course</span><a href="https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/">MIT 6.006 Introduction to Algorithms (OCW)</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.python.org/3/library/heapq.html">Python heapq documentation</a></li>
+          <li><span class="kind">Practice</span><a href="https://neetcode.io/">NeetCode problem roadmap</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="software-engineering">
+        <header class="topic-head">
+          <p class="eyebrow">01.7 · Code other people can trust</p>
+          <h2>Software engineering essentials</h2>
+        </header>
+
+        <p class="lead">A notebook that works once is a prototype. A system that a team can change safely every week needs version control, tests, clear interfaces, configuration kept out of code, and logs that explain failures. AI products need all of this plus one twist: a core component, the model, is non-deterministic and can change underneath you.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Most AI engineering time goes into the software around the model: APIs, retries, data handling, evals in CI and deployment. Teams hire AI engineers who can ship maintainable code, not only prompts.</p>
+        </div>
+
+        <h3>Git, pull requests and CI</h3>
+        <p>Work happens on short-lived <strong>branches</strong>. A <strong>pull request</strong> (PR) proposes merging a branch; <strong>continuous integration</strong> (CI) runs lint, type checks, tests and, for AI code, a small eval set on every push. Only green, reviewed PRs merge to <code>main</code>.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="A feature branch splits from main, gets two commits, opens a pull request that runs CI checks for lint, tests and a mini eval, passes review and merges back into main.">
+              <defs>
+                <marker id="software-engineering-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <line class="d-line" x1="20" y1="60" x2="610" y2="60" marker-end="url(#software-engineering-arrow)"/>
+              <text class="d-mono" x="20" y="44">main</text>
+              <circle class="d-dot-muted" cx="60" cy="60" r="7"/>
+              <circle class="d-dot-muted" cx="120" cy="60" r="7"/>
+              <path class="d-line-accent" d="M120 60 Q140 130 180 130 L400 130 Q455 130 474 68"/>
+              <circle class="d-dot" cx="200" cy="130" r="7"/>
+              <circle class="d-dot" cx="260" cy="130" r="7"/>
+              <text class="d-mono d-text-accent" x="200" y="160" text-anchor="middle">feat/retry</text>
+              <text class="d-label" x="230" y="114" text-anchor="middle">2 commits</text>
+              <rect class="d-box" x="300" y="112" width="96" height="36" rx="6"/>
+              <text class="d-text" x="348" y="135" text-anchor="middle">open PR</text>
+              <rect class="d-good" x="290" y="168" width="60" height="26" rx="4"/><text class="d-label" x="320" y="185" text-anchor="middle">lint ✓</text>
+              <rect class="d-good" x="356" y="168" width="64" height="26" rx="4"/><text class="d-label" x="388" y="185" text-anchor="middle">tests ✓</text>
+              <rect class="d-good" x="426" y="168" width="84" height="26" rx="4"/><text class="d-label" x="468" y="185" text-anchor="middle">mini eval ✓</text>
+              <text class="d-label" x="520" y="185">CI on push</text>
+              <text class="d-label" x="490" y="104">review</text>
+              <text class="d-label" x="490" y="117">approved</text>
+              <circle class="d-dot-good" cx="480" cy="60" r="8"/>
+              <text class="d-label" x="480" y="40" text-anchor="middle">merge</text>
+              <circle class="d-dot-muted" cx="550" cy="60" r="7"/>
+            </svg>
+          </div>
+          <figcaption>Every change travels the same road: branch, commits, pull request, automated checks, human review, merge. The mini eval catches prompt changes that silently hurt quality.</figcaption>
+        </figure>
+
+        <h3>Tests for code that calls models</h3>
+        <p>Keep most tests fast and deterministic by <strong>mocking</strong> the model call: you test your parsing, retries and routing, not the provider. Fewer integration tests hit real services, and a separate eval suite measures quality with real model output.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="A test pyramid: a wide base of many fast unit tests with mocked models, a middle layer of integration tests against real services, and a narrow top of end-to-end tests and evals that are slow and costly.">
+              <path class="d-good" d="M90 200 L550 200 L480 150 L160 150 Z"/>
+              <path class="d-accent" d="M160 146 L480 146 L410 96 L230 96 Z"/>
+              <path class="d-signal" d="M230 92 L410 92 L320 26 Z"/>
+              <text class="d-title" x="320" y="180" text-anchor="middle">Unit tests (mock the LLM)</text>
+              <text class="d-title" x="320" y="126" text-anchor="middle">Integration</text>
+              <text class="d-text" x="320" y="76" text-anchor="middle">E2E + evals</text>
+              <line class="d-line" x1="580" y1="200" x2="580" y2="30"/>
+              <text class="d-label" x="590" y="40">slower</text>
+              <text class="d-label" x="590" y="54">costlier</text>
+              <text class="d-label" x="590" y="196">fast, free</text>
+              <text class="d-label" x="40" y="180" text-anchor="middle">hundreds</text>
+              <text class="d-label" x="40" y="126" text-anchor="middle">dozens</text>
+              <text class="d-label" x="40" y="76" text-anchor="middle">a few</text>
+            </svg>
+          </div>
+          <figcaption>Most checks live at the cheap base. Real model calls sit at the top, where they are run less often and judged statistically.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># app.py</span>
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Query(BaseModel):
+    text: str
+
+def call_llm(prompt: str) -&gt; str:          <span class="c"># real provider call lives here</span>
+    raise NotImplementedError
+
+@app.post("/summarize")
+def summarize(q: Query) -&gt; dict:
+    out = call_llm(f"Summarize in one sentence:\n{q.text}")
+    return {"summary": out.strip()}
+
+<span class="c"># test_app.py  (run with: pytest -q)</span>
+from fastapi.testclient import TestClient
+import app as app_module
+
+def test_summarize_strips_whitespace(monkeypatch):
+    monkeypatch.setattr(app_module, "call_llm", lambda p: "  A short summary. \n")
+    client = TestClient(app_module.app)
+    r = client.post("/summarize", json={"text": "long document"})
+    assert r.status_code == 200
+    assert r.json() == {"summary": "A short summary."}</code></pre>
+
+        <h3>Habits that keep code changeable</h3>
+        <div class="grid-2">
+          <div class="card"><h4>Config and secrets</h4><p>Read API keys and model names from environment variables or a settings object. Never commit keys; add <code>.env</code> to <code>.gitignore</code>.</p></div>
+          <div class="card"><h4>Structured logs</h4><p>Log JSON with a request id, model, latency, token counts and error type, so one failing request can be traced end to end.</p></div>
+          <div class="card"><h4>Small interfaces</h4><p>Hide each provider behind one function or class. Swapping models then touches one file, and tests can inject a fake.</p></div>
+          <div class="card"><h4>Lint, format, type-check</h4><p>Ruff for lint and format plus mypy or pyright in CI end style debates and catch bugs before review.</p></div>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Branch, PR, CI, review, merge: every change takes the same safe road.</li>
+            <li>Mock the model in unit tests; measure real quality with evals.</li>
+            <li>Isolate each external dependency behind a narrow interface.</li>
+            <li>Configuration and secrets live outside the code.</li>
+            <li>Structured logs with request ids make failures explainable.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Committing an API key; once pushed, rotate it, because rewriting history is not enough.</li>
+            <li>Unit tests that call a live model: slow, costly and flaky.</li>
+            <li>Asserting exact LLM output strings instead of properties (valid JSON, required fields, length).</li>
+            <li>Giant PRs that mix refactors with behavior changes and cannot be reviewed.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="software-engineering-1"><span>Create a branch, open a PR and resolve a merge conflict with git.</span></label></li>
+          <li><label><input type="checkbox" data-key="software-engineering-2"><span>Write a pytest test that mocks an LLM call with <code>monkeypatch</code>.</span></label></li>
+          <li><label><input type="checkbox" data-key="software-engineering-3"><span>Build a FastAPI endpoint with a Pydantic request model and correct status codes.</span></label></li>
+          <li><label><input type="checkbox" data-key="software-engineering-4"><span>Set up a CI workflow that runs lint, type checks and tests on every push.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://git-scm.com/book/en/v2">Pro Git (free online book)</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.pytest.org/">pytest documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://fastapi.tiangolo.com/">FastAPI documentation</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="devops-basics">
+        <header class="topic-head">
+          <p class="eyebrow">01.8 · Where your code actually runs</p>
+          <h2>Linux, Docker &amp; cloud basics</h2>
+        </header>
+
+        <p class="lead">Almost every model in production runs on a Linux machine, inside a container, on someone else's computer in a data center. You need enough Linux to move around a remote GPU box over SSH, enough Docker to package an app so it runs the same everywhere, and enough cloud vocabulary to know what you are paying for.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Fine-tuning jobs run on rented GPU machines, inference servers ship as container images, and datasets live in object storage. "It works on my laptop" is not a deployment strategy.</p>
+        </div>
+
+        <h3>The shell in ten commands</h3>
+        <p>Linux tools do one thing each and chain through <strong>pipes</strong> (<code>|</code>), which send one program's output into the next. Processes, files, permissions and environment variables are the core ideas.</p>
+
+        <pre class="code" data-lang="bash"><code>ssh -i ~/.ssh/key.pem ubuntu@gpu-box          <span class="c"># log into a remote machine</span>
+nvidia-smi                                     <span class="c"># GPU usage, memory, running processes</span>
+df -h; du -sh ~/data/*                         <span class="c"># disk free, folder sizes</span>
+tail -f train.log | grep --line-buffered loss  <span class="c"># follow a log, keep loss lines</span>
+ps aux | grep python; kill 12345               <span class="c"># find and stop a process</span>
+export OPENAI_API_KEY=...                      <span class="c"># env var for this shell session</span>
+chmod +x run.sh; ./run.sh                      <span class="c"># make a script executable, run it</span>
+tmux new -s train                              <span class="c"># session that survives disconnects</span>
+wc -l data.jsonl; head -n 3 data.jsonl         <span class="c"># count lines, peek at records</span>
+rsync -avz ./ckpt/ user@host:/backups/ckpt/    <span class="c"># copy only what changed</span></code></pre>
+
+        <h3>Docker: images, layers and containers</h3>
+        <p>A <strong>Dockerfile</strong> lists build steps. Each step creates a cached, read-only <strong>layer</strong>; stacked layers form an <strong>image</strong>. A <strong>container</strong> is a running image plus a thin writable layer, isolated from the host but sharing its kernel.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Dockerfile lines build stacked image layers: base image, dependencies and app code. The same image starts two containers, each with its own thin writable layer.">
+              <defs>
+                <marker id="devops-basics-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="200" height="150" rx="8"/>
+              <text class="d-label" x="32" y="22">Dockerfile</text>
+              <text class="d-mono" x="32" y="56">FROM python:3.12-slim</text>
+              <text class="d-mono" x="32" y="84">COPY requirements.txt .</text>
+              <text class="d-mono" x="32" y="112">RUN pip install -r …</text>
+              <text class="d-mono" x="32" y="140">COPY . .</text>
+              <text class="d-mono" x="32" y="168">CMD ["uvicorn", …]</text>
+              <line class="d-line" x1="226" y1="110" x2="274" y2="110" marker-end="url(#devops-basics-arrow)"/>
+              <text class="d-label" x="250" y="100" text-anchor="middle">build</text>
+              <text class="d-label" x="360" y="22" text-anchor="middle">IMAGE (read-only layers)</text>
+              <rect class="d-accent" x="280" y="134" width="160" height="34" rx="4"/><text class="d-text" x="360" y="156" text-anchor="middle">base OS + Python</text>
+              <rect class="d-accent" x="280" y="96" width="160" height="34" rx="4"/><text class="d-text" x="360" y="118" text-anchor="middle">dependencies</text>
+              <rect class="d-accent" x="280" y="58" width="160" height="34" rx="4"/><text class="d-text" x="360" y="80" text-anchor="middle">app code</text>
+              <line class="d-line" x1="446" y1="90" x2="494" y2="60" marker-end="url(#devops-basics-arrow)"/>
+              <line class="d-line" x1="446" y1="130" x2="494" y2="160" marker-end="url(#devops-basics-arrow)"/>
+              <text class="d-label" x="470" y="116" text-anchor="middle">run</text>
+              <rect class="d-good" x="500" y="30" width="120" height="22" rx="4"/><text class="d-label" x="560" y="45" text-anchor="middle">writable layer</text>
+              <rect class="d-box" x="500" y="52" width="120" height="40" rx="4"/><text class="d-text" x="560" y="77" text-anchor="middle">container 1</text>
+              <rect class="d-good" x="500" y="130" width="120" height="22" rx="4"/><text class="d-label" x="560" y="145" text-anchor="middle">writable layer</text>
+              <rect class="d-box" x="500" y="152" width="120" height="40" rx="4"/><text class="d-text" x="560" y="177" text-anchor="middle">container 2</text>
+              <text class="d-label" x="320" y="214" text-anchor="middle">one image, many containers; container writes vanish unless you use a volume</text>
+            </svg>
+          </div>
+          <figcaption>Layers are cached and shared. The order of Dockerfile lines decides how much gets rebuilt when something changes.</figcaption>
+        </figure>
+
+        <div class="widget" id="docker-demo">
+          <div class="widget-head">
+            <span class="widget-title">Layer cache: good vs bad ordering</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="docker-change">You changed <select id="docker-change">
+              <option value="code" selected>app code (main.py)</option>
+              <option value="reqs">requirements.txt</option>
+              <option value="base">base image tag</option>
+              <option value="none">nothing</option>
+            </select></label>
+          </div>
+          <svg id="docker-plot" viewBox="0 0 600 260" role="img" aria-label="Two Dockerfiles side by side; layers reused from cache are green and layers that must rebuild are orange, with total rebuild time."></svg>
+          <p class="readout" id="docker-readout"></p>
+        </div>
+        <p>A change invalidates its own layer and every layer after it. Copy the dependency list and install it before copying your fast-changing code, and everyday rebuilds take a second instead of minutes.</p>
+
+        <h3>Cloud building blocks</h3>
+        <p>Every cloud sells the same primitives under different names. A typical inference service puts a load balancer in front of containers on GPU machines, reads model weights from object storage and controls access through identity and access management (<strong>IAM</strong>) roles.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="Users send HTTPS requests to a load balancer, which spreads them across containers on GPU virtual machines; the containers pull weights from object storage and read secrets, all inside a private network governed by IAM roles.">
+              <defs>
+                <marker id="devops-basics-arrow-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <rect class="d-box" x="20" y="80" width="80" height="40" rx="8"/><text class="d-text" x="60" y="105" text-anchor="middle">users</text>
+              <line class="d-line" x1="100" y1="100" x2="158" y2="100" marker-end="url(#devops-basics-arrow-c)"/>
+              <text class="d-label" x="129" y="92" text-anchor="middle">HTTPS</text>
+              <rect class="d-grid" x="150" y="20" width="470" height="170" rx="10"/>
+              <text class="d-label" x="610" y="38" text-anchor="end">private network (VPC) · IAM roles</text>
+              <rect class="d-accent" x="160" y="76" width="100" height="48" rx="8"/><text class="d-text" x="210" y="98" text-anchor="middle">load</text><text class="d-text" x="210" y="114" text-anchor="middle">balancer</text>
+              <line class="d-line" x1="260" y1="90" x2="318" y2="66" marker-end="url(#devops-basics-arrow-c)"/>
+              <line class="d-line" x1="260" y1="110" x2="318" y2="134" marker-end="url(#devops-basics-arrow-c)"/>
+              <rect class="d-box" x="320" y="46" width="140" height="40" rx="6"/><text class="d-text" x="390" y="71" text-anchor="middle">GPU VM · container</text>
+              <rect class="d-box" x="320" y="114" width="140" height="40" rx="6"/><text class="d-text" x="390" y="139" text-anchor="middle">GPU VM · container</text>
+              <line class="d-line d-dash" x1="510" y1="70" x2="462" y2="70" marker-end="url(#devops-basics-arrow-c)"/>
+              <line class="d-line d-dash" x1="510" y1="130" x2="462" y2="130" marker-end="url(#devops-basics-arrow-c)"/>
+              <rect class="d-good" x="512" y="50" width="100" height="40" rx="6"/><text class="d-text" x="562" y="75" text-anchor="middle">object storage</text>
+              <rect class="d-signal" x="512" y="110" width="100" height="40" rx="6"/><text class="d-text" x="562" y="135" text-anchor="middle">secrets</text>
+              <text class="d-label" x="486" y="62" text-anchor="middle">weights</text>
+              <text class="d-label" x="486" y="122" text-anchor="middle">keys</text>
+            </svg>
+          </div>
+          <figcaption>The shape of most AI services: a load balancer, stateless containers on GPU or CPU machines, and state kept in managed storage.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Primitive</th><th>AWS</th><th>Google Cloud</th><th>Azure</th></tr></thead>
+            <tbody>
+              <tr><td>Virtual machines (incl. GPU)</td><td>EC2</td><td>Compute Engine</td><td>Virtual Machines</td></tr>
+              <tr><td>Object storage</td><td>S3</td><td>Cloud Storage</td><td>Blob Storage</td></tr>
+              <tr><td>Serverless containers</td><td>Fargate / App Runner</td><td>Cloud Run</td><td>Container Apps</td></tr>
+              <tr><td>Managed Kubernetes</td><td>EKS</td><td>GKE</td><td>AKS</td></tr>
+              <tr><td>Identity &amp; access</td><td>IAM</td><td>IAM</td><td>Entra ID + RBAC</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="dockerfile"><code>FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt   <span class="c"># cached unless requirements change</span>
+COPY . .                                             <span class="c"># code changes only rebuild from here</span>
+EXPOSE 8000
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+
+<span class="c"># docker build -t summarizer:0.1 .</span>
+<span class="c"># docker run -p 8000:8000 --env-file .env summarizer:0.1</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Pipes chain small tools; <code>ssh</code>, <code>tmux</code>, <code>nvidia-smi</code> and <code>tail -f</code> cover most remote GPU work.</li>
+            <li>An image is stacked read-only layers; a container is a running image plus a writable layer.</li>
+            <li>Order Dockerfile steps from least to most frequently changed to keep the cache warm.</li>
+            <li>Clouds share the same primitives: VMs, object storage, containers, Kubernetes, IAM.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Baking API keys into an image; anyone with the image can read them. Pass them at runtime.</li>
+            <li>Running long training jobs in a plain SSH session that dies when your laptop sleeps.</li>
+            <li>Leaving GPU instances running overnight; set budgets and auto-shutdown.</li>
+            <li>Writing important files inside a container instead of to a volume or object storage.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="devops-basics-1"><span>SSH into a remote machine, start a job in tmux, detach and reattach.</span></label></li>
+          <li><label><input type="checkbox" data-key="devops-basics-2"><span>Write a cache-friendly Dockerfile for a FastAPI app and run it with an env file.</span></label></li>
+          <li><label><input type="checkbox" data-key="devops-basics-3"><span>Explain image vs container vs volume to a teammate.</span></label></li>
+          <li><label><input type="checkbox" data-key="devops-basics-4"><span>Upload a file to object storage and grant a service read-only access to it.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Course</span><a href="https://missing.csail.mit.edu/">The Missing Semester of Your CS Education (MIT)</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.docker.com/">Docker documentation</a></li>
+          <li><span class="kind">Book</span><a href="https://linuxcommand.org/tlcl.php">The Linux Command Line (Shotts, free)</a></li>
+        </ul>
+      </section>
+
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>NumPy semantic search</h4><p>Embed a few hundred short texts with any open embedding model, store the matrix in NumPy and answer queries by cosine similarity with a heap for top-k. Add a bootstrap confidence interval on a tiny hand-labeled relevance set.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Logistic regression from scratch</h4><p>Implement logistic regression with hand-derived gradients, check them against finite differences, and train with SGD, momentum and Adam. Plot the three loss curves and a learning-rate sweep on one chart.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Ship a tested model API</h4><p>Wrap your model in FastAPI with Pydantic schemas, an async batch endpoint and mocked unit tests. Containerize it with a cache-friendly Dockerfile, run CI on every push and deploy it to a serverless container service.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Read any tensor expression and predict its output shape before running it.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Explain backpropagation on a small graph and debug a run whose loss diverges.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Put an honest confidence interval on any eval result and reason with base rates.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Write async, typed, tested Python that calls an external API under a rate limit.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Package a service in Docker and run it on a cloud machine over SSH.</span></label></li>
+        </ul>
+      </div>
+
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widgets for Foundations. Every widget builds SVG with the d-* classes, so it follows the theme automatically. */
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function arrowMarker(svg, id, cls) {
+    var defs = mk("defs", {}, svg);
+    var m = mk("marker", { id: id, viewBox: "0 0 10 10", refX: "9", refY: "5", markerWidth: "7", markerHeight: "7", orient: "auto-start-reverse" }, defs);
+    mk("path", { d: "M0,0 L10,5 L0,10 z", "class": cls }, m);
+  }
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function fmt(v, d) { return Number(v).toFixed(d); }
+
+  /* ---------- 1. Linear algebra: 2x2 matrix transforming a grid ---------- */
+  (function () {
+    var svg = document.getElementById("la-plot");
+    if (!svg) return;
+    var ids = ["a", "b", "c", "d"];
+    var inputs = {}, outs = {};
+    ids.forEach(function (k) { inputs[k] = document.getElementById("la-" + k); outs[k] = document.getElementById("la-" + k + "-out"); });
+    var readout = document.getElementById("la-readout");
+    var cx = 300, cy = 150, s = 36;
+    function P(x, y) { return [cx + x * s, cy - y * s]; }
+    function draw() {
+      var a = +inputs.a.value, b = +inputs.b.value, c = +inputs.c.value, d = +inputs.d.value;
+      ids.forEach(function (k) { outs[k].textContent = fmt(inputs[k].value, 1); });
+      clear(svg);
+      arrowMarker(svg, "la-mk-a", "d-head-accent");
+      arrowMarker(svg, "la-mk-s", "d-head-signal");
+      var i, p, q;
+      for (i = -9; i <= 9; i++) {
+        p = P(i, -9); q = P(i, 9);
+        mk("line", { x1: p[0], y1: p[1], x2: q[0], y2: q[1], "class": "d-grid" }, svg);
+        p = P(-9, i); q = P(9, i);
+        mk("line", { x1: p[0], y1: p[1], x2: q[0], y2: q[1], "class": "d-grid" }, svg);
+      }
+      function T(x, y) { return P(a * x + b * y, c * x + d * y); }
+      for (i = -12; i <= 12; i++) {
+        p = T(i, -12); q = T(i, 12);
+        mk("line", { x1: p[0], y1: p[1], x2: q[0], y2: q[1], "class": "d-line", "stroke-opacity": i === 0 ? "1" : "0.45" }, svg);
+        p = T(-12, i); q = T(12, i);
+        mk("line", { x1: p[0], y1: p[1], x2: q[0], y2: q[1], "class": "d-line", "stroke-opacity": i === 0 ? "1" : "0.45" }, svg);
+      }
+      var o = T(0, 0), e1 = T(1, 0), e12 = T(1, 1), e2 = T(0, 1);
+      mk("polygon", { points: [o, e1, e12, e2].map(function (v) { return v.join(","); }).join(" "), "class": "d-accent", "fill-opacity": "0.55" }, svg);
+      mk("line", { x1: o[0], y1: o[1], x2: e1[0], y2: e1[1], "class": "d-line-accent", "stroke-width": "3", "marker-end": "url(#la-mk-a)" }, svg);
+      mk("line", { x1: o[0], y1: o[1], x2: e2[0], y2: e2[1], "class": "d-line-signal", "stroke-width": "3", "marker-end": "url(#la-mk-s)" }, svg);
+      mk("text", { x: 10, y: 20, "class": "d-mono" }, svg, "[" + fmt(a, 1) + "  " + fmt(b, 1) + "]");
+      mk("text", { x: 10, y: 36, "class": "d-mono" }, svg, "[" + fmt(c, 1) + "  " + fmt(d, 1) + "]");
+      var det = a * d - b * c, tr = a + d, disc = tr * tr - 4 * det;
+      var msg = "det = " + fmt(det, 2) + "  ·  area scale ×" + fmt(Math.abs(det), 2);
+      if (Math.abs(det) < 0.05) msg += "  ·  singular: the plane collapses, no inverse";
+      else if (det < 0) msg += "  ·  orientation flipped (mirror)";
+      if (disc >= 0) msg += "  ·  eigenvalues " + fmt((tr + Math.sqrt(disc)) / 2, 2) + ", " + fmt((tr - Math.sqrt(disc)) / 2, 2);
+      else msg += "  ·  complex eigenvalues: a rotation, no direction is only stretched";
+      readout.textContent = msg;
+    }
+    ids.forEach(function (k) { inputs[k].addEventListener("input", draw); });
+    document.querySelectorAll("[data-la-preset]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var v = btn.getAttribute("data-la-preset").split(",");
+        ids.forEach(function (k, j) { inputs[k].value = v[j]; });
+        draw();
+      });
+    });
+    draw();
+  })();
+
+  /* ---------- 2. Calculus: secant vs tangent ---------- */
+  (function () {
+    var svg = document.getElementById("calc-plot");
+    if (!svg) return;
+    var xin = document.getElementById("calc-x"), hin = document.getElementById("calc-h");
+    var xo = document.getElementById("calc-x-out"), ho = document.getElementById("calc-h-out");
+    var readout = document.getElementById("calc-readout");
+    function f(x) { return x * x * x / 3 - x; }
+    function fp(x) { return x * x - 1; }
+    var X0 = -2.6, X1 = 2.6, Y0 = -3.5, Y1 = 3.5;
+    function sx(x) { return 40 + (x - X0) / (X1 - X0) * 530; }
+    function sy(y) { return 20 + (Y1 - y) / (Y1 - Y0) * 220; }
+    function draw() {
+      var x = +xin.value, h = +hin.value;
+      xo.textContent = fmt(x, 2); ho.textContent = fmt(h, 2);
+      clear(svg);
+      mk("line", { x1: sx(X0), y1: sy(0), x2: sx(X1), y2: sy(0), "class": "d-grid" }, svg);
+      mk("line", { x1: sx(0), y1: sy(Y0), x2: sx(0), y2: sy(Y1), "class": "d-grid" }, svg);
+      var d = "", t;
+      for (t = X0; t <= X1 + 1e-9; t += 0.05) d += (d ? " L" : "M") + sx(t).toFixed(1) + " " + sy(f(t)).toFixed(1);
+      mk("path", { d: d, "class": "d-line", "stroke-width": "2" }, svg);
+      var m = fp(x), y = f(x);
+      mk("line", { x1: sx(x - 1.2), y1: sy(y - 1.2 * m), x2: sx(x + 1.2), y2: sy(y + 1.2 * m), "class": "d-line-accent" }, svg);
+      var x2 = x + h, y2 = f(x2), ms = (y2 - y) / h;
+      mk("line", { x1: sx(x - 0.8), y1: sy(y - 0.8 * ms), x2: sx(x2 + 0.8), y2: sy(y2 + 0.8 * ms), "class": "d-line-signal" }, svg);
+      mk("circle", { cx: sx(x), cy: sy(y), r: 5, "class": "d-dot" }, svg);
+      mk("circle", { cx: sx(x2), cy: sy(y2), r: 5, "class": "d-dot-signal" }, svg);
+      mk("text", { x: 46, y: 36, "class": "d-label" }, svg, "f(x) = x³/3 − x");
+      mk("text", { x: 46, y: 52, "class": "d-label d-text-accent" }, svg, "tangent: slope f′(x)");
+      mk("text", { x: 46, y: 68, "class": "d-label d-text-signal" }, svg, "secant through x and x + h");
+      readout.textContent = "secant slope = " + fmt(ms, 3) + "  ·  true derivative x² − 1 = " + fmt(m, 3) + "  ·  error = " + fmt(Math.abs(ms - m), 3) + " (shrinks as h → 0)";
+    }
+    xin.addEventListener("input", draw); hin.addEventListener("input", draw);
+    draw();
+  })();
+
+  /* ---------- 3. Probability: central limit theorem ---------- */
+  (function () {
+    var svg = document.getElementById("clt-plot");
+    if (!svg) return;
+    var sel = document.getElementById("clt-dist"), nin = document.getElementById("clt-n"), nout = document.getElementById("clt-n-out");
+    var btn = document.getElementById("clt-resample"), readout = document.getElementById("clt-readout");
+    var seed = 7;
+    var DIST = {
+      uniform: { lo: 0, hi: 1, mu: 0.5, sd: Math.sqrt(1 / 12), draw: function (r) { return r(); } },
+      exp: { lo: 0, hi: 4, mu: 1, sd: 1, draw: function (r) { return -Math.log(1 - r()); } },
+      bimodal: { lo: 0, hi: 1, mu: 0.5, sd: Math.sqrt(0.0049 + 0.09), draw: function (r) {
+        var z = Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+        return (r() < 0.5 ? 0.2 : 0.8) + 0.07 * z; } },
+      coin: { lo: 0, hi: 1, mu: 0.3, sd: Math.sqrt(0.21), draw: function (r) { return r() < 0.3 ? 1 : 0; } }
+    };
+    var BINS = 30, M = 2000;
+    function hist(vals, lo, hi) {
+      var c = new Array(BINS).fill(0);
+      vals.forEach(function (v) { var k = Math.floor((v - lo) / (hi - lo) * BINS); c[Math.max(0, Math.min(BINS - 1, k))]++; });
+      return c;
+    }
+    function panel(x0, w, counts, title, cls, lo, hi, curve) {
+      var top = 40, bot = 220, max = Math.max.apply(null, counts) || 1;
+      if (curve) max = Math.max(max, curve.peak);
+      mk("text", { x: x0, y: 24, "class": "d-title" }, svg, title);
+      var bw = w / BINS;
+      counts.forEach(function (c, i) {
+        var hgt = c / max * (bot - top);
+        if (hgt > 0) mk("rect", { x: (x0 + i * bw + 0.5).toFixed(1), y: (bot - hgt).toFixed(1), width: (bw - 1).toFixed(1), height: hgt.toFixed(1), "class": cls }, svg);
+      });
+      mk("line", { x1: x0, y1: bot, x2: x0 + w, y2: bot, "class": "d-line" }, svg);
+      mk("text", { x: x0, y: bot + 16, "class": "d-label" }, svg, String(lo));
+      mk("text", { x: x0 + w, y: bot + 16, "class": "d-label", "text-anchor": "end" }, svg, String(hi));
+      if (curve) {
+        var d = "";
+        for (var i = 0; i <= 120; i++) {
+          var v = lo + (hi - lo) * i / 120;
+          var y = curve.f(v) / max * (bot - top);
+          d += (i ? " L" : "M") + (x0 + i / 120 * w).toFixed(1) + " " + (bot - Math.min(y, bot - top + 10)).toFixed(1);
+        }
+        mk("path", { d: d, "class": "d-line-signal" }, svg);
+      }
+    }
+    function draw() {
+      var D = DIST[sel.value], n = +nin.value, r = mulberry32(seed);
+      nout.textContent = n;
+      var raw = [], means = [], i, j;
+      for (i = 0; i < M; i++) raw.push(D.draw(r));
+      for (i = 0; i < M; i++) { var s = 0; for (j = 0; j < n; j++) s += D.draw(r); means.push(s / n); }
+      clear(svg);
+      var se = D.sd / Math.sqrt(n), bwv = (D.hi - D.lo) / BINS;
+      var g = function (v) { return M * bwv * Math.exp(-0.5 * Math.pow((v - D.mu) / se, 2)) / (se * Math.sqrt(2 * Math.PI)); };
+      panel(20, 260, hist(raw, D.lo, D.hi), "Source: 2,000 single draws", "d-box", D.lo, D.hi, null);
+      panel(320, 260, hist(means, D.lo, D.hi), "2,000 means of n = " + n + " draws", "d-accent", D.lo, D.hi, n >= 2 ? { f: g, peak: g(D.mu) } : null);
+      var mm = means.reduce(function (a, b) { return a + b; }, 0) / M;
+      var sd = Math.sqrt(means.reduce(function (a, b) { return a + (b - mm) * (b - mm); }, 0) / (M - 1));
+      readout.textContent = "mean of means = " + fmt(mm, 3) + " (true μ = " + fmt(D.mu, 2) + ")  ·  spread of means = " + fmt(sd, 3) + "  ·  theory σ/√n = " + fmt(se, 3) + (n >= 2 ? "  ·  orange curve: Gaussian predicted by the CLT" : "");
+    }
+    sel.addEventListener("change", draw); nin.addEventListener("input", draw);
+    btn.addEventListener("click", function () { seed = (seed * 9301 + 49297) % 233280; draw(); });
+    draw();
+  })();
+
+  /* ---------- 4. Optimization: gradient descent with momentum ---------- */
+  (function () {
+    var svg = document.getElementById("gd-plot");
+    if (!svg) return;
+    var fnSel = document.getElementById("gd-fn");
+    var lr = document.getElementById("gd-lr"), mom = document.getElementById("gd-mom"), x0 = document.getElementById("gd-x0");
+    var lrO = document.getElementById("gd-lr-out"), momO = document.getElementById("gd-mom-out"), x0O = document.getElementById("gd-x0-out");
+    var readout = document.getElementById("gd-readout");
+    var FN = {
+      bowl: { f: function (x) { return x * x; }, g: function (x) { return 2 * x; }, X: [-3, 3], Y: [-0.5, 9.5] },
+      valleys: { f: function (x) { return 0.25 * x * x * x * x - x * x + 0.35 * x; }, g: function (x) { return x * x * x - 2 * x + 0.35; }, X: [-2.4, 2.4], Y: [-1.8, 3.6] }
+    };
+    var STEPS = 30;
+    function draw() {
+      var F = FN[fnSel.value], eta = +lr.value, beta = +mom.value, x = +x0.value;
+      lrO.textContent = fmt(eta, 2); momO.textContent = fmt(beta, 2); x0O.textContent = fmt(x, 2);
+      function sx(v) { return 40 + (v - F.X[0]) / (F.X[1] - F.X[0]) * 530; }
+      function sy(v) { return 20 + (F.Y[1] - v) / (F.Y[1] - F.Y[0]) * 230; }
+      function cy(v) { return Math.max(4, Math.min(276, sy(v))); }
+      clear(svg);
+      mk("line", { x1: 40, y1: sy(0), x2: 570, y2: sy(0), "class": "d-grid" }, svg);
+      var d = "", t;
+      for (t = F.X[0]; t <= F.X[1] + 1e-9; t += (F.X[1] - F.X[0]) / 200) d += (d ? " L" : "M") + sx(t).toFixed(1) + " " + sy(F.f(t)).toFixed(1);
+      mk("path", { d: d, "class": "d-line", "stroke-width": "2" }, svg);
+      var xs = [x], v = 0, diverged = false, i;
+      for (i = 0; i < STEPS; i++) {
+        v = beta * v - eta * F.g(x);
+        x = x + v;
+        if (!isFinite(x) || Math.abs(x) > 50) { diverged = true; break; }
+        xs.push(x);
+      }
+      var pd = "";
+      xs.forEach(function (p, k) { pd += (k ? " L" : "M") + Math.max(0, Math.min(600, sx(p))).toFixed(1) + " " + cy(F.f(p)).toFixed(1); });
+      mk("path", { d: pd, "class": "d-line-accent", "stroke-opacity": "0.7" }, svg);
+      xs.forEach(function (p, k) {
+        var px = sx(p);
+        if (px < 0 || px > 600) return;
+        mk("circle", { cx: px.toFixed(1), cy: cy(F.f(p)).toFixed(1), r: k === 0 ? 6 : 4, "class": k === 0 ? "d-dot-signal" : (k === xs.length - 1 ? "d-dot-good" : "d-dot") }, svg);
+      });
+      mk("text", { x: 46, y: 36, "class": "d-label" }, svg, fnSel.value === "bowl" ? "L(x) = x²" : "L(x) = x⁴/4 − x² + 0.35x");
+      mk("text", { x: 46, y: 52, "class": "d-label d-text-signal" }, svg, "start");
+      mk("text", { x: 90, y: 52, "class": "d-label d-text-good" }, svg, "final");
+      var last = xs[xs.length - 1], msg;
+      if (diverged) msg = "diverged after " + xs.length + " steps: the learning rate is too large for this curvature";
+      else {
+        var moving = Math.abs(xs[xs.length - 1] - xs[xs.length - 2]);
+        msg = "after " + STEPS + " steps: x = " + fmt(last, 3) + ", loss = " + fmt(F.f(last), 3) + (moving < 1e-3 ? "  ·  converged" : "  ·  still moving (step " + fmt(moving, 3) + ")");
+        if (fnSel.value === "valleys") msg += last < -0.2 ? "  ·  deep left valley (global min ≈ −1.51)" : (last > 0.2 ? "  ·  shallow right valley (local min ≈ −0.52)" : "");
+      }
+      readout.textContent = msg;
+    }
+    [lr, mom, x0].forEach(function (el) { el.addEventListener("input", draw); });
+    fnSel.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- 5. Python: semaphore-limited async calls ---------- */
+  (function () {
+    var svg = document.getElementById("async-plot");
+    if (!svg) return;
+    var nIn = document.getElementById("async-n"), capIn = document.getElementById("async-cap"), latIn = document.getElementById("async-lat");
+    var nO = document.getElementById("async-n-out"), capO = document.getElementById("async-cap-out"), latO = document.getElementById("async-lat-out");
+    var readout = document.getElementById("async-readout");
+    function draw() {
+      var n = +nIn.value, cap = +capIn.value, mean = +latIn.value;
+      nO.textContent = n; capO.textContent = cap; latO.textContent = fmt(mean, 1);
+      var r = mulberry32(42), lat = [], i;
+      for (i = 0; i < n; i++) lat.push(mean * (0.5 + r()));
+      var free = new Array(cap).fill(0), jobs = [];
+      for (i = 0; i < n; i++) {
+        var k = 0;
+        for (var j = 1; j < cap; j++) if (free[j] < free[k]) k = j;
+        jobs.push({ slot: k, start: free[k], end: free[k] + lat[i] });
+        free[k] += lat[i];
+      }
+      var total = Math.max.apply(null, free), seq = lat.reduce(function (a, b) { return a + b; }, 0);
+      clear(svg);
+      var L = 70, W = 510, top = 14, H = 200, rowH = H / cap;
+      function sx(t) { return L + t / total * W; }
+      for (i = 0; i < cap; i++) if (cap <= 10 || i % 2 === 0) mk("text", { x: L - 8, y: (top + i * rowH + rowH / 2 + 4).toFixed(1), "class": "d-label", "text-anchor": "end" }, svg, "slot " + (i + 1));
+      jobs.forEach(function (jb) {
+        mk("rect", { x: sx(jb.start).toFixed(1), y: (top + jb.slot * rowH + 1).toFixed(1), width: Math.max(1, sx(jb.end) - sx(jb.start) - 1).toFixed(1), height: Math.max(1, rowH - 2).toFixed(1), rx: Math.min(3, rowH / 4).toFixed(1), "class": "d-good" }, svg);
+      });
+      var axisY = top + H + 8;
+      mk("line", { x1: L, y1: axisY, x2: L + W, y2: axisY, "class": "d-line" }, svg);
+      var stepT = total > 40 ? 10 : total > 16 ? 4 : total > 6 ? 2 : total > 2.5 ? 1 : 0.5;
+      for (var t = 0; t <= total + 1e-9; t += stepT) {
+        mk("line", { x1: sx(t), y1: axisY, x2: sx(t), y2: axisY + 4, "class": "d-line" }, svg);
+        mk("text", { x: sx(t), y: axisY + 18, "class": "d-label", "text-anchor": "middle" }, svg, (stepT < 1 ? fmt(t, 1) : t) + " s");
+      }
+      readout.textContent = "sequential: " + fmt(seq, 1) + " s  ·  with limit " + cap + ": " + fmt(total, 1) + " s  ·  speed-up " + fmt(seq / total, 1) + "×";
+    }
+    [nIn, capIn, latIn].forEach(function (el) { el.addEventListener("input", draw); });
+    draw();
+  })();
+
+  /* ---------- 6. DSA: Big-O growth curves ---------- */
+  (function () {
+    var svg = document.getElementById("bigo-plot");
+    if (!svg) return;
+    var nIn = document.getElementById("bigo-n"), nO = document.getElementById("bigo-n-out");
+    var logIn = document.getElementById("bigo-log"), real = document.getElementById("bigo-real");
+    var readout = document.getElementById("bigo-readout");
+    var log2 = function (n) { return Math.log(n) / Math.LN2; };
+    var CURVES = [
+      { name: "log n", f: function (n) { return Math.max(log2(n), 0); }, cls: "d-line d-dash" },
+      { name: "n", f: function (n) { return n; }, cls: "d-line" },
+      { name: "n log n", f: function (n) { return n * Math.max(log2(n), 0); }, cls: "d-line-accent" },
+      { name: "n²", f: function (n) { return n * n; }, cls: "d-line-signal" },
+      { name: "2ⁿ", f: function (n) { return Math.pow(2, n); }, cls: "d-line-signal d-dash" }
+    ];
+    function human(sec) {
+      if (!isFinite(sec) || sec > 3.15e7 * 1e10) return "longer than the age of the universe";
+      var u = [[3.15e7, "years"], [86400, "days"], [3600, "hours"], [60, "min"], [1, "s"], [1e-3, "ms"], [1e-6, "µs"], [1e-9, "ns"]];
+      for (var i = 0; i < u.length; i++) if (sec >= u[i][0]) return fmt(sec / u[i][0], sec / u[i][0] < 10 ? 1 : 0) + " " + u[i][1];
+      return "under 1 ns";
+    }
+    function draw() {
+      var N = +nIn.value, isLog = logIn.checked;
+      nO.textContent = N;
+      clear(svg);
+      var L = 50, R = 520, T = 16, B = 240;
+      var ymax = isLog ? Math.pow(2, N) : N * N;
+      function sx(n) { return L + (n - 1) / (N - 1) * (R - L); }
+      function sy(v) {
+        if (isLog) return B - Math.log10(Math.max(v, 1)) / Math.log10(ymax) * (B - T);
+        return B - v / ymax * (B - T);
+      }
+      mk("line", { x1: L, y1: B, x2: R, y2: B, "class": "d-line" }, svg);
+      mk("line", { x1: L, y1: T, x2: L, y2: B, "class": "d-line" }, svg);
+      mk("text", { x: R, y: B + 18, "class": "d-label", "text-anchor": "end" }, svg, "n = " + N);
+      mk("text", { x: L, y: B + 18, "class": "d-label" }, svg, "1");
+      mk("text", { x: L - 6, y: T + 10, "class": "d-label", "text-anchor": "end" }, svg, isLog ? "2ⁿ" : "n²");
+      mk("text", { x: L + 6, y: T + 10, "class": "d-label" }, svg, isLog ? "operations (log scale)" : "operations");
+      var labels = [];
+      CURVES.forEach(function (c, idx) {
+        var d = "", lastX = null, lastY = null;
+        for (var n = 1; n <= N; n += Math.max(0.05, (N - 1) / 200)) {
+          var y = sy(c.f(n));
+          if (y < T) { d += (d ? " L" : "M") + sx(n).toFixed(1) + " " + T; lastX = sx(n); lastY = T; break; }
+          d += (d ? " L" : "M") + sx(n).toFixed(1) + " " + y.toFixed(1);
+          lastX = sx(n); lastY = y;
+        }
+        mk("path", { d: d, "class": c.cls, "stroke-width": "2.5" }, svg);
+        var ly = Math.min(B - 4, Math.max(T + 8, lastY + (lastY <= T + 1 ? 12 : 4)));
+        labels.push({ x: Math.min(lastX + 6, 590), y: ly, name: c.name });
+      });
+      labels.sort(function (p, q) { return q.y - p.y; });
+      for (var li = 1; li < labels.length; li++) {
+        var prev = labels[li - 1];
+        if (Math.abs(prev.x - labels[li].x) < 60 && prev.y - labels[li].y < 14) labels[li].y = prev.y - 14;
+      }
+      labels.forEach(function (lb) { mk("text", { x: lb.x, y: lb.y, "class": "d-mono" }, svg, lb.name); });
+      var n = +real.value, ops = 1e8;
+      var parts = CURVES.map(function (c) {
+        var v = c.name === "2ⁿ" ? Infinity : c.f(n);
+        return c.name + ": " + human(v / ops);
+      });
+      readout.textContent = "At n = " + n.toLocaleString("en-US") + " and 10⁸ ops/s  →  " + parts.join("  ·  ");
+    }
+    nIn.addEventListener("input", draw); logIn.addEventListener("change", draw); real.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- 7. Docker: layer cache with good vs bad ordering ---------- */
+  (function () {
+    var svg = document.getElementById("docker-plot");
+    if (!svg) return;
+    var sel = document.getElementById("docker-change"), readout = document.getElementById("docker-readout");
+    var GOOD = [
+      { t: "FROM python:3.12-slim", hit: ["base"], s: 20 },
+      { t: "WORKDIR /app", hit: [], s: 0.1 },
+      { t: "COPY requirements.txt .", hit: ["reqs"], s: 0.1 },
+      { t: "RUN pip install -r …", hit: [], s: 90 },
+      { t: "COPY . .", hit: ["code", "reqs"], s: 1 },
+      { t: "CMD [\"uvicorn\", …]", hit: [], s: 0.1 }
+    ];
+    var BAD = [
+      { t: "FROM python:3.12-slim", hit: ["base"], s: 20 },
+      { t: "WORKDIR /app", hit: [], s: 0.1 },
+      { t: "COPY . .", hit: ["code", "reqs"], s: 1 },
+      { t: "RUN pip install -r …", hit: [], s: 90 },
+      { t: "CMD [\"uvicorn\", …]", hit: [], s: 0.1 }
+    ];
+    function col(x0, title, layers, change) {
+      mk("text", { x: x0, y: 20, "class": "d-title" }, svg, title);
+      var broken = false, time = 0;
+      layers.forEach(function (l, i) {
+        if (l.hit.indexOf(change) >= 0) broken = true;
+        if (broken) time += l.s;
+        var y = 32 + i * 32;
+        mk("rect", { x: x0, y: y, width: 270, height: 26, rx: 5, "class": broken ? "d-signal" : "d-good" }, svg);
+        mk("text", { x: x0 + 10, y: y + 17, "class": "d-mono" }, svg, l.t);
+        mk("text", { x: x0 + 262, y: y + 17, "class": "d-label", "text-anchor": "end" }, svg, broken ? "rebuild " + (l.s >= 1 ? l.s + " s" : "") : "cached");
+      });
+      mk("text", { x: x0, y: 32 + layers.length * 32 + 16, "class": "d-text" }, svg, "rebuild time ≈ " + fmt(time, 1) + " s");
+      return time;
+    }
+    function draw() {
+      clear(svg);
+      var c = sel.value;
+      var g = col(10, "Good order", GOOD, c);
+      var b = col(320, "Bad order", BAD, c);
+      readout.textContent = "Good order: " + fmt(g, 1) + " s  ·  Bad order: " + fmt(b, 1) + " s" + (b > g ? "  ·  the bad order reinstalls every dependency on each code edit" : "");
+    }
+    sel.addEventListener("change", draw);
+    draw();
+  })();
+})();
+</script>
+</body>
+</html>

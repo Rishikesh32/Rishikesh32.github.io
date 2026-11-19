@@ -1,0 +1,1773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Specializations · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="specializations">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Specializations</h1>
+    <p class="lede">LLMs are the common core, but many products also need a second, deeper domain: images, audio, generated media, recommendations, forecasts or decision-making agents. Each field below gets a compact primer covering its core tasks, the architectures that matter, how it plugs into LLM work today, and a roadmap for going further. Pick one or two to go deep on.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">All six fields run on the same foundation you built in deep learning and transformers: tensors, backpropagation, embeddings, attention and careful evaluation. What changes is the shape of the data (pixels, waveforms, user histories, timestamps, reward signals) and the tricks each community invented for it. Today the fields also feed back into LLM work. Vision encoders give language models eyes, speech models give them ears and a voice, diffusion models turn text into media, recommender retrieval is the ancestor of RAG, and reinforcement learning is how chat models get tuned. Read every primer once for orientation, then choose one or two to study properly.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 310" role="img" aria-label="A shared deep learning foundation feeds six specializations, and each specialization connects to a kind of modern AI product.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="14" width="720" height="42" rx="8"/>
+              <text class="d-title" x="380" y="34" text-anchor="middle">Shared foundation</text>
+              <text class="d-label" x="380" y="50" text-anchor="middle">tensors · backprop · embeddings · attention · evaluation habits (Areas 3–5, 10)</text>
+              <line class="d-line" x1="135" y1="56" x2="135" y2="82" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="380" y1="56" x2="380" y2="82" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="625" y1="56" x2="625" y2="82" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="20" y="84" width="230" height="56" rx="8"/>
+              <text class="d-title" x="135" y="106" text-anchor="middle">Computer vision</text>
+              <text class="d-label" x="135" y="126" text-anchor="middle">ViT encoders give LLMs eyes</text>
+              <rect class="d-box" x="265" y="84" width="230" height="56" rx="8"/>
+              <text class="d-title" x="380" y="106" text-anchor="middle">Speech &amp; voice</text>
+              <text class="d-label" x="380" y="126" text-anchor="middle">ASR in, TTS out, LLM in the middle</text>
+              <rect class="d-box" x="510" y="84" width="230" height="56" rx="8"/>
+              <text class="d-title" x="625" y="106" text-anchor="middle">Diffusion</text>
+              <text class="d-label" x="625" y="126" text-anchor="middle">text-conditioned images, video, audio</text>
+              <rect class="d-box" x="20" y="154" width="230" height="56" rx="8"/>
+              <text class="d-title" x="135" y="176" text-anchor="middle">Recommender systems</text>
+              <text class="d-label" x="135" y="196" text-anchor="middle">two-tower retrieval, ancestor of RAG</text>
+              <rect class="d-box" x="265" y="154" width="230" height="56" rx="8"/>
+              <text class="d-title" x="380" y="176" text-anchor="middle">Time series</text>
+              <text class="d-label" x="380" y="196" text-anchor="middle">forecasts, anomalies, capacity plans</text>
+              <rect class="d-box" x="510" y="154" width="230" height="56" rx="8"/>
+              <text class="d-title" x="625" y="176" text-anchor="middle">Reinforcement learning</text>
+              <text class="d-label" x="625" y="196" text-anchor="middle">RLHF, GRPO, agent training</text>
+              <line class="d-line" x1="135" y1="210" x2="135" y2="246" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="380" y1="210" x2="380" y2="246" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="625" y1="210" x2="625" y2="246" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="145" y="233">feeds</text>
+              <rect class="d-accent" x="20" y="248" width="720" height="48" rx="8"/>
+              <text class="d-title" x="380" y="269" text-anchor="middle">Products you can build</text>
+              <text class="d-label" x="380" y="287" text-anchor="middle">multimodal assistants · voice agents · media tools · personalized feeds · forecasting · tuned models</text>
+            </svg>
+          </div>
+          <figcaption>One foundation, six data shapes. Each specialization adds its own architectures and metrics, then connects back to the products an AI engineer ships.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="computer-vision">
+        <header class="topic-head">
+          <p class="eyebrow">15.1 · Seeing</p>
+          <h2>Computer vision</h2>
+        </header>
+
+        <p class="lead">To a computer, an image is a grid of numbers: a 224×224 colour photo is a 3×224×224 tensor, about 150,000 values. Vision models turn that grid into answers at three levels of detail, and into embeddings that a language model can read.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Screenshots for computer-use agents, scanned invoices, product photos and factory inspection all need vision. You will often choose between a vision-language model (flexible, slower, billed per image token) and a small detector (fast, cheap, precise, fixed classes).</p>
+        </div>
+
+        <h3>Three tasks, three kinds of output</h3>
+        <p><strong>Classification</strong> outputs one label per image. <strong>Detection</strong> outputs boxes, each with a class and a confidence score. <strong>Segmentation</strong> labels every pixel. Detection is scored by <strong>mean average precision (mAP)</strong>, the area under the precision-recall curve, where a prediction counts only if it overlaps a true box enough.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="The same scene of a dog and a ball, shown three ways: classification gives one label, detection gives two scored boxes, segmentation colours every pixel by class.">
+              <text class="d-title" x="120" y="24" text-anchor="middle">Classification: what?</text>
+              <text class="d-title" x="350" y="24" text-anchor="middle">Detection: where?</text>
+              <text class="d-title" x="580" y="24" text-anchor="middle">Segmentation: which pixels?</text>
+              <rect class="d-grid" x="20" y="40" width="200" height="140" rx="6"/>
+              <rect class="d-box" x="50" y="90" width="80" height="55" rx="18"/><circle class="d-box" cx="135" cy="100" r="18"/><circle class="d-box" cx="180" cy="145" r="14"/>
+              <text class="d-mono" x="120" y="204" text-anchor="middle">"dog"  p = 0.94</text>
+              <text class="d-label" x="120" y="222" text-anchor="middle">one label per image</text>
+              <rect class="d-grid" x="250" y="40" width="200" height="140" rx="6"/>
+              <rect class="d-box" x="280" y="90" width="80" height="55" rx="18"/><circle class="d-box" cx="365" cy="100" r="18"/><circle class="d-box" cx="410" cy="145" r="14"/>
+              <rect class="d-line-accent" x="276" y="78" width="112" height="72"/>
+              <rect class="d-line-signal" x="392" y="127" width="36" height="36"/>
+              <text class="d-label d-text-accent" x="278" y="73">dog 0.91</text>
+              <text class="d-label d-text-signal" x="392" y="122">ball 0.88</text>
+              <text class="d-mono" x="350" y="204" text-anchor="middle">[x1, y1, x2, y2, class, score]</text>
+              <text class="d-label" x="350" y="222" text-anchor="middle">one row per object</text>
+              <rect class="d-fill" x="480" y="40" width="200" height="140" rx="6"/>
+              <rect class="d-accent" x="510" y="90" width="80" height="55" rx="18"/><circle class="d-accent" cx="595" cy="100" r="18"/><circle class="d-signal" cx="640" cy="145" r="14"/>
+              <text class="d-mono" x="580" y="204" text-anchor="middle">mask: H × W class ids</text>
+              <text class="d-label" x="580" y="222" text-anchor="middle">blue = dog, orange = ball, grey = background</text>
+            </svg>
+          </div>
+          <figcaption>One scene, three outputs. Each step to the right costs more labelling effort and gives a finer answer.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Task</th><th>Output</th><th>Metric</th><th>Typical models</th></tr></thead>
+            <tbody>
+              <tr><td>Classification</td><td>one label + probability</td><td>top-1 / top-5 accuracy</td><td>ResNet, EfficientNet, ViT, ConvNeXt</td></tr>
+              <tr><td>Detection</td><td>boxes + class + score</td><td>mAP@0.5, COCO mAP@[.5:.95]</td><td>Faster R-CNN, YOLO family, DETR</td></tr>
+              <tr><td>Semantic segmentation</td><td>class per pixel</td><td>mIoU</td><td>U-Net, DeepLab, SegFormer</td></tr>
+              <tr><td>Instance segmentation</td><td>mask per object</td><td>mask mAP</td><td>Mask R-CNN, SAM (promptable)</td></tr>
+              <tr><td>Zero-shot / open-vocabulary</td><td>label from free text</td><td>accuracy on unseen classes</td><td>CLIP, SigLIP, VLMs</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>IoU and non-maximum suppression</h3>
+        <p><strong>Intersection over union (IoU)</strong> measures that overlap. Ground truth (0,0)–(10,10) and prediction (5,0)–(15,10) share 50 units of area out of 150 covered, so IoU = 0.33. It fails the usual 0.5 threshold despite covering half the object.</p>
+        <div class="formula">
+          \[ \text{IoU}(A,B) = \frac{|A \cap B|}{|A \cup B|} = \frac{|A \cap B|}{|A| + |B| - |A \cap B|} \]
+          <span class="formula-note">For axis-aligned boxes the intersection is \(\max(0, \min(x_2) - \max(x_1)) \times \max(0, \min(y_2) - \max(y_1))\).</span>
+        </div>
+        <p>Detectors emit many overlapping boxes per object. <strong>Non-maximum suppression (NMS)</strong> keeps the best-scoring box, deletes every box whose IoU with it exceeds a threshold (often 0.45 to 0.7), and repeats. Too low a threshold merges people standing close together; too high reports one car three times.</p>
+
+        <div class="widget" id="cv-iou">
+          <div class="widget-head">
+            <span class="widget-title">IoU between two boxes</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="cv-iou-thr">Match / NMS threshold <input type="range" id="cv-iou-thr" min="0.1" max="0.9" step="0.05" value="0.5"><output id="cv-iou-thr-out">0.50</output></label>
+            <button class="btn" type="button" id="cv-iou-reset">Reset boxes</button>
+          </div>
+          <svg id="cv-iou-svg" viewBox="0 0 600 300" role="img" aria-label="Two draggable boxes; their overlap is shaded and the IoU is shown below." style="touch-action: none;"></svg>
+          <p class="readout" id="cv-iou-readout"></p>
+          <p class="muted" style="font-size:.88rem">Drag a box body to move it, or drag its corner handle to resize it. Treat the blue box as ground truth and the orange box as a prediction.</p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+def iou(a, b):
+    <span class="c"># boxes as [x1, y1, x2, y2]</span>
+    ix = max(0.0, min(a[2], b[2]) - max(a[0], b[0]))
+    iy = max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+    inter = ix * iy
+    area = lambda r: (r[2] - r[0]) * (r[3] - r[1])
+    return inter / (area(a) + area(b) - inter)
+
+def nms(boxes, scores, thr=0.5):
+    order = np.argsort(scores)[::-1]      <span class="c"># best score first</span>
+    keep = []
+    while len(order):
+        best, rest = order[0], order[1:]
+        keep.append(int(best))
+        order = np.array([i for i in rest if iou(boxes[best], boxes[i]) &lt;= thr])
+    return keep
+
+boxes = np.array([[0, 0, 10, 10], [1, 1, 11, 11], [20, 20, 30, 30]], dtype=float)
+print(nms(boxes, np.array([0.9, 0.8, 0.7])))   <span class="c"># [0, 2]: box 1 overlaps box 0 with IoU 0.68</span>
+<span class="c"># In real code use torchvision.ops.nms(boxes, scores, iou_threshold)</span></code></pre>
+
+        <h3>From CNNs to ViTs to vision-language models</h3>
+        <p><strong>CNNs</strong> slide small learned filters across the image, from edges up to whole objects. Detectors add a head: one-stage YOLO-family models for real time, two-stage Faster R-CNN for accuracy, and DETR, which needs no NMS.</p>
+        <p>The <strong>Vision Transformer (ViT)</strong> cuts a 224×224 image into 196 patches of 16×16 pixels, projects each patch to a vector, adds position embeddings and a CLS token, and runs a standard transformer encoder. With no built-in locality bias, ViTs need large-scale pretraining.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="A ViT splits an image into patches, embeds them as tokens, runs a transformer encoder, then either classifies from the CLS token or projects patch outputs into an LLM.">
+              <defs>
+                <marker id="cv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="50" width="120" height="120"/>
+              <line class="d-grid" x1="50" y1="50" x2="50" y2="170"/><line class="d-grid" x1="80" y1="50" x2="80" y2="170"/><line class="d-grid" x1="110" y1="50" x2="110" y2="170"/>
+              <line class="d-grid" x1="20" y1="80" x2="140" y2="80"/><line class="d-grid" x1="20" y1="110" x2="140" y2="110"/><line class="d-grid" x1="20" y1="140" x2="140" y2="140"/>
+              <rect class="d-accent" x="20" y="50" width="30" height="30"/>
+              <text class="d-text" x="80" y="38" text-anchor="middle">image</text>
+              <text class="d-label" x="80" y="190" text-anchor="middle">cut into 16×16 patches</text>
+              <text class="d-label" x="80" y="206" text-anchor="middle">224² image → 196 patches</text>
+              <line class="d-line-accent" x1="145" y1="110" x2="182" y2="110" marker-end="url(#cv-arrow)"/>
+              <text class="d-label" x="163" y="100" text-anchor="middle">linear</text>
+              <rect class="d-signal" x="190" y="93" width="22" height="34" rx="3"/>
+              <rect class="d-accent" x="216" y="93" width="22" height="34" rx="3"/>
+              <rect class="d-accent" x="242" y="93" width="22" height="34" rx="3"/>
+              <rect class="d-accent" x="268" y="93" width="22" height="34" rx="3"/>
+              <text class="d-text" x="303" y="115" text-anchor="middle">…</text>
+              <rect class="d-accent" x="318" y="93" width="22" height="34" rx="3"/>
+              <text class="d-label" x="201" y="86" text-anchor="middle">CLS</text>
+              <text class="d-label" x="265" y="146" text-anchor="middle">197 tokens of width d</text>
+              <text class="d-label" x="265" y="162" text-anchor="middle">+ position embeddings</text>
+              <line class="d-line-accent" x1="345" y1="110" x2="378" y2="110" marker-end="url(#cv-arrow)"/>
+              <rect class="d-box" x="380" y="70" width="120" height="80" rx="8"/>
+              <text class="d-title" x="440" y="102" text-anchor="middle">Transformer</text>
+              <text class="d-title" x="440" y="120" text-anchor="middle">encoder</text>
+              <text class="d-label" x="440" y="139" text-anchor="middle">L layers</text>
+              <line class="d-line-accent" x1="500" y1="88" x2="538" y2="44" marker-end="url(#cv-arrow)"/>
+              <text class="d-label" x="506" y="58">CLS out</text>
+              <rect class="d-box" x="540" y="20" width="150" height="40" rx="8"/>
+              <text class="d-text" x="615" y="45" text-anchor="middle">class head → label</text>
+              <line class="d-line-accent" x1="500" y1="130" x2="538" y2="130" marker-end="url(#cv-arrow)"/>
+              <text class="d-label" x="506" y="150">patches</text>
+              <rect class="d-box" x="540" y="110" width="150" height="40" rx="8"/>
+              <text class="d-text" x="615" y="135" text-anchor="middle">projector (MLP)</text>
+              <line class="d-line-accent" x1="615" y1="150" x2="615" y2="172" marker-end="url(#cv-arrow)"/>
+              <rect class="d-accent" x="540" y="174" width="150" height="46" rx="8"/>
+              <text class="d-title" x="615" y="195" text-anchor="middle">LLM</text>
+              <text class="d-label" x="615" y="211" text-anchor="middle">image tokens + text</text>
+            </svg>
+          </div>
+          <figcaption>A ViT treats patches as tokens. For classification, a head reads the CLS output. In a vision-language model, the patch outputs are projected into the LLM's embedding space and read like words.</figcaption>
+        </figure>
+
+                <p><strong>CLIP</strong> trained image and text encoders on about 400 million captioned images so that matching pairs land close together. Compare an image with "a photo of a {label}" for every label and you get zero-shot classification.</p>
+        <p><strong>Vision-language models (VLMs)</strong> project a vision encoder's patch outputs into an LLM: a 336×336 image with 14-pixel patches becomes 576 tokens. They excel at documents and open questions but are weaker at counting and exact localisation, so high-volume fixed-class jobs still favour a detector.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Classification answers what, detection answers where (boxes), segmentation answers which pixels.</li>
+            <li>IoU is overlap divided by union; it decides true positives in mAP and which boxes NMS removes.</li>
+            <li>CNNs bake in locality; ViTs treat 16×16 patches as tokens and need large-scale pretraining.</li>
+            <li>CLIP aligns images and text in one embedding space, enabling zero-shot labels and image search.</li>
+            <li>VLMs = vision encoder + projector + LLM; images become hundreds of tokens each.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Mixing box formats (corner vs centre, pixels vs normalised 0–1) between a model and its evaluation code.</li>
+            <li>Forgetting to apply the same resize and normalisation (ImageNet mean and std) at inference as in training.</li>
+            <li>Using a VLM for high-volume, fixed-class detection where a small detector is 100× cheaper.</li>
+            <li>Random train/test splits when near-duplicate frames from the same video land on both sides.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">Starter roadmap</span>
+          <ol>
+            <li>Train a small CNN on CIFAR-10.</li>
+            <li>Fine-tune a pretrained ViT on your own 5 classes.</li>
+            <li>Train a detector and compute mAP@0.5 yourself.</li>
+            <li>Compare zero-shot CLIP with your fine-tuned model.</li>
+            <li>Build a VLM document extractor with a 50-page eval set.</li>
+          </ol>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="computer-vision-1"><span>Compute IoU for two boxes by hand and implement NMS in under 20 lines</span></label></li>
+          <li><label><input type="checkbox" data-key="computer-vision-2"><span>Explain how mAP is computed from scored detections and an IoU threshold</span></label></li>
+          <li><label><input type="checkbox" data-key="computer-vision-3"><span>Count the tokens a ViT produces for a given image size and patch size</span></label></li>
+          <li><label><input type="checkbox" data-key="computer-vision-4"><span>Describe how CLIP does zero-shot classification and how a VLM feeds images to an LLM</span></label></li>
+          <li><label><input type="checkbox" data-key="computer-vision-5"><span>Argue for a detector, a VLM or a hybrid given volume, latency and accuracy needs</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Course</span><a href="https://cs231n.stanford.edu/">Stanford CS231n: Deep Learning for Computer Vision</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2010.11929">An Image is Worth 16x16 Words (ViT, Dosovitskiy et al., 2020)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2103.00020">Learning Transferable Visual Models From Natural Language Supervision (CLIP, 2021)</a></li>
+          <li><span class="kind">Docs</span><a href="https://pytorch.org/vision/stable/index.html">torchvision documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="speech">
+        <header class="topic-head">
+          <p class="eyebrow">15.2 · Hearing and speaking</p>
+          <h2>Speech &amp; voice agents</h2>
+        </header>
+
+        <p class="lead">Sound is air pressure sampled thousands of times per second. Speech recognition (ASR) turns it into text, text-to-speech (TTS) turns text back into audio, and an LLM in between makes a voice agent. The models are now good enough that the hard engineering problem is time.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Phone support, meeting transcription, tutors and accessibility tools all run on this stack. Building one means picking sample rates, streaming every stage, deciding when the user has finished talking, and measuring error rates on your own audio.</p>
+        </div>
+
+        <h3>From waveform to features</h3>
+        <p>ASR audio is usually 16 kHz (16,000 samples per second); phone audio is 8 kHz. Most models read a <strong>log-mel spectrogram</strong>: a 25 ms window slides every 10 ms, each window's frequencies are pooled into 80 or 128 bands spaced like human hearing, and the log is taken. One second becomes 100 columns of 80 numbers.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 175" role="img" aria-label="A waveform is cut into overlapping 25 millisecond windows every 10 milliseconds; each window becomes one column of a log-mel spectrogram, with energy shown as colour intensity per mel band.">
+              <defs>
+                <marker id="speech-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <polyline class="d-line" points="20,78.4 21,80.1 22,82.6 23,83.5 24,81.6 25,77.8 26,75.2 27,76.2 28,80.4 29,84.6 30,85.3 31,82.0 32,77.3 33,74.9 34,76.5 35,80.4 36,83.2 37,83.0 38,80.9 39,79.2 40,79.4 41,80.3 42,79.8 43,77.8 44,76.3 45,78.3 46,83.4 47,87.6 48,86.2 49,78.8 50,70.6 51,68.7 52,75.9 53,87.3 54,93.7 55,89.6 56,78.2 57,68.5 58,68.2 59,76.5 60,85.8 61,88.7 62,84.6 63,79.3 64,78.2 65,80.5 66,81.0 67,76.4 68,70.7 69,71.8 70,82.6 71,95.8 72,99.1 73,86.2 74,65.3 75,53.3 76,61.7 77,85.3 78,105.5 79,106.1 80,87.0 81,64.3 82,55.8 83,66.0 84,83.8 85,93.9 86,90.9 87,81.9 88,77.5 89,80.1 90,82.7 91,78.2 92,68.9 93,65.6 94,75.7 95,94.0 96,104.9 97,96.6 98,73.4 99,53.4 100,53.4 101,73.9 102,98.5 103,107.7 104,95.7 105,74.0 106,60.3 107,63.3 108,77.0 109,88.4 110,89.7 111,83.8 112,79.1 113,79.6 114,82.1 115,80.9 116,75.1 117,70.5 118,73.5 119,83.6 120,92.7 121,92.6 122,82.3 123,69.8 124,65.1 125,71.8 126,84.2 127,92.2 128,90.4 129,81.5 130,73.3 131,71.7 132,76.2 133,81.8 134,84.0 135,82.5 136,80.2 137,79.7 138,80.8 139,81.0 140,79.1 141,76.5 142,76.2 143,79.5 144,84.0 145,86.0 146,83.3 147,77.7 148,73.6 149,74.3 150,79.4 151,84.7 152,86.2 153,83.0 154,78.0 155,75.2 156,76.4 157,79.7 158,82.2 159,82.2 160,80.7 161,79.8 162,80.5 163,81.2 164,80.1 165,77.4 166,75.6 167,77.4 168,82.5 169,87.0 170,86.5 171,80.3 172,72.8 173,70.3 174,75.3 175,84.2 176,90.1 177,88.1 178,80.2 179,72.9 180,71.8 181,76.7 182,82.6 183,84.5 184,82.4 185,80.0 186,80.6 187,82.7 188,82.1 189,76.9 190,71.1 191,71.3 192,80.2 193,91.9 194,96.2 195,87.6 196,71.2 197,60.2 198,64.1 199,80.6 200,96.6 201,99.4 202,87.7 203,71.7 204,64.3 205,69.6 206,80.5 207,87.0 208,85.5 209,81.0 210,80.3 211,83.9 212,85.4 213,79.3 214,68.9 215,64.3 216,73.0 217,90.6 218,103.0 219,98.1 220,77.9 221,58.1 222,54.7 223,70.7 224,93.0 225,103.9 226,96.2 227,78.0 228,64.9 229,65.5 230,75.8 231,85.0 232,86.2 233,82.2 234,80.0 235,82.7 236,85.7 237,82.8 238,73.9 239,66.6 240,69.4 241,82.2 242,95.4 243,97.5 244,85.9 245,69.4 246,61.2 247,67.5 248,82.5 249,94.0 250,93.7 251,83.8 252,73.5 253,70.4 254,74.8 255,80.9 256,83.4 257,81.9 258,80.1 259,80.8 260,83.0 261,82.9 262,79.0 263,74.1 264,73.1 265,77.9 266,85.2 267,89.0 268,85.9 269,78.2 270,72.1 271,72.2 272,78.0 273,84.6 274,86.9 275,83.9 276,78.9 277,75.9 278,76.7 279,79.4 280,81.2 281,81.1 282,80.2 283,80.1 284,81.2 285,81.8 286,80.5 287,78.0 288,76.3 289,77.5 290,81.1 291,84.3 292,84.3 293,80.9 294,76.8 295,75.2 296,77.2 297,81.2 298,83.8 299,83.4 300,80.6"/>
+              <rect class="d-line-accent d-dash" x="62" y="42" width="40" height="76"/>
+              <rect class="d-line-accent d-dash" x="78" y="46" width="40" height="72"/>
+              <rect class="d-line-accent d-dash" x="94" y="50" width="40" height="68"/>
+              <text class="d-label d-text-accent" x="62" y="34">25 ms windows, 10 ms hop</text>
+              <text class="d-label" x="20" y="146">waveform: 16,000 samples per second</text>
+              <line class="d-line-accent" x1="310" y1="80" x2="388" y2="80" marker-end="url(#speech-arrow2)"/>
+              <text class="d-label" x="349" y="70" text-anchor="middle">FFT → mel</text>
+              <text class="d-label" x="349" y="98" text-anchor="middle">→ log</text>
+              <rect class="d-dot" x="400" y="117.5" width="19" height="11.5" opacity="0.11"/><rect class="d-dot" x="400" y="105.0" width="19" height="11.5" opacity="0.19"/><rect class="d-dot" x="400" y="92.5" width="19" height="11.5" opacity="0.18"/><rect class="d-dot" x="400" y="80.0" width="19" height="11.5" opacity="0.15"/><rect class="d-dot" x="400" y="67.5" width="19" height="11.5" opacity="0.21"/><rect class="d-dot" x="400" y="55.0" width="19" height="11.5" opacity="0.23"/><rect class="d-dot" x="400" y="42.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="400" y="30.0" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="420" y="117.5" width="19" height="11.5" opacity="0.13"/><rect class="d-dot" x="420" y="105.0" width="19" height="11.5" opacity="0.28"/><rect class="d-dot" x="420" y="92.5" width="19" height="11.5" opacity="0.35"/><rect class="d-dot" x="420" y="80.0" width="19" height="11.5" opacity="0.19"/><rect class="d-dot" x="420" y="67.5" width="19" height="11.5" opacity="0.41"/><rect class="d-dot" x="420" y="55.0" width="19" height="11.5" opacity="0.51"/><rect class="d-dot" x="420" y="42.5" width="19" height="11.5" opacity="0.31"/><rect class="d-dot" x="420" y="30.0" width="19" height="11.5" opacity="0.12"/><rect class="d-dot" x="440" y="117.5" width="19" height="11.5" opacity="0.18"/><rect class="d-dot" x="440" y="105.0" width="19" height="11.5" opacity="0.49"/><rect class="d-dot" x="440" y="92.5" width="19" height="11.5" opacity="0.47"/><rect class="d-dot" x="440" y="80.0" width="19" height="11.5" opacity="0.32"/><rect class="d-dot" x="440" y="67.5" width="19" height="11.5" opacity="0.69"/><rect class="d-dot" x="440" y="55.0" width="19" height="11.5" opacity="0.78"/><rect class="d-dot" x="440" y="42.5" width="19" height="11.5" opacity="0.41"/><rect class="d-dot" x="440" y="30.0" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="460" y="117.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="460" y="105.0" width="19" height="11.5" opacity="0.50"/><rect class="d-dot" x="460" y="92.5" width="19" height="11.5" opacity="0.59"/><rect class="d-dot" x="460" y="80.0" width="19" height="11.5" opacity="0.40"/><rect class="d-dot" x="460" y="67.5" width="19" height="11.5" opacity="0.90"/><rect class="d-dot" x="460" y="55.0" width="19" height="11.5" opacity="0.94"/><rect class="d-dot" x="460" y="42.5" width="19" height="11.5" opacity="0.39"/><rect class="d-dot" x="460" y="30.0" width="19" height="11.5" opacity="0.18"/><rect class="d-dot" x="480" y="117.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="480" y="105.0" width="19" height="11.5" opacity="0.49"/><rect class="d-dot" x="480" y="92.5" width="19" height="11.5" opacity="0.48"/><rect class="d-dot" x="480" y="80.0" width="19" height="11.5" opacity="0.44"/><rect class="d-dot" x="480" y="67.5" width="19" height="11.5" opacity="0.82"/><rect class="d-dot" x="480" y="55.0" width="19" height="11.5" opacity="0.67"/><rect class="d-dot" x="480" y="42.5" width="19" height="11.5" opacity="0.25"/><rect class="d-dot" x="480" y="30.0" width="19" height="11.5" opacity="0.11"/><rect class="d-dot" x="500" y="117.5" width="19" height="11.5" opacity="0.18"/><rect class="d-dot" x="500" y="105.0" width="19" height="11.5" opacity="0.31"/><rect class="d-dot" x="500" y="92.5" width="19" height="11.5" opacity="0.34"/><rect class="d-dot" x="500" y="80.0" width="19" height="11.5" opacity="0.30"/><rect class="d-dot" x="500" y="67.5" width="19" height="11.5" opacity="0.52"/><rect class="d-dot" x="500" y="55.0" width="19" height="11.5" opacity="0.40"/><rect class="d-dot" x="500" y="42.5" width="19" height="11.5" opacity="0.17"/><rect class="d-dot" x="500" y="30.0" width="19" height="11.5" opacity="0.13"/><rect class="d-dot" x="520" y="117.5" width="19" height="11.5" opacity="0.14"/><rect class="d-dot" x="520" y="105.0" width="19" height="11.5" opacity="0.24"/><rect class="d-dot" x="520" y="92.5" width="19" height="11.5" opacity="0.24"/><rect class="d-dot" x="520" y="80.0" width="19" height="11.5" opacity="0.27"/><rect class="d-dot" x="520" y="67.5" width="19" height="11.5" opacity="0.34"/><rect class="d-dot" x="520" y="55.0" width="19" height="11.5" opacity="0.28"/><rect class="d-dot" x="520" y="42.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="520" y="30.0" width="19" height="11.5" opacity="0.09"/><rect class="d-dot" x="540" y="117.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="540" y="105.0" width="19" height="11.5" opacity="0.25"/><rect class="d-dot" x="540" y="92.5" width="19" height="11.5" opacity="0.27"/><rect class="d-dot" x="540" y="80.0" width="19" height="11.5" opacity="0.26"/><rect class="d-dot" x="540" y="67.5" width="19" height="11.5" opacity="0.34"/><rect class="d-dot" x="540" y="55.0" width="19" height="11.5" opacity="0.20"/><rect class="d-dot" x="540" y="42.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="540" y="30.0" width="19" height="11.5" opacity="0.13"/><rect class="d-dot" x="560" y="117.5" width="19" height="11.5" opacity="0.13"/><rect class="d-dot" x="560" y="105.0" width="19" height="11.5" opacity="0.27"/><rect class="d-dot" x="560" y="92.5" width="19" height="11.5" opacity="0.39"/><rect class="d-dot" x="560" y="80.0" width="19" height="11.5" opacity="0.45"/><rect class="d-dot" x="560" y="67.5" width="19" height="11.5" opacity="0.46"/><rect class="d-dot" x="560" y="55.0" width="19" height="11.5" opacity="0.30"/><rect class="d-dot" x="560" y="42.5" width="19" height="11.5" opacity="0.13"/><rect class="d-dot" x="560" y="30.0" width="19" height="11.5" opacity="0.09"/><rect class="d-dot" x="580" y="117.5" width="19" height="11.5" opacity="0.14"/><rect class="d-dot" x="580" y="105.0" width="19" height="11.5" opacity="0.44"/><rect class="d-dot" x="580" y="92.5" width="19" height="11.5" opacity="0.57"/><rect class="d-dot" x="580" y="80.0" width="19" height="11.5" opacity="0.61"/><rect class="d-dot" x="580" y="67.5" width="19" height="11.5" opacity="0.69"/><rect class="d-dot" x="580" y="55.0" width="19" height="11.5" opacity="0.28"/><rect class="d-dot" x="580" y="42.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="580" y="30.0" width="19" height="11.5" opacity="0.11"/><rect class="d-dot" x="600" y="117.5" width="19" height="11.5" opacity="0.20"/><rect class="d-dot" x="600" y="105.0" width="19" height="11.5" opacity="0.51"/><rect class="d-dot" x="600" y="92.5" width="19" height="11.5" opacity="0.66"/><rect class="d-dot" x="600" y="80.0" width="19" height="11.5" opacity="0.84"/><rect class="d-dot" x="600" y="67.5" width="19" height="11.5" opacity="0.71"/><rect class="d-dot" x="600" y="55.0" width="19" height="11.5" opacity="0.26"/><rect class="d-dot" x="600" y="42.5" width="19" height="11.5" opacity="0.14"/><rect class="d-dot" x="600" y="30.0" width="19" height="11.5" opacity="0.08"/><rect class="d-dot" x="620" y="117.5" width="19" height="11.5" opacity="0.14"/><rect class="d-dot" x="620" y="105.0" width="19" height="11.5" opacity="0.43"/><rect class="d-dot" x="620" y="92.5" width="19" height="11.5" opacity="0.64"/><rect class="d-dot" x="620" y="80.0" width="19" height="11.5" opacity="0.71"/><rect class="d-dot" x="620" y="67.5" width="19" height="11.5" opacity="0.55"/><rect class="d-dot" x="620" y="55.0" width="19" height="11.5" opacity="0.26"/><rect class="d-dot" x="620" y="42.5" width="19" height="11.5" opacity="0.11"/><rect class="d-dot" x="620" y="30.0" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="640" y="117.5" width="19" height="11.5" opacity="0.18"/><rect class="d-dot" x="640" y="105.0" width="19" height="11.5" opacity="0.31"/><rect class="d-dot" x="640" y="92.5" width="19" height="11.5" opacity="0.47"/><rect class="d-dot" x="640" y="80.0" width="19" height="11.5" opacity="0.52"/><rect class="d-dot" x="640" y="67.5" width="19" height="11.5" opacity="0.38"/><rect class="d-dot" x="640" y="55.0" width="19" height="11.5" opacity="0.18"/><rect class="d-dot" x="640" y="42.5" width="19" height="11.5" opacity="0.13"/><rect class="d-dot" x="640" y="30.0" width="19" height="11.5" opacity="0.13"/><rect class="d-dot" x="660" y="117.5" width="19" height="11.5" opacity="0.17"/><rect class="d-dot" x="660" y="105.0" width="19" height="11.5" opacity="0.22"/><rect class="d-dot" x="660" y="92.5" width="19" height="11.5" opacity="0.29"/><rect class="d-dot" x="660" y="80.0" width="19" height="11.5" opacity="0.32"/><rect class="d-dot" x="660" y="67.5" width="19" height="11.5" opacity="0.19"/><rect class="d-dot" x="660" y="55.0" width="19" height="11.5" opacity="0.12"/><rect class="d-dot" x="660" y="42.5" width="19" height="11.5" opacity="0.16"/><rect class="d-dot" x="660" y="30.0" width="19" height="11.5" opacity="0.12"/>
+              <text class="d-label" x="400" y="146">frames: 100 per second →</text>
+              <text class="d-label" x="680" y="22" text-anchor="end">80 mel bands (8 drawn) ↑</text>
+              <text class="d-label" x="400" y="164">one column per window = one "token-like" frame</text>
+            </svg>
+          </div>
+          <figcaption>From waveform to log-mel spectrogram. Overlapping windows become columns; brightness is the log energy in each mel band. The result is an image-like grid that convolutions and transformers handle well.</figcaption>
+        </figure>
+
+        <h3>Recognition and synthesis</h3>
+        <p>ASR comes in three families and TTS in two. On both sides the trend matches LLMs: large transformers trained on huge, weakly labelled datasets, with audio turned into tokens.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Approach</th><th>How it works</th><th>Strength</th><th>Examples</th></tr></thead>
+            <tbody>
+              <tr><td>CTC (ASR)</td><td>emits a token or blank per frame, collapses repeats</td><td>fast, streams naturally</td><td>wav2vec 2.0 + CTC</td></tr>
+              <tr><td>Encoder-decoder (ASR)</td><td>encodes a 30 s chunk, decodes text like translation</td><td>robust to accents and noise</td><td>Whisper (680k hours)</td></tr>
+              <tr><td>Transducer (ASR)</td><td>audio encoder + small prediction network, emits as audio arrives</td><td>low-latency streaming, on-device</td><td>RNN-T, Conformer-Transducer</td></tr>
+              <tr><td>Spectrogram TTS</td><td>text → mel spectrogram → vocoder → waveform</td><td>mature, controllable</td><td>FastSpeech + HiFi-GAN</td></tr>
+              <tr><td>Codec-LM TTS</td><td>LM predicts neural-codec audio tokens (50–75 frames/s)</td><td>natural prosody, voice cloning</td><td>VALL-E-style models</td></tr>
+            </tbody>
+          </table>
+        </div>
+          <p>Score ASR with <strong>word error rate (WER)</strong>:</p>
+        <div class="formula">
+          \[ \text{WER} = \frac{S + D + I}{N} \]
+          <span class="formula-note">\(N\) is the number of words in the reference. Because insertions count, WER can exceed 100%. Normalise case, punctuation and numbers before scoring, or you will measure formatting instead of recognition.</span>
+        </div>
+        <p>Reference "book a table for two at seven" heard as "book table for to at seven pm" has one deletion, one substitution and one insertion: WER = 3/7 ≈ 43%. Normalise case, punctuation and numbers first, or you measure formatting.</p>
+
+        <pre class="code" data-lang="python"><code>def wer(ref: str, hyp: str) -&gt; float:
+    r, h = ref.lower().split(), hyp.lower().split()
+    <span class="c"># d[i][j] = edits to turn r[:i] into h[:j]</span>
+    d = [[0] * (len(h) + 1) for _ in range(len(r) + 1)]
+    for i in range(len(r) + 1): d[i][0] = i
+    for j in range(len(h) + 1): d[0][j] = j
+    for i in range(1, len(r) + 1):
+        for j in range(1, len(h) + 1):
+            sub = d[i-1][j-1] + (r[i-1] != h[j-1])
+            d[i][j] = min(sub, d[i-1][j] + 1, d[i][j-1] + 1)
+    return d[len(r)][len(h)] / len(r)
+
+print(wer("book a table for two at seven",
+          "book table for to at seven pm"))   <span class="c"># 0.428...</span></code></pre>
+
+        <h3>The voice-agent pipeline and its latency budget</h3>
+        <p>A cascaded agent chains four stages: <strong>voice activity detection (VAD)</strong> spots speech, ASR transcribes, the LLM replies and may call tools, and TTS speaks. The hardest call is <strong>endpointing</strong>, deciding the user has finished. Wait for 800 ms of silence and the agent feels sluggish; wait 200 ms and it interrupts people.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 240" role="img" aria-label="Voice agent pipeline: microphone audio passes through VAD, streaming ASR, an LLM and TTS; a timeline below shows each stage adding to the delay before the first audio reply.">
+              <defs>
+                <marker id="speech-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="30" width="70" height="50" rx="8"/>
+              <text class="d-text" x="45" y="60" text-anchor="middle">user</text>
+              <line class="d-line-accent" x1="80" y1="55" x2="108" y2="55" marker-end="url(#speech-arrow)"/>
+              <rect class="d-box" x="110" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="160" y="52" text-anchor="middle">VAD</text>
+              <text class="d-label" x="160" y="69" text-anchor="middle">speech? done?</text>
+              <line class="d-line-accent" x1="210" y1="55" x2="238" y2="55" marker-end="url(#speech-arrow)"/>
+              <rect class="d-box" x="240" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="290" y="52" text-anchor="middle">ASR</text>
+              <text class="d-label" x="290" y="69" text-anchor="middle">audio → text</text>
+              <line class="d-line-accent" x1="340" y1="55" x2="368" y2="55" marker-end="url(#speech-arrow)"/>
+              <rect class="d-accent" x="370" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="420" y="52" text-anchor="middle">LLM</text>
+              <text class="d-label" x="420" y="69" text-anchor="middle">+ tools</text>
+              <line class="d-line-accent" x1="470" y1="55" x2="498" y2="55" marker-end="url(#speech-arrow)"/>
+              <rect class="d-box" x="500" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="550" y="52" text-anchor="middle">TTS</text>
+              <text class="d-label" x="550" y="69" text-anchor="middle">text → audio</text>
+              <line class="d-line-accent" x1="600" y1="55" x2="628" y2="55" marker-end="url(#speech-arrow)"/>
+              <rect class="d-fill" x="630" y="30" width="60" height="50" rx="8"/>
+              <text class="d-text" x="660" y="60" text-anchor="middle">reply</text>
+              <path class="d-line-signal d-dash" d="M550,80 C550,105 160,105 160,82" marker-end="url(#speech-arrow)"/>
+              <text class="d-label d-text-signal" x="355" y="114" text-anchor="middle">barge-in: user speaks → stop TTS, cancel LLM</text>
+              <line class="d-line" x1="40" y1="160" x2="680" y2="160"/>
+              <text class="d-label" x="40" y="150">user stops talking</text>
+              <rect class="d-fill" x="40" y="168" width="200" height="22"/>
+              <text class="d-label" x="140" y="183" text-anchor="middle">endpoint wait ~500 ms</text>
+              <rect class="d-box" x="240" y="168" width="60" height="22"/>
+              <text class="d-label" x="270" y="183" text-anchor="middle">ASR</text>
+              <rect class="d-accent" x="300" y="168" width="180" height="22"/>
+              <text class="d-label" x="390" y="183" text-anchor="middle">LLM first token ~450 ms</text>
+              <rect class="d-box" x="480" y="168" width="80" height="22"/>
+              <text class="d-label" x="520" y="183" text-anchor="middle">TTS start</text>
+              <line class="d-line" x1="560" y1="160" x2="560" y2="200"/>
+              <text class="d-label d-text-signal" x="560" y="216" text-anchor="middle">first sound heard</text>
+              <text class="d-label" x="40" y="216">time →</text>
+            </svg>
+          </div>
+          <figcaption>Top: the cascade, with barge-in as a control path. Bottom: the delay the user feels is the sum of each stage's time to first output.</figcaption>
+        </figure>
+
+        <p>Human turn gaps average about 200 ms, so under roughly 800 ms voice-to-voice feels responsive and past 1.5 s feels broken. Stream every stage, start TTS on the LLM's first sentence, keep prompts cached, and support <strong>barge-in</strong>: stop speaking when the user interrupts and drop the unspoken text from history.</p>
+        <p><strong>Speech-to-speech models</strong> handle audio in and out in one model, cutting latency and keeping tone of voice. The cascade stays popular because each stage can be logged, swapped and guarded.</p>
+
+        <div class="widget" id="speech-latency">
+          <div class="widget-head">
+            <span class="widget-title">Voice-agent latency budget</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="speech-vad">Endpoint silence (ms) <input type="range" id="speech-vad" min="100" max="1200" step="50" value="500"><output id="speech-vad-out">500</output></label>
+            <label for="speech-asr">ASR finalise (ms) <input type="range" id="speech-asr" min="30" max="800" step="10" value="150"><output id="speech-asr-out">150</output></label>
+            <label for="speech-llm">LLM first token (ms) <input type="range" id="speech-llm" min="100" max="2500" step="50" value="450"><output id="speech-llm-out">450</output></label>
+            <label for="speech-tts">TTS first audio (ms) <input type="range" id="speech-tts" min="40" max="1000" step="10" value="200"><output id="speech-tts-out">200</output></label>
+            <label for="speech-net">Network (ms) <input type="range" id="speech-net" min="0" max="400" step="10" value="100"><output id="speech-net-out">100</output></label>
+            <label for="speech-wait"><input type="checkbox" id="speech-wait"> Wait for the full reply before TTS (60-token reply at 50 tok/s)</label>
+          </div>
+          <svg id="speech-latency-svg" viewBox="0 0 600 150" role="img" aria-label="Stacked bar of latency per stage against 800 ms and 1500 ms reference lines."></svg>
+          <p class="readout" id="speech-latency-readout"></p>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Most ASR models read log-mel spectrograms: about 100 frames per second of 80 or 128 numbers.</li>
+            <li>CTC and transducers stream naturally; encoder-decoders like Whisper are robust but chunk-based.</li>
+            <li>WER = (S + D + I) / N, measured after text normalisation on your own audio.</li>
+            <li>Modern TTS often predicts neural-codec audio tokens with a language model.</li>
+            <li>Voice UX lives or dies on time to first audio; stream every stage and handle barge-in.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Feeding 8 kHz phone audio to a model trained on 16 kHz without resampling.</li>
+            <li>Measuring total LLM generation time when the user only feels time to first audio.</li>
+            <li>Letting the LLM write markdown, URLs or tables that the TTS then reads aloud literally.</li>
+            <li>Keeping the full planned reply in the conversation history after the user interrupted it.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">Starter roadmap</span>
+          <ol>
+            <li>Plot a log-mel spectrogram of your own voice.</li>
+            <li>Transcribe 20 recordings with Whisper and compute WER.</li>
+            <li>Score an open TTS model by running ASR on its output.</li>
+            <li>Wire VAD, streaming ASR, an LLM and TTS; log every stage.</li>
+            <li>Add barge-in and get under one second voice-to-voice.</li>
+          </ol>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="speech-1"><span>Explain what a log-mel spectrogram is and how many frames one second produces</span></label></li>
+          <li><label><input type="checkbox" data-key="speech-2"><span>Compute WER by hand for a short sentence pair, including an insertion</span></label></li>
+          <li><label><input type="checkbox" data-key="speech-3"><span>Contrast CTC, encoder-decoder and transducer ASR on streaming and robustness</span></label></li>
+          <li><label><input type="checkbox" data-key="speech-4"><span>Draw the VAD → ASR → LLM → TTS chain and assign a latency budget under 1 second</span></label></li>
+          <li><label><input type="checkbox" data-key="speech-5"><span>Describe how barge-in works and what must happen to the conversation history</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2212.04356">Robust Speech Recognition via Large-Scale Weak Supervision (Whisper, 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2006.11477">wav2vec 2.0: Self-Supervised Learning of Speech Representations (2020)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2301.02111">Neural Codec Language Models are Zero-Shot TTS Synthesizers (VALL-E, 2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="diffusion">
+        <header class="topic-head">
+          <p class="eyebrow">15.3 · Generating media</p>
+          <h2>Diffusion &amp; generative media</h2>
+        </header>
+
+        <p class="lead">Destroying an image is easy: keep adding noise until only static remains. A diffusion model learns to run that film backwards, starting from static and removing predicted noise step by step, steered by your prompt.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Image and video generation ships in design tools, marketing pipelines, games and e-commerce. Even through a hosted API you choose steps, guidance scale, seeds, resolution and adapters, and each choice trades quality, prompt adherence, diversity, latency and cost.</p>
+        </div>
+
+        <h3>The forward process: adding noise on a schedule</h3>
+        <p>Pick \(T\) steps (classically 1,000) and a <strong>noise schedule</strong> \(\beta_t\), the noise added per step. Because Gaussians compose, you can jump from the clean image \(x_0\) to any step in one line:</p>
+        <div class="formula">
+          \[ x_t = \sqrt{\bar\alpha_t}\, x_0 + \sqrt{1-\bar\alpha_t}\, \varepsilon, \qquad \varepsilon \sim \mathcal{N}(0, I), \qquad \bar\alpha_t = \prod_{s=1}^{t} (1-\beta_s) \]
+          <span class="formula-note">\(\bar\alpha_t\) ("alpha bar") is the share of signal variance left at step \(t\). It starts near 1 and falls to near 0. The signal-to-noise ratio is \(\bar\alpha_t / (1-\bar\alpha_t)\).</span>
+        </div>
+        <p>DDPM's <strong>linear schedule</strong> (\(\beta\) from 0.0001 to 0.02) destroys information fast, so many late steps are wasted on near-static. The <strong>cosine schedule</strong> degrades the image more evenly. Compare them with the slider.</p>
+
+        <div class="widget" id="diff-noise">
+          <div class="widget-head">
+            <span class="widget-title">Forward noising with a schedule</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="diff-t">Step t <input type="range" id="diff-t" min="0" max="1000" step="10" value="200"><output id="diff-t-out">200</output></label>
+            <label for="diff-sched">Schedule <select id="diff-sched"><option value="linear">Linear (DDPM)</option><option value="cosine">Cosine</option></select></label>
+            <button class="btn" type="button" id="diff-reseed">New noise</button>
+          </div>
+          <svg id="diff-svg" viewBox="0 0 600 240" role="img" aria-label="Left: a 24 by 24 pixel pattern with noise mixed in according to the schedule. Right: alpha bar over time for both schedules with the current step marked."></svg>
+          <p class="readout" id="diff-readout"></p>
+        </div>
+
+        <h3>The reverse process: learning to denoise</h3>
+        <p>A network \(\varepsilon_\theta(x_t, t)\) learns to predict the noise inside \(x_t\). Training is plain regression: noise a real image to a random step and minimise the squared error between true and predicted noise. Large current models use a <strong>diffusion transformer (DiT)</strong> as the network.</p>
+        <p>Sampling starts from pure noise and subtracts predicted noise step by step. DDPM needs about 1,000 network calls, modern solvers 20 to 50, distilled models 1 to 4. <strong>Flow matching</strong> learns near-straight noise-to-data paths and also cuts steps.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 270" role="img" aria-label="Top: forward process adds noise from a clean image to pure noise, reverse process removes it. Bottom: latent diffusion encodes the image with a VAE, denoises in latent space with text conditioning, and decodes.">
+              <defs>
+                <marker id="diff-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="diff-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="350" y="16" text-anchor="middle">forward q: add a little Gaussian noise per step (fixed, no learning)</text>
+              <rect class="d-box" x="60" y="40" width="70" height="70" rx="4"/>
+              <circle class="d-accent" cx="95" cy="75" r="22"/>
+              <rect class="d-box" x="240" y="40" width="70" height="70" rx="4"/>
+              <circle class="d-accent" cx="275" cy="75" r="22" opacity=".65"/>
+              <circle class="d-dot-muted" cx="252" cy="52" r="2"/><circle class="d-dot-muted" cx="296" cy="60" r="2"/><circle class="d-dot-muted" cx="262" cy="98" r="2"/><circle class="d-dot-muted" cx="300" cy="94" r="2"/><circle class="d-dot-muted" cx="281" cy="68" r="2"/>
+              <rect class="d-box" x="420" y="40" width="70" height="70" rx="4"/>
+              <circle class="d-accent" cx="455" cy="75" r="22" opacity=".3"/>
+              <circle class="d-dot-muted" cx="428" cy="48" r="2"/><circle class="d-dot-muted" cx="440" cy="62" r="2"/><circle class="d-dot-muted" cx="476" cy="50" r="2"/><circle class="d-dot-muted" cx="484" cy="72" r="2"/><circle class="d-dot-muted" cx="432" cy="90" r="2"/><circle class="d-dot-muted" cx="452" cy="102" r="2"/><circle class="d-dot-muted" cx="470" cy="88" r="2"/><circle class="d-dot-muted" cx="458" cy="70" r="2"/><circle class="d-dot-muted" cx="446" cy="80" r="2"/>
+              <rect class="d-box" x="600" y="40" width="70" height="70" rx="4"/>
+              <circle class="d-dot-muted" cx="608" cy="47" r="2"/><circle class="d-dot-muted" cx="622" cy="58" r="2"/><circle class="d-dot-muted" cx="640" cy="46" r="2"/><circle class="d-dot-muted" cx="660" cy="55" r="2"/><circle class="d-dot-muted" cx="612" cy="72" r="2"/><circle class="d-dot-muted" cx="632" cy="80" r="2"/><circle class="d-dot-muted" cx="650" cy="70" r="2"/><circle class="d-dot-muted" cx="664" cy="88" r="2"/><circle class="d-dot-muted" cx="616" cy="98" r="2"/><circle class="d-dot-muted" cx="638" cy="102" r="2"/><circle class="d-dot-muted" cx="655" cy="100" r="2"/><circle class="d-dot-muted" cx="628" cy="66" r="2"/>
+              <text class="d-mono" x="95" y="126" text-anchor="middle">x₀ clean</text>
+              <text class="d-mono" x="275" y="126" text-anchor="middle">x_t</text>
+              <text class="d-mono" x="455" y="126" text-anchor="middle">x_t′</text>
+              <text class="d-mono" x="635" y="126" text-anchor="middle">x_T noise</text>
+              <line class="d-line" x1="132" y1="34" x2="236" y2="34" marker-end="url(#diff-arrow)"/>
+              <line class="d-line" x1="312" y1="34" x2="416" y2="34" marker-end="url(#diff-arrow)"/>
+              <line class="d-line" x1="492" y1="34" x2="596" y2="34" marker-end="url(#diff-arrow)"/>
+              <line class="d-line-accent" x1="596" y1="140" x2="494" y2="140" marker-end="url(#diff-arrow-acc)"/>
+              <line class="d-line-accent" x1="416" y1="140" x2="314" y2="140" marker-end="url(#diff-arrow-acc)"/>
+              <line class="d-line-accent" x1="236" y1="140" x2="134" y2="140" marker-end="url(#diff-arrow-acc)"/>
+              <text class="d-label d-text-accent" x="350" y="158" text-anchor="middle">reverse p_θ: the network predicts the noise and removes a little per step</text>
+              <line class="d-grid" x1="20" y1="174" x2="680" y2="174"/>
+              <text class="d-label" x="20" y="194">latent diffusion</text>
+              <rect class="d-fill" x="20" y="204" width="90" height="46" rx="6"/>
+              <text class="d-text" x="65" y="225" text-anchor="middle">image</text>
+              <text class="d-label" x="65" y="241" text-anchor="middle">512×512×3</text>
+              <line class="d-line" x1="110" y1="227" x2="138" y2="227" marker-end="url(#diff-arrow)"/>
+              <rect class="d-box" x="140" y="204" width="90" height="46" rx="6"/>
+              <text class="d-text" x="185" y="232" text-anchor="middle">VAE enc.</text>
+              <line class="d-line" x1="230" y1="227" x2="258" y2="227" marker-end="url(#diff-arrow)"/>
+              <rect class="d-accent" x="260" y="204" width="190" height="46" rx="6"/>
+              <text class="d-text" x="355" y="223" text-anchor="middle">denoise latent 64×64×4</text>
+              <text class="d-label" x="355" y="240" text-anchor="middle">U-Net or DiT, T steps</text>
+              <line class="d-line" x1="450" y1="227" x2="478" y2="227" marker-end="url(#diff-arrow)"/>
+              <rect class="d-box" x="480" y="204" width="90" height="46" rx="6"/>
+              <text class="d-text" x="525" y="232" text-anchor="middle">VAE dec.</text>
+              <line class="d-line" x1="570" y1="227" x2="598" y2="227" marker-end="url(#diff-arrow)"/>
+              <rect class="d-fill" x="600" y="204" width="80" height="46" rx="6"/>
+              <text class="d-text" x="640" y="232" text-anchor="middle">output</text>
+              <text class="d-label" x="355" y="196" text-anchor="middle">text embeddings via cross-attention ↓</text>
+            </svg>
+          </div>
+          <figcaption>Top: the forward chain is fixed arithmetic; only the reverse chain is learned. Bottom: latent diffusion runs that chain on a small VAE latent (48× fewer numbers than the pixels), conditioned on the prompt.</figcaption>
+        </figure>
+
+        <h3>Steering: conditioning and classifier-free guidance</h3>
+        <p>Prompts enter the denoiser through cross-attention to text embeddings. <strong>Classifier-free guidance (CFG)</strong> strengthens them. Drop the prompt about 10% of the time in training, so one network learns both predictions; at sampling time, extrapolate from the unconditional prediction toward the conditional one.</p>
+        <div class="formula">
+          \[ \tilde\varepsilon = \varepsilon_\theta(x_t, t, \varnothing) + w \,\big(\varepsilon_\theta(x_t, t, c) - \varepsilon_\theta(x_t, t, \varnothing)\big) \]
+          <span class="formula-note">A negative prompt replaces \(\varnothing\) with text to steer away from. CFG doubles the network calls per step.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 210" role="img" aria-label="Classifier-free guidance drawn as vectors: the guided prediction starts at the unconditional prediction and extends past the conditional one along their difference, further for larger guidance scale w.">
+              <defs>
+                <marker id="diffusion-cfg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <line class="d-line d-dash" x1="80" y1="170" x2="640" y2="26"/>
+              <line class="d-line-accent" x1="80" y1="170" x2="146" y2="153" marker-end="url(#diffusion-cfg-arrow)"/>
+              <circle class="d-dot-muted" cx="80" cy="170" r="6"/>
+              <circle class="d-dot" cx="150" cy="152" r="6"/>
+              <circle class="d-dot-good" cx="360" cy="98" r="7"/>
+              <circle class="d-dot-signal" cx="570" cy="44" r="7"/>
+              <text class="d-mono" x="80" y="196" text-anchor="middle">ε(x_t, ∅)</text>
+              <text class="d-label" x="80" y="152" text-anchor="middle">unconditional</text>
+              <text class="d-mono" x="160" y="180">ε(x_t, c)  w = 1</text>
+              <text class="d-label" x="160" y="196">plain conditioning: loose match</text>
+              <text class="d-mono" x="372" y="122">w = 4</text>
+              <text class="d-label" x="372" y="138">typical: follows the prompt</text>
+              <text class="d-mono" x="585" y="70">w = 7+</text>
+              <text class="d-label" x="585" y="86">too literal,</text>
+              <text class="d-label" x="585" y="101">less diverse</text>
+              <text class="d-label d-text-accent" x="20" y="124">difference = "what the prompt adds"</text>
+              <rect class="d-fill" x="430" y="150" width="250" height="44" rx="6"/>
+              <text class="d-mono" x="555" y="168" text-anchor="middle">guided = ε∅ + w · (εc − ε∅)</text>
+              <text class="d-label" x="555" y="185" text-anchor="middle">two network calls per step</text>
+            </svg>
+          </div>
+          <figcaption>Guidance as geometry. The model's two predictions define a direction; the guidance scale w sets how far past the conditional prediction you step.</figcaption>
+        </figure>
+
+        <h3>Latent diffusion and the toolbox</h3>
+        <p><strong>Latent diffusion</strong> runs the chain inside a VAE's compressed space: a 512×512×3 image (786,432 numbers) becomes a 64×64×4 latent (16,384), 48× fewer, decoded once at the end. That is what made Stable Diffusion fit on consumer GPUs. Video models add a time axis to the latent.</p>
+        <p>The toolbox around the core: <strong>image-to-image</strong> ("strength" sets how far up the chain a real image starts), inpainting, ControlNet-style conditioning on edges or pose, and LoRA fine-tunes for a style or subject.</p>
+
+        <pre class="code" data-lang="python"><code>import torch
+import torch.nn.functional as F
+
+T = 1000
+betas = torch.linspace(1e-4, 0.02, T)               <span class="c"># linear schedule</span>
+alpha_bar = torch.cumprod(1.0 - betas, dim=0)
+
+def train_step(model, x0, cond, opt, p_uncond=0.1):
+    b = x0.shape[0]
+    t = torch.randint(0, T, (b,), device=x0.device)
+    eps = torch.randn_like(x0)
+    ab = alpha_bar.to(x0.device)[t].view(b, 1, 1, 1)
+    xt = ab.sqrt() * x0 + (1 - ab).sqrt() * eps        <span class="c"># jump straight to step t</span>
+    drop = torch.rand(b, device=x0.device) &lt; p_uncond  <span class="c"># learn the unconditional case too</span>
+    cond = torch.where(drop.view(b, 1, 1), torch.zeros_like(cond), cond)  <span class="c"># cond: (b, seq, dim)</span>
+    loss = F.mse_loss(model(xt, t, cond), eps)          <span class="c"># predict the noise</span>
+    opt.zero_grad(); loss.backward(); opt.step()
+    return loss.item()
+
+<span class="c"># Using a pretrained pipeline from Hugging Face diffusers:</span>
+from diffusers import DiffusionPipeline
+pipe = DiffusionPipeline.from_pretrained(
+    <span class="s">"stabilityai/stable-diffusion-xl-base-1.0"</span>, torch_dtype=torch.float16).to(<span class="s">"cuda"</span>)
+image = pipe(<span class="s">"a watercolor fox in the snow"</span>, num_inference_steps=30,
+             guidance_scale=6.0, generator=torch.Generator(<span class="s">"cuda"</span>).manual_seed(7)).images[0]</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Forward: \(x_t = \sqrt{\bar\alpha_t}x_0 + \sqrt{1-\bar\alpha_t}\varepsilon\); the schedule sets how fast signal fades.</li>
+            <li>Training is regression: predict the added noise with an MSE loss at random steps.</li>
+            <li>Sampling cost is steps × network calls; better solvers and distillation cut 1,000 steps to 1–50.</li>
+            <li>Classifier-free guidance extrapolates from unconditional to conditional predictions; scale trades adherence for diversity.</li>
+            <li>Latent diffusion works in a VAE's compressed space, which is why it is affordable.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Cranking guidance scale to fix a bad prompt, producing burnt, oversaturated images.</li>
+            <li>Comparing models or prompts without fixing the seed, so you are judging noise.</li>
+            <li>Mixing a schedule or sampler with a checkpoint trained for a different parameterisation.</li>
+            <li>Shipping without content filters and provenance (watermark or metadata) on generated media.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">Starter roadmap</span>
+          <ol>
+            <li>Visualise the forward process on MNIST digits.</li>
+            <li>Train a tiny DDPM on MNIST and sample from it.</li>
+            <li>Add class conditioning and CFG, then sweep \(w\).</li>
+            <li>Compare steps, schedulers and guidance in diffusers on a fixed seed.</li>
+            <li>Train a LoRA on 20 images of one subject and evaluate it.</li>
+          </ol>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="diffusion-1"><span>Write the closed-form forward noising equation and explain \(\bar\alpha_t\)</span></label></li>
+          <li><label><input type="checkbox" data-key="diffusion-2"><span>Explain why a cosine schedule wastes fewer steps than a linear one</span></label></li>
+          <li><label><input type="checkbox" data-key="diffusion-3"><span>Write the training loss and one CFG sampling step in PyTorch-style pseudocode</span></label></li>
+          <li><label><input type="checkbox" data-key="diffusion-4"><span>Compute the compression factor of a VAE latent for a given image size</span></label></li>
+          <li><label><input type="checkbox" data-key="diffusion-5"><span>Predict what raising guidance scale, steps or img2img strength will do to an output</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Models (Ho et al., 2020)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2112.10752">High-Resolution Image Synthesis with Latent Diffusion Models (2021)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2207.12598">Classifier-Free Diffusion Guidance (Ho &amp; Salimans, 2022)</a></li>
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/diffusers/index">Hugging Face Diffusers documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="recsys">
+        <header class="topic-head">
+          <p class="eyebrow">15.4 · Personalization</p>
+          <h2>Recommender systems</h2>
+        </header>
+
+        <p class="lead">A recommender has millions of items, one user, ten slots and about 100 ms. It learns from what similar users engaged with and from what the items are like. Scoring every item with a heavy model is impossible, so real systems are a funnel: cheap retrieval, then expensive ranking.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Feeds, shopping, ads, music and jobs run on recommenders. The machinery also runs through LLM work: two-tower retrieval is embedding search in RAG, ranking is reranking, and ANN indexes, feature stores and A/B tests matured in recommendation teams.</p>
+        </div>
+
+                <h3>From a sparse matrix to user and item vectors</h3>
+        <p>Interactions form a huge, sparse user × item matrix, mostly <strong>implicit feedback</strong> (clicks, purchases, watch time). A missing click is not a dislike, since the user may never have seen the item, and top positions get clicks just for being on top.</p>
+
+        <p><strong>Matrix factorization</strong> learns a k-dimensional vector per user and per item (k of 32 to 256) whose dot product predicts the signal. Item-item collaborative filtering ("people who bought this also bought") remains a strong, explainable baseline.</p>
+        <div class="formula">
+          \[ \hat r_{ui} = p_u^{\top} q_i + b_u + b_i + \mu, \qquad \min_{p,q,b} \sum_{(u,i)\in \text{observed}} \big(r_{ui} - \hat r_{ui}\big)^2 + \lambda \big(\lVert p_u\rVert^2 + \lVert q_i\rVert^2\big) \]
+          <span class="formula-note">\(p_u, q_i\): user and item vectors; \(b\): biases; \(\mu\): global mean. Train with SGD or alternating least squares (ALS).</span>
+        </div>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 200" role="img" aria-label="A sparse user by item matrix is approximated by a tall user-factor matrix times a wide item-factor matrix; one missing cell is predicted as the dot product of a user row and an item column.">
+              <rect class="d-grid" x="21" y="41" width="12" height="12"/><rect class="d-grid" x="35" y="41" width="12" height="12"/><rect class="d-grid" x="49" y="41" width="12" height="12"/><rect class="d-grid" x="63" y="41" width="12" height="12"/><rect class="d-grid" x="77" y="41" width="12" height="12"/><rect class="d-grid" x="91" y="41" width="12" height="12"/><rect class="d-dot" x="105" y="41" width="12" height="12" opacity="0.6"/><rect class="d-grid" x="119" y="41" width="12" height="12"/><rect class="d-grid" x="133" y="41" width="12" height="12"/><rect class="d-dot" x="147" y="41" width="12" height="12" opacity="0.35"/><rect class="d-dot" x="161" y="41" width="12" height="12" opacity="0.6"/><rect class="d-grid" x="175" y="41" width="12" height="12"/><rect class="d-grid" x="21" y="55" width="12" height="12"/><rect class="d-dot" x="35" y="55" width="12" height="12" opacity="0.35"/><rect class="d-dot" x="49" y="55" width="12" height="12" opacity="0.35"/><rect class="d-grid" x="63" y="55" width="12" height="12"/><rect class="d-dot" x="77" y="55" width="12" height="12" opacity="0.6"/><rect class="d-dot" x="91" y="55" width="12" height="12" opacity="0.35"/><rect class="d-dot" x="105" y="55" width="12" height="12" opacity="0.9"/><rect class="d-grid" x="119" y="55" width="12" height="12"/><rect class="d-dot" x="133" y="55" width="12" height="12" opacity="0.35"/><rect class="d-dot" x="147" y="55" width="12" height="12" opacity="0.35"/><rect class="d-grid" x="161" y="55" width="12" height="12"/><rect class="d-dot" x="175" y="55" width="12" height="12" opacity="0.35"/><rect class="d-grid" x="21" y="69" width="12" height="12"/><rect class="d-grid" x="35" y="69" width="12" height="12"/><rect class="d-grid" x="49" y="69" width="12" height="12"/><rect class="d-grid" x="63" y="69" width="12" height="12"/><rect class="d-dot" x="77" y="69" width="12" height="12" opacity="0.9"/><rect class="d-dot" x="91" y="69" width="12" height="12" opacity="0.6"/><rect class="d-grid" x="105" y="69" width="12" height="12"/><rect class="d-grid" x="119" y="69" width="12" height="12"/><rect class="d-dot" x="133" y="69" width="12" height="12" opacity="0.35"/><rect class="d-grid" x="147" y="69" width="12" height="12"/><rect class="d-grid" x="161" y="69" width="12" height="12"/><rect class="d-grid" x="175" y="69" width="12" height="12"/><rect class="d-grid" x="21" y="83" width="12" height="12"/><rect class="d-grid" x="35" y="83" width="12" height="12"/><rect class="d-grid" x="49" y="83" width="12" height="12"/><rect class="d-dot" x="63" y="83" width="12" height="12" opacity="0.6"/><rect class="d-grid" x="77" y="83" width="12" height="12"/><rect class="d-grid" x="91" y="83" width="12" height="12"/><rect class="d-grid" x="105" y="83" width="12" height="12"/><rect class="d-grid" x="119" y="83" width="12" height="12"/><rect class="d-grid" x="133" y="83" width="12" height="12"/><rect class="d-dot" x="147" y="83" width="12" height="12" opacity="0.35"/><rect class="d-grid" x="161" y="83" width="12" height="12"/><rect class="d-grid" x="175" y="83" width="12" height="12"/><rect class="d-grid" x="21" y="97" width="12" height="12"/><rect class="d-grid" x="35" y="97" width="12" height="12"/><rect class="d-grid" x="49" y="97" width="12" height="12"/><rect class="d-grid" x="63" y="97" width="12" height="12"/><rect class="d-grid" x="77" y="97" width="12" height="12"/><rect class="d-grid" x="91" y="97" width="12" height="12"/><rect class="d-grid" x="105" y="97" width="12" height="12"/><rect class="d-grid" x="119" y="97" width="12" height="12"/><rect class="d-grid" x="133" y="97" width="12" height="12"/><rect class="d-dot" x="147" y="97" width="12" height="12" opacity="0.35"/><rect class="d-grid" x="161" y="97" width="12" height="12"/><rect class="d-grid" x="175" y="97" width="12" height="12"/><rect class="d-grid" x="21" y="111" width="12" height="12"/><rect class="d-grid" x="35" y="111" width="12" height="12"/><rect class="d-grid" x="49" y="111" width="12" height="12"/><rect class="d-grid" x="63" y="111" width="12" height="12"/><rect class="d-dot" x="77" y="111" width="12" height="12" opacity="0.9"/><rect class="d-grid" x="91" y="111" width="12" height="12"/><rect class="d-grid" x="105" y="111" width="12" height="12"/><rect class="d-grid" x="119" y="111" width="12" height="12"/><rect class="d-grid" x="133" y="111" width="12" height="12"/><rect class="d-grid" x="147" y="111" width="12" height="12"/><rect class="d-dot" x="161" y="111" width="12" height="12" opacity="0.9"/><rect class="d-grid" x="175" y="111" width="12" height="12"/><rect class="d-grid" x="21" y="125" width="12" height="12"/><rect class="d-grid" x="35" y="125" width="12" height="12"/><rect class="d-grid" x="49" y="125" width="12" height="12"/><rect class="d-grid" x="63" y="125" width="12" height="12"/><rect class="d-grid" x="77" y="125" width="12" height="12"/><rect class="d-grid" x="91" y="125" width="12" height="12"/><rect class="d-dot" x="105" y="125" width="12" height="12" opacity="0.35"/><rect class="d-grid" x="119" y="125" width="12" height="12"/><rect class="d-grid" x="133" y="125" width="12" height="12"/><rect class="d-grid" x="147" y="125" width="12" height="12"/><rect class="d-grid" x="161" y="125" width="12" height="12"/><rect class="d-grid" x="175" y="125" width="12" height="12"/><rect class="d-dot" x="21" y="139" width="12" height="12" opacity="0.9"/><rect class="d-grid" x="35" y="139" width="12" height="12"/><rect class="d-grid" x="49" y="139" width="12" height="12"/><rect class="d-grid" x="63" y="139" width="12" height="12"/><rect class="d-grid" x="77" y="139" width="12" height="12"/><rect class="d-grid" x="91" y="139" width="12" height="12"/><rect class="d-grid" x="105" y="139" width="12" height="12"/><rect class="d-grid" x="119" y="139" width="12" height="12"/><rect class="d-dot" x="133" y="139" width="12" height="12" opacity="0.9"/><rect class="d-dot" x="147" y="139" width="12" height="12" opacity="0.6"/><rect class="d-grid" x="161" y="139" width="12" height="12"/><rect class="d-dot" x="175" y="139" width="12" height="12" opacity="0.9"/>
+              <rect class="d-good" x="133" y="111" width="12" height="12"/>
+              <text class="d-mono" x="139" y="121" text-anchor="middle">?</text>
+              <text class="d-label" x="20" y="30">R: users × items (mostly empty)</text>
+              <text class="d-label" x="20" y="172">filled = observed click / buy</text>
+              <text class="d-title" x="220" y="102" text-anchor="middle">≈</text>
+              <rect class="d-grid" x="251" y="41" width="12" height="12"/><rect class="d-grid" x="265" y="41" width="12" height="12"/><rect class="d-grid" x="279" y="41" width="12" height="12"/><rect class="d-grid" x="251" y="55" width="12" height="12"/><rect class="d-grid" x="265" y="55" width="12" height="12"/><rect class="d-grid" x="279" y="55" width="12" height="12"/><rect class="d-grid" x="251" y="69" width="12" height="12"/><rect class="d-grid" x="265" y="69" width="12" height="12"/><rect class="d-grid" x="279" y="69" width="12" height="12"/><rect class="d-grid" x="251" y="83" width="12" height="12"/><rect class="d-grid" x="265" y="83" width="12" height="12"/><rect class="d-grid" x="279" y="83" width="12" height="12"/><rect class="d-grid" x="251" y="97" width="12" height="12"/><rect class="d-grid" x="265" y="97" width="12" height="12"/><rect class="d-grid" x="279" y="97" width="12" height="12"/><rect class="d-accent" x="251" y="111" width="12" height="12"/><rect class="d-accent" x="265" y="111" width="12" height="12"/><rect class="d-accent" x="279" y="111" width="12" height="12"/><rect class="d-grid" x="251" y="125" width="12" height="12"/><rect class="d-grid" x="265" y="125" width="12" height="12"/><rect class="d-grid" x="279" y="125" width="12" height="12"/><rect class="d-grid" x="251" y="139" width="12" height="12"/><rect class="d-grid" x="265" y="139" width="12" height="12"/><rect class="d-grid" x="279" y="139" width="12" height="12"/>
+              <text class="d-label" x="271" y="30" text-anchor="middle">U: users × k</text>
+              <text class="d-title" x="314" y="102" text-anchor="middle">×</text>
+              <rect class="d-grid" x="331" y="55" width="12" height="12"/><rect class="d-grid" x="345" y="55" width="12" height="12"/><rect class="d-grid" x="359" y="55" width="12" height="12"/><rect class="d-grid" x="373" y="55" width="12" height="12"/><rect class="d-grid" x="387" y="55" width="12" height="12"/><rect class="d-grid" x="401" y="55" width="12" height="12"/><rect class="d-grid" x="415" y="55" width="12" height="12"/><rect class="d-grid" x="429" y="55" width="12" height="12"/><rect class="d-signal" x="443" y="55" width="12" height="12"/><rect class="d-grid" x="457" y="55" width="12" height="12"/><rect class="d-grid" x="471" y="55" width="12" height="12"/><rect class="d-grid" x="485" y="55" width="12" height="12"/><rect class="d-grid" x="331" y="69" width="12" height="12"/><rect class="d-grid" x="345" y="69" width="12" height="12"/><rect class="d-grid" x="359" y="69" width="12" height="12"/><rect class="d-grid" x="373" y="69" width="12" height="12"/><rect class="d-grid" x="387" y="69" width="12" height="12"/><rect class="d-grid" x="401" y="69" width="12" height="12"/><rect class="d-grid" x="415" y="69" width="12" height="12"/><rect class="d-grid" x="429" y="69" width="12" height="12"/><rect class="d-signal" x="443" y="69" width="12" height="12"/><rect class="d-grid" x="457" y="69" width="12" height="12"/><rect class="d-grid" x="471" y="69" width="12" height="12"/><rect class="d-grid" x="485" y="69" width="12" height="12"/><rect class="d-grid" x="331" y="83" width="12" height="12"/><rect class="d-grid" x="345" y="83" width="12" height="12"/><rect class="d-grid" x="359" y="83" width="12" height="12"/><rect class="d-grid" x="373" y="83" width="12" height="12"/><rect class="d-grid" x="387" y="83" width="12" height="12"/><rect class="d-grid" x="401" y="83" width="12" height="12"/><rect class="d-grid" x="415" y="83" width="12" height="12"/><rect class="d-grid" x="429" y="83" width="12" height="12"/><rect class="d-signal" x="443" y="83" width="12" height="12"/><rect class="d-grid" x="457" y="83" width="12" height="12"/><rect class="d-grid" x="471" y="83" width="12" height="12"/><rect class="d-grid" x="485" y="83" width="12" height="12"/>
+              <text class="d-label" x="414" y="44" text-anchor="middle">Vᵀ: k × items</text>
+              <text class="d-label d-text-accent" x="250" y="172">user u's row</text>
+              <text class="d-label d-text-signal" x="370" y="114">item i's column</text>
+              <rect class="d-fill" x="520" y="60" width="165" height="74" rx="6"/>
+              <text class="d-mono" x="602" y="84" text-anchor="middle">r̂(u,i) = p_u · q_i</text>
+              <text class="d-label" x="602" y="104" text-anchor="middle">fill the "?" with a</text>
+              <text class="d-label" x="602" y="120" text-anchor="middle">dot product of k numbers</text>
+            </svg>
+          </div>
+          <figcaption>Matrix factorization. Learning small user and item vectors from the few observed cells lets you predict every empty cell, which is the recommendation.</figcaption>
+        </figure>
+
+        <p>New users and items have no history, the <strong>cold-start problem</strong>. Content features (text, image and category embeddings), popularity priors and onboarding questions fill the gap.</p>
+
+        <h3>Two-stage architecture: retrieval, then ranking</h3>
+        <p><strong>Retrieval</strong> narrows millions of items to about 1,000. A <strong>two-tower model</strong> gives users and items separate vectors scored by dot product, so item vectors are precomputed into an approximate nearest-neighbour (ANN) index such as FAISS or HNSW. Training contrasts each positive with the other items in the batch, as CLIP does.</p>
+        <p><strong>Ranking</strong> scores only those candidates, so it can afford hundreds of features: gradient-boosted trees, DLRM-style networks or transformers over recent actions. It predicts several outcomes (click, long watch, purchase) and blends them. <strong>Re-ranking</strong> then applies diversity, freshness and business rules.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 250" role="img" aria-label="Recommendation funnel: 10 million items narrowed by retrieval to about 1,000, by ranking to 100, and by re-ranking to 10 shown items; inset shows a two-tower model producing user and item vectors compared by dot product.">
+              <defs>
+                <marker id="recsys-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <polygon class="d-fill" points="20,20 400,20 340,70 80,70"/>
+              <text class="d-title" x="210" y="42" text-anchor="middle">Corpus: 10,000,000 items</text>
+              <text class="d-label" x="210" y="60" text-anchor="middle">retrieval: two-tower ANN · co-visits · trending</text>
+              <polygon class="d-accent" points="80,80 340,80 300,130 120,130"/>
+              <text class="d-title" x="210" y="102" text-anchor="middle">~1,000 candidates</text>
+              <text class="d-label" x="210" y="120" text-anchor="middle">ranking model, 100s of features</text>
+              <polygon class="d-box" points="120,140 300,140 270,190 150,190"/>
+              <text class="d-title" x="210" y="162" text-anchor="middle">~100 scored</text>
+              <text class="d-label" x="210" y="180" text-anchor="middle">re-rank: diversity, rules</text>
+              <rect class="d-good" x="165" y="200" width="90" height="34" rx="6"/>
+              <text class="d-title" x="210" y="222" text-anchor="middle">10 shown</text>
+              <text class="d-label" x="410" y="48">~5 ms</text>
+              <text class="d-label" x="350" y="108">~30 ms</text>
+              <text class="d-label" x="310" y="168">~2 ms</text>
+              <line class="d-grid" x1="470" y1="20" x2="470" y2="234"/>
+              <rect class="d-box" x="490" y="150" width="90" height="40" rx="6"/>
+              <text class="d-text" x="535" y="168" text-anchor="middle">user tower</text>
+              <text class="d-label" x="535" y="183" text-anchor="middle">id, history</text>
+              <rect class="d-box" x="595" y="150" width="90" height="40" rx="6"/>
+              <text class="d-text" x="640" y="168" text-anchor="middle">item tower</text>
+              <text class="d-label" x="640" y="183" text-anchor="middle">id, text, price</text>
+              <line class="d-line-accent" x1="535" y1="150" x2="535" y2="112" marker-end="url(#recsys-arrow)"/>
+              <line class="d-line-accent" x1="640" y1="150" x2="640" y2="112" marker-end="url(#recsys-arrow)"/>
+              <text class="d-mono" x="535" y="104" text-anchor="middle">u ∈ ℝ⁶⁴</text>
+              <text class="d-mono" x="640" y="104" text-anchor="middle">v ∈ ℝ⁶⁴</text>
+              <line class="d-line" x1="548" y1="90" x2="578" y2="64" marker-end="url(#recsys-arrow)"/>
+              <line class="d-line" x1="627" y1="90" x2="597" y2="64" marker-end="url(#recsys-arrow)"/>
+              <rect class="d-accent" x="545" y="32" width="85" height="30" rx="6"/>
+              <text class="d-mono" x="587" y="52" text-anchor="middle">score = u·v</text>
+              <text class="d-label" x="640" y="214" text-anchor="middle">item vectors precomputed</text>
+              <text class="d-label" x="640" y="228" text-anchor="middle">into an ANN index</text>
+            </svg>
+          </div>
+          <figcaption>Left: each stage trades breadth for model cost, so the expensive ranker only sees about 1,000 items. Right: the two-tower model keeps user and item computations separate so item vectors can be indexed ahead of time.</figcaption>
+        </figure>
+
+        <div class="widget" id="recsys-2t">
+          <div class="widget-head">
+            <span class="widget-title">Two-tower retrieval in two dimensions</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="recsys-angle">User taste direction <input type="range" id="recsys-angle" min="0" max="359" step="1" value="35"><output id="recsys-angle-out">35°</output></label>
+            <label for="recsys-metric">Score <select id="recsys-metric"><option value="dot">Dot product</option><option value="cos">Cosine (normalised)</option></select></label>
+            <label for="recsys-k">Top K <input type="range" id="recsys-k" min="1" max="6" step="1" value="3"><output id="recsys-k-out">3</output></label>
+          </div>
+          <svg id="recsys-svg" viewBox="0 0 600 320" role="img" aria-label="Item vectors as dots in a 2-D embedding space, a user vector as an arrow, and the top-K items by score highlighted."></svg>
+          <p class="readout" id="recsys-readout"></p>
+          <p class="muted">Bigger dots are popular items, which training tends to give longer vectors. Dot product rewards length; cosine scores direction only.</p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class Tower(nn.Module):
+    def __init__(self, n_ids, n_feats, dim=64):
+        super().__init__()
+        self.emb = nn.Embedding(n_ids, dim)
+        self.mlp = nn.Sequential(nn.Linear(dim + n_feats, 128), nn.ReLU(), nn.Linear(128, dim))
+
+    def forward(self, ids, feats):
+        x = torch.cat([self.emb(ids), feats], dim=-1)
+        return F.normalize(self.mlp(x), dim=-1)          <span class="c"># unit vectors: dot = cosine</span>
+
+user_tower = Tower(n_ids=1_000_000, n_feats=16)
+item_tower = Tower(n_ids=200_000, n_feats=32)
+
+def in_batch_loss(u_ids, u_feats, i_ids, i_feats, temperature=0.05):
+    u = user_tower(u_ids, u_feats)                       <span class="c"># (B, d)</span>
+    v = item_tower(i_ids, i_feats)                       <span class="c"># (B, d); row i is user i's positive</span>
+    logits = u @ v.T / temperature                       <span class="c"># other rows act as negatives</span>
+    labels = torch.arange(u.shape[0], device=u.device)
+    return F.cross_entropy(logits, labels)</code></pre>
+
+        <h3>Evaluating recommenders</h3>
+        <p>Offline, measure retrieval with <strong>recall@K</strong> and ranking with <strong>NDCG@K</strong>, which rewards putting relevant items near the top.</p>
+        <div class="formula">
+          \[ \text{DCG@}K = \sum_{i=1}^{K} \frac{2^{\text{rel}_i} - 1}{\log_2(i+1)}, \qquad \text{NDCG@}K = \frac{\text{DCG@}K}{\text{IDCG@}K} \]
+          <span class="formula-note">IDCG is the DCG of the perfect ordering, so NDCG lies between 0 and 1. A relevant item at rank 1 counts fully; at rank 3 it counts half.</span>
+        </div>
+        <p>Split by time, never randomly, and let an A/B test on retention be the final judge. The model only learns from what it showed, so reserve some traffic for exploration.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Implicit feedback is abundant but biased: no click is not a dislike, and position inflates clicks.</li>
+            <li>Matrix factorization learns user and item vectors whose dot product predicts engagement.</li>
+            <li>Production systems retrieve cheaply (two-tower + ANN), then rank expensively, then re-rank with rules.</li>
+            <li>Two-tower training with in-batch negatives is the same contrastive recipe as CLIP and embedding models for RAG.</li>
+            <li>Split by time offline, and trust A/B tests on retention over offline metric gains.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Random train/test splits that leak future interactions into training.</li>
+            <li>Optimising click-through alone and getting clickbait that hurts retention.</li>
+            <li>Treating every unclicked impression as a confident negative.</li>
+            <li>Ignoring cold start until launch, when every new item gets zero exposure.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">Starter roadmap</span>
+          <ol>
+            <li>On MovieLens, build popularity and item-item baselines; measure recall@10 on a time split.</li>
+            <li>Train matrix factorization and compare.</li>
+            <li>Train a two-tower model and serve top-K from FAISS.</li>
+            <li>Add a gradient-boosted ranker; measure NDCG@10.</li>
+            <li>Test LLM-written item descriptions on cold-start items.</li>
+          </ol>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="recsys-1"><span>Explain why implicit feedback needs care with negatives and position bias</span></label></li>
+          <li><label><input type="checkbox" data-key="recsys-2"><span>Write the matrix factorization prediction and loss, and explain cold start</span></label></li>
+          <li><label><input type="checkbox" data-key="recsys-3"><span>Draw the retrieval → ranking → re-ranking funnel with rough item counts and latencies</span></label></li>
+          <li><label><input type="checkbox" data-key="recsys-4"><span>Implement an in-batch softmax loss for a two-tower model</span></label></li>
+          <li><label><input type="checkbox" data-key="recsys-5"><span>Compute NDCG@3 by hand for a ranked list with graded relevance</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Course</span><a href="https://developers.google.com/machine-learning/recommendation">Google Machine Learning: Recommendation Systems</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1606.07792">Wide &amp; Deep Learning for Recommender Systems (2016)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1906.00091">Deep Learning Recommendation Model (DLRM, 2019)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="time-series">
+        <header class="topic-head">
+          <p class="eyebrow">15.5 · Forecasting</p>
+          <h2>Time series</h2>
+        </header>
+
+        <p class="lead">A time series is a sequence of measurements in time order: hourly API requests, daily sales, GPU temperature every second. Order carries the information. Tomorrow resembles today, Mondays resemble Mondays, and you can never use the future to explain the past.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>You will forecast token spend and GPU demand, set alert thresholds on latency metrics and catch cost anomalies. Time series is also where leakage hides best, so its habits (time splits, backtests, naive baselines) sharpen every evaluation you run.</p>
+        </div>
+
+        <h3>Anatomy: trend, seasonality and noise</h3>
+        <p>Most series mix a <strong>trend</strong>, one or more <strong>seasonal</strong> cycles with a fixed period (24 hours, 7 days, 12 months) and a <strong>residual</strong>. The additive form is \(y_t = T_t + S_t + R_t\). If the swing grows with the level the series is multiplicative, and a log makes it additive.</p>
+        <p>Classical decomposition: a centred moving average with window equal to the period cancels the cycle and leaves the trend; averaging the detrended values at each cycle position gives the seasonal profile; the rest is residual. Set the window off the period and watch the cycle leak.</p>
+
+        <div class="widget" id="ts-decomp">
+          <div class="widget-head">
+            <span class="widget-title">Seasonal decomposition of a synthetic series</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="ts-trend">Trend slope <input type="range" id="ts-trend" min="-0.5" max="1" step="0.05" value="0.4"><output id="ts-trend-out">0.40</output></label>
+            <label for="ts-amp">Season amplitude <input type="range" id="ts-amp" min="0" max="20" step="1" value="10"><output id="ts-amp-out">10</output></label>
+            <label for="ts-noise">Noise <input type="range" id="ts-noise" min="0" max="10" step="0.5" value="3"><output id="ts-noise-out">3.0</output></label>
+            <label for="ts-win">MA window <input type="range" id="ts-win" min="3" max="24" step="1" value="12"><output id="ts-win-out">12</output></label>
+          </div>
+          <svg id="ts-svg" viewBox="0 0 600 340" role="img" aria-label="Four stacked panels: observed series, estimated trend, seasonal component and residual, for 96 monthly points with period 12."></svg>
+          <p class="readout" id="ts-readout"></p>
+        </div>
+
+        <h3>Stationarity, differencing and autocorrelation</h3>
+        <p>A series is <strong>stationary</strong> when its mean, variance and autocorrelation stay constant over time. ARIMA-style models assume it, so you remove trend by differencing, remove seasonality by seasonal differencing (\(y_t - y_{t-m}\)) and stabilise variance with a log. The <strong>autocorrelation function (ACF)</strong> shows the structure that remains.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 190" role="img" aria-label="Left: a trending series with a weekly cycle. Middle: after first differencing the trend is gone and the level is flat. Right: autocorrelation of the differenced series shows spikes at lags 7 and 14, revealing the weekly cycle.">
+              <defs>
+                <marker id="ts-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="120" y="22" text-anchor="middle">raw: trend + weekly cycle</text>
+              <line class="d-grid" x1="20" y1="145" x2="220" y2="145"/>
+              <polyline class="d-line-accent" points="20.0,144.9 24.8,127.4 29.5,120.9 34.3,130.4 39.0,142.8 43.8,145.0 48.6,138.7 53.3,123.8 58.1,116.7 62.9,112.0 67.6,112.3 72.4,123.1 77.1,125.8 81.9,122.4 86.7,112.1 91.4,99.3 96.2,86.8 101.0,100.0 105.7,111.5 110.5,118.0 115.2,109.9 120.0,96.5 124.8,84.5 129.5,78.9 134.3,83.6 139.0,92.7 143.8,97.1 148.6,94.6 153.3,86.7 158.1,66.8 162.9,67.6 167.6,69.8 172.4,83.5 177.1,85.1 181.9,82.3 186.7,66.5 191.4,45.0 196.2,49.0 201.0,52.2 205.7,68.2 210.5,71.0 215.2,63.6 220.0,52.4"/>
+              <text class="d-label" x="120" y="165" text-anchor="middle">mean drifts up: not stationary</text>
+              <line class="d-line-accent" x1="224" y1="95" x2="254" y2="95" marker-end="url(#ts-arrow2)"/>
+              <text class="d-mono" x="239" y="86" text-anchor="middle">Δ</text>
+              <text class="d-title" x="360" y="22" text-anchor="middle">differenced: y_t − y_t−1</text>
+              <line class="d-grid" x1="260" y1="95" x2="460" y2="95"/>
+              <polyline class="d-line" points="260.0,58.3 264.9,81.3 269.8,115.1 274.6,120.9 279.5,99.6 284.4,81.7 289.3,63.8 294.1,80.2 299.0,85.2 303.9,95.5 308.8,117.7 313.7,100.7 318.5,87.9 323.4,73.3 328.3,68.2 333.2,68.9 338.0,122.6 342.9,119.2 347.8,108.6 352.7,77.9 357.6,67.0 362.4,70.0 367.3,83.2 372.2,104.8 377.1,114.0 382.0,104.4 386.8,89.7 391.7,78.4 396.6,53.3 401.5,96.6 406.3,99.7 411.2,123.7 416.1,98.4 421.0,89.1 425.9,61.7 430.7,50.0 435.6,103.5 440.5,101.7 445.4,128.5 450.2,100.9 455.1,79.5 460.0,71.5"/>
+              <text class="d-label" x="360" y="165" text-anchor="middle">flat mean: trend removed</text>
+              <text class="d-title" x="595" y="22" text-anchor="middle">ACF of differenced series</text>
+              <line class="d-grid" x1="496" y1="95" x2="692" y2="95"/>
+              <rect class="d-dot" x="500.0" y="71.9" width="9" height="23.1"/><rect class="d-dot" x="513.5" y="95.0" width="9" height="11.8"/><rect class="d-dot" x="527.0" y="95.0" width="9" height="40.7"/><rect class="d-dot" x="540.5" y="95.0" width="9" height="35.0"/><rect class="d-dot" x="554.0" y="95.0" width="9" height="5.7"/><rect class="d-dot" x="567.5" y="69.8" width="9" height="25.2"/><rect class="d-dot-signal" x="581.0" y="58.4" width="9" height="36.6"/><rect class="d-dot" x="594.5" y="76.4" width="9" height="18.6"/><rect class="d-dot" x="608.0" y="95.0" width="9" height="6.8"/><rect class="d-dot" x="621.5" y="95.0" width="9" height="32.1"/><rect class="d-dot" x="635.0" y="95.0" width="9" height="27.7"/><rect class="d-dot" x="648.5" y="95.0" width="9" height="7.9"/><rect class="d-dot" x="662.0" y="72.3" width="9" height="22.7"/><rect class="d-dot-signal" x="675.5" y="64.8" width="9" height="30.2"/>
+              <text class="d-label d-text-signal" x="585" y="40" text-anchor="middle">lag 7</text>
+              <text class="d-label d-text-signal" x="680" y="40" text-anchor="middle">14</text>
+              <text class="d-label" x="595" y="165" text-anchor="middle">lags 1 → 14: spikes = weekly cycle</text>
+            </svg>
+          </div>
+          <figcaption>Differencing removes the trend; the autocorrelation function then exposes the remaining seasonal structure. A seasonal difference (y_t − y_t−7) would remove the weekly spikes too.</figcaption>
+        </figure>
+<p class="muted">The augmented Dickey-Fuller test (null: non-stationary) and the KPSS test (null: stationary) give a formal check.</p>
+
+        <h3>Models, from baselines to foundation models</h3>
+        <p>Start with <strong>seasonal naive</strong>, the value one period ago; it is embarrassingly hard to beat. Move down the table only when a backtest says the extra complexity pays. Prefer quantile forecasts (P10, P50, P90) when decisions depend on risk: you provision GPUs for the P90.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Family</th><th>Examples</th><th>Good for</th><th>Watch out</th></tr></thead>
+            <tbody>
+              <tr><td>Baselines</td><td>naive, seasonal naive</td><td>the bar every model must clear</td><td>always run them first</td></tr>
+              <tr><td>Statistical</td><td>ETS (Holt-Winters), ARIMA / SARIMA</td><td>single series, small data, interpretable</td><td>one model per series; assumes stable patterns</td></tr>
+              <tr><td>Global ML</td><td>gradient-boosted trees on lag + calendar features</td><td>many related series, promos, holidays</td><td>leak-free features are your job</td></tr>
+              <tr><td>Deep</td><td>DeepAR, N-BEATS, TFT, PatchTST</td><td>lots of data, complex covariates</td><td>cost and tuning; must beat the baselines</td></tr>
+              <tr><td>Foundation</td><td>pretrained zero-shot forecasters</td><td>cold start, many short series</td><td>backtest on your data before trusting</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Backtesting: the only honest evaluation</h3>
+        <p><strong>Backtesting</strong> replays history: train up to a cutoff, forecast the next h steps, slide the cutoff and repeat. Features may only use information available at the cutoff, so a lag-1 feature is useless for a 7-day-ahead forecast.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="Four backtest folds: each trains on an expanding window of history, skips a gap, and tests on the next horizon; the cutoff moves forward each fold.">
+              <defs>
+                <marker id="ts-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="38">fold 1</text>
+              <rect class="d-accent" x="80" y="26" width="240" height="18" rx="3"/>
+              <rect class="d-signal" x="330" y="26" width="70" height="18" rx="3"/>
+              <text class="d-label" x="20" y="72">fold 2</text>
+              <rect class="d-accent" x="80" y="60" width="310" height="18" rx="3"/>
+              <rect class="d-signal" x="400" y="60" width="70" height="18" rx="3"/>
+              <text class="d-label" x="20" y="106">fold 3</text>
+              <rect class="d-accent" x="80" y="94" width="380" height="18" rx="3"/>
+              <rect class="d-signal" x="470" y="94" width="70" height="18" rx="3"/>
+              <text class="d-label" x="20" y="140">fold 4</text>
+              <rect class="d-accent" x="80" y="128" width="450" height="18" rx="3"/>
+              <rect class="d-signal" x="540" y="128" width="70" height="18" rx="3"/>
+              <rect class="d-fill" x="610" y="128" width="50" height="18" rx="3"/>
+              <text class="d-label" x="635" y="122" text-anchor="middle">unused</text>
+              <line class="d-line" x1="80" y1="168" x2="665" y2="168" marker-end="url(#ts-arrow)"/>
+              <text class="d-label" x="80" y="184">past</text>
+              <text class="d-label" x="665" y="184" text-anchor="end">time →</text>
+              <rect class="d-accent" x="80" y="192" width="14" height="10"/>
+              <text class="d-label" x="100" y="201">train (expanding window)</text>
+              <rect class="d-signal" x="270" y="192" width="14" height="10"/>
+              <text class="d-label" x="290" y="201">test horizon h</text>
+              <text class="d-label" x="420" y="201">small gap = time to deploy / data delay</text>
+            </svg>
+          </div>
+          <figcaption>Rolling-origin backtesting. Each fold trains only on the past, leaves a gap for realistic data delay, and scores the next horizon. Averaging across folds shows how the model would really have performed.</figcaption>
+        </figure>
+
+        <p>MAE and RMSE are in the series' units; MAPE explodes near zero. <strong>MASE</strong> divides your error by seasonal naive's in-sample error, so below 1 means you beat the baseline.</p>
+        <div class="formula">
+          \[ \text{MASE} = \frac{\frac{1}{h}\sum_{t=n+1}^{n+h} |y_t - \hat y_t|}{\frac{1}{n-m}\sum_{t=m+1}^{n} |y_t - y_{t-m}|} \]
+          <span class="formula-note">\(m\) is the season length, \(n\) the training length, \(h\) the horizon. MASE below 1 means you beat seasonal naive.</span>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+import pandas as pd
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.model_selection import TimeSeriesSplit
+from statsmodels.tsa.seasonal import STL
+
+<span class="c"># two years of daily data with a trend and a weekly cycle</span>
+idx = pd.date_range(<span class="s">"2024-01-01"</span>, periods=730, freq=<span class="s">"D"</span>)
+t = np.arange(730)
+rng = np.random.default_rng(0)
+y = pd.Series(100 + 0.05 * t + 10 * np.sin(2 * np.pi * t / 7) + rng.normal(0, 3, 730), index=idx)
+
+parts = STL(y, period=7).fit()                 <span class="c"># parts.trend, parts.seasonal, parts.resid</span>
+
+horizon = 7                                    <span class="c"># forecast one week ahead</span>
+df = pd.DataFrame({<span class="s">"y"</span>: y})
+for lag in (7, 14, 21, 28):                    <span class="c"># lags &gt;= horizon: known at forecast time</span>
+    df[f<span class="s">"lag{lag}"</span>] = y.shift(lag)
+df[<span class="s">"dow"</span>] = df.index.dayofweek
+df = df.dropna()
+X, target = df.drop(columns=<span class="s">"y"</span>), df[<span class="s">"y"</span>]
+
+for k, (tr, te) in enumerate(TimeSeriesSplit(n_splits=8, test_size=horizon).split(X)):
+    model = HistGradientBoostingRegressor().fit(X.iloc[tr], target.iloc[tr])
+    mae_model = np.mean(np.abs(model.predict(X.iloc[te]) - target.iloc[te]))
+    mae_snaive = np.mean(np.abs(X[<span class="s">"lag7"</span>].iloc[te] - target.iloc[te]))  <span class="c"># value 7 days ago</span>
+    print(k, round(mae_model, 2), round(mae_snaive, 2))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Decompose into trend + seasonality + residual; a moving average with window = period isolates the trend.</li>
+            <li>Stationarity (constant mean, variance, autocorrelation) is reached by differencing and log transforms.</li>
+            <li>Seasonal naive is the baseline to beat; global gradient-boosted models with lag features are the workhorse.</li>
+            <li>Backtest with rolling origins and features available at the cutoff; never shuffle.</li>
+            <li>Forecast quantiles when decisions depend on risk, such as capacity planning.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Random K-fold cross-validation on time series, which leaks the future into training.</li>
+            <li>Using lag features shorter than the forecast horizon, or scalers fit on the full series.</li>
+            <li>Reporting MAPE on series with zeros or near-zero values.</li>
+            <li>Skipping the seasonal naive baseline and celebrating a deep model that does not beat it.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">Starter roadmap</span>
+          <ol>
+            <li>Decompose a public series with STL; plot its ACF.</li>
+            <li>Backtest naive, seasonal naive and ETS with MASE.</li>
+            <li>Build one global gradient-boosted model over many series.</li>
+            <li>Produce P10/P50/P90 forecasts and check coverage.</li>
+            <li>Forecast your app's token usage and alert outside P90.</li>
+          </ol>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="time-series-1"><span>Decompose a series by hand into trend, seasonal and residual with a centred moving average</span></label></li>
+          <li><label><input type="checkbox" data-key="time-series-2"><span>Explain stationarity and choose a differencing or log transform to achieve it</span></label></li>
+          <li><label><input type="checkbox" data-key="time-series-3"><span>Set up a rolling-origin backtest with a horizon, a gap and leak-free features</span></label></li>
+          <li><label><input type="checkbox" data-key="time-series-4"><span>Compute MASE and explain why below 1 means beating seasonal naive</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://otexts.com/fpp3/">Forecasting: Principles and Practice, 3rd ed. (Hyndman &amp; Athanasopoulos)</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.statsmodels.org/stable/index.html">statsmodels documentation (STL, ETS, ARIMA)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="rl">
+        <header class="topic-head">
+          <p class="eyebrow">15.6 · Learning from reward</p>
+          <h2>Reinforcement learning</h2>
+        </header>
+
+        <p class="lead">Reinforcement learning (RL) learns by trial and error. An agent acts, the environment answers with a new situation and a reward, and the agent adjusts so that total future reward goes up. Nobody labels the right action, and the reward often arrives long after the move that earned it.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>RL is how chat models are tuned on human preferences (RLHF) and how reasoning models learn from verifiable rewards such as passing tests. Knowing its failure modes, especially reward hacking, helps you design reward signals and read model cards.</p>
+        </div>
+
+        <h3>The loop and the Markov decision process</h3>
+        <p>A <strong>Markov decision process (MDP)</strong> has states \(s\), actions \(a\), transition probabilities, rewards \(r\) and a discount \(\gamma\) that makes near rewards worth more. A <strong>policy</strong> \(\pi(a \mid s)\) chooses actions to maximise the expected <strong>return</strong> \(G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots\)</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 210" role="img" aria-label="The agent sends an action to the environment, which returns the next state and a reward; on the right, bars show later rewards weighted by powers of the discount factor.">
+              <defs>
+                <marker id="rl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="40" y="70" width="150" height="70" rx="8"/>
+              <text class="d-title" x="115" y="100" text-anchor="middle">Agent</text>
+              <text class="d-mono" x="115" y="122" text-anchor="middle">policy π(a|s)</text>
+              <rect class="d-box" x="330" y="70" width="170" height="70" rx="8"/>
+              <text class="d-title" x="415" y="100" text-anchor="middle">Environment</text>
+              <text class="d-label" x="415" y="122" text-anchor="middle">transitions + rewards</text>
+              <path class="d-line-accent" d="M115,70 L115,38 L415,38 L415,66" marker-end="url(#rl-arrow)"/>
+              <text class="d-mono" x="265" y="30" text-anchor="middle">action a_t</text>
+              <path class="d-line-accent" d="M415,140 L415,172 L115,172 L115,144" marker-end="url(#rl-arrow)"/>
+              <text class="d-mono" x="265" y="192" text-anchor="middle">next state s_t+1, reward r_t+1</text>
+              <line class="d-grid" x1="525" y1="20" x2="525" y2="200"/>
+              <text class="d-title" x="612" y="34" text-anchor="middle">return G_t</text>
+              <line class="d-line" x1="545" y1="150" x2="685" y2="150"/>
+              <rect class="d-dot" x="550" y="70" width="20" height="80"/>
+              <rect class="d-dot" x="578" y="78" width="20" height="72"/>
+              <rect class="d-dot" x="606" y="85.2" width="20" height="64.8"/>
+              <rect class="d-dot" x="634" y="91.7" width="20" height="58.3"/>
+              <rect class="d-dot" x="662" y="97.5" width="20" height="52.5"/>
+              <text class="d-mono" x="560" y="166" text-anchor="middle">1</text>
+              <text class="d-mono" x="588" y="166" text-anchor="middle">γ</text>
+              <text class="d-mono" x="616" y="166" text-anchor="middle">γ²</text>
+              <text class="d-mono" x="644" y="166" text-anchor="middle">γ³</text>
+              <text class="d-mono" x="672" y="166" text-anchor="middle">γ⁴</text>
+              <text class="d-label" x="612" y="186" text-anchor="middle">weight on r1…r5, γ = 0.9</text>
+              <text class="d-label" x="612" y="58" text-anchor="middle">same reward, later = worth less</text>
+            </svg>
+          </div>
+          <figcaption>Left: the RL loop. The only teaching signal is the reward that comes back. Right: discounting makes a reward four steps away worth 0.66 of an immediate one when γ = 0.9.</figcaption>
+        </figure>
+
+        <h3>Value-based learning: Q-learning</h3>
+        <p>The <strong>Q-value</strong> \(Q(s,a)\) is the expected return from taking action \(a\) in state \(s\) and acting well afterwards. Q-learning nudges each estimate toward a one-step target: the reward plus the discounted best value of the next state.</p>
+        <div class="formula">
+          \[ Q(s,a) \leftarrow Q(s,a) + \alpha \Big[\, r + \gamma \max_{a'} Q(s', a') - Q(s,a) \Big] \]
+          <span class="formula-note">\(\alpha\) is the learning rate; the bracket is the temporal-difference error, the surprise between target and current estimate.</span>
+        </div>
+        <p><strong>ε-greedy</strong> exploration takes a random action with probability ε and the best-known one otherwise. In the gridworld, watch value spread backward from the goal. DQN replaced the table with a neural network to play Atari from pixels.</p>
+
+        <div class="widget" id="rl-grid">
+          <div class="widget-head">
+            <span class="widget-title">Q-learning gridworld</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="rl-alpha">α <input type="range" id="rl-alpha" min="0.05" max="1" step="0.05" value="0.5"><output id="rl-alpha-out">0.50</output></label>
+            <label for="rl-gamma">γ <input type="range" id="rl-gamma" min="0.5" max="0.99" step="0.01" value="0.9"><output id="rl-gamma-out">0.90</output></label>
+            <label for="rl-eps">ε <input type="range" id="rl-eps" min="0" max="1" step="0.05" value="0.2"><output id="rl-eps-out">0.20</output></label>
+          </div>
+          <div class="widget-controls">
+            <button class="btn" type="button" id="rl-step">Step</button>
+            <button class="btn" type="button" id="rl-episode">Run 1 episode</button>
+            <button class="btn primary" type="button" id="rl-run50">Run 50 episodes</button>
+            <button class="btn" type="button" id="rl-reset">Reset Q-table</button>
+          </div>
+          <svg id="rl-svg" viewBox="0 0 600 330" role="img" aria-label="A 5 by 5 gridworld with a goal, pits and walls; cells are shaded by their best Q-value and arrows show the greedy action."></svg>
+          <p class="readout" id="rl-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+import gymnasium as gym
+
+env = gym.make(<span class="s">"FrozenLake-v1"</span>, is_slippery=False)    <span class="c"># 4x4 grid, reward 1 at the goal</span>
+Q = np.zeros((env.observation_space.n, env.action_space.n))
+alpha, gamma, eps = 0.1, 0.99, 0.1
+rng = np.random.default_rng(0)
+
+for episode in range(2000):
+    s, _ = env.reset()
+    done = False
+    while not done:
+        if rng.random() &lt; eps:
+            a = env.action_space.sample()
+        else:                                             <span class="c"># greedy, ties broken at random</span>
+            a = int(rng.choice(np.flatnonzero(Q[s] == Q[s].max())))
+        s2, r, terminated, truncated, _ = env.step(a)
+        target = r + gamma * np.max(Q[s2]) * (not terminated)  <span class="c"># no future after the end</span>
+        Q[s, a] += alpha * (target - Q[s, a])
+        s, done = s2, terminated or truncated
+
+print(np.argmax(Q, axis=1).reshape(4, 4))                 <span class="c"># greedy action per cell</span></code></pre>
+
+        <h3>Policy gradients and RL for LLMs</h3>
+        <p><strong>Policy-gradient</strong> methods skip the value table and adjust the policy directly: raise the log-probability of actions that did better than expected. "Better than expected" is the <strong>advantage</strong> \(A\). PPO clips each update so that one batch cannot move the policy too far.</p>
+        <div class="formula">
+          \[ \nabla_\theta J(\theta) = \mathbb{E}\big[\, \nabla_\theta \log \pi_\theta(a \mid s)\; A(s,a) \,\big] \]
+          <span class="formula-note">Positive advantage pushes the action's probability up, negative pushes it down. Subtracting a baseline from the return reduces variance without biasing the gradient.</span>
+        </div>
+        <p>For an LLM, the state is the prompt plus tokens so far, an action is the next token, and the reward arrives when the answer ends. RLHF scores answers with a reward model trained on human preferences, optimises with PPO, and adds a KL penalty to stay near the starting model. GRPO uses each sampled answer's reward minus its group's mean as the advantage, so it needs no value network.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 245" role="img" aria-label="GRPO step: a prompt goes to the policy, which samples four answers; each gets a reward, the group mean is subtracted to give advantages, and the policy update raises good answers and lowers bad ones with a KL penalty to a reference model.">
+              <defs>
+                <marker id="rl-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="90" width="90" height="50" rx="8"/>
+              <text class="d-text" x="65" y="120" text-anchor="middle">prompt</text>
+              <line class="d-line" x1="110" y1="115" x2="138" y2="115" marker-end="url(#rl-arrow2)"/>
+              <rect class="d-accent" x="140" y="90" width="100" height="50" rx="8"/>
+              <text class="d-title" x="190" y="113" text-anchor="middle">policy</text>
+              <text class="d-mono" x="190" y="130" text-anchor="middle">π_θ (the LLM)</text>
+              <line class="d-line" x1="240" y1="115" x2="288" y2="38" marker-end="url(#rl-arrow2)"/>
+              <line class="d-line" x1="240" y1="115" x2="288" y2="88" marker-end="url(#rl-arrow2)"/>
+              <line class="d-line" x1="240" y1="115" x2="288" y2="138" marker-end="url(#rl-arrow2)"/>
+              <line class="d-line" x1="240" y1="115" x2="288" y2="188" marker-end="url(#rl-arrow2)"/>
+              <text class="d-label" x="345" y="13" text-anchor="middle">sample a group</text>
+              <text class="d-label" x="455" y="13" text-anchor="middle">reward</text>
+              <text class="d-label" x="550" y="13" text-anchor="middle">r − mean</text>
+              <rect class="d-box" x="290" y="20" width="110" height="36" rx="6"/><text class="d-text" x="345" y="43" text-anchor="middle">answer 1</text>
+              <rect class="d-box" x="290" y="70" width="110" height="36" rx="6"/><text class="d-text" x="345" y="93" text-anchor="middle">answer 2</text>
+              <rect class="d-box" x="290" y="120" width="110" height="36" rx="6"/><text class="d-text" x="345" y="143" text-anchor="middle">answer 3</text>
+              <rect class="d-box" x="290" y="170" width="110" height="36" rx="6"/><text class="d-text" x="345" y="193" text-anchor="middle">answer 4</text>
+              <rect class="d-box" x="420" y="20" width="70" height="36" rx="6"/><text class="d-mono" x="455" y="43" text-anchor="middle">0.9</text>
+              <rect class="d-box" x="420" y="70" width="70" height="36" rx="6"/><text class="d-mono" x="455" y="93" text-anchor="middle">0.2</text>
+              <rect class="d-box" x="420" y="120" width="70" height="36" rx="6"/><text class="d-mono" x="455" y="143" text-anchor="middle">0.6</text>
+              <rect class="d-box" x="420" y="170" width="70" height="36" rx="6"/><text class="d-mono" x="455" y="193" text-anchor="middle">0.3</text>
+              <rect class="d-good" x="515" y="20" width="70" height="36" rx="6"/><text class="d-mono" x="550" y="43" text-anchor="middle">+0.4</text>
+              <rect class="d-signal" x="515" y="70" width="70" height="36" rx="6"/><text class="d-mono" x="550" y="93" text-anchor="middle">−0.3</text>
+              <rect class="d-good" x="515" y="120" width="70" height="36" rx="6"/><text class="d-mono" x="550" y="143" text-anchor="middle">+0.1</text>
+              <rect class="d-signal" x="515" y="170" width="70" height="36" rx="6"/><text class="d-mono" x="550" y="193" text-anchor="middle">−0.2</text>
+              <line class="d-line" x1="585" y1="38" x2="610" y2="100" marker-end="url(#rl-arrow2)"/>
+              <line class="d-line" x1="585" y1="188" x2="610" y2="132" marker-end="url(#rl-arrow2)"/>
+              <rect class="d-accent" x="612" y="88" width="80" height="56" rx="8"/>
+              <text class="d-title" x="652" y="111" text-anchor="middle">update θ</text>
+              <text class="d-label" x="652" y="130" text-anchor="middle">+ KL to ref</text>
+              <path class="d-line-accent" d="M652,144 L652,222 L190,222 L190,144" marker-end="url(#rl-arrow2)"/>
+              <text class="d-label" x="420" y="238" text-anchor="middle">raise probability of above-average answers, lower the rest</text>
+            </svg>
+          </div>
+          <figcaption>One GRPO step with four sampled answers. The group's mean reward (0.5) is the baseline, so each answer's advantage is just how much better or worse it scored than its siblings.</figcaption>
+        </figure>
+
+        <p>Verifiable rewards, such as passing unit tests, power reasoning models. The classic failure is <strong>reward hacking</strong>: scoring high without doing the task, such as padding answers because the reward model likes length.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>An MDP has states, actions, transitions, rewards and a discount; the policy maximises expected discounted return.</li>
+            <li>Q-learning moves \(Q(s,a)\) toward \(r + \gamma \max Q(s',\cdot)\); value flows backward from rewards.</li>
+            <li>Exploration (ε-greedy and friends) is required because the agent only learns about actions it tries.</li>
+            <li>Policy gradients push up log-probabilities of actions with positive advantage; PPO keeps steps small.</li>
+            <li>RLHF and GRPO apply the same ideas to LLMs, with reward models or verifiers and a KL leash.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Bootstrapping from the next state after a terminal step, which leaks value past the end of an episode.</li>
+            <li>Writing a reward that is easy to game, then trusting the reward curve instead of reading outputs.</li>
+            <li>Dropping the KL penalty in LLM RL and watching the model drift into gibberish that the reward model likes.</li>
+            <li>Judging an RL run from one seed; results vary a lot between seeds.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">Starter roadmap</span>
+          <ol>
+            <li>Solve FrozenLake with tabular Q-learning.</li>
+            <li>Train DQN on CartPole across five seeds.</li>
+            <li>Implement REINFORCE, then run a library PPO.</li>
+            <li>Sketch the RLHF data flow from the InstructGPT paper.</li>
+            <li>GRPO-tune a small LLM on math with a verifiable reward.</li>
+          </ol>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="rl-1"><span>Define an MDP and compute a discounted return for a short reward sequence</span></label></li>
+          <li><label><input type="checkbox" data-key="rl-2"><span>Apply one Q-learning update by hand given α, γ, a reward and next-state values</span></label></li>
+          <li><label><input type="checkbox" data-key="rl-3"><span>Explain the exploration-exploitation trade-off and how ε-greedy handles it</span></label></li>
+          <li><label><input type="checkbox" data-key="rl-4"><span>Explain the policy-gradient update and what the advantage does</span></label></li>
+          <li><label><input type="checkbox" data-key="rl-5"><span>Walk through RLHF and GRPO, including the role of the reward model and the KL penalty</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="http://incompleteideas.net/book/the-book-2nd.html">Reinforcement Learning: An Introduction (Sutton &amp; Barto, 2nd ed.)</a></li>
+          <li><span class="kind">Course</span><a href="https://spinningup.openai.com/">OpenAI Spinning Up in Deep RL</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1707.06347">Proximal Policy Optimization Algorithms (2017)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2203.02155">Training language models to follow instructions with human feedback (InstructGPT, 2022)</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Zero-shot vs fine-tuned image classifier</h4><p>Collect 300 photos across five classes. Compare CLIP zero-shot, a fine-tuned ResNet and a VLM prompt on accuracy, latency and cost per 1,000 images, and present the trade-off in one chart.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Sub-second voice agent</h4><p>Build a VAD → streaming ASR → LLM → streaming TTS loop with barge-in. Log a timestamp for every stage, publish the latency breakdown, and measure WER on 30 of your own recordings.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Retrieval + ranking recommender with backtests</h4><p>On a public interaction dataset, build a two-tower retriever with an ANN index and a gradient-boosted ranker. Evaluate recall@100 and NDCG@10 on a time split, and forecast next week's traffic to size the serving fleet.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Explain the core tasks, architectures and metrics of at least two specializations without notes</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Choose between a specialised model and a general multimodal LLM with numbers for cost, latency and accuracy</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Draw the data flow of a voice agent, a diffusion sampler and a two-stage recommender</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Set up a leak-free evaluation for time-ordered data</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Explain how RL (RLHF, GRPO) shapes the LLMs you build on, and how reward hacking shows up</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(el) { while (el.firstChild) el.removeChild(el.firstChild); }
+  function arrowMarker(svg, id, cls) {
+    var defs = mk("defs", {}, svg);
+    var m = mk("marker", { id: id, viewBox: "0 0 10 10", refX: "9", refY: "5", markerWidth: "6", markerHeight: "6", orient: "auto-start-reverse" }, defs);
+    mk("path", { d: "M0,0 L10,5 L0,10 z", "class": cls }, m);
+  }
+  function seeded(seed) {
+    var s = seed >>> 0;
+    return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  }
+  function gauss(rand) {
+    var u = Math.max(rand(), 1e-9), v = rand();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+
+  /* ---------- 15.1 IoU between two draggable boxes ---------- */
+  (function () {
+    var svg = document.getElementById("cv-iou-svg");
+    if (!svg) return;
+    var thr = document.getElementById("cv-iou-thr"), thrOut = document.getElementById("cv-iou-thr-out");
+    var readout = document.getElementById("cv-iou-readout");
+    var W = 600, H = 300, MIN = 24;
+    var A, B, drag = null;
+    function reset() { A = { x: 110, y: 60, w: 210, h: 160 }; B = { x: 230, y: 100, w: 210, h: 160 }; }
+    reset();
+    function inter(a, b) {
+      var ix = Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x));
+      var iy = Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+      return { w: ix, h: iy, x: Math.max(a.x, b.x), y: Math.max(a.y, b.y) };
+    }
+    function draw() {
+      clear(svg);
+      mk("rect", { x: 0, y: 0, width: W, height: H, rx: 8, "class": "d-fill" }, svg);
+      for (var gx = 50; gx < W; gx += 50) mk("line", { x1: gx, y1: 0, x2: gx, y2: H, "class": "d-grid" }, svg);
+      for (var gy = 50; gy < H; gy += 50) mk("line", { x1: 0, y1: gy, x2: W, y2: gy, "class": "d-grid" }, svg);
+      var I = inter(A, B);
+      var ra = mk("rect", { x: A.x, y: A.y, width: A.w, height: A.h, "class": "d-accent", "fill-opacity": "0.55", "data-box": "A" }, svg);
+      var rb = mk("rect", { x: B.x, y: B.y, width: B.w, height: B.h, "class": "d-signal", "fill-opacity": "0.55", "data-box": "B" }, svg);
+      ra.style.cursor = rb.style.cursor = "move";
+      if (I.w > 0 && I.h > 0) mk("rect", { x: I.x, y: I.y, width: I.w, height: I.h, "class": "d-good", "pointer-events": "none" }, svg);
+      [["A", A], ["B", B]].forEach(function (p) {
+        var h = mk("rect", { x: p[1].x + p[1].w - 7, y: p[1].y + p[1].h - 7, width: 14, height: 14, rx: 3, "class": p[0] === "A" ? "d-dot" : "d-dot-signal", "data-handle": p[0] }, svg);
+        h.style.cursor = "nwse-resize";
+      });
+      mk("text", { x: A.x + 6, y: A.y - 6, "class": "d-label d-text-accent" }, svg, "ground truth");
+      mk("text", { x: B.x + B.w - 6, y: B.y + B.h + 16, "text-anchor": "end", "class": "d-label d-text-signal" }, svg, "prediction");
+      var ai = I.w * I.h, union = A.w * A.h + B.w * B.h - ai, iou = ai / union;
+      var t = parseFloat(thr.value);
+      mk("text", { x: W - 12, y: 26, "text-anchor": "end", "class": "d-title" }, svg, "IoU = " + iou.toFixed(3));
+      var ok = iou >= t;
+      readout.textContent = "Intersection " + fmt(ai) + " px² ÷ union " + fmt(union) + " px² = IoU " + iou.toFixed(3) + ". " +
+        (ok ? "At threshold " + t.toFixed(2) + " this counts as a true positive, and NMS would delete the lower-scoring box as a duplicate."
+            : "Below threshold " + t.toFixed(2) + ": a false positive in mAP, and NMS would keep both boxes as separate objects.");
+    }
+    function pt(evt) {
+      var p = svg.createSVGPoint(); p.x = evt.clientX; p.y = evt.clientY;
+      var m = svg.getScreenCTM(); if (!m) return { x: 0, y: 0 };
+      return p.matrixTransform(m.inverse());
+    }
+    svg.addEventListener("pointerdown", function (e) {
+      var t = e.target, which = t.getAttribute("data-handle") || t.getAttribute("data-box");
+      if (!which) return;
+      var box = which === "A" ? A : B, p = pt(e);
+      drag = { box: box, resize: !!t.getAttribute("data-handle"), dx: p.x - box.x, dy: p.y - box.y };
+      if (svg.setPointerCapture) svg.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    svg.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var p = pt(e), b = drag.box;
+      if (drag.resize) {
+        b.w = Math.max(MIN, Math.min(W - b.x, p.x - b.x));
+        b.h = Math.max(MIN, Math.min(H - b.y, p.y - b.y));
+      } else {
+        b.x = Math.max(0, Math.min(W - b.w, p.x - drag.dx));
+        b.y = Math.max(0, Math.min(H - b.h, p.y - drag.dy));
+      }
+      draw();
+    });
+    function end() { drag = null; }
+    svg.addEventListener("pointerup", end);
+    svg.addEventListener("pointercancel", end);
+    thr.addEventListener("input", function () { thrOut.textContent = parseFloat(thr.value).toFixed(2); draw(); });
+    document.getElementById("cv-iou-reset").addEventListener("click", function () { reset(); draw(); });
+    draw();
+  })();
+
+  /* ---------- 15.2 Voice-agent latency budget ---------- */
+  (function () {
+    var svg = document.getElementById("speech-latency-svg");
+    if (!svg) return;
+    var ids = ["vad", "asr", "net", "llm", "tts"];
+    var inputs = {}, outs = {};
+    ids.forEach(function (k) { inputs[k] = document.getElementById("speech-" + k); outs[k] = document.getElementById("speech-" + k + "-out"); });
+    var wait = document.getElementById("speech-wait");
+    var readout = document.getElementById("speech-latency-readout");
+    var X0 = 20, X1 = 580, MAX = 3000;
+    function sx(ms) { return X0 + (X1 - X0) * Math.min(ms, MAX) / MAX; }
+    function draw() {
+      ids.forEach(function (k) { outs[k].textContent = inputs[k].value; });
+      var segs = [
+        { name: "endpoint", ms: +inputs.vad.value, cls: "d-fill" },
+        { name: "ASR", ms: +inputs.asr.value, cls: "d-box" },
+        { name: "network", ms: +inputs.net.value, cls: "d-box" },
+        { name: "LLM first token", ms: +inputs.llm.value, cls: "d-accent" }
+      ];
+      if (wait.checked) segs.push({ name: "full reply", ms: 1200, cls: "d-signal" });
+      segs.push({ name: "TTS first audio", ms: +inputs.tts.value, cls: "d-good" });
+      clear(svg);
+      var total = 0, x = X0, biggest = segs[0];
+      segs.forEach(function (s) {
+        var w = sx(total + s.ms) - sx(total);
+        mk("rect", { x: x, y: 34, width: Math.max(0, w), height: 40, "class": s.cls }, svg);
+        if (w > 46) mk("text", { x: x + w / 2, y: 58, "text-anchor": "middle", "class": "d-label" }, svg, s.ms + "");
+        x += w; total += s.ms;
+        if (s.ms > biggest.ms) biggest = s;
+      });
+      [[800, "800 ms: feels responsive"], [1500, "1.5 s: feels broken"]].forEach(function (r, i) {
+        var lx = sx(r[0]);
+        mk("line", { x1: lx, y1: 22, x2: lx, y2: 86, "class": i ? "d-line-signal" : "d-line-accent" }, svg);
+        mk("text", { x: lx + 4, y: i ? 98 : 18, "class": "d-label" + (i ? " d-text-signal" : " d-text-accent") }, svg, r[1]);
+      });
+      for (var t = 0; t <= MAX; t += 500) {
+        mk("line", { x1: sx(t), y1: 104, x2: sx(t), y2: 110, "class": "d-line" }, svg);
+        mk("text", { x: sx(t), y: 124, "text-anchor": "middle", "class": "d-label" }, svg, (t / 1000) + " s");
+      }
+      var lx2 = X0;
+      segs.forEach(function (s) {
+        mk("rect", { x: lx2, y: 134, width: 10, height: 10, "class": s.cls }, svg);
+        mk("text", { x: lx2 + 14, y: 143, "class": "d-label" }, svg, s.name);
+        lx2 += 14 + s.name.length * 6.2 + 14;
+      });
+      var verdict = total <= 800 ? "responsive: feels like a conversation." : total <= 1500 ? "usable but sluggish; users will start talking over it." : "too slow: users will think the call dropped.";
+      readout.textContent = "Voice-to-voice ≈ " + total + " ms, " + verdict + " Biggest cost: " + biggest.name + " (" + biggest.ms + " ms).";
+    }
+    ids.forEach(function (k) { inputs[k].addEventListener("input", draw); });
+    wait.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- 15.3 Diffusion forward noising ---------- */
+  (function () {
+    var svg = document.getElementById("diff-svg");
+    if (!svg) return;
+    var tIn = document.getElementById("diff-t"), tOut = document.getElementById("diff-t-out");
+    var sched = document.getElementById("diff-sched"), readout = document.getElementById("diff-readout");
+    var T = 1000, N = 24, i, j;
+    var lin = [1], cos = [1], ab = 1, s = 0.008;
+    function f(t) { var v = Math.cos(((t / T) + s) / (1 + s) * Math.PI / 2); return v * v; }
+    for (i = 1; i <= T; i++) {
+      ab *= 1 - (1e-4 + (0.02 - 1e-4) * (i - 1) / (T - 1));
+      lin.push(ab);
+      cos.push(Math.max(0, f(i) / f(0)));
+    }
+    var x0 = [];
+    for (i = 0; i < N; i++) for (j = 0; j < N; j++) {
+      var dx = j - 8, dy = i - 9, inCircle = dx * dx + dy * dy <= 30;
+      var inSquare = j >= 13 && j <= 20 && i >= 12 && i <= 20;
+      var bar = i >= 2 && i <= 4 && j >= 3 && j <= 20;
+      x0.push(inCircle || inSquare || bar ? 1 : -1);
+    }
+    var eps = [], seed = 7;
+    function reseed() { var r = seeded(seed++); eps = []; for (var k = 0; k < N * N; k++) eps.push(gauss(r)); }
+    reseed();
+    var CX = 280, CW = 300, CY = 20, CH = 170;
+    function px(t) { return CX + CW * t / T; }
+    function py(v) { return CY + CH * (1 - v); }
+    function path(arr) { var d = ""; for (var t = 0; t <= T; t += 10) d += (t ? "L" : "M") + px(t).toFixed(1) + "," + py(arr[t]).toFixed(1); return d; }
+    function draw() {
+      var t = parseInt(tIn.value, 10); tOut.textContent = t;
+      var arr = sched.value === "cosine" ? cos : lin, a = arr[t];
+      var sa = Math.sqrt(a), sn = Math.sqrt(1 - a);
+      clear(svg);
+      var cell = 8, ox = 12, oy = 12;
+      mk("rect", { x: ox, y: oy, width: N * cell, height: N * cell, "class": "d-fill" }, svg);
+      for (var k = 0; k < N * N; k++) {
+        var v = sa * x0[k] + sn * eps[k];
+        var op = Math.max(0, Math.min(1, (v + 2) / 4));
+        mk("rect", { x: ox + (k % N) * cell, y: oy + Math.floor(k / N) * cell, width: cell, height: cell, "class": "d-dot", opacity: op.toFixed(3) }, svg);
+      }
+      mk("text", { x: ox + N * cell / 2, y: oy + N * cell + 18, "text-anchor": "middle", "class": "d-mono" }, svg, "x_t at t = " + t);
+      mk("rect", { x: CX, y: CY, width: CW, height: CH, "class": "d-grid" }, svg);
+      [0, 0.5, 1].forEach(function (v) { mk("text", { x: CX - 6, y: py(v) + 4, "text-anchor": "end", "class": "d-label" }, svg, v.toFixed(1)); });
+      [0, 500, 1000].forEach(function (v) { mk("text", { x: px(v), y: CY + CH + 16, "text-anchor": "middle", "class": "d-label" }, svg, v); });
+      mk("path", { d: path(lin), "class": "d-line-accent" + (sched.value === "linear" ? "" : " d-dash") }, svg);
+      mk("path", { d: path(cos), "class": "d-line-signal" + (sched.value === "cosine" ? "" : " d-dash") }, svg);
+      mk("line", { x1: px(t), y1: CY, x2: px(t), y2: CY + CH, "class": "d-line" }, svg);
+      mk("circle", { cx: px(t), cy: py(lin[t]), r: 5, "class": "d-dot" }, svg);
+      mk("circle", { cx: px(t), cy: py(cos[t]), r: 5, "class": "d-dot-signal" }, svg);
+      mk("text", { x: CX + CW - 8, y: CY + 18, "text-anchor": "end", "class": "d-label d-text-accent" }, svg, "linear ᾱ_t");
+      mk("text", { x: CX + CW - 8, y: CY + 34, "text-anchor": "end", "class": "d-label d-text-signal" }, svg, "cosine ᾱ_t");
+      mk("text", { x: CX + CW / 2, y: CY + CH + 34, "text-anchor": "middle", "class": "d-label" }, svg, "step t → (share of signal left)");
+      var snr = a / (1 - a);
+      readout.textContent = "t = " + t + " · ᾱ = " + a.toFixed(3) + " · signal weight √ᾱ = " + sa.toFixed(2) +
+        " · noise weight √(1−ᾱ) = " + sn.toFixed(2) + " · SNR = " + (t === 0 ? "∞" : (10 * Math.log10(snr)).toFixed(1) + " dB");
+    }
+    tIn.addEventListener("input", draw);
+    sched.addEventListener("change", draw);
+    document.getElementById("diff-reseed").addEventListener("click", function () { reseed(); draw(); });
+    draw();
+  })();
+
+  /* ---------- 15.4 Two-tower retrieval in 2-D ---------- */
+  (function () {
+    var svg = document.getElementById("recsys-svg");
+    if (!svg) return;
+    var ang = document.getElementById("recsys-angle"), angOut = document.getElementById("recsys-angle-out");
+    var metric = document.getElementById("recsys-metric");
+    var kIn = document.getElementById("recsys-k"), kOut = document.getElementById("recsys-k-out");
+    var readout = document.getElementById("recsys-readout");
+    var items = [
+      ["Space opera", 1.4, 0.6], ["Robot comedy", 0.62, 0.48], ["Sci-fi doc", 0.42, 0.7], ["Superhero", 1.5, -0.25],
+      ["Heist thriller", 0.75, -0.8], ["Crime doc", 0.3, -0.55], ["Rom-com", -1.3, -0.55], ["Period drama", -0.55, -0.75],
+      ["Cooking show", -0.8, 0.45], ["Nature doc", -0.3, 0.85], ["Anime", 0.15, 1.05], ["Indie horror", 0.5, -0.2]
+    ];
+    var CX = 300, CY = 162, S = 110;
+    function draw() {
+      var a = parseInt(ang.value, 10) * Math.PI / 180, K = parseInt(kIn.value, 10), useCos = metric.value === "cos";
+      angOut.textContent = ang.value + "°"; kOut.textContent = K;
+      var ux = Math.cos(a), uy = Math.sin(a);
+      var scored = items.map(function (it) {
+        var n = Math.hypot(it[1], it[2]), dot = ux * it[1] + uy * it[2];
+        return { name: it[0], x: it[1], y: it[2], n: n, s: useCos ? dot / n : dot };
+      });
+      var ranked = scored.slice().sort(function (p, q) { return q.s - p.s; });
+      var top = ranked.slice(0, K).map(function (r) { return r.name; });
+      clear(svg);
+      arrowMarker(svg, "recsys-w-arrow", "d-head-accent");
+      mk("line", { x1: CX - 190, y1: CY, x2: CX + 190, y2: CY, "class": "d-grid" }, svg);
+      mk("line", { x1: CX, y1: 8, x2: CX, y2: 316, "class": "d-grid" }, svg);
+      mk("circle", { cx: CX, cy: CY, r: S, "class": "d-line d-dash" }, svg);
+      mk("text", { x: CX - S * 0.72 - 6, y: CY + S * 0.72 + 18, "text-anchor": "end", "class": "d-label" }, svg, "|v| = 1");
+      scored.forEach(function (it) {
+        var hot = top.indexOf(it.name) >= 0, x = CX + it.x * S, y = CY - it.y * S;
+        mk("circle", { cx: x, cy: y, r: 3 + 3 * it.n, "class": hot ? "d-dot-good" : "d-dot-muted" }, svg);
+        mk("text", { x: x + 9 + 2 * it.n, y: y + 4, "class": "d-label" + (hot ? " d-text-good" : "") }, svg, it.name);
+      });
+      mk("line", { x1: CX, y1: CY, x2: CX + ux * S * 1.3, y2: CY - uy * S * 1.3, "class": "d-line-accent", "marker-end": "url(#recsys-w-arrow)" }, svg);
+      mk("text", { x: CX + ux * S * 1.45, y: CY - uy * S * 1.45 + 4, "text-anchor": "middle", "class": "d-mono d-text-accent" }, svg, "u");
+      readout.textContent = "Top " + K + " by " + (useCos ? "cosine" : "dot product") + ": " +
+        ranked.slice(0, K).map(function (r) { return r.name + " (" + r.s.toFixed(2) + ")"; }).join(", ");
+    }
+    [ang, kIn].forEach(function (el) { el.addEventListener("input", draw); });
+    metric.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- 15.5 Seasonal decomposition ---------- */
+  (function () {
+    var svg = document.getElementById("ts-svg");
+    if (!svg) return;
+    var ctl = {}, outs = {};
+    ["trend", "amp", "noise", "win"].forEach(function (k) { ctl[k] = document.getElementById("ts-" + k); outs[k] = document.getElementById("ts-" + k + "-out"); });
+    var readout = document.getElementById("ts-readout");
+    var N = 96, P = 12, rand = seeded(42), z = [];
+    for (var i = 0; i < N; i++) z.push(gauss(rand));
+    function variance(a) { var m = 0, k; for (k = 0; k < a.length; k++) m += a[k]; m /= a.length; var v = 0; for (k = 0; k < a.length; k++) v += (a[k] - m) * (a[k] - m); return v / a.length; }
+    function draw() {
+      var slope = +ctl.trend.value, amp = +ctl.amp.value, noise = +ctl.noise.value, w = parseInt(ctl.win.value, 10);
+      outs.trend.textContent = slope.toFixed(2); outs.amp.textContent = amp; outs.noise.textContent = noise.toFixed(1); outs.win.textContent = w;
+      var y = [], k, i2;
+      for (i2 = 0; i2 < N; i2++) y.push(50 + slope * i2 + amp * (Math.sin(2 * Math.PI * i2 / P) + 0.4 * Math.sin(4 * Math.PI * i2 / P)) + noise * z[i2]);
+      var h = Math.floor(w / 2), T = new Array(N).fill(null);
+      for (i2 = h; i2 < N - h; i2++) {
+        var sum = 0, wt = 0;
+        for (k = -h; k <= h; k++) {
+          var c = (w % 2 === 0 && Math.abs(k) === h) ? 0.5 : 1;
+          sum += c * y[i2 + k]; wt += c;
+        }
+        T[i2] = sum / wt;
+      }
+      var acc = new Array(P).fill(0), cnt = new Array(P).fill(0);
+      for (i2 = 0; i2 < N; i2++) if (T[i2] !== null) { acc[i2 % P] += y[i2] - T[i2]; cnt[i2 % P]++; }
+      var prof = acc.map(function (a, p) { return cnt[p] ? a / cnt[p] : 0; });
+      var pm = prof.reduce(function (a, b) { return a + b; }, 0) / P;
+      prof = prof.map(function (v) { return v - pm; });
+      var S = [], R = [], Rv = [], SR = [];
+      for (i2 = 0; i2 < N; i2++) {
+        S.push(prof[i2 % P]);
+        if (T[i2] !== null) { var r = y[i2] - T[i2] - S[i2]; R.push(r); Rv.push(r); SR.push(r + S[i2]); } else R.push(null);
+      }
+      clear(svg);
+      var X0 = 70, X1 = 592, PH = 64, gaps = [8, 92, 176, 260];
+      function sx(t) { return X0 + (X1 - X0) * t / (N - 1); }
+      var lo = Math.min.apply(null, y), hi = Math.max.apply(null, y);
+      var mag = 1;
+      S.concat(Rv).forEach(function (v) { mag = Math.max(mag, Math.abs(v)); });
+      function line(arr, top, mn, mx, cls) {
+        var d = "", started = false;
+        arr.forEach(function (v, t) {
+          if (v === null) { started = false; return; }
+          var yy = top + PH - 5 - (PH - 10) * (v - mn) / (mx - mn || 1);
+          d += (started ? "L" : "M") + sx(t).toFixed(1) + "," + yy.toFixed(1); started = true;
+        });
+        mk("path", { d: d, "class": cls }, svg);
+      }
+      var names = ["observed", "trend", "seasonal", "residual"];
+      gaps.forEach(function (top, p) {
+        mk("rect", { x: X0, y: top, width: X1 - X0, height: PH, "class": "d-grid" }, svg);
+        mk("text", { x: 4, y: top + PH / 2 + 4, "class": "d-label" }, svg, names[p]);
+        if (p >= 2) mk("line", { x1: X0, y1: top + PH / 2, x2: X1, y2: top + PH / 2, "class": "d-grid" }, svg);
+      });
+      for (i2 = 0; i2 < N; i2 += P) mk("line", { x1: sx(i2), y1: 8, x2: sx(i2), y2: 324, "class": "d-grid d-dash" }, svg);
+      line(y, gaps[0], lo, hi, "d-line");
+      line(T, gaps[0], lo, hi, "d-line-accent");
+      line(T, gaps[1], lo, hi, "d-line-accent");
+      line(S, gaps[2], -mag, mag, "d-line-signal");
+      line(R, gaps[3], -mag, mag, "d-line");
+      mk("text", { x: X1, y: 336, "text-anchor": "end", "class": "d-label" }, svg, "96 months; dashed lines mark each 12-month cycle; seasonal and residual share one scale");
+      var vr = variance(Rv), vsr = variance(SR);
+      var Fs = Math.max(0, 1 - vr / (vsr || 1));
+      var rsd = Math.sqrt(vr);
+      readout.textContent = "Seasonal strength = " + Fs.toFixed(2) + " (1 − Var(R)/Var(S+R)) · residual std = " + rsd.toFixed(2) +
+        " vs true noise " + noise.toFixed(1) + (w === P ? " · window = period, so the cycle cancels cleanly." : w === 2 * P ? " · window = 2 periods also cancels the cycle, but blurs the trend more." : " · window ≠ period: part of the cycle leaks into the trend and residual.");
+    }
+    ["trend", "amp", "noise", "win"].forEach(function (k) { ctl[k].addEventListener("input", draw); });
+    draw();
+  })();
+
+  /* ---------- 15.6 Q-learning gridworld ---------- */
+  (function () {
+    var svg = document.getElementById("rl-svg");
+    if (!svg) return;
+    var aIn = document.getElementById("rl-alpha"), gIn = document.getElementById("rl-gamma"), eIn = document.getElementById("rl-eps");
+    var aOut = document.getElementById("rl-alpha-out"), gOut = document.getElementById("rl-gamma-out"), eOut = document.getElementById("rl-eps-out");
+    var readout = document.getElementById("rl-readout");
+    var MAP = ["....G", ".W.P.", ".....", "..WP.", "S...."];
+    var R = 5, C = 5, START = [4, 0], MAXSTEPS = 100;
+    var DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+    var Q, pos, steps, episodes, history, lastMsg, rand = Math.random;
+    function cellAt(r, c) { return MAP[r].charAt(c); }
+    function reset() {
+      Q = []; for (var s = 0; s < R * C; s++) Q.push([0, 0, 0, 0]);
+      pos = START.slice(); steps = 0; episodes = 0; history = []; lastMsg = "Press Step or Run to start exploring.";
+    }
+    function idx(p) { return p[0] * C + p[1]; }
+    function greedy(s) {
+      var q = Q[s], m = Math.max.apply(null, q), best = [];
+      for (var a = 0; a < 4; a++) if (q[a] === m) best.push(a);
+      return best[Math.floor(rand() * best.length)];
+    }
+    function step() {
+      var alpha = +aIn.value, gamma = +gIn.value, eps = +eIn.value;
+      var s = idx(pos), a = rand() < eps ? Math.floor(rand() * 4) : greedy(s);
+      var nr = pos[0] + DIRS[a][0], nc = pos[1] + DIRS[a][1];
+      if (nr < 0 || nr >= R || nc < 0 || nc >= C || cellAt(nr, nc) === "W") { nr = pos[0]; nc = pos[1]; }
+      var ch = cellAt(nr, nc), r = ch === "G" ? 1 : ch === "P" ? -1 : 0, term = ch === "G" || ch === "P";
+      var s2 = nr * C + nc, target = r + (term ? 0 : gamma * Math.max.apply(null, Q[s2]));
+      Q[s][a] += alpha * (target - Q[s][a]);
+      pos = [nr, nc]; steps++;
+      if (term || steps >= MAXSTEPS) {
+        episodes++;
+        history.push({ n: steps, res: ch === "G" ? "goal" : ch === "P" ? "pit" : "timeout" });
+        if (history.length > 60) history.shift();
+        lastMsg = "Episode " + episodes + " ended at the " + (ch === "G" ? "goal" : ch === "P" ? "pit" : "step limit") + " after " + steps + " steps.";
+        pos = START.slice(); steps = 0;
+        return true;
+      }
+      return false;
+    }
+    function draw() {
+      aOut.textContent = (+aIn.value).toFixed(2); gOut.textContent = (+gIn.value).toFixed(2); eOut.textContent = (+eIn.value).toFixed(2);
+      clear(svg);
+      arrowMarker(svg, "rl-w-arrow", "d-head-accent");
+      var CS = 58, OX = 12, OY = 12;
+      for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
+        var x = OX + c * CS, y = OY + r * CS, ch = cellAt(r, c), s = r * C + c;
+        mk("rect", { x: x, y: y, width: CS - 2, height: CS - 2, rx: 4, "class": "d-box" }, svg);
+        if (ch === "W") { mk("rect", { x: x, y: y, width: CS - 2, height: CS - 2, rx: 4, "class": "d-dot-muted" }, svg); continue; }
+        if (ch === "G" || ch === "P") {
+          mk("rect", { x: x, y: y, width: CS - 2, height: CS - 2, rx: 4, "class": ch === "G" ? "d-good" : "d-signal" }, svg);
+          mk("text", { x: x + CS / 2 - 1, y: y + CS / 2 + 4, "text-anchor": "middle", "class": "d-title" }, svg, ch === "G" ? "+1" : "−1");
+          continue;
+        }
+        var m = Math.max.apply(null, Q[s]);
+        if (m > 0.001) mk("rect", { x: x, y: y, width: CS - 2, height: CS - 2, rx: 4, "class": "d-good", "fill-opacity": Math.min(1, m).toFixed(2), "stroke-opacity": "0" }, svg);
+        else if (m < -0.001) mk("rect", { x: x, y: y, width: CS - 2, height: CS - 2, rx: 4, "class": "d-signal", "fill-opacity": Math.min(1, -m).toFixed(2), "stroke-opacity": "0" }, svg);
+        var nonzero = Q[s].some(function (v) { return Math.abs(v) > 1e-6; });
+        if (nonzero && Math.abs(m) > 0.005) {
+          var q = Q[s], ba = q.indexOf(Math.max.apply(null, q)), cx = x + CS / 2 - 1, cy = y + CS / 2 - 1;
+          mk("line", { x1: cx - DIRS[ba][1] * 9, y1: cy - DIRS[ba][0] * 9, x2: cx + DIRS[ba][1] * 15, y2: cy + DIRS[ba][0] * 15, "class": "d-line-accent", "marker-end": "url(#rl-w-arrow)" }, svg);
+          mk("text", { x: x + 4, y: y + CS - 6, "class": "d-label" }, svg, m.toFixed(2));
+        }
+        if (ch === "S") mk("text", { x: x + 4, y: y + 13, "class": "d-label" }, svg, "start");
+      }
+      mk("circle", { cx: OX + pos[1] * CS + CS / 2 - 1, cy: OY + pos[0] * CS + CS / 2 - 1, r: 9, "class": "d-dot" }, svg);
+      var GX = 330, GW = 258, GY = 40, GH = 230;
+      mk("text", { x: GX, y: 26, "class": "d-title" }, svg, "steps per episode");
+      mk("rect", { x: GX, y: GY, width: GW, height: GH, "class": "d-grid" }, svg);
+      var ymax = 40, bw = GW / 60;
+      var yOpt = GY + GH - GH * 8 / ymax;
+      mk("line", { x1: GX, y1: yOpt, x2: GX + GW, y2: yOpt, "class": "d-line-accent d-dash" }, svg);
+      mk("text", { x: GX + GW - 4, y: yOpt - 5, "text-anchor": "end", "class": "d-label d-text-accent" }, svg, "shortest path = 8");
+      history.forEach(function (hst, k) {
+        var hgt = GH * Math.min(hst.n, ymax) / ymax;
+        mk("rect", { x: GX + k * bw + 0.5, y: GY + GH - hgt, width: Math.max(1, bw - 1), height: hgt, "class": hst.res === "goal" ? "d-dot-good" : hst.res === "pit" ? "d-dot-signal" : "d-dot-muted" }, svg);
+      });
+      mk("text", { x: GX, y: GY + GH + 18, "class": "d-label" }, svg, "last 60 episodes · green = goal, orange = pit, grey = timeout (bars capped at 40)");
+      var recent = history.slice(-10), goals = recent.filter(function (h2) { return h2.res === "goal"; }).length;
+      readout.textContent = lastMsg + " Episodes: " + episodes + " · goal rate over last " + recent.length + ": " + goals + "/" + recent.length + (steps ? " · current episode step " + steps : "");
+    }
+    document.getElementById("rl-step").addEventListener("click", function () { step(); draw(); });
+    document.getElementById("rl-episode").addEventListener("click", function () { var g = 0; while (!step() && g++ < 1000) {} draw(); });
+    document.getElementById("rl-run50").addEventListener("click", function () { for (var e = 0; e < 50; e++) { var g = 0; while (!step() && g++ < 1000) {} } draw(); });
+    document.getElementById("rl-reset").addEventListener("click", function () { reset(); draw(); });
+    [aIn, gIn, eIn].forEach(function (el) { el.addEventListener("input", draw); });
+    reset();
+    for (var e0 = 0; e0 < 20; e0++) { var g0 = 0; while (!step() && g0++ < 1000) {} }
+    draw();
+  })();
+})();
+</script>
+</body>
+</html>

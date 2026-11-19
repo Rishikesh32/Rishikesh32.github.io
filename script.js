@@ -437,6 +437,8 @@
       a: "Rishikesh starts from a reference architecture: interfaces → guardrails → a supervisor agent (LangGraph state machine with checkpoints) → specialist agents → tools via MCP → vector + graph knowledge and memory → a model gateway that routes between frontier and open-weight models. Security runs down one side and observability and evals down the other.\n\nPrinciples: workflows before agents, evals are the spec, tools through MCP, humans approve anything irreversible, and route for cost." },
     { keys: ["alphadesk", "flagship", "quant", "quantitative", "stock", "stocks", "trading", "backtest"],
       a: "AlphaDesk is the flagship: a multi-agent quant research platform. A LangGraph supervisor delegates to a market-data agent (MCP servers), a research agent (GraphRAG over filings and news), a quant agent that writes and runs backtests in a sandbox, and a risk agent. Frontier models plan, small open-weight models extract, everything is traced in Langfuse, and a human approves before any signal leaves. It evolved from an earlier regression and time-series stock prediction project." },
+    { keys: ["atlas", "ai-engineer-atlas", "engineer-atlas", "study", "map", "curriculum", "learning", "sites", "site", "interactive"],
+      a: "The AI Engineer Atlas is an interactive study platform and knowledge map hosted live at https://rishikesh32.github.io/ai-engineer-atlas/.\n\n▹ 16 core areas across 5 curriculum tiers (from math foundations to production agents)\n▹ 106 subtopics with deep dives, KaTeX math, and code labs\n▹ Three.js interactive 3D learning graph\n▹ Progress tracker and spaced-repetition daily review" },
     { keys: ["skill", "skills", "stack", "tech", "tools", "know", "languages", "framework", "frameworks", "cloud"],
       a: "Agents: LangGraph, CrewAI, OpenAI Agents SDK, Claude Agent SDK, multi-agent systems, MCP servers, A2A, computer use, human-in-the-loop.\nKnowledge: RAG and GraphRAG, hybrid search and reranking, vector databases, knowledge graphs, agent memory, context engineering.\nModels: Claude, GPT, Gemini, Llama, Qwen, DeepSeek, model routing, LoRA/QLoRA/DPO fine-tuning, multimodal.\nSpeech: Whisper, streaming speech-to-text and text-to-speech, speaker diarization, voice agents, video dubbing.\nLLMOps: Ragas, DeepEval, Langfuse, LangSmith, guardrails, prompt-injection defence.\nPlatform: vLLM, Ollama, Docker, Kubernetes, AWS Bedrock, Azure AI Foundry, Vertex AI." },
     { keys: ["voice", "speech", "call", "calls", "phone", "echoagent", "conversational", "stt", "tts", "audio"],
@@ -569,6 +571,44 @@
   }
 
   /* ================================================================
+     Sites & Atlas inline preview toggle
+     ================================================================ */
+  function initSitesPreview() {
+    const toggleBtn = $("#toggle-atlas-preview");
+    const container = $("#atlas-preview-container");
+    const closeBtn = $("#close-atlas-preview");
+    const iframe = $("#atlas-iframe");
+    const btnText = $("#preview-btn-text");
+
+    if (!toggleBtn || !container || !iframe) return;
+
+    function setPreviewState(open) {
+      container.hidden = !open;
+      toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (btnText) btnText.textContent = open ? "Hide Preview" : "Preview Inline";
+
+      if (open) {
+        if (!iframe.src && iframe.dataset.src) {
+          iframe.src = iframe.dataset.src;
+        }
+        setTimeout(() => {
+          container.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 80);
+      }
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      setPreviewState(container.hidden);
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        setPreviewState(false);
+      });
+    }
+  }
+
+  /* ================================================================
      Pause CSS animations in sections that are off screen
      ================================================================ */
   function pauseOffscreen() {
@@ -584,6 +624,7 @@
      ================================================================ */
   $("#year").textContent = new Date().getFullYear();
   nav();
+  initSitesPreview();
   pauseOffscreen();
   pointerFX();
   hud();

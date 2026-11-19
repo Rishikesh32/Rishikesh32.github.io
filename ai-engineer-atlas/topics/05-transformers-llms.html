@@ -1,0 +1,2414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Transformers &amp; LLMs · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="transformers-llms">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Transformers &amp; LLMs</h1>
+    <p class="lede">A large language model turns text into tokens, tokens into vectors, mixes those vectors with attention, and predicts the next token, over and over. This area takes that loop apart piece by piece, then follows the training recipe and the model choices you make on the job.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Read the top row left to right: it is one forward pass of a decoder-only LLM, and each box is a subtopic below. The bottom row covers where the weights come from, the main architectural variants, and how you pick a model for a product.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 270" role="img" aria-label="Map of the area: text becomes tokens, then vectors with position, passes through N transformer blocks, becomes next-token probabilities, and decoding appends a token and loops. Training, architecture variants and model choice sit below.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="8" y="22">ONE FORWARD PASS (INFERENCE)</text>
+              <rect class="d-box" x="8" y="40" width="104" height="60" rx="8"/>
+              <text class="d-title" x="60" y="66" text-anchor="middle">Text</text>
+              <text class="d-mono" x="60" y="86" text-anchor="middle">"the cat"</text>
+              <rect class="d-accent" x="138" y="40" width="104" height="60" rx="8"/>
+              <text class="d-title" x="190" y="66" text-anchor="middle">Tokens</text>
+              <text class="d-label" x="190" y="86" text-anchor="middle">05.1 ids</text>
+              <rect class="d-accent" x="268" y="40" width="104" height="60" rx="8"/>
+              <text class="d-title" x="320" y="66" text-anchor="middle">Vectors</text>
+              <text class="d-label" x="320" y="86" text-anchor="middle">05.2 + position</text>
+              <rect class="d-accent" x="398" y="40" width="104" height="60" rx="8"/>
+              <text class="d-title" x="450" y="66" text-anchor="middle">N × block</text>
+              <text class="d-label" x="450" y="86" text-anchor="middle">05.3 attn · 05.4</text>
+              <rect class="d-accent" x="528" y="40" width="104" height="60" rx="8"/>
+              <text class="d-title" x="580" y="66" text-anchor="middle">Logits</text>
+              <text class="d-label" x="580" y="86" text-anchor="middle">p(next token)</text>
+              <rect class="d-good" x="658" y="40" width="104" height="60" rx="8"/>
+              <text class="d-title" x="710" y="66" text-anchor="middle">Decode</text>
+              <text class="d-label" x="710" y="86" text-anchor="middle">05.7 sample</text>
+              <line class="d-line" x1="112" y1="70" x2="136" y2="70" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="242" y1="70" x2="266" y2="70" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="372" y1="70" x2="396" y2="70" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="502" y1="70" x2="526" y2="70" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="632" y1="70" x2="656" y2="70" marker-end="url(#ov-arrow)"/>
+              <path class="d-line-accent d-dash" d="M710 40 C710 12, 190 12, 190 38" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label d-text-accent" x="450" y="20" text-anchor="middle">append the new token, repeat</text>
+              <text class="d-label" x="8" y="146">WHERE IT COMES FROM AND WHAT YOU PICK</text>
+              <rect class="d-box" x="138" y="164" width="234" height="60" rx="8"/>
+              <text class="d-title" x="255" y="190" text-anchor="middle">Training recipe</text>
+              <text class="d-label" x="255" y="210" text-anchor="middle">05.6 pretrain → SFT → RLHF</text>
+              <rect class="d-box" x="398" y="164" width="104" height="60" rx="8"/>
+              <text class="d-title" x="450" y="190" text-anchor="middle">Families</text>
+              <text class="d-label" x="450" y="210" text-anchor="middle">05.5 enc / dec</text>
+              <rect class="d-box" x="528" y="164" width="104" height="60" rx="8"/>
+              <text class="d-title" x="580" y="190" text-anchor="middle">Variants</text>
+              <text class="d-label" x="580" y="210" text-anchor="middle">05.8 MoE · vision</text>
+              <rect class="d-signal" x="658" y="164" width="104" height="60" rx="8"/>
+              <text class="d-title" x="710" y="190" text-anchor="middle">Choose</text>
+              <text class="d-label" x="710" y="210" text-anchor="middle">05.9 for a product</text>
+              <line class="d-line d-dash" x1="300" y1="164" x2="430" y2="102" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="330" y="128">sets the weights</text>
+              <line class="d-line d-dash" x1="450" y1="164" x2="450" y2="102" marker-end="url(#ov-arrow)"/>
+              <line class="d-line d-dash" x1="560" y1="164" x2="470" y2="102" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="8" y="256">Arrows up: these change what happens inside the blocks.</text>
+            </svg>
+          </div>
+          <figcaption>The inference loop on top, the training and design decisions that shape it underneath.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="tokenization">
+        <header class="topic-head">
+          <p class="eyebrow">05.1 · Text to integers</p>
+          <h2>Tokenization</h2>
+        </header>
+
+        <p class="lead">A model cannot read characters. A <strong>tokenizer</strong> chops text into pieces from a fixed vocabulary (typically 32k to 256k entries) and maps each piece to an integer id. Common words become one token; rare words are built from several smaller pieces.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>You pay per token, context limits are counted in tokens, and many odd model failures (miscounting letters, shaky arithmetic, weaker non-English output) trace back to how text was split. A useful rule of thumb for English: about 4 characters or 0.75 words per token.</p>
+        </div>
+
+        <h3>The pipeline</h3>
+        <p>Text is first normalized and pre-split, usually on spaces and punctuation, with the leading space kept as part of the next word. Then learned merge rules glue bytes into larger pieces, and each final piece is looked up in the vocabulary.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 190" role="img" aria-label="Tokenizer pipeline: raw text is pre-split into words, BPE merges glue bytes into subwords, and each subword maps to an integer id.">
+              <defs>
+                <marker id="tokenization-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="24">1 RAW TEXT</text>
+              <rect class="d-box" x="20" y="34" width="150" height="44" rx="6"/>
+              <text class="d-mono" x="95" y="61" text-anchor="middle">"the lowest"</text>
+              <line class="d-line-accent" x1="170" y1="56" x2="198" y2="56" marker-end="url(#tokenization-arrow)"/>
+              <text class="d-label" x="200" y="24">2 PRE-SPLIT</text>
+              <rect class="d-fill" x="200" y="34" width="60" height="44" rx="6"/>
+              <text class="d-mono" x="230" y="61" text-anchor="middle">the</text>
+              <rect class="d-fill" x="266" y="34" width="84" height="44" rx="6"/>
+              <text class="d-mono" x="308" y="61" text-anchor="middle">␣lowest</text>
+              <line class="d-line-accent" x1="350" y1="56" x2="378" y2="56" marker-end="url(#tokenization-arrow)"/>
+              <text class="d-label" x="380" y="24">3 APPLY MERGES</text>
+              <rect class="d-accent" x="380" y="34" width="56" height="44" rx="6"/>
+              <text class="d-mono" x="408" y="61" text-anchor="middle">the</text>
+              <rect class="d-accent" x="442" y="34" width="60" height="44" rx="6"/>
+              <text class="d-mono" x="472" y="61" text-anchor="middle">␣low</text>
+              <rect class="d-accent" x="508" y="34" width="46" height="44" rx="6"/>
+              <text class="d-mono" x="531" y="61" text-anchor="middle">est</text>
+              <line class="d-line-accent" x1="554" y1="56" x2="582" y2="56" marker-end="url(#tokenization-arrow)"/>
+              <text class="d-label" x="584" y="24">4 LOOK UP IDS</text>
+              <rect class="d-good" x="584" y="34" width="112" height="44" rx="6"/>
+              <text class="d-mono" x="640" y="61" text-anchor="middle">[1820,3428,395]</text>
+              <text class="d-label" x="20" y="116">Merge rules are learned once, in order, from a training corpus:</text>
+              <text class="d-mono" x="20" y="140">l+o → lo   lo+w → low   ␣+low → ␣low   e+s → es   es+t → est …</text>
+              <text class="d-label" x="20" y="172">The ids are positions in the vocabulary. They carry no meaning until the embedding table (05.2) gives each one a vector.</text>
+            </svg>
+          </div>
+          <figcaption>Four stages turn a string into ids. The ids shown are illustrative; every tokenizer has its own vocabulary.</figcaption>
+        </figure>
+
+        <h3>How BPE learns its vocabulary</h3>
+        <p><strong>Byte-pair encoding</strong> (BPE) starts with single bytes, so any string can be encoded and nothing is ever "unknown". It counts every adjacent pair across the corpus, merges the most frequent pair into a new token, and repeats until the vocabulary hits its target size. Step through it below on a tiny corpus.</p>
+
+        <div class="widget" id="tokenization-demo">
+          <div class="widget-head">
+            <span class="widget-title">BPE merge stepper</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="tokenization-corpus">Corpus <input type="text" id="tokenization-corpus" value="low low low low lower lower newest newest newest widest widest" size="40"></label>
+            <button class="btn primary" type="button" id="tokenization-step">Merge once</button>
+            <button class="btn" type="button" id="tokenization-run">Merge ×5</button>
+            <button class="btn" type="button" id="tokenization-reset">Reset</button>
+            <label for="tokenization-count">Merges done <output id="tokenization-count">0</output></label>
+          </div>
+          <svg id="tokenization-plot" viewBox="0 0 640 300" role="img" aria-label="Each word in the corpus drawn as its current tokens, with the most frequent adjacent pairs ranked on the right."></svg>
+          <p class="readout" id="tokenization-readout"></p>
+        </div>
+
+        <p>Encoding new text replays the learned merges in the same order. WordPiece (BERT) and Unigram (SentencePiece) choose merges by likelihood instead of raw counts, but the output looks the same: subword pieces with ids.</p>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Minimal BPE training loop (whitespace-split words, counts per word)</span>
+from collections import Counter
+
+def train_bpe(text, num_merges):
+    words = Counter(text.split())
+    splits = {w: list(w) for w in words}          <span class="c"># start from characters</span>
+    merges = []
+    for _ in range(num_merges):
+        pairs = Counter()
+        for w, n in words.items():
+            s = splits[w]
+            for a, b in zip(s, s[1:]):
+                pairs[(a, b)] += n
+        if not pairs:
+            break
+        best = max(pairs, key=pairs.get)          <span class="c"># most frequent pair</span>
+        merges.append(best)
+        for w in words:                           <span class="c"># apply the merge everywhere</span>
+            s, out, i = splits[w], [], 0
+            while i &lt; len(s):
+                if i + 1 &lt; len(s) and (s[i], s[i + 1]) == best:
+                    out.append(s[i] + s[i + 1]); i += 2
+                else:
+                    out.append(s[i]); i += 1
+            splits[w] = out
+    return merges, splits
+
+<span class="c"># Counting tokens with a production tokenizer</span>
+import tiktoken
+enc = tiktoken.get_encoding("cl100k_base")
+print(len(enc.encode("Tokenization isn't trivial.")))</code></pre>
+
+        <h3>Where tokenization bites</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 200" role="img" aria-label="Annotated examples: a leading space changes the token, numbers split into arbitrary chunks, and a rare word splits into several pieces.">
+              <text class="d-label" x="20" y="24">SAME WORD, DIFFERENT TOKENS</text>
+              <rect class="d-accent" x="20" y="34" width="60" height="32" rx="5"/><text class="d-mono" x="50" y="55" text-anchor="middle">Hello</text>
+              <rect class="d-accent" x="100" y="34" width="70" height="32" rx="5"/><text class="d-mono" x="135" y="55" text-anchor="middle">␣Hello</text>
+              <rect class="d-accent" x="190" y="34" width="70" height="32" rx="5"/><text class="d-mono" x="225" y="55" text-anchor="middle">␣hello</text>
+              <text class="d-label" x="280" y="55">3 different ids: case and the leading space both count</text>
+              <text class="d-label" x="20" y="96">NUMBERS SPLIT UNEVENLY</text>
+              <rect class="d-signal" x="20" y="106" width="44" height="32" rx="5"/><text class="d-mono" x="42" y="127" text-anchor="middle">123</text>
+              <rect class="d-signal" x="68" y="106" width="44" height="32" rx="5"/><text class="d-mono" x="90" y="127" text-anchor="middle">456</text>
+              <rect class="d-signal" x="116" y="106" width="30" height="32" rx="5"/><text class="d-mono" x="131" y="127" text-anchor="middle">7</text>
+              <text class="d-label" x="166" y="127">digits are grouped by the vocabulary, not by place value, so arithmetic is harder</text>
+              <text class="d-label" x="20" y="166">RARE WORDS COST MORE</text>
+              <rect class="d-fill" x="20" y="174" width="50" height="22" rx="4"/><text class="d-mono" x="45" y="190" text-anchor="middle">␣anti</text>
+              <rect class="d-fill" x="74" y="174" width="56" height="22" rx="4"/><text class="d-mono" x="102" y="190" text-anchor="middle">dis</text>
+              <rect class="d-fill" x="134" y="174" width="62" height="22" rx="4"/><text class="d-mono" x="165" y="190" text-anchor="middle">establish</text>
+              <rect class="d-fill" x="200" y="174" width="44" height="22" rx="4"/><text class="d-mono" x="222" y="190" text-anchor="middle">ment</text>
+              <text class="d-label" x="262" y="190">one word, 4 tokens; non-English text often costs 1.5–3× more tokens</text>
+            </svg>
+          </div>
+          <figcaption>Illustrative splits. Run a real tokenizer on your own data before estimating cost or context use.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Tokens are subword pieces from a fixed vocabulary; ids are just row numbers.</li>
+            <li>Byte-level BPE can encode any string because it falls back to single bytes.</li>
+            <li>Merges are learned from corpus frequency and replayed in order at encode time.</li>
+            <li>A tokenizer is tied to its model: never mix one model's tokenizer with another's weights.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Estimating cost or context use with word counts instead of a real tokenizer.</li>
+            <li>Stripping or adding whitespace casually; "␣word" and "word" are different tokens.</li>
+            <li>Assuming every language or code style costs the same tokens per character.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="tokenization-1"><span>Run three BPE merges by hand on a five-word corpus.</span></label></li>
+          <li><label><input type="checkbox" data-key="tokenization-2"><span>Explain why byte-level BPE never produces an unknown token.</span></label></li>
+          <li><label><input type="checkbox" data-key="tokenization-3"><span>Count tokens for a prompt with a real tokenizer and convert it to cost.</span></label></li>
+          <li><label><input type="checkbox" data-key="tokenization-4"><span>Explain why a model may struggle to count the letters in a word.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1508.07909">Neural Machine Translation of Rare Words with Subword Units (Sennrich et al., 2015)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1808.06226">SentencePiece (Kudo &amp; Richardson, 2018)</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/openai/tiktoken">tiktoken on GitHub</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="embeddings">
+        <header class="topic-head">
+          <p class="eyebrow">05.2 · Ids to vectors</p>
+          <h2>Embeddings &amp; positional encoding</h2>
+        </header>
+
+        <p class="lead">Each token id selects one row of a big learned table, the <strong>embedding matrix</strong>, giving a vector of a few thousand numbers. Training pushes tokens used in similar ways toward similar vectors. Because attention by itself ignores order, the model also needs a signal that says where each token sits.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>The embedding table is a large chunk of a small model's parameters, and the position scheme decides how well a model handles long contexts. When a provider "extends context" to millions of tokens, they are usually adjusting the positional encoding (RoPE scaling) and training further on long documents.</p>
+        </div>
+
+        <h3>Lookup, then add position</h3>
+        <p>The table has shape vocabulary × width. With a 128k vocabulary and width 4,096 that is 524M parameters, about 1 GB in fp16. Looking up a row is the same as multiplying a one-hot vector by the matrix, so it trains with ordinary gradients.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="Token ids index rows of the embedding matrix; each row is a vector, and a position vector is added to produce the input to the first block.">
+              <defs>
+                <marker id="embeddings-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="22">TOKEN IDS</text>
+              <rect class="d-box" x="20" y="40" width="70" height="30" rx="5"/><text class="d-mono" x="55" y="60" text-anchor="middle">1820</text>
+              <rect class="d-box" x="20" y="90" width="70" height="30" rx="5"/><text class="d-mono" x="55" y="110" text-anchor="middle">3428</text>
+              <rect class="d-box" x="20" y="140" width="70" height="30" rx="5"/><text class="d-mono" x="55" y="160" text-anchor="middle">395</text>
+              <text class="d-label" x="150" y="22">EMBEDDING MATRIX E  (V × d)</text>
+              <rect class="d-fill" x="150" y="32" width="200" height="160" rx="4"/>
+              <line class="d-grid" x1="150" y1="52" x2="350" y2="52"/><line class="d-grid" x1="150" y1="72" x2="350" y2="72"/>
+              <line class="d-grid" x1="150" y1="92" x2="350" y2="92"/><line class="d-grid" x1="150" y1="112" x2="350" y2="112"/>
+              <line class="d-grid" x1="150" y1="132" x2="350" y2="132"/><line class="d-grid" x1="150" y1="152" x2="350" y2="152"/>
+              <line class="d-grid" x1="150" y1="172" x2="350" y2="172"/>
+              <rect class="d-accent" x="150" y="52" width="200" height="20"/>
+              <rect class="d-accent" x="150" y="112" width="200" height="20"/>
+              <rect class="d-accent" x="150" y="152" width="200" height="20"/>
+              <line class="d-line-accent" x1="90" y1="55" x2="148" y2="62" marker-end="url(#embeddings-arrow)"/>
+              <line class="d-line-accent" x1="90" y1="105" x2="148" y2="122" marker-end="url(#embeddings-arrow)"/>
+              <line class="d-line-accent" x1="90" y1="155" x2="148" y2="162" marker-end="url(#embeddings-arrow)"/>
+              <text class="d-label" x="250" y="210" text-anchor="middle">pick row = id</text>
+              <text class="d-label" x="420" y="22">TOKEN VECTOR + POSITION</text>
+              <rect class="d-accent" x="400" y="46" width="90" height="22" rx="4"/><text class="d-mono" x="445" y="62" text-anchor="middle">e(the)</text>
+              <rect class="d-good" x="510" y="46" width="60" height="22" rx="4"/><text class="d-mono" x="540" y="62" text-anchor="middle">p0</text>
+              <rect class="d-accent" x="400" y="106" width="90" height="22" rx="4"/><text class="d-mono" x="445" y="122" text-anchor="middle">e(␣low)</text>
+              <rect class="d-good" x="510" y="106" width="60" height="22" rx="4"/><text class="d-mono" x="540" y="122" text-anchor="middle">p1</text>
+              <rect class="d-accent" x="400" y="146" width="90" height="22" rx="4"/><text class="d-mono" x="445" y="162" text-anchor="middle">e(est)</text>
+              <rect class="d-good" x="510" y="146" width="60" height="22" rx="4"/><text class="d-mono" x="540" y="162" text-anchor="middle">p2</text>
+              <text class="d-title" x="500" y="62" text-anchor="middle">+</text>
+              <text class="d-title" x="500" y="122" text-anchor="middle">+</text>
+              <text class="d-title" x="500" y="162" text-anchor="middle">+</text>
+              <line class="d-line" x1="350" y1="62" x2="398" y2="57" marker-end="url(#embeddings-arrow)"/>
+              <line class="d-line" x1="350" y1="122" x2="398" y2="117" marker-end="url(#embeddings-arrow)"/>
+              <line class="d-line" x1="350" y1="162" x2="398" y2="157" marker-end="url(#embeddings-arrow)"/>
+              <line class="d-line" x1="570" y1="107" x2="610" y2="107" marker-end="url(#embeddings-arrow)"/>
+              <rect class="d-box" x="612" y="80" width="78" height="54" rx="6"/>
+              <text class="d-text" x="651" y="104" text-anchor="middle">to block 1</text>
+              <text class="d-label" x="651" y="122" text-anchor="middle">x = e + p</text>
+              <text class="d-label" x="400" y="200">With RoPE, p is not added here; Q and K are rotated inside attention.</text>
+            </svg>
+          </div>
+          <figcaption>Ids pick rows of E; a position signal is added (absolute schemes) or applied later inside attention (RoPE).</figcaption>
+        </figure>
+
+        <h3>Three ways to encode position</h3>
+        <p>The original transformer added fixed sine and cosine waves of different frequencies. GPT-2 learned one vector per position instead, which cannot extend past the trained length. Most current open LLMs use <strong>rotary position embeddings</strong> (RoPE): they rotate pairs of query and key dimensions by an angle proportional to position, so the attention score depends on the distance between tokens.</p>
+
+        <div class="formula">
+          \[ PE_{(pos,\,2i)} = \sin\!\left(\frac{pos}{10000^{2i/d}}\right), \qquad PE_{(pos,\,2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d}}\right) \]
+          <span class="formula-note">Low dimension pairs (small \(i\)) oscillate fast; high pairs oscillate slowly. Together they give every position a unique pattern, like the hands of a clock.</span>
+        </div>
+
+        <div class="widget" id="embeddings-demo">
+          <div class="widget-head">
+            <span class="widget-title">Sinusoidal positional encoding</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="embeddings-pair">Dimension pair i <input type="range" id="embeddings-pair" min="0" max="31" step="1" value="2"><output id="embeddings-pair-out">2</output></label>
+            <label for="embeddings-pos">Position <input type="range" id="embeddings-pos" min="0" max="63" step="1" value="10"><output id="embeddings-pos-out">10</output></label>
+          </div>
+          <svg id="embeddings-plot" viewBox="0 0 640 330" role="img" aria-label="Top: sine and cosine curves for the chosen dimension pair across positions. Bottom: heat map of the encoding for 64 positions by 64 dimensions with the chosen position highlighted."></svg>
+          <p class="readout" id="embeddings-readout"></p>
+        </div>
+
+        <figure>
+          <div class="diagram narrow">
+            <svg viewBox="0 0 560 220" role="img" aria-label="RoPE: a query at position m is rotated by m times theta and a key at position n by n times theta; their dot product depends only on the difference m minus n.">
+              <defs>
+                <marker id="embeddings-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="embeddings-arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <line class="d-grid" x1="40" y1="180" x2="230" y2="180"/>
+              <line class="d-grid" x1="60" y1="200" x2="60" y2="20"/>
+              <line class="d-line-accent" x1="60" y1="180" x2="196" y2="110" marker-end="url(#embeddings-arrow2)"/>
+              <line class="d-line-signal" x1="60" y1="180" x2="120" y2="42" marker-end="url(#embeddings-arrow3)"/>
+              <path class="d-line d-dash" d="M150 134 A 100 100 0 0 0 100 88"/>
+              <text class="d-mono d-text-accent" x="200" y="104">q · rotated mθ</text>
+              <text class="d-mono d-text-signal" x="124" y="36">k · rotated nθ</text>
+              <text class="d-label" x="160" y="96">(n − m)θ</text>
+              <text class="d-title" x="330" y="60">Why rotation helps</text>
+              <text class="d-text" x="330" y="86">Rotate q by its position m,</text>
+              <text class="d-text" x="330" y="106">rotate k by its position n.</text>
+              <text class="d-text" x="330" y="126">The angle between them is</text>
+              <text class="d-text" x="330" y="146">(n − m)θ, so q·k sees only</text>
+              <text class="d-text" x="330" y="166">the relative distance.</text>
+              <text class="d-label" x="330" y="196">Each dimension pair uses its own θ.</text>
+            </svg>
+          </div>
+          <figcaption>RoPE in one 2-D pair: shifting both tokens by the same amount leaves their dot product unchanged.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import math, torch, torch.nn as nn
+
+vocab, d = 50_000, 512
+embed = nn.Embedding(vocab, d)                 <span class="c"># a learnable V x d table</span>
+ids = torch.tensor([[1820, 3428, 395]])        <span class="c"># batch of 1, 3 tokens</span>
+x = embed(ids)                                 <span class="c"># shape (1, 3, 512)</span>
+
+def sinusoidal(n_pos, d):
+    pos = torch.arange(n_pos).unsqueeze(1)                     <span class="c"># (n_pos, 1)</span>
+    freq = torch.exp(-math.log(10000.0) * torch.arange(0, d, 2) / d)
+    pe = torch.zeros(n_pos, d)
+    pe[:, 0::2] = torch.sin(pos * freq)
+    pe[:, 1::2] = torch.cos(pos * freq)
+    return pe
+
+x = x + sinusoidal(3, d)                       <span class="c"># broadcast over the batch</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>An embedding is a row lookup in a learned V × d matrix.</li>
+            <li>Attention is order-blind, so position must be injected explicitly.</li>
+            <li>RoPE encodes relative position by rotating Q and K; it is the default in most current open models.</li>
+            <li>Many models tie the input embedding and the output projection to save parameters.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Confusing token embeddings (inside the LLM) with sentence embeddings from an embedding model (used for search in RAG).</li>
+            <li>Assuming a model works well at any length up to its advertised limit; quality often drops well before it.</li>
+            <li>Forgetting that a learned absolute position table cannot go beyond its trained length.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="embeddings-1"><span>Compute the parameter count and fp16 size of an embedding table from V and d.</span></label></li>
+          <li><label><input type="checkbox" data-key="embeddings-2"><span>Explain why a transformer without positional information treats "dog bites man" and "man bites dog" the same.</span></label></li>
+          <li><label><input type="checkbox" data-key="embeddings-3"><span>Describe in one sentence how RoPE makes attention depend on relative position.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2104.09864">RoFormer: Rotary Position Embedding (Su et al., 2021)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need (Vaswani et al., 2017)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="attention">
+        <header class="topic-head">
+          <p class="eyebrow">05.3 · The core mechanism</p>
+          <h2>Self-attention</h2>
+        </header>
+
+        <p class="lead">Self-attention lets every token look at the other tokens and pull in what it needs. In "the animal didn't cross the street because it was tired", the vector for "it" should absorb information from "animal". Attention computes, for each token, a weighted average of the other tokens' information, where the weights come from learned similarity.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Attention explains why cost and memory grow with context length (the score matrix is n × n), why long prompts slow down the first token, why a KV cache exists, and why "lost in the middle" effects happen. Inference tricks such as FlashAttention, grouped-query attention and prefix caching all target this one operation.</p>
+        </div>
+
+        <h3>Queries, keys and values</h3>
+        <p>Each token vector is projected three ways. The <strong>query</strong> says what this token is looking for, the <strong>key</strong> says what it offers, and the <strong>value</strong> is the content it hands over. A query-key dot product scores relevance; softmax turns a row of scores into weights; the weights mix the values.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 250" role="img" aria-label="Attention data flow: X is multiplied by three weight matrices into Q, K and V; Q times K transpose gives scores, which are scaled, masked and softmaxed into weights, which multiply V to give the output.">
+              <defs>
+                <marker id="attention-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="16" y="95" width="60" height="60" rx="6"/>
+              <text class="d-title" x="46" y="124" text-anchor="middle">X</text>
+              <text class="d-label" x="46" y="142" text-anchor="middle">n × d</text>
+              <line class="d-line-accent" x1="76" y1="110" x2="128" y2="50" marker-end="url(#attention-arrow)"/>
+              <line class="d-line-accent" x1="76" y1="125" x2="128" y2="125" marker-end="url(#attention-arrow)"/>
+              <line class="d-line-accent" x1="76" y1="140" x2="128" y2="200" marker-end="url(#attention-arrow)"/>
+              <text class="d-mono" x="88" y="70">W_Q</text><text class="d-mono" x="88" y="118">W_K</text><text class="d-mono" x="88" y="186">W_V</text>
+              <rect class="d-accent" x="130" y="30" width="60" height="40" rx="6"/><text class="d-title" x="160" y="55" text-anchor="middle">Q</text>
+              <rect class="d-accent" x="130" y="105" width="60" height="40" rx="6"/><text class="d-title" x="160" y="130" text-anchor="middle">K</text>
+              <rect class="d-good" x="130" y="180" width="60" height="40" rx="6"/><text class="d-title" x="160" y="205" text-anchor="middle">V</text>
+              <line class="d-line" x1="190" y1="50" x2="238" y2="80" marker-end="url(#attention-arrow)"/>
+              <line class="d-line" x1="190" y1="125" x2="238" y2="95" marker-end="url(#attention-arrow)"/>
+              <rect class="d-box" x="240" y="62" width="80" height="50" rx="6"/>
+              <text class="d-mono" x="280" y="85" text-anchor="middle">Q Kᵀ</text>
+              <text class="d-label" x="280" y="102" text-anchor="middle">n × n scores</text>
+              <line class="d-line" x1="320" y1="87" x2="346" y2="87" marker-end="url(#attention-arrow)"/>
+              <rect class="d-box" x="348" y="62" width="70" height="50" rx="6"/>
+              <text class="d-mono" x="383" y="85" text-anchor="middle">÷ √d_k</text>
+              <text class="d-label" x="383" y="102" text-anchor="middle">scale</text>
+              <line class="d-line" x1="418" y1="87" x2="444" y2="87" marker-end="url(#attention-arrow)"/>
+              <rect class="d-signal" x="446" y="62" width="70" height="50" rx="6"/>
+              <text class="d-mono" x="481" y="85" text-anchor="middle">+ M</text>
+              <text class="d-label" x="481" y="102" text-anchor="middle">causal mask</text>
+              <line class="d-line" x1="516" y1="87" x2="542" y2="87" marker-end="url(#attention-arrow)"/>
+              <rect class="d-box" x="544" y="62" width="74" height="50" rx="6"/>
+              <text class="d-mono" x="581" y="85" text-anchor="middle">softmax</text>
+              <text class="d-label" x="581" y="102" text-anchor="middle">rows sum to 1</text>
+              <line class="d-line" x1="581" y1="112" x2="581" y2="176" marker-end="url(#attention-arrow)"/>
+              <line class="d-line" x1="190" y1="200" x2="544" y2="200" marker-end="url(#attention-arrow)"/>
+              <rect class="d-accent" x="546" y="178" width="70" height="44" rx="6"/>
+              <text class="d-mono" x="581" y="205" text-anchor="middle">A · V</text>
+              <line class="d-line-accent" x1="616" y1="200" x2="650" y2="200" marker-end="url(#attention-arrow)"/>
+              <rect class="d-good" x="652" y="178" width="56" height="44" rx="6"/>
+              <text class="d-title" x="680" y="205" text-anchor="middle">out</text>
+              <text class="d-label" x="370" y="190" text-anchor="middle">values are mixed by the weights A</text>
+              <text class="d-label" x="240" y="140">how relevant is token j to token i?</text>
+            </svg>
+          </div>
+          <figcaption>One attention head. The only learned parts are W_Q, W_K, W_V (and an output projection after the heads are combined).</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}} + M\right)V, \qquad M_{ij} = \begin{cases} 0 & j \le i \\ -\infty & j &gt; i \end{cases} \]
+          <span class="formula-note">\(Q = XW_Q\), \(K = XW_K\), \(V = XW_V\). Dividing by \(\sqrt{d_k}\) keeps dot products from growing with dimension and saturating the softmax. The causal mask \(M\) stops token \(i\) from seeing future tokens, so \(e^{-\infty} = 0\) weight.</span>
+        </div>
+
+        <h3>A worked example, by hand</h3>
+        <p>Take three tokens with \(d_k = 2\), so \(\sqrt{d_k} \approx 1.414\). Suppose the projections produced \(Q = [[1,0],[0,1],[1,1]]\), \(K = [[1,0],[1,1],[0,1]]\) and \(V = [[1,0],[0,2],[3,1]]\). Follow the grids from left to right.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 260" role="img" aria-label="Worked example: raw scores QK transpose, scaled scores with the causal mask applied, softmax weights per row, and the output rows after multiplying by V.">
+              <defs><marker id="attention-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker></defs>
+              <text class="d-label" x="52" y="98" text-anchor="end">the</text>
+              <text class="d-label" x="52" y="132" text-anchor="end">cat</text>
+              <text class="d-label" x="52" y="166" text-anchor="end">sat</text>
+              <text class="d-title" x="60" y="24">1 · Q Kᵀ</text>
+              <text class="d-label" x="60" y="42">raw dot products</text>
+              <text class="d-label" x="83" y="68" text-anchor="middle">the</text>
+              <text class="d-label" x="129" y="68" text-anchor="middle">cat</text>
+              <text class="d-label" x="175" y="68" text-anchor="middle">sat</text>
+              <rect class="d-box" x="60" y="76" width="46" height="34"/>
+              <text class="d-mono" x="83" y="98" text-anchor="middle">1</text>
+              <rect class="d-box" x="106" y="76" width="46" height="34"/>
+              <text class="d-mono" x="129" y="98" text-anchor="middle">1</text>
+              <rect class="d-box" x="152" y="76" width="46" height="34"/>
+              <text class="d-mono" x="175" y="98" text-anchor="middle">0</text>
+              <rect class="d-box" x="60" y="110" width="46" height="34"/>
+              <text class="d-mono" x="83" y="132" text-anchor="middle">0</text>
+              <rect class="d-box" x="106" y="110" width="46" height="34"/>
+              <text class="d-mono" x="129" y="132" text-anchor="middle">1</text>
+              <rect class="d-box" x="152" y="110" width="46" height="34"/>
+              <text class="d-mono" x="175" y="132" text-anchor="middle">1</text>
+              <rect class="d-box" x="60" y="144" width="46" height="34"/>
+              <text class="d-mono" x="83" y="166" text-anchor="middle">1</text>
+              <rect class="d-box" x="106" y="144" width="46" height="34"/>
+              <text class="d-mono" x="129" y="166" text-anchor="middle">2</text>
+              <rect class="d-box" x="152" y="144" width="46" height="34"/>
+              <text class="d-mono" x="175" y="166" text-anchor="middle">1</text>
+              <text class="d-title" x="240" y="24">2 · ÷ √2, + mask</text>
+              <text class="d-label" x="240" y="42">future set to −∞</text>
+              <text class="d-label" x="263" y="68" text-anchor="middle">the</text>
+              <text class="d-label" x="309" y="68" text-anchor="middle">cat</text>
+              <text class="d-label" x="355" y="68" text-anchor="middle">sat</text>
+              <rect class="d-box" x="240" y="76" width="46" height="34"/>
+              <text class="d-mono" x="263" y="98" text-anchor="middle">0.71</text>
+              <rect class="d-signal" x="286" y="76" width="46" height="34"/>
+              <text class="d-mono" x="309" y="98" text-anchor="middle">−∞</text>
+              <rect class="d-signal" x="332" y="76" width="46" height="34"/>
+              <text class="d-mono" x="355" y="98" text-anchor="middle">−∞</text>
+              <rect class="d-box" x="240" y="110" width="46" height="34"/>
+              <text class="d-mono" x="263" y="132" text-anchor="middle">0.00</text>
+              <rect class="d-box" x="286" y="110" width="46" height="34"/>
+              <text class="d-mono" x="309" y="132" text-anchor="middle">0.71</text>
+              <rect class="d-signal" x="332" y="110" width="46" height="34"/>
+              <text class="d-mono" x="355" y="132" text-anchor="middle">−∞</text>
+              <rect class="d-box" x="240" y="144" width="46" height="34"/>
+              <text class="d-mono" x="263" y="166" text-anchor="middle">0.71</text>
+              <rect class="d-box" x="286" y="144" width="46" height="34"/>
+              <text class="d-mono" x="309" y="166" text-anchor="middle">1.41</text>
+              <rect class="d-box" x="332" y="144" width="46" height="34"/>
+              <text class="d-mono" x="355" y="166" text-anchor="middle">0.71</text>
+              <text class="d-title" x="420" y="24">3 · softmax rows</text>
+              <text class="d-label" x="420" y="42">each row sums to 1</text>
+              <text class="d-label" x="443" y="68" text-anchor="middle">the</text>
+              <text class="d-label" x="489" y="68" text-anchor="middle">cat</text>
+              <text class="d-label" x="535" y="68" text-anchor="middle">sat</text>
+              <rect class="d-accent" x="420" y="76" width="46" height="34"/>
+              <text class="d-mono" x="443" y="98" text-anchor="middle">1.00</text>
+              <rect class="d-fill" x="466" y="76" width="46" height="34"/>
+              <text class="d-mono" x="489" y="98" text-anchor="middle">0</text>
+              <rect class="d-fill" x="512" y="76" width="46" height="34"/>
+              <text class="d-mono" x="535" y="98" text-anchor="middle">0</text>
+              <rect class="d-accent" x="420" y="110" width="46" height="34"/>
+              <text class="d-mono" x="443" y="132" text-anchor="middle">0.33</text>
+              <rect class="d-accent" x="466" y="110" width="46" height="34"/>
+              <text class="d-mono" x="489" y="132" text-anchor="middle">0.67</text>
+              <rect class="d-fill" x="512" y="110" width="46" height="34"/>
+              <text class="d-mono" x="535" y="132" text-anchor="middle">0</text>
+              <rect class="d-accent" x="420" y="144" width="46" height="34"/>
+              <text class="d-mono" x="443" y="166" text-anchor="middle">0.25</text>
+              <rect class="d-accent" x="466" y="144" width="46" height="34"/>
+              <text class="d-mono" x="489" y="166" text-anchor="middle">0.50</text>
+              <rect class="d-accent" x="512" y="144" width="46" height="34"/>
+              <text class="d-mono" x="535" y="166" text-anchor="middle">0.25</text>
+              <text class="d-title" x="600" y="24">4 · weights × V</text>
+              <text class="d-label" x="600" y="42">output vectors</text>
+              <text class="d-label" x="623" y="68" text-anchor="middle">dim 1</text>
+              <text class="d-label" x="669" y="68" text-anchor="middle">dim 2</text>
+              <rect class="d-accent" x="600" y="76" width="46" height="34"/>
+              <text class="d-mono" x="623" y="98" text-anchor="middle">1.00</text>
+              <rect class="d-accent" x="646" y="76" width="46" height="34"/>
+              <text class="d-mono" x="669" y="98" text-anchor="middle">0.00</text>
+              <rect class="d-accent" x="600" y="110" width="46" height="34"/>
+              <text class="d-mono" x="623" y="132" text-anchor="middle">0.33</text>
+              <rect class="d-accent" x="646" y="110" width="46" height="34"/>
+              <text class="d-mono" x="669" y="132" text-anchor="middle">1.34</text>
+              <rect class="d-accent" x="600" y="144" width="46" height="34"/>
+              <text class="d-mono" x="623" y="166" text-anchor="middle">0.99</text>
+              <rect class="d-accent" x="646" y="144" width="46" height="34"/>
+              <text class="d-mono" x="669" y="166" text-anchor="middle">1.26</text>
+              <line class="d-line-accent" x1="198" y1="127" x2="236" y2="127" marker-end="url(#attention-arrow2)"/>
+              <line class="d-line-accent" x1="378" y1="127" x2="416" y2="127" marker-end="url(#attention-arrow2)"/>
+              <line class="d-line-accent" x1="558" y1="127" x2="596" y2="127" marker-end="url(#attention-arrow2)"/>
+              <rect x="418" y="142" width="142" height="38" rx="3" class="d-line"/>
+              <rect x="598" y="142" width="96" height="38" rx="3" class="d-line"/>
+              <text class="d-label" x="60" y="208">Row "cat" sees only the and cat: softmax(0, 0.71) = 0.33, 0.67. Output = 0.33·[1,0] + 0.67·[0,2] = [0.33, 1.34].</text>
+              <text class="d-label" x="60" y="230">Row "the" can only see itself, so its weight is 1 and its output is simply its own value vector [1, 0].</text>
+            </svg>
+          </div>
+          <figcaption>Row 3 ("sat" attends to all three): exp(0.71), exp(1.41), exp(0.71) = 2.03, 4.11, 2.03; dividing by their sum 8.17 gives 0.25, 0.50, 0.25. The output is 0.25·[1,0] + 0.50·[0,2] + 0.25·[3,1] ≈ [0.99, 1.26].</figcaption>
+        </figure>
+
+        <div class="widget" id="attention-demo">
+          <div class="widget-head">
+            <span class="widget-title">Attention heat map: pick a query token</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="attention-query">Query token <select id="attention-query"></select></label>
+            <label for="attention-head">Head <select id="attention-head">
+              <option value="coref">Reference-tracking head</option>
+              <option value="prev">Previous-token head</option>
+              <option value="sink">First-token (sink) head</option>
+            </select></label>
+            <label for="attention-causal"><input type="checkbox" id="attention-causal" checked> Causal mask</label>
+            <label for="attention-sharp">Sharpness <input type="range" id="attention-sharp" min="0.2" max="3" step="0.1" value="1"><output id="attention-sharp-out">1.0</output></label>
+          </div>
+          <svg id="attention-plot" viewBox="0 0 660 380" role="img" aria-label="Heat map of attention weights, rows are queries and columns are keys; bars on the right show the weights for the selected query token."></svg>
+          <p class="readout" id="attention-readout"></p>
+        </div>
+        <p>The demo's scores are hand-set to mimic patterns seen in trained heads. Turn the causal mask off to see what an encoder (05.5) could attend to.</p>
+
+        <h3>Many heads, quadratic cost</h3>
+        <p><strong>Multi-head attention</strong> runs h heads in parallel, each with \(d_k = d/h\) (for example 32 heads of 128 dims when d = 4,096), then concatenates their outputs and applies \(W_O\). Different heads specialize in different relations. The score matrix is n × n per head, so doubling the context quadruples attention compute. Grouped-query attention shares K and V across groups of query heads to shrink the KV cache.</p>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+def causal_attention(Q, K, V):
+    n, d_k = Q.shape
+    scores = Q @ K.T / np.sqrt(d_k)                     <span class="c"># (n, n)</span>
+    mask = np.triu(np.ones((n, n), dtype=bool), k=1)    <span class="c"># True above the diagonal</span>
+    scores = np.where(mask, -np.inf, scores)
+    scores -= scores.max(axis=1, keepdims=True)         <span class="c"># numerical stability</span>
+    w = np.exp(scores)
+    w /= w.sum(axis=1, keepdims=True)
+    return w @ V, w
+
+Q = np.array([[1, 0], [0, 1], [1, 1]], float)
+K = np.array([[1, 0], [1, 1], [0, 1]], float)
+V = np.array([[1, 0], [0, 2], [3, 1]], float)
+out, w = causal_attention(Q, K, V)
+print(w.round(2))    <span class="c"># [[1. 0. 0.] [0.33 0.67 0.] [0.25 0.5 0.25]]</span>
+print(out.round(2))  <span class="c"># [[1. 0.] [0.33 1.34] [0.99 1.26]]</span>
+
+<span class="c"># In PyTorch, use the fused kernel (FlashAttention-style when available):</span>
+<span class="c"># torch.nn.functional.scaled_dot_product_attention(q, k, v, is_causal=True)</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Attention output for token i is a weighted average of value vectors; the weights are softmax of scaled query-key dot products.</li>
+            <li>The \(\sqrt{d_k}\) scale keeps the softmax from saturating as dimensions grow.</li>
+            <li>The causal mask sets future positions to −∞ before softmax, giving them exactly zero weight.</li>
+            <li>Compute and score memory grow as n² in sequence length.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Applying the mask after softmax (weights no longer sum to 1) or masking with 0 instead of −∞.</li>
+            <li>Forgetting the max-subtraction trick and getting overflow in a hand-written softmax.</li>
+            <li>Reading attention weights as a faithful explanation of model decisions; they are one signal among many.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="attention-1"><span>Compute causal attention for a 3-token, 2-dimension example by hand and check it in NumPy.</span></label></li>
+          <li><label><input type="checkbox" data-key="attention-2"><span>Explain what Q, K and V each represent, in one sentence each.</span></label></li>
+          <li><label><input type="checkbox" data-key="attention-3"><span>Say why scores are divided by √d_k and what happens without it.</span></label></li>
+          <li><label><input type="checkbox" data-key="attention-4"><span>Estimate how attention compute changes when context grows from 8k to 32k tokens.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need (Vaswani et al., 2017)</a></li>
+          <li><span class="kind">Article</span><a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer (Jay Alammar)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2205.14135">FlashAttention (Dao et al., 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.13245">GQA: Grouped-Query Attention (Ainslie et al., 2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="transformer-block">
+        <header class="topic-head">
+          <p class="eyebrow">05.4 · The repeating unit</p>
+          <h2>The transformer block</h2>
+        </header>
+
+        <p class="lead">An LLM is the same block stacked N times (12 for GPT-2 small, 32 for a typical 7B model, 80 or more for the largest dense models). Each block does two things: attention lets tokens exchange information, then an MLP processes each token on its own. Both write their result back into a shared running vector called the <strong>residual stream</strong>.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Block shape sets parameter count, memory, and speed. Knowing that the parameters are about 12·L·d² lets you sanity-check any model card, estimate GPU memory, and understand what quantization, LoRA and pruning actually touch.</p>
+        </div>
+
+        <h3>Inside one block</h3>
+        <p>Modern LLMs use the <strong>pre-norm</strong> layout: normalize, run the sublayer, add the result back to the input. The additions keep a clean path for gradients through dozens of layers. Most current models use RMSNorm (scale only, no mean subtraction) and a gated MLP such as SwiGLU.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 300" role="img" aria-label="Pre-norm transformer block: the residual stream runs vertically; a branch normalizes and runs attention then adds back, a second branch normalizes and runs the MLP then adds back. The block repeats N times, then a final norm and unembedding produce logits.">
+              <defs>
+                <marker id="transformer-block-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="transformer-block-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="150" y="20" width="390" height="250" rx="10"/>
+              <text class="d-label" x="530" y="40" text-anchor="end">× N layers</text>
+              <line class="d-line-accent" x1="200" y1="290" x2="200" y2="8" marker-end="url(#transformer-block-arrow)"/>
+              <text class="d-label d-text-accent" x="192" y="286" text-anchor="end">x in</text>
+              <text class="d-label d-text-accent" x="192" y="16" text-anchor="end">to next block</text>
+              <text class="d-label" x="160" y="150" transform="rotate(-90 160 150)" text-anchor="middle">residual stream (width d)</text>
+              <circle class="d-box" cx="200" cy="170" r="11"/><text class="d-title" x="200" y="175" text-anchor="middle">+</text>
+              <circle class="d-box" cx="200" cy="70" r="11"/><text class="d-title" x="200" y="75" text-anchor="middle">+</text>
+              <path class="d-line" d="M200 250 H250"/>
+              <rect class="d-box" x="252" y="234" width="70" height="32" rx="6"/><text class="d-text" x="287" y="255" text-anchor="middle">RMSNorm</text>
+              <line class="d-line" x1="322" y1="250" x2="348" y2="250" marker-end="url(#transformer-block-arrow2)"/>
+              <rect class="d-accent" x="350" y="226" width="170" height="48" rx="6"/>
+              <text class="d-title" x="435" y="248" text-anchor="middle">Multi-head attention</text>
+              <text class="d-label" x="435" y="265" text-anchor="middle">tokens talk (causal)</text>
+              <path class="d-line" d="M435 226 V170 H213" marker-end="url(#transformer-block-arrow2)"/>
+              <path class="d-line" d="M200 150 H250"/>
+              <rect class="d-box" x="252" y="134" width="70" height="32" rx="6"/><text class="d-text" x="287" y="155" text-anchor="middle">RMSNorm</text>
+              <line class="d-line" x1="322" y1="150" x2="348" y2="140" marker-end="url(#transformer-block-arrow2)"/>
+              <rect class="d-good" x="350" y="100" width="170" height="60" rx="6"/>
+              <text class="d-title" x="435" y="122" text-anchor="middle">MLP</text>
+              <text class="d-mono" x="435" y="140" text-anchor="middle">d → ~4d → d</text>
+              <text class="d-label" x="435" y="154" text-anchor="middle">each token alone</text>
+              <path class="d-line" d="M435 100 V70 H213" marker-end="url(#transformer-block-arrow2)"/>
+              <text class="d-label" x="300" y="64">add back</text>
+              <text class="d-label" x="300" y="184">add back</text>
+              <rect class="d-box" x="580" y="40" width="120" height="36" rx="6"/><text class="d-text" x="640" y="63" text-anchor="middle">final RMSNorm</text>
+              <rect class="d-box" x="580" y="100" width="120" height="44" rx="6"/><text class="d-text" x="640" y="119" text-anchor="middle">unembed</text><text class="d-mono" x="640" y="136" text-anchor="middle">d → V</text>
+              <rect class="d-signal" x="580" y="168" width="120" height="36" rx="6"/><text class="d-text" x="640" y="191" text-anchor="middle">logits (V)</text>
+              <line class="d-line" x1="640" y1="76" x2="640" y2="98" marker-end="url(#transformer-block-arrow2)"/>
+              <line class="d-line" x1="640" y1="144" x2="640" y2="166" marker-end="url(#transformer-block-arrow2)"/>
+              <text class="d-label" x="640" y="226" text-anchor="middle">after the last block</text>
+            </svg>
+          </div>
+          <figcaption>Each sublayer reads a normalized copy of the residual stream and adds its output back. After N blocks, the last position's vector becomes next-token logits.</figcaption>
+        </figure>
+
+        <h3>Where the parameters live</h3>
+        <p>Attention has four d × d matrices (Q, K, V, O), so 4d² per layer. A standard MLP has two d × 4d matrices, so 8d². That gives roughly 12·L·d² plus the embedding tables. The MLP holds two thirds of the weights, and interpretability work suggests much factual recall is stored there.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 200" role="img" aria-label="Bar chart of parameters in a 7B-class model with d 4096, 32 layers and vocabulary 32000: MLP about 4.3 billion, attention about 2.1 billion, embedding and unembedding about 0.26 billion, total about 6.7 billion.">
+              <text class="d-title" x="20" y="24">7B-class model: d = 4,096, L = 32, V = 32,000</text>
+              <text class="d-text" x="20" y="64">MLP (8d² × L)</text>
+              <rect class="d-good" x="190" y="48" width="430" height="24" rx="3"/>
+              <text class="d-mono" x="630" y="65">4.3B</text>
+              <text class="d-text" x="20" y="104">Attention (4d² × L)</text>
+              <rect class="d-accent" x="190" y="88" width="215" height="24" rx="3"/>
+              <text class="d-mono" x="415" y="105">2.1B</text>
+              <text class="d-text" x="20" y="144">Embed + unembed</text>
+              <rect class="d-signal" x="190" y="128" width="26" height="24" rx="3"/>
+              <text class="d-mono" x="226" y="145">0.26B (2·V·d)</text>
+              <line class="d-grid" x1="190" y1="40" x2="190" y2="160"/>
+              <text class="d-label" x="20" y="186">Total ≈ 6.7B parameters → ≈ 13.5 GB of weights in fp16 (2 bytes each) before any KV cache or activations.</text>
+            </svg>
+          </div>
+          <figcaption>Two thirds of a dense model's weights sit in the MLPs. Bar lengths are to scale.</figcaption>
+        </figure>
+
+        <div class="widget" id="transformer-block-demo">
+          <div class="widget-head">
+            <span class="widget-title">Parameter and memory calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="transformer-block-preset">Preset <select id="transformer-block-preset">
+              <option value="768,12,50257,4,1,1,0">124M (GPT-2 small)</option>
+              <option value="4096,32,32000,2.6875,1,0,1" selected>7B-class, SwiGLU</option>
+              <option value="8192,80,128256,3.5,0.125,0,1">70B-class, SwiGLU + GQA</option>
+            </select></label>
+            <label for="transformer-block-d">Width d <input type="range" id="transformer-block-d" min="256" max="16384" step="256" value="4096"><output id="transformer-block-d-out">4096</output></label>
+            <label for="transformer-block-L">Layers L <input type="range" id="transformer-block-L" min="2" max="128" step="1" value="32"><output id="transformer-block-L-out">32</output></label>
+            <label for="transformer-block-V">Vocab V <input type="number" id="transformer-block-V" min="1000" max="300000" step="1000" value="32000"></label>
+            <label for="transformer-block-mlp">MLP hidden / d <input type="range" id="transformer-block-mlp" min="1" max="8" step="0.0625" value="2.6875"><output id="transformer-block-mlp-out">2.69</output></label>
+            <label for="transformer-block-gated"><input type="checkbox" id="transformer-block-gated" checked> Gated MLP (3 matrices)</label>
+            <label for="transformer-block-kv">KV heads / Q heads <select id="transformer-block-kv">
+              <option value="1" selected>1 (full MHA)</option><option value="0.25">1/4 (GQA)</option><option value="0.125">1/8 (GQA)</option>
+            </select></label>
+            <label for="transformer-block-tie"><input type="checkbox" id="transformer-block-tie"> Tie embeddings</label>
+          </div>
+          <svg id="transformer-block-plot" viewBox="0 0 640 200" role="img" aria-label="Stacked bar of parameters by component and bars of weight memory at different precisions."></svg>
+          <p class="readout" id="transformer-block-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import torch, torch.nn as nn
+
+class Block(nn.Module):
+    """Pre-norm decoder block: x + Attn(Norm(x)), then x + MLP(Norm(x))."""
+    def __init__(self, d, n_heads, mult=4):
+        super().__init__()
+        self.ln1 = nn.LayerNorm(d)
+        self.attn = nn.MultiheadAttention(d, n_heads, batch_first=True)
+        self.ln2 = nn.LayerNorm(d)
+        self.mlp = nn.Sequential(nn.Linear(d, mult * d), nn.GELU(), nn.Linear(mult * d, d))
+
+    def forward(self, x):                       <span class="c"># x: (batch, n, d)</span>
+        n = x.size(1)
+        causal = torch.triu(torch.ones(n, n, dtype=torch.bool, device=x.device), 1)
+        h = self.ln1(x)
+        x = x + self.attn(h, h, h, attn_mask=causal, need_weights=False)[0]
+        x = x + self.mlp(self.ln2(x))
+        return x
+
+blk = Block(d=768, n_heads=12)
+print(sum(p.numel() for p in blk.parameters()))   <span class="c"># about 7.1M, close to 12 * 768**2</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Block = attention sublayer + MLP sublayer, each wrapped in norm and a residual add.</li>
+            <li>The residual stream is the model's working memory; every sublayer reads from it and writes to it.</li>
+            <li>Dense parameters ≈ 12·L·d² + embeddings; fp16 weights need 2 bytes per parameter.</li>
+            <li>Attention mixes across tokens; the MLP transforms each token independently.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Estimating serving memory from weights alone; the KV cache and activations add a lot at long contexts.</li>
+            <li>Assuming the block is post-norm as in the 2017 paper; nearly all modern LLMs are pre-norm.</li>
+            <li>Forgetting that GQA and gated MLPs change the 12·L·d² rule of thumb a little.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="transformer-block-1"><span>Draw a pre-norm block from memory, including both residual adds.</span></label></li>
+          <li><label><input type="checkbox" data-key="transformer-block-2"><span>Estimate parameters and fp16 memory for d = 4,096 and L = 32.</span></label></li>
+          <li><label><input type="checkbox" data-key="transformer-block-3"><span>Explain why residual connections make deep stacks trainable.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2002.05202">GLU Variants Improve Transformer (Shazeer, 2020)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2307.09288">Llama 2: Open Foundation and Fine-Tuned Chat Models (2023)</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/karpathy/nanoGPT">nanoGPT (Andrej Karpathy)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="model-families">
+        <header class="topic-head">
+          <p class="eyebrow">05.5 · Three wirings of one block</p>
+          <h2>Encoder, decoder &amp; encoder–decoder</h2>
+        </header>
+
+        <p class="lead">The same block can be wired three ways. The difference is mostly which tokens each token may attend to. An <strong>encoder</strong> sees the whole input in both directions, a <strong>decoder</strong> sees only the past so it can generate, and an <strong>encoder–decoder</strong> reads the input with an encoder and writes the output with a decoder that looks back at it.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Chat and generation models are decoder-only. Embedding models and rerankers used in RAG are usually encoders, which are small, fast and good at producing one vector per text. Some translation, speech and summarization systems still use encoder–decoders. Picking the right family can cut cost by orders of magnitude.</p>
+        </div>
+
+        <h3>Side by side</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 740 280" role="img" aria-label="Three architectures. Encoder-only: bidirectional stack produces a vector per token for classification or embeddings. Decoder-only: causal stack predicts the next token. Encoder-decoder: encoder reads the source bidirectionally, decoder generates with cross-attention to the encoder outputs.">
+              <defs>
+                <marker id="model-families-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="110" y="22" text-anchor="middle">Encoder-only</text>
+              <text class="d-label" x="110" y="40" text-anchor="middle">BERT-style</text>
+              <rect class="d-box" x="30" y="220" width="160" height="30" rx="5"/><text class="d-mono" x="110" y="240" text-anchor="middle">the [MASK] sat</text>
+              <rect class="d-accent" x="30" y="110" width="160" height="80" rx="8"/>
+              <text class="d-text" x="110" y="146" text-anchor="middle">N × block</text>
+              <text class="d-label" x="110" y="166" text-anchor="middle">sees left and right</text>
+              <rect class="d-good" x="30" y="56" width="160" height="30" rx="5"/><text class="d-text" x="110" y="76" text-anchor="middle">vector per token</text>
+              <line class="d-line-accent" x1="110" y1="220" x2="110" y2="192" marker-end="url(#model-families-arrow)"/>
+              <line class="d-line-accent" x1="110" y1="110" x2="110" y2="88" marker-end="url(#model-families-arrow)"/>
+              <text class="d-label" x="110" y="270" text-anchor="middle">classify · embed · rerank</text>
+
+              <text class="d-title" x="340" y="22" text-anchor="middle">Decoder-only</text>
+              <text class="d-label" x="340" y="40" text-anchor="middle">GPT-style, most LLMs</text>
+              <rect class="d-box" x="260" y="220" width="160" height="30" rx="5"/><text class="d-mono" x="340" y="240" text-anchor="middle">the cat sat</text>
+              <rect class="d-accent" x="260" y="110" width="160" height="80" rx="8"/>
+              <text class="d-text" x="340" y="146" text-anchor="middle">N × block</text>
+              <text class="d-label" x="340" y="166" text-anchor="middle">sees only the past</text>
+              <rect class="d-good" x="260" y="56" width="160" height="30" rx="5"/><text class="d-mono" x="340" y="76" text-anchor="middle">next: "on"</text>
+              <line class="d-line-accent" x1="340" y1="220" x2="340" y2="192" marker-end="url(#model-families-arrow)"/>
+              <line class="d-line-accent" x1="340" y1="110" x2="340" y2="88" marker-end="url(#model-families-arrow)"/>
+              <path class="d-line-accent d-dash" d="M420 71 C450 71, 450 235, 422 235" marker-end="url(#model-families-arrow)"/>
+              <text class="d-label" x="340" y="270" text-anchor="middle">chat · code · agents</text>
+
+              <text class="d-title" x="600" y="22" text-anchor="middle">Encoder–decoder</text>
+              <text class="d-label" x="600" y="40" text-anchor="middle">T5-style, original transformer</text>
+              <rect class="d-box" x="490" y="220" width="100" height="30" rx="5"/><text class="d-mono" x="540" y="240" text-anchor="middle">source</text>
+              <rect class="d-accent" x="490" y="110" width="100" height="80" rx="8"/>
+              <text class="d-text" x="540" y="146" text-anchor="middle">encoder</text>
+              <text class="d-label" x="540" y="166" text-anchor="middle">bidirectional</text>
+              <rect class="d-box" x="620" y="220" width="100" height="30" rx="5"/><text class="d-mono" x="670" y="240" text-anchor="middle">output so far</text>
+              <rect class="d-accent" x="620" y="110" width="100" height="80" rx="8"/>
+              <text class="d-text" x="670" y="146" text-anchor="middle">decoder</text>
+              <text class="d-label" x="670" y="166" text-anchor="middle">causal + cross</text>
+              <rect class="d-good" x="620" y="56" width="100" height="30" rx="5"/><text class="d-text" x="670" y="76" text-anchor="middle">next token</text>
+              <line class="d-line-accent" x1="540" y1="220" x2="540" y2="192" marker-end="url(#model-families-arrow)"/>
+              <line class="d-line-accent" x1="670" y1="220" x2="670" y2="192" marker-end="url(#model-families-arrow)"/>
+              <line class="d-line-accent" x1="670" y1="110" x2="670" y2="88" marker-end="url(#model-families-arrow)"/>
+              <line class="d-line-accent" x1="590" y1="130" x2="618" y2="130" marker-end="url(#model-families-arrow)"/>
+              <text class="d-label" x="604" y="122" text-anchor="middle">K,V</text>
+              <text class="d-label" x="605" y="270" text-anchor="middle">translate · speech-to-text</text>
+            </svg>
+          </div>
+          <figcaption>Dashed loop: a decoder feeds each generated token back in. In the encoder–decoder, cross-attention takes queries from the decoder and keys and values from the encoder output.</figcaption>
+        </figure>
+
+        <h3>Who can see whom</h3>
+        <p>The attention mask is the cleanest way to tell the families apart. Pick a family and a query position below; highlighted cells are the positions that token is allowed to attend to.</p>
+
+        <div class="widget" id="model-families-demo">
+          <div class="widget-head">
+            <span class="widget-title">Attention masks by family</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="model-families-arch">Family <select id="model-families-arch">
+              <option value="enc">Encoder-only</option>
+              <option value="dec" selected>Decoder-only</option>
+              <option value="encdec">Encoder–decoder</option>
+            </select></label>
+            <label for="model-families-q">Query position <input type="range" id="model-families-q" min="0" max="6" step="1" value="4"><output id="model-families-q-out">4</output></label>
+          </div>
+          <svg id="model-families-plot" viewBox="0 0 660 300" role="img" aria-label="Grids of allowed attention: rows are query tokens, columns are key tokens, filled cells are allowed."></svg>
+          <p class="readout" id="model-families-readout"></p>
+        </div>
+
+        <h3>How each is pretrained</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 190" role="img" aria-label="Pretraining objectives: masked language modeling predicts hidden tokens from both sides; causal language modeling predicts every next token; span corruption reconstructs hidden spans.">
+              <text class="d-title" x="20" y="28">Masked LM (encoder)</text>
+              <text class="d-mono" x="230" y="28">the [M] sat on the [M]</text>
+              <text class="d-mono d-text-good" x="500" y="28">→ cat, mat</text>
+              <text class="d-label" x="230" y="46">about 15% of tokens hidden; predict them from both sides</text>
+              <text class="d-title" x="20" y="88">Causal LM (decoder)</text>
+              <rect class="d-accent" x="230" y="70" width="40" height="26" rx="4"/><text class="d-mono" x="250" y="88" text-anchor="middle">the</text>
+              <rect class="d-accent" x="276" y="70" width="40" height="26" rx="4"/><text class="d-mono" x="296" y="88" text-anchor="middle">cat</text>
+              <rect class="d-accent" x="322" y="70" width="40" height="26" rx="4"/><text class="d-mono" x="342" y="88" text-anchor="middle">sat</text>
+              <rect class="d-accent" x="368" y="70" width="40" height="26" rx="4"/><text class="d-mono" x="388" y="88" text-anchor="middle">on</text>
+              <text class="d-mono d-text-good" x="250" y="114" text-anchor="middle">cat</text>
+              <text class="d-mono d-text-good" x="296" y="114" text-anchor="middle">sat</text>
+              <text class="d-mono d-text-good" x="342" y="114" text-anchor="middle">on</text>
+              <text class="d-mono d-text-good" x="388" y="114" text-anchor="middle">the</text>
+              <text class="d-label" x="430" y="96">every position predicts the next token:</text>
+              <text class="d-label" x="430" y="112">n training targets per sequence</text>
+              <text class="d-title" x="20" y="158">Span corruption (enc–dec)</text>
+              <text class="d-mono" x="230" y="158">the &lt;X&gt; on the mat</text>
+              <text class="d-mono d-text-good" x="440" y="158">→ &lt;X&gt; cat sat</text>
+              <text class="d-label" x="230" y="176">hide whole spans; the decoder writes them out</text>
+            </svg>
+          </div>
+          <figcaption>Causal LM wins for generation because every token in every document is a training target, and the same objective is what you use at inference.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Family</th><th>Attention</th><th>Typical size</th><th>Use it for</th></tr></thead>
+            <tbody>
+              <tr><td>Encoder-only</td><td>bidirectional</td><td>~100M–1B</td><td>embeddings, classification, reranking, NER</td></tr>
+              <tr><td>Decoder-only</td><td>causal</td><td>1B to frontier scale</td><td>chat, code, reasoning, agents, most generation</td></tr>
+              <tr><td>Encoder–decoder</td><td>bi (enc) + causal and cross (dec)</td><td>~100M–10B+</td><td>translation, speech recognition, input-to-output tasks</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>The three families share the block; they differ in masks and in what the output is used for.</li>
+            <li>Encoders give rich per-token or per-text vectors but do not generate text naturally.</li>
+            <li>Decoder-only models dominate general LLMs because next-token prediction scales and matches generation.</li>
+            <li>Cross-attention lets a decoder query an encoder's output.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Using a large chat model for a job a small encoder classifier or embedding model does faster and cheaper.</li>
+            <li>Expecting an encoder like BERT to write fluent text.</li>
+            <li>Assuming "transformer" means decoder-only; the original paper was an encoder–decoder.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="model-families-1"><span>Draw the attention mask for each family on a 4-token example.</span></label></li>
+          <li><label><input type="checkbox" data-key="model-families-2"><span>Name a task where an encoder-only model is the better choice and say why.</span></label></li>
+          <li><label><input type="checkbox" data-key="model-families-3"><span>Explain what cross-attention takes as queries and as keys/values.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1810.04805">BERT (Devlin et al., 2018)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1910.10683">T5: Exploring the Limits of Transfer Learning (Raffel et al., 2019)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2005.14165">Language Models are Few-Shot Learners (GPT-3, 2020)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="training-pipeline">
+        <header class="topic-head">
+          <p class="eyebrow">05.6 · Where the weights come from</p>
+          <h2>Pretraining → instruction tuning → RLHF</h2>
+        </header>
+
+        <p class="lead">A chat assistant is built in stages. <strong>Pretraining</strong> on trillions of tokens of text produces a base model that is good at continuing documents. <strong>Supervised fine-tuning</strong> (SFT) on example conversations teaches it to answer instead of ramble. <strong>Preference tuning</strong> (RLHF, DPO and relatives) then nudges it toward the answers people, or automated graders, prefer.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Each stage explains a behavior you will see: base models continue text instead of following instructions, chat models follow a chat template, preference tuning causes both politeness and over-refusal, and RL on verifiable tasks produced today's reasoning models. It also tells you which stage your own fine-tuning (Area 09) imitates.</p>
+        </div>
+
+        <h3>The pipeline</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 740 250" role="img" aria-label="Training pipeline: pretraining on trillions of tokens produces a base model; SFT on curated demonstrations produces an instruction model; preference tuning and RL produce the assistant. Each stage uses far less data than the last but shapes behavior more directly.">
+              <defs>
+                <marker id="training-pipeline-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="16" y="40" width="190" height="90" rx="8"/>
+              <text class="d-title" x="111" y="66" text-anchor="middle">1 · Pretraining</text>
+              <text class="d-label" x="111" y="86" text-anchor="middle">next-token prediction</text>
+              <text class="d-label" x="111" y="104" text-anchor="middle">web, books, code</text>
+              <text class="d-mono" x="111" y="122" text-anchor="middle">~10¹² –10¹³ tokens</text>
+              <line class="d-line-accent" x1="206" y1="85" x2="248" y2="85" marker-end="url(#training-pipeline-arrow)"/>
+              <text class="d-label" x="227" y="75" text-anchor="middle">base</text>
+              <rect class="d-accent" x="250" y="40" width="150" height="90" rx="8"/>
+              <text class="d-title" x="325" y="66" text-anchor="middle">2 · SFT</text>
+              <text class="d-label" x="325" y="86" text-anchor="middle">imitate good answers</text>
+              <text class="d-label" x="325" y="104" text-anchor="middle">chat template</text>
+              <text class="d-mono" x="325" y="122" text-anchor="middle">~10⁴ –10⁶ examples</text>
+              <line class="d-line-accent" x1="400" y1="85" x2="442" y2="85" marker-end="url(#training-pipeline-arrow)"/>
+              <rect class="d-accent" x="444" y="40" width="150" height="90" rx="8"/>
+              <text class="d-title" x="519" y="66" text-anchor="middle">3 · Preferences</text>
+              <text class="d-label" x="519" y="86" text-anchor="middle">RLHF / DPO</text>
+              <text class="d-label" x="519" y="104" text-anchor="middle">A better than B</text>
+              <text class="d-mono" x="519" y="122" text-anchor="middle">~10⁴ –10⁶ pairs</text>
+              <line class="d-line-accent" x1="594" y1="85" x2="636" y2="85" marker-end="url(#training-pipeline-arrow)"/>
+              <rect class="d-good" x="638" y="40" width="90" height="90" rx="8"/>
+              <text class="d-title" x="683" y="80" text-anchor="middle">Assistant</text>
+              <text class="d-label" x="683" y="100" text-anchor="middle">model</text>
+              <rect class="d-signal" x="444" y="150" width="150" height="56" rx="8"/>
+              <text class="d-title" x="519" y="172" text-anchor="middle">RL, verifiable rewards</text>
+              <text class="d-label" x="519" y="192" text-anchor="middle">math, code, tool tasks</text>
+              <path class="d-line-accent d-dash" d="M594 178 C620 178, 683 170, 683 132" marker-end="url(#training-pipeline-arrow)"/>
+              <text class="d-label" x="16" y="160">WHAT EACH STAGE MOSTLY ADDS</text>
+              <text class="d-text" x="16" y="182">knowledge, language,</text>
+              <text class="d-text" x="16" y="200">skills (most compute)</text>
+              <text class="d-text" x="250" y="182">format, instruction</text>
+              <text class="d-text" x="250" y="200">following, tone</text>
+              <text class="d-text" x="444" y="228">helpfulness, safety, reasoning</text>
+              <text class="d-label" x="16" y="236">Pretraining uses well over 90% of the compute; later stages are small but change behavior the most.</text>
+            </svg>
+          </div>
+          <figcaption>Data shrinks and gets more curated at each stage. Reasoning models add a large RL stage on tasks whose answers a program can check.</figcaption>
+        </figure>
+
+        <p>Pretraining compute is roughly \(6ND\) floating-point operations for N parameters and D tokens. The Chinchilla study found about 20 tokens per parameter is compute-optimal for a fixed training budget, but models that will serve heavy traffic are often trained far longer, because a smaller, over-trained model is cheaper to run.</p>
+
+        <div class="widget" id="training-pipeline-demo">
+          <div class="widget-head">
+            <span class="widget-title">Pretraining compute estimator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="training-pipeline-n">Parameters <input type="range" id="training-pipeline-n" min="-1" max="3" step="0.05" value="0.85"><output id="training-pipeline-n-out">7.1B</output></label>
+            <label for="training-pipeline-d">Training tokens <input type="range" id="training-pipeline-d" min="9" max="14" step="0.05" value="12.3"><output id="training-pipeline-d-out">2.0T</output></label>
+            <label for="training-pipeline-gpus">GPUs <input type="number" id="training-pipeline-gpus" min="1" max="200000" step="1" value="1024"></label>
+            <label for="training-pipeline-tflops">Effective TFLOP/s per GPU (example) <input type="number" id="training-pipeline-tflops" min="10" max="5000" step="10" value="400"></label>
+          </div>
+          <svg id="training-pipeline-plot" viewBox="0 0 640 170" role="img" aria-label="Tokens per parameter on a log scale with the 20-to-1 compute-optimal marker, plus the total FLOPs and wall-clock time."></svg>
+          <p class="readout" id="training-pipeline-readout"></p>
+        </div>
+
+        <h3>How preference tuning works</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 740 230" role="img" aria-label="RLHF in two loops. Left: humans compare two responses and a reward model learns to score the preferred one higher. Right: the policy generates, the reward model scores, and an RL update raises reward while a KL penalty keeps the policy close to the SFT reference.">
+              <defs>
+                <marker id="training-pipeline-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="16" y="22">A · TRAIN A REWARD MODEL</text>
+              <rect class="d-box" x="16" y="36" width="90" height="34" rx="6"/><text class="d-text" x="61" y="58" text-anchor="middle">prompt x</text>
+              <rect class="d-good" x="140" y="30" width="110" height="28" rx="5"/><text class="d-text" x="195" y="49" text-anchor="middle">answer A ✓</text>
+              <rect class="d-signal" x="140" y="66" width="110" height="28" rx="5"/><text class="d-text" x="195" y="85" text-anchor="middle">answer B</text>
+              <line class="d-line" x1="106" y1="50" x2="138" y2="44" marker-end="url(#training-pipeline-arrow2)"/>
+              <line class="d-line" x1="106" y1="58" x2="138" y2="78" marker-end="url(#training-pipeline-arrow2)"/>
+              <line class="d-line-accent" x1="250" y1="62" x2="288" y2="62" marker-end="url(#training-pipeline-arrow2)"/>
+              <rect class="d-accent" x="290" y="40" width="100" height="44" rx="6"/><text class="d-text" x="340" y="60" text-anchor="middle">reward model</text><text class="d-mono" x="340" y="76" text-anchor="middle">r(A) &gt; r(B)</text>
+              <text class="d-label" x="16" y="122">Human (or AI) labelers pick the better answer.</text>
+              <text class="d-label" x="16" y="140">Loss pushes r(chosen) above r(rejected).</text>
+              <line class="d-grid" x1="410" y1="20" x2="410" y2="220"/>
+              <text class="d-label" x="430" y="22">B · OPTIMIZE THE POLICY</text>
+              <rect class="d-accent" x="430" y="40" width="110" height="44" rx="6"/><text class="d-text" x="485" y="60" text-anchor="middle">policy π</text><text class="d-label" x="485" y="76" text-anchor="middle">starts as SFT</text>
+              <line class="d-line-accent" x1="540" y1="62" x2="588" y2="62" marker-end="url(#training-pipeline-arrow2)"/>
+              <text class="d-label" x="564" y="54" text-anchor="middle">sample</text>
+              <rect class="d-box" x="590" y="40" width="130" height="44" rx="6"/><text class="d-text" x="655" y="60" text-anchor="middle">reward model</text><text class="d-label" x="655" y="76" text-anchor="middle">or checker</text>
+              <path class="d-line-accent" d="M655 84 V140 H485 V86" marker-end="url(#training-pipeline-arrow2)"/>
+              <text class="d-label" x="570" y="134" text-anchor="middle">RL update (PPO, GRPO)</text>
+              <rect class="d-signal" x="430" y="160" width="290" height="50" rx="6"/>
+              <text class="d-text" x="575" y="181" text-anchor="middle">− β · KL(π ‖ π_ref)</text>
+              <text class="d-label" x="575" y="199" text-anchor="middle">penalty for drifting from the SFT model</text>
+              <text class="d-label" x="16" y="190">DPO skips both the separate reward model</text>
+              <text class="d-label" x="16" y="208">and RL: it trains directly on the pairs.</text>
+            </svg>
+          </div>
+          <figcaption>Classic RLHF: learn a reward model from comparisons, then optimize the policy against it with a leash (the KL term) so it does not exploit the reward model's blind spots.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \mathcal{L}_{RM} = -\log \sigma\big(r(x, y_w) - r(x, y_l)\big) \qquad \max_{\pi}\; \mathbb{E}\big[r(x,y)\big] - \beta\, \mathrm{KL}\big(\pi \,\|\, \pi_{\text{ref}}\big) \]
+          <span class="formula-note">\(y_w\) is the preferred ("winning") response and \(y_l\) the rejected one; \(\sigma\) is the sigmoid. The right-hand objective is what PPO-style RLHF maximizes.</span>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import torch.nn.functional as F
+
+def dpo_loss(pi_w, pi_l, ref_w, ref_l, beta=0.1):
+    """Direct Preference Optimization.
+    Each argument is a tensor of summed log-probs of a full response
+    (w = chosen, l = rejected) under the policy (pi) or the frozen reference (ref)."""
+    margin = (pi_w - ref_w) - (pi_l - ref_l)   <span class="c"># how much more the policy prefers w than ref does</span>
+    return -F.logsigmoid(beta * margin).mean()</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Pretraining builds knowledge and skills; post-training (SFT and preferences) shapes behavior.</li>
+            <li>Training compute ≈ 6·N·D FLOPs; ~20 tokens per parameter is compute-optimal, but serving costs favor smaller models trained longer.</li>
+            <li>RLHF = reward model from comparisons + RL with a KL penalty; DPO gets a similar effect with a simple classification-style loss.</li>
+            <li>RL with automatically checkable rewards (tests pass, answer matches) is how reasoning models are trained.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Prompting a base model like a chat model, or sending a chat model text without its chat template.</li>
+            <li>Believing fine-tuning reliably adds new factual knowledge; it mostly changes behavior and format.</li>
+            <li>Ignoring reward hacking: optimizing hard against an imperfect reward makes outputs longer, more flattering, or wrong in ways the reward misses.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="training-pipeline-1"><span>Describe the difference in behavior between a base model and its instruction-tuned version.</span></label></li>
+          <li><label><input type="checkbox" data-key="training-pipeline-2"><span>Estimate pretraining FLOPs and GPU-days for a 7B model on 2T tokens.</span></label></li>
+          <li><label><input type="checkbox" data-key="training-pipeline-3"><span>Explain the role of the KL penalty in RLHF.</span></label></li>
+          <li><label><input type="checkbox" data-key="training-pipeline-4"><span>Write the DPO loss and say what each term means.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2203.02155">Training language models to follow instructions with human feedback (InstructGPT, 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2203.15556">Training Compute-Optimal Large Language Models (Chinchilla, 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.18290">Direct Preference Optimization (Rafailov et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1: reasoning via reinforcement learning (2025)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="decoding">
+        <header class="topic-head">
+          <p class="eyebrow">05.7 · From probabilities to text</p>
+          <h2>Decoding &amp; sampling</h2>
+        </header>
+
+        <p class="lead">The model only outputs a probability for every token in the vocabulary. <strong>Decoding</strong> is the rule that picks one: take the most likely token (greedy), or reshape the distribution and draw from it at random (sampling). The chosen token is appended and the model runs again, one token at a time.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Temperature, top-k and top-p are the knobs you most often see in APIs and serving engines. The wrong settings cause repetitive loops, invented details, or broken JSON. Generating one token per forward pass is also why output tokens cost more and take longer than input tokens.</p>
+        </div>
+
+        <h3>The generation loop</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 740 210" role="img" aria-label="Generation loop: context goes through the model to logits, logits are divided by temperature, softmaxed, filtered by top-k and top-p, one token is sampled and appended to the context, repeating until a stop token or the length limit.">
+              <defs>
+                <marker id="decoding-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="12" y="60" width="110" height="56" rx="8"/>
+              <text class="d-title" x="67" y="84" text-anchor="middle">context</text>
+              <text class="d-mono" x="67" y="104" text-anchor="middle">"The sky is"</text>
+              <line class="d-line-accent" x1="122" y1="88" x2="146" y2="88" marker-end="url(#decoding-arrow)"/>
+              <rect class="d-accent" x="148" y="60" width="80" height="56" rx="8"/>
+              <text class="d-title" x="188" y="92" text-anchor="middle">model</text>
+              <line class="d-line-accent" x1="228" y1="88" x2="252" y2="88" marker-end="url(#decoding-arrow)"/>
+              <rect class="d-box" x="254" y="60" width="80" height="56" rx="8"/>
+              <text class="d-text" x="294" y="84" text-anchor="middle">logits z</text>
+              <text class="d-label" x="294" y="102" text-anchor="middle">one per token</text>
+              <line class="d-line-accent" x1="334" y1="88" x2="358" y2="88" marker-end="url(#decoding-arrow)"/>
+              <rect class="d-signal" x="360" y="60" width="80" height="56" rx="8"/>
+              <text class="d-mono" x="400" y="84" text-anchor="middle">z / T</text>
+              <text class="d-label" x="400" y="102" text-anchor="middle">temperature</text>
+              <line class="d-line-accent" x1="440" y1="88" x2="464" y2="88" marker-end="url(#decoding-arrow)"/>
+              <rect class="d-box" x="466" y="60" width="80" height="56" rx="8"/>
+              <text class="d-text" x="506" y="92" text-anchor="middle">softmax</text>
+              <line class="d-line-accent" x1="546" y1="88" x2="570" y2="88" marker-end="url(#decoding-arrow)"/>
+              <rect class="d-signal" x="572" y="60" width="80" height="56" rx="8"/>
+              <text class="d-mono" x="612" y="84" text-anchor="middle">top-k/p</text>
+              <text class="d-label" x="612" y="102" text-anchor="middle">cut the tail</text>
+              <line class="d-line-accent" x1="652" y1="88" x2="676" y2="88" marker-end="url(#decoding-arrow)"/>
+              <rect class="d-good" x="678" y="60" width="54" height="56" rx="8"/>
+              <text class="d-text" x="705" y="84" text-anchor="middle">draw</text>
+              <text class="d-mono" x="705" y="104" text-anchor="middle">"blue"</text>
+              <path class="d-line-accent d-dash" d="M705 116 V160 H67 V118" marker-end="url(#decoding-arrow)"/>
+              <text class="d-label" x="386" y="178" text-anchor="middle">append "blue" → "The sky is blue" → run the model again</text>
+              <text class="d-label" x="386" y="198" text-anchor="middle">stop at an end-of-sequence token, a stop string, or max_tokens</text>
+              <text class="d-label" x="12" y="36">Greedy decoding skips the orange steps and takes the argmax.</text>
+            </svg>
+          </div>
+          <figcaption>Every output token is one trip around this loop. The orange steps are where the sampling knobs act.</figcaption>
+        </figure>
+
+        <h3>Temperature, top-k and top-p</h3>
+        <p><strong>Temperature</strong> divides the logits before softmax: below 1 sharpens the distribution, above 1 flattens it, and near 0 approaches greedy. <strong>Top-k</strong> keeps only the k most likely tokens. <strong>Top-p</strong> (nucleus sampling) keeps the smallest set whose probabilities add up to p, so the set grows when the model is unsure and shrinks when it is confident.</p>
+
+        <div class="formula">
+          \[ p_i = \frac{e^{z_i / T}}{\sum_j e^{z_j / T}} \qquad \text{top-}p:\ \text{keep the fewest tokens with } \textstyle\sum p_i \ge p,\ \text{then renormalize} \]
+        </div>
+
+        <div class="widget" id="decoding-demo">
+          <div class="widget-head">
+            <span class="widget-title">Reshape the next-token distribution</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="decoding-temp">Temperature <input type="range" id="decoding-temp" min="0.05" max="2" step="0.05" value="1"><output id="decoding-temp-out">1.00</output></label>
+            <label for="decoding-topk">Top-k <input type="range" id="decoding-topk" min="1" max="12" step="1" value="12"><output id="decoding-topk-out">12</output></label>
+            <label for="decoding-topp">Top-p <input type="range" id="decoding-topp" min="0.05" max="1" step="0.05" value="1"><output id="decoding-topp-out">1.00</output></label>
+            <button class="btn primary" type="button" id="decoding-sample">Sample 20</button>
+          </div>
+          <svg id="decoding-plot" viewBox="0 0 640 300" role="img" aria-label="Bars for twelve candidate next tokens after the prompt 'The weather today is', showing original probabilities as outlines and adjusted probabilities as filled bars; tokens removed by top-k or top-p are greyed out."></svg>
+          <p class="readout" id="decoding-readout"></p>
+        </div>
+
+        <h3>Greedy is not the most likely sentence</h3>
+        <p>Greedy picks the best token at each step, which can miss a better overall sequence. <strong>Beam search</strong> keeps the b best partial sequences and is still used for translation and speech, but for open-ended text it tends to produce bland, repetitive output, so chat models sample.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 200" role="img" aria-label="A two-step tree: greedy takes 'nice' at 0.40 then 'and' at 0.30 for a sequence probability of 0.12; beam search keeps 'sunny' at 0.35 followed by 'and' at 0.90 for 0.315.">
+              <defs>
+                <marker id="decoding-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="16" y="80" width="130" height="40" rx="6"/><text class="d-mono" x="81" y="105" text-anchor="middle">weather is</text>
+              <line class="d-line-signal" x1="146" y1="92" x2="236" y2="48" marker-end="url(#decoding-arrow2)"/>
+              <line class="d-line-accent" x1="146" y1="108" x2="236" y2="150" marker-end="url(#decoding-arrow2)"/>
+              <text class="d-mono d-text-signal" x="176" y="60">0.40</text>
+              <text class="d-mono d-text-accent" x="176" y="152">0.35</text>
+              <rect class="d-signal" x="238" y="28" width="90" height="36" rx="6"/><text class="d-mono" x="283" y="51" text-anchor="middle">nice</text>
+              <rect class="d-accent" x="238" y="134" width="90" height="36" rx="6"/><text class="d-mono" x="283" y="157" text-anchor="middle">sunny</text>
+              <line class="d-line-signal" x1="328" y1="46" x2="410" y2="46" marker-end="url(#decoding-arrow2)"/>
+              <text class="d-mono d-text-signal" x="368" y="38" text-anchor="middle">0.30</text>
+              <line class="d-line-accent" x1="328" y1="152" x2="410" y2="152" marker-end="url(#decoding-arrow2)"/>
+              <text class="d-mono d-text-accent" x="368" y="144" text-anchor="middle">0.90</text>
+              <rect class="d-signal" x="412" y="28" width="90" height="36" rx="6"/><text class="d-mono" x="457" y="51" text-anchor="middle">and</text>
+              <rect class="d-accent" x="412" y="134" width="90" height="36" rx="6"/><text class="d-mono" x="457" y="157" text-anchor="middle">and</text>
+              <text class="d-text d-text-signal" x="520" y="44">greedy: 0.40 × 0.30</text>
+              <text class="d-text d-text-signal" x="520" y="62">= 0.12</text>
+              <text class="d-text d-text-accent" x="520" y="150">beam (b=2): 0.35 × 0.90</text>
+              <text class="d-text d-text-accent" x="520" y="168">= 0.315</text>
+              <text class="d-label" x="16" y="194">Sequence probability is the product of step probabilities (in practice, a sum of log-probs).</text>
+            </svg>
+          </div>
+          <figcaption>A locally best first step ("nice") leads to a worse full sequence than "sunny and".</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+def sample(logits, temperature=1.0, top_k=None, top_p=None, rng=np.random.default_rng()):
+    if temperature == 0:
+        return int(np.argmax(logits))                     <span class="c"># greedy</span>
+    z = logits / temperature
+    p = np.exp(z - z.max()); p /= p.sum()
+    order = np.argsort(p)[::-1]                           <span class="c"># most likely first</span>
+    keep = np.ones_like(p, dtype=bool)
+    if top_k is not None:
+        keep[order[top_k:]] = False
+    if top_p is not None:
+        cum = np.cumsum(p[order])
+        cutoff = np.searchsorted(cum, top_p) + 1          <span class="c"># smallest set reaching top_p</span>
+        keep[order[cutoff:]] = False
+    p = np.where(keep, p, 0.0); p /= p.sum()
+    return int(rng.choice(len(p), p=p))</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Task</th><th>Typical setting</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>Extraction, classification, JSON</td><td>greedy or T ≈ 0–0.2</td><td>one right answer; randomness only adds errors</td></tr>
+              <tr><td>Code, factual Q&amp;A</td><td>T ≈ 0.2–0.5</td><td>slight variety, stays on the likely path</td></tr>
+              <tr><td>Chat, writing, brainstorming</td><td>T ≈ 0.7–1.0, top-p ≈ 0.9–0.95</td><td>natural variety without the junk tail</td></tr>
+              <tr><td>Many candidates to rerank or vote</td><td>T ≈ 0.8–1.0, n samples</td><td>diversity matters more than any one sample</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>The model gives a distribution; decoding turns it into text one token per forward pass.</li>
+            <li>Temperature rescales logits; top-k and top-p cut the unlikely tail and renormalize.</li>
+            <li>Top-p adapts to the model's confidence; top-k does not.</li>
+            <li>Greedy and beam search maximize probability; sampling trades a little probability for variety.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Expecting temperature 0 to be perfectly reproducible on a hosted API; batching and floating-point order can still change outputs.</li>
+            <li>Raising temperature to "make the model smarter"; it only makes it more random.</li>
+            <li>Tuning temperature and top-p at the same time without measuring; change one at a time.</li>
+            <li>Assuming every API accepts these knobs; some hosted reasoning models fix sampling and reject custom values.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="decoding-1"><span>Apply temperature 0.5 to three logits by hand and compare with T = 1.</span></label></li>
+          <li><label><input type="checkbox" data-key="decoding-2"><span>Explain the difference between top-k and top-p with an example where they disagree.</span></label></li>
+          <li><label><input type="checkbox" data-key="decoding-3"><span>Choose and justify decoding settings for a JSON extraction task and for a story generator.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1904.09751">The Curious Case of Neural Text Degeneration (nucleus sampling, 2019)</a></li>
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/transformers/index">Hugging Face Transformers documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="frontier">
+        <header class="topic-head">
+          <p class="eyebrow">05.8 · Beyond the dense text model</p>
+          <h2>MoE, multimodal &amp; reasoning models</h2>
+        </header>
+
+        <p class="lead">Three changes to the basic recipe define today's large models. <strong>Mixture-of-experts</strong> (MoE) stores many MLPs but runs only a few per token. <strong>Multimodal</strong> models turn images and audio into token-like vectors so the same transformer can read them. <strong>Reasoning models</strong> are trained to spend extra output tokens thinking before they answer.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>These change your cost and latency math. An MoE model needs memory for all its parameters but compute for only the active ones. An image can cost hundreds or thousands of tokens. A reasoning model may produce thousands of hidden thinking tokens that you pay for and wait for, in exchange for much better results on hard problems.</p>
+        </div>
+
+        <h3>Mixture-of-experts</h3>
+        <p>In an MoE layer, the single MLP is replaced by E expert MLPs and a small <strong>router</strong>. The router scores the experts for each token, keeps the top k (often 1 or 2 of 8, or a handful out of dozens or hundreds), and mixes their outputs by the router weights. Attention layers stay shared.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 260" role="img" aria-label="MoE layer: a token vector goes to a router, which scores eight experts; only the top two run, and their outputs are combined with the router weights.">
+              <defs>
+                <marker id="frontier-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="frontier-arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="14" y="106" width="90" height="44" rx="6"/>
+              <text class="d-text" x="59" y="126" text-anchor="middle">token h</text>
+              <text class="d-label" x="59" y="142" text-anchor="middle">after attention</text>
+              <line class="d-line-accent" x1="104" y1="128" x2="134" y2="128" marker-end="url(#frontier-arrow)"/>
+              <rect class="d-signal" x="136" y="100" width="90" height="56" rx="6"/>
+              <text class="d-title" x="181" y="124" text-anchor="middle">router</text>
+              <text class="d-mono" x="181" y="143" text-anchor="middle">softmax(Wh)</text>
+              <rect class="d-box" x="300" y="14" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="31" text-anchor="middle">E1  0.03</text>
+              <rect class="d-accent" x="300" y="44" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="61" text-anchor="middle">E2  0.41 ✓</text>
+              <rect class="d-box" x="300" y="74" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="91" text-anchor="middle">E3  0.06</text>
+              <rect class="d-box" x="300" y="104" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="121" text-anchor="middle">E4  0.09</text>
+              <rect class="d-accent" x="300" y="134" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="151" text-anchor="middle">E5  0.29 ✓</text>
+              <rect class="d-box" x="300" y="164" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="181" text-anchor="middle">E6  0.05</text>
+              <rect class="d-box" x="300" y="194" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="211" text-anchor="middle">E7  0.04</text>
+              <rect class="d-box" x="300" y="224" width="120" height="24" rx="4"/><text class="d-mono" x="360" y="241" text-anchor="middle">E8  0.03</text>
+              <line class="d-line-accent" x1="226" y1="120" x2="298" y2="56" marker-end="url(#frontier-arrow)"/>
+              <line class="d-line-accent" x1="226" y1="136" x2="298" y2="146" marker-end="url(#frontier-arrow)"/>
+              <line class="d-line d-dash" x1="226" y1="128" x2="298" y2="116"/>
+              <line class="d-line-accent" x1="420" y1="56" x2="498" y2="120" marker-end="url(#frontier-arrow)"/>
+              <line class="d-line-accent" x1="420" y1="146" x2="498" y2="132" marker-end="url(#frontier-arrow)"/>
+              <rect class="d-good" x="500" y="100" width="100" height="56" rx="6"/>
+              <text class="d-mono" x="550" y="122" text-anchor="middle">0.59·E2(h)</text>
+              <text class="d-mono" x="550" y="140" text-anchor="middle">+0.41·E5(h)</text>
+              <line class="d-line-accent" x1="600" y1="128" x2="630" y2="128" marker-end="url(#frontier-arrow)"/>
+              <text class="d-text" x="636" y="132">out</text>
+              <text class="d-label" x="500" y="186">weights renormalized over</text>
+              <text class="d-label" x="500" y="202">the chosen k = 2 experts</text>
+              <text class="d-label" x="500" y="236">6 of 8 experts stay idle</text>
+              <text class="d-label" x="500" y="252">for this token</text>
+            </svg>
+          </div>
+          <figcaption>Top-2 routing: 0.41 and 0.29 renormalize to 0.59 and 0.41. Each token can pick different experts, and a load-balancing loss keeps any expert from being overused.</figcaption>
+        </figure>
+
+        <div class="widget" id="frontier-demo">
+          <div class="widget-head">
+            <span class="widget-title">MoE routing: total vs active parameters</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="frontier-e">Experts E <input type="range" id="frontier-e" min="2" max="64" step="1" value="8"><output id="frontier-e-out">8</output></label>
+            <label for="frontier-k">Active k <input type="range" id="frontier-k" min="1" max="8" step="1" value="2"><output id="frontier-k-out">2</output></label>
+            <label for="frontier-x">Params per expert, all layers (B) <input type="range" id="frontier-x" min="0.1" max="20" step="0.1" value="5.6"><output id="frontier-x-out">5.6</output></label>
+            <label for="frontier-s">Shared params (B) <input type="range" id="frontier-s" min="0.1" max="40" step="0.1" value="1.6"><output id="frontier-s-out">1.6</output></label>
+            <button class="btn" type="button" id="frontier-roll">New tokens</button>
+          </div>
+          <svg id="frontier-plot" viewBox="0 0 640 330" role="img" aria-label="Eight tokens routed to their top-k experts, expert boxes shaded by how many tokens chose them, and bars comparing total and active parameters."></svg>
+          <p class="readout" id="frontier-readout"></p>
+        </div>
+
+        <h3>Multimodal input</h3>
+        <p>A vision encoder cuts an image into patches (often 14 or 16 pixels square), turns each into a vector, and a small projector maps those vectors into the LLM's embedding space. The LLM then attends over image vectors and text tokens together. Audio works the same way with short time slices.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 200" role="img" aria-label="Image to tokens: an image is split into a grid of patches, a vision encoder turns patches into vectors, a projector maps them into the LLM embedding space, and they are placed in the sequence alongside text tokens.">
+              <defs>
+                <marker id="frontier-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="16" y="40" width="96" height="96" rx="4"/>
+              <path class="d-grid" d="M40 40 V136 M64 40 V136 M88 40 V136 M16 64 H112 M16 88 H112 M16 112 H112"/>
+              <text class="d-label" x="64" y="156" text-anchor="middle">image → 4×4 patches</text>
+              <line class="d-line-accent" x1="112" y1="88" x2="148" y2="88" marker-end="url(#frontier-arrow2)"/>
+              <rect class="d-accent" x="150" y="58" width="110" height="60" rx="6"/>
+              <text class="d-title" x="205" y="84" text-anchor="middle">vision</text>
+              <text class="d-title" x="205" y="102" text-anchor="middle">encoder</text>
+              <line class="d-line-accent" x1="260" y1="88" x2="290" y2="88" marker-end="url(#frontier-arrow2)"/>
+              <rect class="d-signal" x="292" y="64" width="90" height="48" rx="6"/>
+              <text class="d-text" x="337" y="86" text-anchor="middle">projector</text>
+              <text class="d-label" x="337" y="102" text-anchor="middle">to LLM width</text>
+              <line class="d-line-accent" x1="382" y1="88" x2="412" y2="88" marker-end="url(#frontier-arrow2)"/>
+              <rect class="d-box" x="414" y="72" width="44" height="32" rx="4"/><text class="d-mono" x="436" y="93" text-anchor="middle">Describe</text>
+              <rect class="d-signal" x="462" y="72" width="22" height="32" rx="3"/>
+              <rect class="d-signal" x="487" y="72" width="22" height="32" rx="3"/>
+              <rect class="d-signal" x="512" y="72" width="22" height="32" rx="3"/>
+              <text class="d-mono" x="548" y="93" text-anchor="middle">…</text>
+              <rect class="d-signal" x="562" y="72" width="22" height="32" rx="3"/>
+              <rect class="d-box" x="588" y="72" width="40" height="32" rx="4"/><text class="d-mono" x="608" y="93" text-anchor="middle">this</text>
+              <line class="d-line-accent" x1="628" y1="88" x2="652" y2="88" marker-end="url(#frontier-arrow2)"/>
+              <rect class="d-accent" x="654" y="64" width="56" height="48" rx="6"/><text class="d-text" x="682" y="93" text-anchor="middle">LLM</text>
+              <text class="d-label" x="523" y="128" text-anchor="middle">image vectors sit in the sequence like tokens</text>
+              <text class="d-label" x="16" y="186">A 1024×1024 image cut into 16-pixel patches is 64 × 64 = 4,096 patches; models usually merge or downsample them to fewer tokens.</text>
+            </svg>
+          </div>
+          <figcaption>"Natively multimodal" models train the vision and text parts together; others bolt a pretrained encoder onto a pretrained LLM.</figcaption>
+        </figure>
+
+        <h3>Reasoning models</h3>
+        <p>Reasoning models are trained with reinforcement learning on problems with checkable answers, which teaches them to write a long chain of thought, check their work and backtrack before giving a final answer. Accuracy on hard math, code and planning rises with the thinking budget. This is called test-time compute scaling.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 200" role="img" aria-label="Left: a reasoning model emits a long block of thinking tokens before a short answer. Right: a qualitative curve where accuracy on hard tasks rises with thinking tokens and then flattens.">
+              <rect class="d-box" x="16" y="40" width="70" height="36" rx="5"/><text class="d-text" x="51" y="63" text-anchor="middle">prompt</text>
+              <rect class="d-signal" x="92" y="40" width="230" height="36" rx="5"/><text class="d-text" x="207" y="63" text-anchor="middle">thinking … 2,000–20,000+ tokens</text>
+              <rect class="d-good" x="328" y="40" width="60" height="36" rx="5"/><text class="d-text" x="358" y="63" text-anchor="middle">answer</text>
+              <text class="d-label" x="16" y="100">billed as output tokens and added to latency,</text>
+              <text class="d-label" x="16" y="118">often hidden or summarized by the provider</text>
+              <text class="d-label" x="16" y="150">Many APIs expose an "effort" or thinking-budget</text>
+              <text class="d-label" x="16" y="168">setting to trade quality against cost and time.</text>
+              <line class="d-line" x1="450" y1="170" x2="700" y2="170"/>
+              <line class="d-line" x1="450" y1="170" x2="450" y2="30"/>
+              <path class="d-line-accent" d="M455 160 C520 140, 560 80, 610 62 S 680 50, 698 48"/>
+              <text class="d-label" x="575" y="190" text-anchor="middle">thinking tokens (log scale)</text>
+              <text class="d-label" x="444" y="100" text-anchor="end" transform="rotate(-90 444 100)">accuracy on hard tasks</text>
+              <text class="d-label" x="640" y="90">diminishing returns</text>
+            </svg>
+          </div>
+          <figcaption>Qualitative shape only. Easy questions gain little from thinking, so route them to a lower effort setting.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import torch, torch.nn as nn
+
+class MoE(nn.Module):
+    """Top-k mixture-of-experts MLP (no load-balancing loss, for clarity)."""
+    def __init__(self, d, n_experts=8, k=2, mult=4):
+        super().__init__()
+        self.k = k
+        self.router = nn.Linear(d, n_experts, bias=False)
+        self.experts = nn.ModuleList(
+            nn.Sequential(nn.Linear(d, mult * d), nn.GELU(), nn.Linear(mult * d, d))
+            for _ in range(n_experts))
+
+    def forward(self, x):                          <span class="c"># x: (tokens, d)</span>
+        w, idx = self.router(x).topk(self.k, dim=-1)
+        w = w.softmax(dim=-1)                      <span class="c"># renormalize over chosen experts</span>
+        out = torch.zeros_like(x)
+        for slot in range(self.k):
+            for e, expert in enumerate(self.experts):
+                sel = idx[:, slot] == e
+                if sel.any():
+                    out[sel] += w[sel, slot, None] * expert(x[sel])
+        return out</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>MoE decouples capacity (total parameters, which set memory) from per-token compute (active parameters).</li>
+            <li>Images and audio become sequences of vectors in the LLM's embedding space; they cost context like text.</li>
+            <li>Reasoning models trade output tokens and latency for accuracy on hard, checkable problems.</li>
+            <li>All three are still the same transformer block underneath.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Sizing GPU memory for an MoE model by its active parameters; all experts must be loaded.</li>
+            <li>Ignoring image token cost when sending many or very large images.</li>
+            <li>Using maximum reasoning effort on simple, latency-sensitive requests.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="frontier-1"><span>Compute total and active parameters for an MoE with 8 experts, top-2 routing and given expert and shared sizes.</span></label></li>
+          <li><label><input type="checkbox" data-key="frontier-2"><span>Explain how an image becomes input to an LLM.</span></label></li>
+          <li><label><input type="checkbox" data-key="frontier-3"><span>Decide when a reasoning model is worth its extra cost and latency for a task.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2101.03961">Switch Transformers (Fedus et al., 2021)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2401.04088">Mixtral of Experts (2024)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2010.11929">An Image is Worth 16x16 Words (ViT, 2020)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting (Wei et al., 2022)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="landscape">
+        <header class="topic-head">
+          <p class="eyebrow">05.9 · From theory to a decision</p>
+          <h2>Choosing a model</h2>
+        </header>
+
+        <p class="lead">There is no best model, only the cheapest model that passes your bar on your task. Model choice is a trade-off between quality, latency, cost and where the data may go, and the right answer changes every few months as new models ship. Think in model classes, shortlist two or three, and let an evaluation on your own examples decide.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Model choice is often the biggest single lever on a product's unit economics and speed. Prices across model tiers commonly differ by 10× to 100× per token, and a small model that is good enough can also respond several times faster.</p>
+        </div>
+
+        <h3>Start from the hard constraints</h3>
+        <p>Rule things out before you rank anything. Privacy and deployment rules come first, because they can remove whole categories. Then task difficulty, then latency and volume. Only after that should you look at leaderboards.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 740 300" role="img" aria-label="Decision flow: if data must stay on your own servers or device, use an open-weight model you host. Otherwise, if the task needs hard reasoning or is high stakes, use a frontier hosted model. Otherwise, if volume is high or latency is tight, use a small fast hosted model or a fine-tuned small model. Otherwise use a mid-tier hosted model.">
+              <defs>
+                <marker id="landscape-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="16" y="20" width="120" height="40" rx="20"/>
+              <text class="d-title" x="76" y="45" text-anchor="middle">your task</text>
+              <line class="d-line-accent" x1="76" y1="60" x2="76" y2="86" marker-end="url(#landscape-arrow)"/>
+              <rect class="d-signal" x="16" y="88" width="190" height="48" rx="6"/>
+              <text class="d-text" x="111" y="108" text-anchor="middle">Data must stay on our</text>
+              <text class="d-text" x="111" y="126" text-anchor="middle">servers or the device?</text>
+              <line class="d-line-accent" x1="206" y1="112" x2="508" y2="112" marker-end="url(#landscape-arrow)"/>
+              <text class="d-label" x="226" y="104">yes</text>
+              <rect class="d-good" x="510" y="88" width="214" height="48" rx="6"/>
+              <text class="d-text" x="617" y="108" text-anchor="middle">Open-weight model you host</text>
+              <text class="d-label" x="617" y="126" text-anchor="middle">size it by quality need, see Area 11</text>
+              <line class="d-line-accent" x1="76" y1="136" x2="76" y2="162" marker-end="url(#landscape-arrow)"/>
+              <text class="d-label" x="84" y="154">no</text>
+              <rect class="d-signal" x="16" y="164" width="190" height="48" rx="6"/>
+              <text class="d-text" x="111" y="184" text-anchor="middle">Hard reasoning, agentic,</text>
+              <text class="d-text" x="111" y="202" text-anchor="middle">or high-stakes output?</text>
+              <line class="d-line-accent" x1="206" y1="188" x2="508" y2="188" marker-end="url(#landscape-arrow)"/>
+              <text class="d-label" x="226" y="180">yes</text>
+              <rect class="d-good" x="510" y="164" width="214" height="48" rx="6"/>
+              <text class="d-text" x="617" y="184" text-anchor="middle">Frontier hosted model</text>
+              <text class="d-label" x="617" y="202" text-anchor="middle">tune reasoning effort per route</text>
+              <line class="d-line-accent" x1="76" y1="212" x2="76" y2="238" marker-end="url(#landscape-arrow)"/>
+              <text class="d-label" x="84" y="230">no</text>
+              <rect class="d-signal" x="16" y="240" width="190" height="48" rx="6"/>
+              <text class="d-text" x="111" y="260" text-anchor="middle">High volume or need</text>
+              <text class="d-text" x="111" y="278" text-anchor="middle">sub-second responses?</text>
+              <line class="d-line-accent" x1="206" y1="256" x2="508" y2="256" marker-end="url(#landscape-arrow)"/>
+              <text class="d-label" x="226" y="248">yes</text>
+              <rect class="d-good" x="510" y="234" width="214" height="34" rx="6"/>
+              <text class="d-text" x="617" y="256" text-anchor="middle">Small, fast model</text>
+              <line class="d-line-accent" x1="206" y1="280" x2="508" y2="286" marker-end="url(#landscape-arrow)"/>
+              <text class="d-label" x="226" y="296">no</text>
+              <rect class="d-accent" x="510" y="272" width="214" height="26" rx="6"/>
+              <text class="d-text" x="617" y="290" text-anchor="middle">Mid-tier hosted model</text>
+            </svg>
+          </div>
+          <figcaption>A first cut, not a verdict. Each leaf is a class to shortlist; an eval on your data picks the actual model.</figcaption>
+        </figure>
+
+        <div class="widget" id="landscape-demo">
+          <div class="widget-head">
+            <span class="widget-title">Model-class helper</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="landscape-task">Task difficulty <select id="landscape-task">
+              <option value="simple">Simple (classify, extract, rewrite)</option>
+              <option value="moderate" selected>Moderate (support chat, summaries, RAG)</option>
+              <option value="hard">Hard (multi-step reasoning, agents, complex code)</option>
+            </select></label>
+            <label for="landscape-latency">Latency need <select id="landscape-latency">
+              <option value="realtime">Real-time (under ~1 s to first token)</option>
+              <option value="interactive" selected>Interactive (a few seconds is fine)</option>
+              <option value="batch">Offline batch</option>
+            </select></label>
+            <label for="landscape-volume">Volume <select id="landscape-volume">
+              <option value="low">Low (hundreds of requests a day)</option>
+              <option value="medium" selected>Medium (thousands to tens of thousands)</option>
+              <option value="high">High (millions)</option>
+            </select></label>
+            <label for="landscape-privacy">Data rules <select id="landscape-privacy">
+              <option value="any" selected>Hosted API is fine</option>
+              <option value="cloud">Must stay in our cloud account or region</option>
+              <option value="infra">Must run on our own servers</option>
+              <option value="device">Must run on the user's device</option>
+            </select></label>
+            <label for="landscape-context"><input type="checkbox" id="landscape-context"> Needs very long context (100k+ tokens)</label>
+            <label for="landscape-images"><input type="checkbox" id="landscape-images"> Needs image input</label>
+          </div>
+          <svg id="landscape-plot" viewBox="0 0 640 230" role="img" aria-label="Fit score for five model classes given your constraints, with the best fit highlighted."></svg>
+          <p class="readout" id="landscape-readout"></p>
+        </div>
+        <p>The helper scores five generic classes with simple rules of thumb. Use it to see how constraints interact, for example how a strict data rule overrides a need for top quality.</p>
+
+        <h3>The quality–cost frontier</h3>
+        <p>Plot candidates by cost per task and quality on your eval, and keep only those on the frontier: no other model is both cheaper and better. Cost per task matters more than price per token, because a stronger model that finishes in one attempt can beat a cheap one that needs retries.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 260" role="img" aria-label="Qualitative chart of quality against cost per task. Small local, small hosted, mid-tier, frontier and frontier with high reasoning effort lie on a rising, flattening frontier curve; a dominated model sits below the curve.">
+              <line class="d-line" x1="70" y1="220" x2="680" y2="220"/>
+              <line class="d-line" x1="70" y1="220" x2="70" y2="20"/>
+              <text class="d-label" x="375" y="250" text-anchor="middle">cost per completed task (log scale) →</text>
+              <text class="d-label" x="56" y="120" text-anchor="middle" transform="rotate(-90 56 120)">quality on your eval →</text>
+              <path class="d-line d-dash" d="M100 190 C200 150, 300 100, 420 72 S 600 46, 660 42"/>
+              <circle class="d-dot-muted" cx="110" cy="186" r="7"/><text class="d-label" x="122" y="200">small local</text>
+              <circle class="d-dot" cx="210" cy="148" r="7"/><text class="d-label" x="222" y="164">small hosted</text>
+              <circle class="d-dot" cx="340" cy="94" r="7"/><text class="d-label" x="352" y="110">mid-tier</text>
+              <circle class="d-dot" cx="480" cy="60" r="7"/><text class="d-label" x="492" y="76">frontier</text>
+              <circle class="d-dot" cx="640" cy="44" r="7"/><text class="d-label" x="636" y="30" text-anchor="end">frontier, high effort</text>
+              <circle class="d-dot-signal" cx="440" cy="150" r="7"/><text class="d-label" x="452" y="154">dominated: costs more,</text>
+              <text class="d-label" x="452" y="170">scores lower than mid-tier</text>
+              <text class="d-label" x="120" y="40">Pick the leftmost point</text>
+              <text class="d-label" x="120" y="56">that clears your quality bar.</text>
+              <line class="d-grid" x1="70" y1="104" x2="680" y2="104"/>
+              <text class="d-label d-text-good" x="676" y="98" text-anchor="end">your quality bar</text>
+            </svg>
+          </div>
+          <figcaption>Qualitative shape, no real prices. Here the mid-tier class is the cheapest that clears the bar; the frontier classes buy quality you may not need.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Class</th><th>Strengths</th><th>Watch out for</th></tr></thead>
+            <tbody>
+              <tr><td>Frontier hosted</td><td>best reasoning, coding, agents, long context</td><td>highest cost per token, slower, data leaves your infra</td></tr>
+              <tr><td>Mid-tier hosted</td><td>strong default for most product features</td><td>struggles on the hardest multi-step tasks</td></tr>
+              <tr><td>Small fast hosted</td><td>low latency and cost at high volume</td><td>weaker instruction following on complex prompts</td></tr>
+              <tr><td>Open-weight, self-hosted</td><td>data control, fine-tuning, fixed versions</td><td>you own GPUs, scaling, upgrades and safety filters</td></tr>
+              <tr><td>Small open-weight, local or on-device</td><td>offline, private, no per-token fee</td><td>limited quality, device memory and battery</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Let an eval decide</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 140" role="img" aria-label="Selection loop: shortlist classes, build an eval set from real examples, measure quality, latency and cost, pick the cheapest model that passes, and re-run when new models ship.">
+              <defs>
+                <marker id="landscape-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="10" y="30" width="120" height="50" rx="8"/><text class="d-text" x="70" y="52" text-anchor="middle">1 shortlist</text><text class="d-label" x="70" y="70" text-anchor="middle">2–3 classes</text>
+              <line class="d-line-accent" x1="130" y1="55" x2="152" y2="55" marker-end="url(#landscape-arrow2)"/>
+              <rect class="d-box" x="154" y="30" width="130" height="50" rx="8"/><text class="d-text" x="219" y="52" text-anchor="middle">2 eval set</text><text class="d-label" x="219" y="70" text-anchor="middle">50–200 real cases</text>
+              <line class="d-line-accent" x1="284" y1="55" x2="306" y2="55" marker-end="url(#landscape-arrow2)"/>
+              <rect class="d-accent" x="308" y="30" width="140" height="50" rx="8"/><text class="d-text" x="378" y="52" text-anchor="middle">3 measure</text><text class="d-label" x="378" y="70" text-anchor="middle">quality · p95 latency · $</text>
+              <line class="d-line-accent" x1="448" y1="55" x2="470" y2="55" marker-end="url(#landscape-arrow2)"/>
+              <rect class="d-good" x="472" y="30" width="120" height="50" rx="8"/><text class="d-text" x="532" y="52" text-anchor="middle">4 pick</text><text class="d-label" x="532" y="70" text-anchor="middle">cheapest that passes</text>
+              <line class="d-line-accent" x1="592" y1="55" x2="614" y2="55" marker-end="url(#landscape-arrow2)"/>
+              <rect class="d-box" x="616" y="30" width="96" height="50" rx="8"/><text class="d-text" x="664" y="52" text-anchor="middle">5 monitor</text><text class="d-label" x="664" y="70" text-anchor="middle">in production</text>
+              <path class="d-line-accent d-dash" d="M664 80 V112 H70 V82" marker-end="url(#landscape-arrow2)"/>
+              <text class="d-label" x="367" y="130" text-anchor="middle">re-run when a new model ships or your traffic changes</text>
+            </svg>
+          </div>
+          <figcaption>Keep the eval set and harness; re-testing a new model then takes minutes instead of a project.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import time, statistics
+
+def compare(models, cases, call_model, is_correct, price_per_call):
+    """models: list of model ids; cases: list of (prompt, expected).
+    call_model(model_id, prompt) -&gt; text is your own wrapper around the provider SDK."""
+    for m in models:
+        passed, latencies = 0, []
+        for prompt, expected in cases:
+            t0 = time.perf_counter()
+            out = call_model(m, prompt)
+            latencies.append(time.perf_counter() - t0)
+            passed += is_correct(out, expected)
+        p95 = statistics.quantiles(latencies, n=20)[18]
+        print(f"{m:24s} pass={passed / len(cases):.0%}  p95={p95:.2f}s  "
+              f"cost/1k calls=${1000 * price_per_call[m]:.2f}")
+
+<span class="c"># compare(["your-small-model-id", "your-mid-model-id"], cases, call_model, check, prices)</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Apply hard constraints (privacy, deployment, modality) first; they remove whole classes.</li>
+            <li>Choose the cheapest model that clears your quality bar on your own eval, measured per completed task.</li>
+            <li>Route by difficulty: a small model for easy requests and a stronger one for hard ones often beats any single choice.</li>
+            <li>Model rankings change fast; a reusable eval harness keeps your choice current.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Picking from a public leaderboard without testing on your own data.</li>
+            <li>Comparing price per token instead of cost per successful task, including retries and thinking tokens.</li>
+            <li>Self-hosting to save money at low volume, where idle GPUs usually cost more than API calls.</li>
+            <li>Hard-coding one model id everywhere, which makes switching or routing painful.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="landscape-1"><span>Turn a product's requirements into a shortlist of model classes, with reasons.</span></label></li>
+          <li><label><input type="checkbox" data-key="landscape-2"><span>Build a 50-case eval and compare two models on quality, p95 latency and cost per task.</span></label></li>
+          <li><label><input type="checkbox" data-key="landscape-3"><span>Explain when self-hosting an open-weight model beats a hosted API, and when it does not.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/models">Hugging Face model hub</a></li>
+          <li><span class="kind">Site</span><a href="https://lmarena.ai/">LMArena (crowd-sourced model comparisons)</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Tokenizer and sampler from scratch</h4><p>Train a byte-level BPE tokenizer on a small text corpus and compare its token counts with a production tokenizer. Then write greedy, temperature, top-k and top-p sampling over a model's logits and show how each changes the output.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>A tiny GPT that trains on your laptop</h4><p>Implement a decoder-only transformer in PyTorch (embeddings, causal multi-head attention, pre-norm blocks, weight tying) and train it on a few megabytes of text. Plot the loss, visualize one attention head, and generate samples at several temperatures.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Instruction-tune and compare</h4><p>Take a small open-weight base model, run supervised fine-tuning on an instruction dataset, then a preference-tuning step such as DPO. Build a 50-prompt eval and report how base, SFT and preference-tuned versions differ in format, helpfulness and refusals.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Explain, with a whiteboard sketch, every step from raw text to a sampled next token.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Compute scaled dot-product attention with a causal mask by hand for a 3-token example.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Estimate a dense model's parameter count and fp16 weight memory from its width, depth and vocabulary.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Describe what pretraining, SFT and preference tuning each change in a model's behavior.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Pick decoding settings for a task and justify them.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Recommend a model class for a product given latency, cost, quality and privacy constraints, and say how you would verify it.</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widgets for Area 05. One IIFE per widget. */
+var NS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs, text) {
+  var e = document.createElementNS(NS, tag);
+  for (var k in attrs) { if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]); }
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function clearEl(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+/* ---- 05.1 BPE merge stepper ---- */
+(function () {
+  var plot = document.getElementById("tokenization-plot");
+  if (!plot) return;
+  var input = document.getElementById("tokenization-corpus");
+  var countOut = document.getElementById("tokenization-count");
+  var readout = document.getElementById("tokenization-readout");
+  var words, order, splits, merges, nChars, baseVocab;
+  function reset() {
+    words = {}; order = []; merges = []; splits = {}; nChars = 0;
+    var base = {};
+    input.value.trim().split(/\s+/).forEach(function (w) {
+      if (!w) return;
+      w = w.slice(0, 14);
+      if (!(w in words)) { words[w] = 0; order.push(w); }
+      words[w]++;
+    });
+    order = order.slice(0, 8);
+    order.forEach(function (w) {
+      splits[w] = w.split("");
+      nChars += w.length * words[w];
+      splits[w].forEach(function (c) { base[c] = 1; });
+    });
+    baseVocab = Object.keys(base).length;
+    draw();
+  }
+  function pairCounts() {
+    var c = {}, first = {}, idx = 0;
+    order.forEach(function (w) {
+      var s = splits[w];
+      for (var i = 0; i + 1 < s.length; i++) {
+        var key = s[i] + "\u0000" + s[i + 1];
+        if (!(key in c)) { c[key] = 0; first[key] = idx++; }
+        c[key] += words[w];
+      }
+    });
+    var arr = Object.keys(c).map(function (k) { return { k: k, n: c[k], f: first[k] }; });
+    arr.sort(function (a, b) { return b.n - a.n || a.f - b.f; });
+    return arr;
+  }
+  function mergeOnce() {
+    var pc = pairCounts();
+    if (!pc.length) return false;
+    var ab = pc[0].k.split("\u0000"), a = ab[0], b = ab[1];
+    merges.push(a + "+" + b);
+    order.forEach(function (w) {
+      var s = splits[w], out = [], i = 0;
+      while (i < s.length) {
+        if (i + 1 < s.length && s[i] === a && s[i + 1] === b) { out.push(a + b); i += 2; }
+        else { out.push(s[i]); i++; }
+      }
+      splits[w] = out;
+    });
+    return true;
+  }
+  function draw() {
+    clearEl(plot);
+    var last = merges.length ? merges[merges.length - 1].replace("+", "") : null;
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 18 }, "WORDS AS CURRENT TOKENS"));
+    var total = 0;
+    order.forEach(function (w, r) {
+      var y = 30 + r * 30;
+      plot.appendChild(svgEl("text", { "class": "d-mono", x: 10, y: y + 17 }, "×" + words[w]));
+      var x = 44;
+      splits[w].forEach(function (t) {
+        var wdt = 12 + t.length * 8;
+        var cls = t === last ? "d-good" : (t.length > 1 ? "d-accent" : "d-box");
+        plot.appendChild(svgEl("rect", { "class": cls, x: x, y: y, width: wdt, height: 24, rx: 4 }));
+        plot.appendChild(svgEl("text", { "class": "d-mono", x: x + wdt / 2, y: y + 16, "text-anchor": "middle" }, t));
+        x += wdt + 4;
+      });
+      total += splits[w].length * words[w];
+    });
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 430, y: 18 }, "MOST FREQUENT PAIRS"));
+    var pc = pairCounts().slice(0, 7);
+    var maxN = pc.length ? pc[0].n : 1;
+    pc.forEach(function (p, r) {
+      var y = 30 + r * 30, ab = p.k.split("\u0000");
+      plot.appendChild(svgEl("text", { "class": "d-mono", x: 520, y: y + 17, "text-anchor": "end" }, ab[0] + " + " + ab[1]));
+      plot.appendChild(svgEl("rect", { "class": r === 0 ? "d-signal" : "d-fill", x: 528, y: y + 4, width: Math.max(4, 90 * p.n / maxN), height: 16, rx: 3 }));
+      plot.appendChild(svgEl("text", { "class": "d-label", x: 532 + 90 * p.n / maxN + 4, y: y + 17 }, String(p.n)));
+    });
+    if (pc.length) plot.appendChild(svgEl("text", { "class": "d-label d-text-signal", x: 430, y: 30 + pc.length * 30 + 14 }, "next merge: top pair"));
+    var list = merges.slice(-8).map(function (m, i) { return (merges.length - Math.min(8, merges.length) + i + 1) + ". " + m; }).join("   ");
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 292 }, merges.length ? "Merges learned: " + list : "No merges yet: every token is a single character."));
+    countOut.textContent = merges.length;
+    readout.textContent = "Vocabulary " + baseVocab + " characters + " + merges.length + " merges = " + (baseVocab + merges.length) +
+      " · corpus length " + total + " tokens (started at " + nChars + " characters)" + (pc.length ? "" : " · nothing left to merge");
+  }
+  document.getElementById("tokenization-step").addEventListener("click", function () { mergeOnce(); draw(); });
+  document.getElementById("tokenization-run").addEventListener("click", function () { for (var i = 0; i < 5; i++) { if (!mergeOnce()) break; } draw(); });
+  document.getElementById("tokenization-reset").addEventListener("click", reset);
+  input.addEventListener("change", reset);
+  reset();
+})();
+
+/* ---- 05.2 Sinusoidal positional encoding ---- */
+(function () {
+  var plot = document.getElementById("embeddings-plot");
+  if (!plot) return;
+  var pairIn = document.getElementById("embeddings-pair"), posIn = document.getElementById("embeddings-pos");
+  var pairOut = document.getElementById("embeddings-pair-out"), posOut = document.getElementById("embeddings-pos-out");
+  var readout = document.getElementById("embeddings-readout");
+  var D = 64, P = 64, x0 = 50, x1 = 620;
+  function pe(pos, dim) {
+    var i = Math.floor(dim / 2), ang = pos / Math.pow(10000, 2 * i / D);
+    return dim % 2 === 0 ? Math.sin(ang) : Math.cos(ang);
+  }
+  function xOf(pos) { return x0 + (x1 - x0) * pos / (P - 1); }
+  /* static heat map, built once */
+  var hm = svgEl("g", {});
+  var cw = (x1 - x0) / P, hy = 170, rh = 2.3;
+  for (var p = 0; p < P; p++) {
+    for (var d = 0; d < D; d++) {
+      var v = pe(p, d);
+      hm.appendChild(svgEl("rect", { "class": v >= 0 ? "d-dot" : "d-dot-signal", x: (x0 + p * cw).toFixed(1), y: (hy + d * rh).toFixed(1),
+        width: (cw + 0.3).toFixed(1), height: rh + 0.2, "fill-opacity": Math.abs(v).toFixed(2) }));
+    }
+  }
+  var dyn = svgEl("g", {});
+  plot.appendChild(svgEl("text", { "class": "d-label", x: x0, y: 16 }, "VALUE ACROSS POSITIONS FOR THE CHOSEN PAIR"));
+  plot.appendChild(svgEl("text", { "class": "d-label", x: x0, y: 162 }, "FULL ENCODING: POSITION → (columns), DIMENSION ↓ (rows 0–63); blue +, orange −"));
+  plot.appendChild(hm);
+  plot.appendChild(dyn);
+  function draw() {
+    var i = +pairIn.value, pos = +posIn.value;
+    pairOut.textContent = i; posOut.textContent = pos;
+    clearEl(dyn);
+    var cy = 85, amp = 52;
+    dyn.appendChild(svgEl("line", { "class": "d-grid", x1: x0, y1: cy, x2: x1, y2: cy }));
+    var ds = "", dc = "";
+    for (var k = 0; k <= 252; k++) {
+      var pp = (P - 1) * k / 252, xx = xOf(pp).toFixed(1);
+      ds += (k ? "L" : "M") + xx + " " + (cy - amp * pe(pp, 2 * i)).toFixed(1);
+      dc += (k ? "L" : "M") + xx + " " + (cy - amp * pe(pp, 2 * i + 1)).toFixed(1);
+    }
+    dyn.appendChild(svgEl("path", { "class": "d-line-accent", d: ds }));
+    dyn.appendChild(svgEl("path", { "class": "d-line-signal", d: dc }));
+    var xp = xOf(pos), s = pe(pos, 2 * i), c = pe(pos, 2 * i + 1);
+    dyn.appendChild(svgEl("line", { "class": "d-line d-dash", x1: xp, y1: 26, x2: xp, y2: 150 }));
+    dyn.appendChild(svgEl("circle", { "class": "d-dot", cx: xp, cy: cy - amp * s, r: 5 }));
+    dyn.appendChild(svgEl("circle", { "class": "d-dot-signal", cx: xp, cy: cy - amp * c, r: 5 }));
+    dyn.appendChild(svgEl("text", { "class": "d-label d-text-accent", x: x1, y: 30, "text-anchor": "end" }, "sin (dim " + (2 * i) + ")"));
+    dyn.appendChild(svgEl("text", { "class": "d-label d-text-signal", x: x1, y: 46, "text-anchor": "end" }, "cos (dim " + (2 * i + 1) + ")"));
+    dyn.appendChild(svgEl("text", { "class": "d-label", x: x0 - 6, y: cy - amp + 4, "text-anchor": "end" }, "+1"));
+    dyn.appendChild(svgEl("text", { "class": "d-label", x: x0 - 6, y: cy + amp + 4, "text-anchor": "end" }, "−1"));
+    dyn.appendChild(svgEl("rect", { "class": "d-line", x: (x0 + pos * cw).toFixed(1), y: hy - 2, width: cw.toFixed(1), height: D * rh + 4 }));
+    dyn.appendChild(svgEl("rect", { "class": "d-line", x: x0 - 2, y: (hy + 2 * i * rh - 1).toFixed(1), width: x1 - x0 + 4, height: (2 * rh + 2).toFixed(1) }));
+    var wl = 2 * Math.PI * Math.pow(10000, 2 * i / D);
+    readout.textContent = "Pair " + i + " repeats every " + (wl < 1000 ? wl.toFixed(1) : Math.round(wl).toLocaleString()) +
+      " positions · at position " + pos + ": [sin, cos] = [" + s.toFixed(3) + ", " + c.toFixed(3) + "]" +
+      (wl > 400 ? " · this slow pair barely changes across 64 positions" : "");
+  }
+  pairIn.addEventListener("input", draw);
+  posIn.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---- 05.3 Attention heat map ---- */
+(function () {
+  var plot = document.getElementById("attention-plot");
+  if (!plot) return;
+  var T = ["The", "animal", "didn't", "cross", "the", "street", "because", "it", "was", "tired"];
+  var qSel = document.getElementById("attention-query"), headSel = document.getElementById("attention-head");
+  var causalIn = document.getElementById("attention-causal"), sharpIn = document.getElementById("attention-sharp");
+  var sharpOut = document.getElementById("attention-sharp-out"), readout = document.getElementById("attention-readout");
+  T.forEach(function (t, i) {
+    var o = document.createElement("option"); o.value = i; o.textContent = i + " · " + t;
+    if (i === 7) o.selected = true;
+    qSel.appendChild(o);
+  });
+  function rawScores(head) {
+    var n = T.length, S = [];
+    for (var i = 0; i < n; i++) {
+      S.push([]);
+      for (var j = 0; j < n; j++) {
+        var s = 0;
+        if (head === "prev") { s = j === i - 1 ? 4 : (j === i ? 1.5 : 0); if (i === 0 && j === 0) s = 4; }
+        else if (head === "sink") { s = j === 0 ? 3 : (j === i ? 1 : 0.2); }
+        else {
+          s = j === i ? 0.5 : 0;
+          if (j === 1 || j === 5) s += 1;
+          if (i === 7 && j === 1) s += 4;
+          if (i === 7 && j === 5) s += 2.5;
+          if (i === 9 && j === 1) s += 3;
+          if (i === 9 && j === 7) s += 2;
+          if (i === 8 && j === 7) s += 2.5;
+          if ((i === 0 && j === 1) || (i === 4 && j === 5)) s += 3;
+          if (i === 3 && (j === 1 || j === 5)) s += 1.5;
+          if (i === 2 && j === 1) s += 1.5;
+        }
+        S[i].push(s);
+      }
+    }
+    return S;
+  }
+  function weights() {
+    var S = rawScores(headSel.value), causal = causalIn.checked, sh = +sharpIn.value, W = [];
+    for (var i = 0; i < T.length; i++) {
+      var row = [], mx = -Infinity, sum = 0, j;
+      for (j = 0; j < T.length; j++) { var ok = !causal || j <= i; row.push(ok ? sh * S[i][j] : null); if (ok) mx = Math.max(mx, sh * S[i][j]); }
+      for (j = 0; j < T.length; j++) { row[j] = row[j] === null ? null : Math.exp(row[j] - mx); if (row[j] !== null) sum += row[j]; }
+      for (j = 0; j < T.length; j++) { if (row[j] !== null) row[j] /= sum; }
+      W.push(row);
+    }
+    return W;
+  }
+  var gx = 84, gy = 96, c = 22;
+  function draw() {
+    sharpOut.textContent = (+sharpIn.value).toFixed(1);
+    var q = +qSel.value, W = weights();
+    clearEl(plot);
+    plot.appendChild(svgEl("text", { "class": "d-label", x: gx, y: 14 }, "keys (what is attended to) →"));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 4, y: gy - 6 }, "queries ↓"));
+    T.forEach(function (t, j) {
+      var tx = gx + j * c + c / 2 + 4;
+      plot.appendChild(svgEl("text", { "class": "d-label", x: tx, y: gy - 6, transform: "rotate(-55 " + tx + " " + (gy - 6) + ")" }, t));
+    });
+    T.forEach(function (t, i) {
+      var lab = svgEl("text", { "class": i === q ? "d-label d-text-accent" : "d-label", x: gx - 6, y: gy + i * c + 15, "text-anchor": "end", style: "cursor:pointer" }, t);
+      lab.addEventListener("click", function () { qSel.value = i; draw(); });
+      plot.appendChild(lab);
+      for (var j = 0; j < T.length; j++) {
+        var x = gx + j * c, y = gy + i * c, w = W[i][j];
+        plot.appendChild(svgEl("rect", { "class": "d-fill", x: x, y: y, width: c - 2, height: c - 2 }));
+        if (w !== null) {
+          var r = svgEl("rect", { "class": "d-dot", x: x, y: y, width: c - 2, height: c - 2, "fill-opacity": Math.max(0.04, w).toFixed(3), style: "cursor:pointer" });
+          r.addEventListener("click", (function (ii) { return function () { qSel.value = ii; draw(); }; })(i));
+          plot.appendChild(r);
+        } else {
+          plot.appendChild(svgEl("text", { "class": "d-label", x: x + c / 2 - 1, y: y + 15, "text-anchor": "middle" }, "·"));
+        }
+      }
+    });
+    plot.appendChild(svgEl("rect", { "class": "d-line-accent", x: gx - 2, y: gy + q * c - 2, width: T.length * c + 2, height: c + 2, rx: 3 }));
+    var bx = 430, bw = 170;
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 330, y: 14 }, "weights for query “" + T[q] + "”"));
+    var ranked = [];
+    T.forEach(function (t, j) {
+      var y = gy + j * c, w = W[q][j];
+      plot.appendChild(svgEl("text", { "class": "d-label", x: bx - 8, y: y + 15, "text-anchor": "end" }, t));
+      if (w === null) {
+        plot.appendChild(svgEl("text", { "class": "d-label d-text-signal", x: bx, y: y + 15 }, "masked (future)"));
+      } else {
+        plot.appendChild(svgEl("rect", { "class": "d-accent", x: bx, y: y + 3, width: Math.max(1, bw * w), height: c - 8, rx: 2 }));
+        plot.appendChild(svgEl("text", { "class": "d-mono", x: bx + bw * w + 6, y: y + 15 }, w.toFixed(2)));
+        ranked.push([t, w]);
+      }
+    });
+    plot.appendChild(svgEl("text", { "class": "d-label", x: gx, y: gy + T.length * c + 22 }, "Click a row to choose the query. Dots mark masked (future) positions."));
+    ranked.sort(function (a, b) { return b[1] - a[1]; });
+    readout.textContent = "Query “" + T[q] + "” attends most to: " + ranked.slice(0, 3).map(function (r) { return r[0] + " " + r[1].toFixed(2); }).join(", ") +
+      " · sees " + ranked.length + " of " + T.length + " tokens";
+  }
+  [qSel, headSel, causalIn].forEach(function (el) { el.addEventListener("change", draw); });
+  sharpIn.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---- 05.4 Parameter and memory calculator ---- */
+(function () {
+  var plot = document.getElementById("transformer-block-plot");
+  if (!plot) return;
+  function $(id) { return document.getElementById("transformer-block-" + id); }
+  var preset = $("preset"), dIn = $("d"), LIn = $("L"), VIn = $("V"), mIn = $("mlp"), gIn = $("gated"), kvIn = $("kv"), tieIn = $("tie");
+  var readout = $("readout");
+  function fmt(x) { return x >= 1e9 ? (x / 1e9).toFixed(2) + "B" : (x / 1e6).toFixed(1) + "M"; }
+  function applyPreset() {
+    var v = preset.value.split(",");
+    dIn.value = v[0]; LIn.value = v[1]; VIn.value = v[2]; mIn.value = v[3]; kvIn.value = v[4];
+    tieIn.checked = v[5] === "1"; gIn.checked = v[6] === "1";
+    draw();
+  }
+  function draw() {
+    var d = +dIn.value, L = +LIn.value, V = Math.max(1000, +VIn.value || 32000), m = +mIn.value, kv = +kvIn.value;
+    $("d-out").textContent = d; $("L-out").textContent = L; $("mlp-out").textContent = m.toFixed(2);
+    var hidden = Math.round(m * d);
+    var attn = L * (2 * d * d + 2 * d * d * kv);
+    var mlp = L * (gIn.checked ? 3 : 2) * d * hidden;
+    var emb = V * d * (tieIn.checked ? 1 : 2);
+    var total = attn + mlp + emb;
+    clearEl(plot);
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 16 }, "PARAMETERS BY COMPONENT"));
+    var x = 10, W = 620, parts = [["MLP", mlp, "d-good"], ["attention", attn, "d-accent"], ["embeddings", emb, "d-signal"]];
+    parts.forEach(function (p) {
+      var w = W * p[1] / total;
+      plot.appendChild(svgEl("rect", { "class": p[2], x: x, y: 24, width: Math.max(1, w), height: 28 }));
+      if (w > 70) plot.appendChild(svgEl("text", { "class": "d-label", x: x + 6, y: 43 }, p[0] + " " + Math.round(100 * p[1] / total) + "%"));
+      x += w;
+    });
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 84 }, "WEIGHT MEMORY (weights only, no KV cache)"));
+    var precs = [["fp32", 4], ["fp16 / bf16", 2], ["int8", 1], ["int4", 0.5]];
+    precs.forEach(function (p, i) {
+      var gb = total * p[1] / 1e9, y = 94 + i * 25, w = 440 * p[1] / 4;
+      plot.appendChild(svgEl("text", { "class": "d-label", x: 90, y: y + 14, "text-anchor": "end" }, p[0]));
+      plot.appendChild(svgEl("rect", { "class": i === 1 ? "d-accent" : "d-fill", x: 98, y: y + 2, width: w, height: 16, rx: 3 }));
+      plot.appendChild(svgEl("text", { "class": "d-mono", x: 104 + w, y: y + 15 }, (gb < 10 ? gb.toFixed(2) : gb.toFixed(0)) + " GB"));
+    });
+    readout.textContent = "Total ≈ " + fmt(total) + " · MLP " + fmt(mlp) + " · attention " + fmt(attn) + " · embeddings " + fmt(emb) +
+      " · rule of thumb 12·L·d² = " + fmt(12 * L * d * d) + " · MLP hidden size " + hidden;
+  }
+  preset.addEventListener("change", applyPreset);
+  [dIn, LIn, mIn].forEach(function (el) { el.addEventListener("input", draw); });
+  [VIn, gIn, kvIn, tieIn].forEach(function (el) { el.addEventListener("change", draw); });
+  applyPreset();
+})();
+
+/* ---- 05.5 Attention masks by family ---- */
+(function () {
+  var plot = document.getElementById("model-families-plot");
+  if (!plot) return;
+  var archIn = document.getElementById("model-families-arch"), qIn = document.getElementById("model-families-q");
+  var qOut = document.getElementById("model-families-q-out"), readout = document.getElementById("model-families-readout");
+  var S = ["the", "cat", "sat", "on", "the", "warm", "mat"];
+  var SRC = ["the", "cat", "sat", "on", "mat"], TGT = ["le", "chat", "s'assit"];
+  var c = 26;
+  function grid(x, y, rows, cols, allowed, sel, title) {
+    plot.appendChild(svgEl("text", { "class": "d-title", x: x, y: y - 44 }, title));
+    cols.forEach(function (t, j) {
+      var tx = x + j * c + c / 2 + 3;
+      plot.appendChild(svgEl("text", { "class": "d-label", x: tx, y: y - 4, transform: "rotate(-50 " + tx + " " + (y - 4) + ")" }, t));
+    });
+    rows.forEach(function (t, i) {
+      plot.appendChild(svgEl("text", { "class": i === sel ? "d-label d-text-accent" : "d-label", x: x - 5, y: y + i * c + 17, "text-anchor": "end" }, t));
+      cols.forEach(function (u, j) {
+        var ok = allowed(i, j), hot = ok && i === sel;
+        plot.appendChild(svgEl("rect", { "class": hot ? "d-dot" : (ok ? "d-accent" : "d-fill"), x: x + j * c, y: y + i * c, width: c - 2, height: c - 2, rx: 2 }));
+      });
+    });
+    if (sel !== null) plot.appendChild(svgEl("rect", { "class": "d-line", x: x - 2, y: y + sel * c - 2, width: cols.length * c + 2, height: c + 2, rx: 3 }));
+  }
+  function all() { return true; }
+  function causal(i, j) { return j <= i; }
+  function draw() {
+    var arch = archIn.value;
+    qIn.max = arch === "encdec" ? TGT.length - 1 : S.length - 1;
+    if (+qIn.value > +qIn.max) qIn.value = qIn.max;
+    var q = +qIn.value;
+    qOut.textContent = q;
+    clearEl(plot);
+    var seen;
+    if (arch === "enc") {
+      grid(120, 80, S, S, all, q, "Encoder self-attention");
+      readout.textContent = "“" + S[q] + "” (position " + q + ") attends to all " + S.length + " tokens, left and right.";
+    } else if (arch === "dec") {
+      grid(120, 80, S, S, causal, q, "Decoder self-attention (causal)");
+      seen = S.slice(0, q + 1);
+      readout.textContent = "“" + S[q] + "” (position " + q + ") attends to " + seen.join(", ") + " (" + seen.length + " of " + S.length + "). The future is masked.";
+    } else {
+      grid(60, 80, SRC, SRC, all, null, "Encoder self");
+      grid(290, 80, TGT, TGT, causal, q, "Decoder self");
+      grid(440, 80, TGT, SRC, all, q, "Cross: decoder → encoder");
+      seen = TGT.slice(0, q + 1);
+      readout.textContent = "Decoder token “" + TGT[q] + "” sees " + seen.join(", ") + " in its own output (causal) and all " + SRC.length +
+        " source tokens through cross-attention. Encoder tokens see the whole source.";
+    }
+    plot.appendChild(svgEl("rect", { "class": "d-dot", x: 120, y: 280, width: 14, height: 14 }));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 140, y: 292 }, "selected query"));
+    plot.appendChild(svgEl("rect", { "class": "d-accent", x: 250, y: 280, width: 14, height: 14 }));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 270, y: 292 }, "allowed"));
+    plot.appendChild(svgEl("rect", { "class": "d-fill", x: 350, y: 280, width: 14, height: 14 }));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 370, y: 292 }, "masked"));
+  }
+  archIn.addEventListener("change", draw);
+  qIn.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---- 05.6 Pretraining compute estimator ---- */
+(function () {
+  var plot = document.getElementById("training-pipeline-plot");
+  if (!plot) return;
+  var nIn = document.getElementById("training-pipeline-n"), dIn = document.getElementById("training-pipeline-d");
+  var gIn = document.getElementById("training-pipeline-gpus"), tIn = document.getElementById("training-pipeline-tflops");
+  var nOut = document.getElementById("training-pipeline-n-out"), dOut = document.getElementById("training-pipeline-d-out");
+  var readout = document.getElementById("training-pipeline-readout");
+  function human(x) {
+    if (x >= 1e12) return (x / 1e12).toFixed(1) + "T";
+    if (x >= 1e9) return (x / 1e9).toFixed(1) + "B";
+    return (x / 1e6).toFixed(0) + "M";
+  }
+  function sci(x) { var e = Math.floor(Math.log10(x)); return (x / Math.pow(10, e)).toFixed(1) + " × 10^" + e; }
+  function draw() {
+    var N = Math.pow(10, +nIn.value) * 1e9, D = Math.pow(10, +dIn.value);
+    var gpus = Math.max(1, +gIn.value || 1), tf = Math.max(1, +tIn.value || 1);
+    nOut.textContent = human(N); dOut.textContent = human(D);
+    var flops = 6 * N * D, secs = flops / (gpus * tf * 1e12), days = secs / 86400, gpuHours = secs * gpus / 3600;
+    var ratio = D / N;
+    clearEl(plot);
+    var x0 = 40, x1 = 600, lx = function (r) { var l = Math.min(4, Math.max(0, Math.log10(r))); return x0 + (x1 - x0) * l / 4; };
+    plot.appendChild(svgEl("text", { "class": "d-label", x: x0, y: 16 }, "TRAINING TOKENS PER PARAMETER (log scale)"));
+    plot.appendChild(svgEl("line", { "class": "d-line", x1: x0, y1: 60, x2: x1, y2: 60 }));
+    [1, 10, 100, 1000, 10000].forEach(function (t) {
+      plot.appendChild(svgEl("line", { "class": "d-grid", x1: lx(t), y1: 54, x2: lx(t), y2: 66 }));
+      plot.appendChild(svgEl("text", { "class": "d-label", x: lx(t), y: 82, "text-anchor": "middle" }, String(t)));
+    });
+    plot.appendChild(svgEl("line", { "class": "d-line-signal d-dash", x1: lx(20), y1: 30, x2: lx(20), y2: 66 }));
+    plot.appendChild(svgEl("text", { "class": "d-label d-text-signal", x: lx(20) + 5, y: 36 }, "≈ 20: compute-optimal"));
+    plot.appendChild(svgEl("circle", { "class": "d-dot", cx: lx(ratio), cy: 60, r: 7 }));
+    plot.appendChild(svgEl("text", { "class": "d-mono d-text-accent", x: lx(ratio), y: 50, "text-anchor": "middle" }, Math.round(ratio) + ":1"));
+    plot.appendChild(svgEl("text", { "class": "d-title", x: x0, y: 116 }, "6 × N × D = " + sci(flops) + " FLOPs"));
+    plot.appendChild(svgEl("text", { "class": "d-text", x: x0, y: 140 }, "≈ " + Math.round(gpuHours).toLocaleString() + " GPU-hours · " +
+      (days < 1 ? (days * 24).toFixed(1) + " hours" : days.toFixed(1) + " days") + " on " + gpus.toLocaleString() + " GPUs"));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: x0, y: 162 }, "Assumes the effective throughput you entered; real runs also lose time to failures and restarts."));
+    var note = ratio < 10 ? "under-trained for its size: a smaller model on the same data would do better per FLOP"
+      : ratio < 40 ? "close to compute-optimal" : "over-trained on purpose: more training compute, but a smaller model that is cheaper to serve";
+    readout.textContent = human(N) + " parameters on " + human(D) + " tokens → " + Math.round(ratio) + " tokens/param, " + note +
+      ". Chinchilla-optimal data for this size ≈ " + human(20 * N) + " tokens.";
+  }
+  [nIn, dIn].forEach(function (el) { el.addEventListener("input", draw); });
+  [gIn, tIn].forEach(function (el) { el.addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---- 05.7 Temperature, top-k, top-p ---- */
+(function () {
+  var plot = document.getElementById("decoding-plot");
+  if (!plot) return;
+  var V = [["sunny", 3.2], ["cloudy", 2.6], ["warm", 2.3], ["nice", 2.2], ["cold", 1.8], ["rainy", 1.6],
+           ["beautiful", 1.2], ["perfect", 0.9], ["humid", 0.5], ["windy", 0.3], ["great", 0.1], ["purple", -2.0]];
+  var tIn = document.getElementById("decoding-temp"), kIn = document.getElementById("decoding-topk"), pIn = document.getElementById("decoding-topp");
+  var tOut = document.getElementById("decoding-temp-out"), kOut = document.getElementById("decoding-topk-out"), pOut = document.getElementById("decoding-topp-out");
+  var readout = document.getElementById("decoding-readout");
+  var counts = null;
+  function softmax(z) { var m = Math.max.apply(null, z), e = z.map(function (v) { return Math.exp(v - m); }), s = e.reduce(function (a, b) { return a + b; }, 0); return e.map(function (v) { return v / s; }); }
+  function dist() {
+    var T = +tIn.value, k = +kIn.value, p = +pIn.value;
+    var base = softmax(V.map(function (v) { return v[1]; }));
+    var pt = softmax(V.map(function (v) { return v[1] / T; }));
+    var cum = 0, keep = pt.map(function (q, i) { var ok = i < k && cum < p - 1e-9; cum += q; return ok; });
+    var s = 0; pt.forEach(function (q, i) { if (keep[i]) s += q; });
+    var fin = pt.map(function (q, i) { return keep[i] ? q / s : 0; });
+    return { base: base, fin: fin, keep: keep };
+  }
+  function draw() {
+    tOut.textContent = (+tIn.value).toFixed(2); kOut.textContent = kIn.value; pOut.textContent = (+pIn.value).toFixed(2);
+    var r = dist();
+    clearEl(plot);
+    var x0 = 40, bw = 48, h = 180, yb = 236;
+    var mx = Math.max(0.4, Math.max.apply(null, r.fin), Math.max.apply(null, r.base));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: x0, y: 16 }, "“The weather today is ___”  ·  outline = original (T = 1), fill = after your settings"));
+    plot.appendChild(svgEl("line", { "class": "d-line", x1: x0 - 4, y1: yb, x2: x0 + V.length * bw, y2: yb }));
+    V.forEach(function (v, i) {
+      var x = x0 + i * bw + 8, w = bw - 16;
+      var hb = h * r.base[i] / mx, hf = h * r.fin[i] / mx;
+      if (r.keep[i]) plot.appendChild(svgEl("rect", { "class": "d-dot", x: x, y: yb - hf, width: w, height: Math.max(0, hf), rx: 2 }));
+      else plot.appendChild(svgEl("rect", { "class": "d-fill", x: x, y: yb - 6, width: w, height: 6 }));
+      plot.appendChild(svgEl("rect", { "class": "d-line", x: x, y: yb - hb, width: w, height: hb, rx: 2 }));
+      var val = r.keep[i] ? r.fin[i] : 0;
+      plot.appendChild(svgEl("text", { "class": "d-label", x: x + w / 2, y: yb - Math.max(hf, hb) - 5, "text-anchor": "middle" }, r.keep[i] ? (val < 0.005 ? "<.01" : val.toFixed(2)) : "cut"));
+      var tx = x + w / 2;
+      plot.appendChild(svgEl("text", { "class": r.keep[i] ? "d-label" : "d-label d-text-signal", x: tx, y: yb + 14, transform: "rotate(-35 " + tx + " " + (yb + 14) + ")", "text-anchor": "end" }, v[0]));
+      if (counts && counts[i]) plot.appendChild(svgEl("text", { "class": "d-mono d-text-good", x: tx, y: yb - Math.max(hf, hb) - 20, "text-anchor": "middle" }, "×" + counts[i]));
+    });
+    var nk = r.keep.filter(Boolean).length, H = 0;
+    r.fin.forEach(function (q) { if (q > 0) H -= q * Math.log2(q); });
+    readout.textContent = "Kept " + nk + " of " + V.length + " tokens · entropy " + H.toFixed(2) + " bits · top token “" + V[0][0] + "” " + r.fin[0].toFixed(2) +
+      (counts ? " · green ×n = how often each token was drawn in 20 samples" : "");
+  }
+  function sampleN() {
+    var r = dist(); counts = V.map(function () { return 0; });
+    for (var n = 0; n < 20; n++) {
+      var u = Math.random(), acc = 0;
+      for (var i = 0; i < V.length; i++) { acc += r.fin[i]; if (u <= acc || i === V.length - 1) { if (r.fin[i] > 0) { counts[i]++; break; } } }
+    }
+    draw();
+  }
+  [tIn, kIn, pIn].forEach(function (el) { el.addEventListener("input", function () { counts = null; draw(); }); });
+  document.getElementById("decoding-sample").addEventListener("click", sampleN);
+  draw();
+})();
+
+/* ---- 05.8 MoE routing ---- */
+(function () {
+  var plot = document.getElementById("frontier-plot");
+  if (!plot) return;
+  function $(id) { return document.getElementById("frontier-" + id); }
+  var eIn = $("e"), kIn = $("k"), xIn = $("x"), sIn = $("s"), readout = $("readout");
+  var TOK = ["The", "cat", "sat", "on", "42", "+", "7", "="];
+  var seed = 7;
+  function rand() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+  var noise = [];
+  function rollNoise() { noise = TOK.map(function () { var r = []; for (var j = 0; j < 64; j++) r.push(rand()); return r; }); }
+  function draw() {
+    var E = +eIn.value, k = Math.min(+kIn.value, E), xb = +xIn.value, sb = +sIn.value;
+    $("e-out").textContent = E; $("k-out").textContent = k; $("x-out").textContent = xb.toFixed(1); $("s-out").textContent = sb.toFixed(1);
+    clearEl(plot);
+    var cols = Math.min(E, 8), rows = Math.ceil(E / 8), bw = 30, bh = Math.min(24, Math.floor(200 / rows) - 4), gx = 330, gy = 26;
+    var load = []; for (var e = 0; e < E; e++) load.push(0);
+    var lines = svgEl("g", {});
+    plot.appendChild(lines);
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 16 }, "TOKENS"));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: gx, y: 16 }, "EXPERTS (number = tokens routed here)"));
+    TOK.forEach(function (t, i) {
+      var y = 26 + i * 26;
+      plot.appendChild(svgEl("rect", { "class": "d-box", x: 10, y: y, width: 60, height: 20, rx: 4 }));
+      plot.appendChild(svgEl("text", { "class": "d-mono", x: 40, y: y + 14, "text-anchor": "middle" }, t));
+      /* tokens of a similar kind share a preference so routing looks structured */
+      var kind = /[0-9+=]/.test(t) ? 1 : 0, sc = [];
+      for (var e2 = 0; e2 < E; e2++) sc.push([e2, noise[i][e2] + (e2 % 3 === kind ? 0.5 : 0)]);
+      sc.sort(function (a, b) { return b[1] - a[1]; });
+      sc.slice(0, k).forEach(function (pair, rank) {
+        var ex = pair[0]; load[ex]++;
+        var cx = gx + (ex % 8) * (bw + 6), cy = gy + Math.floor(ex / 8) * (bh + 4) + bh / 2;
+        lines.appendChild(svgEl("line", { "class": rank === 0 ? "d-line-accent" : "d-line", x1: 70, y1: y + 10, x2: cx, y2: cy, "stroke-opacity": 0.7 }));
+      });
+    });
+    for (var e3 = 0; e3 < E; e3++) {
+      var bx = gx + (e3 % 8) * (bw + 6), by = gy + Math.floor(e3 / 8) * (bh + 4);
+      plot.appendChild(svgEl("rect", { "class": load[e3] ? "d-accent" : "d-fill", x: bx, y: by, width: bw, height: bh, rx: 3 }));
+      if (bh >= 14) plot.appendChild(svgEl("text", { "class": "d-label", x: bx + bw / 2, y: by + bh / 2 + 4, "text-anchor": "middle" }, load[e3] ? String(load[e3]) : "E" + (e3 + 1)));
+    }
+    var total = sb + E * xb, active = sb + k * xb, mx = total, W = 470;
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 254 }, "total"));
+    plot.appendChild(svgEl("rect", { "class": "d-signal", x: 60, y: 242, width: Math.max(2, W * total / mx), height: 18, rx: 3 }));
+    plot.appendChild(svgEl("text", { "class": "d-mono", x: 66 + W * total / mx, y: 256 }, total.toFixed(1) + "B"));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 286 }, "active"));
+    plot.appendChild(svgEl("rect", { "class": "d-good", x: 60, y: 274, width: Math.max(2, W * active / mx), height: 18, rx: 3 }));
+    plot.appendChild(svgEl("text", { "class": "d-mono", x: 66 + W * active / mx, y: 288 }, active.toFixed(1) + "B"));
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 318 }, "Memory follows the orange bar (all experts loaded); per-token compute follows the green bar."));
+    var idle = load.filter(function (v) { return v === 0; }).length;
+    readout.textContent = "Total " + total.toFixed(1) + "B params ≈ " + Math.round(total * 2) + " GB in fp16 · active per token " + active.toFixed(1) + "B (" +
+      Math.round(100 * active / total) + "% of total) · " + idle + " of " + E + " experts unused by these 8 tokens";
+  }
+  [eIn, kIn, xIn, sIn].forEach(function (el) { el.addEventListener("input", draw); });
+  $("roll").addEventListener("click", function () { rollNoise(); draw(); });
+  rollNoise();
+  draw();
+})();
+
+/* ---- 05.9 Model-class helper ---- */
+(function () {
+  var plot = document.getElementById("landscape-plot");
+  if (!plot) return;
+  function $(id) { return document.getElementById("landscape-" + id); }
+  var readout = $("readout");
+  var C = [
+    { id: "A", name: "Frontier hosted model" },
+    { id: "B", name: "Mid-tier hosted model" },
+    { id: "C", name: "Small, fast hosted model" },
+    { id: "D", name: "Open-weight model, self-hosted" },
+    { id: "E", name: "Small open-weight, local / on-device" }
+  ];
+  function score() {
+    var s = { A: 0, B: 0, C: 0, D: 0, E: 0 }, out = {}, why = [];
+    var task = $("task").value, lat = $("latency").value, vol = $("volume").value, priv = $("privacy").value;
+    function add(o) { for (var key in o) { if (o.hasOwnProperty(key)) s[key] += o[key]; } }
+    if (task === "simple") { add({ C: 3, E: 2, B: 1, D: 1 }); why.push("simple task: small models are usually enough"); }
+    if (task === "moderate") { add({ B: 3, A: 1, D: 2, C: 1 }); why.push("moderate task: mid-tier models are the usual sweet spot"); }
+    if (task === "hard") { add({ A: 4, B: 1, D: 1, E: -2 }); why.push("hard reasoning: frontier models lead clearly"); }
+    if (lat === "realtime") { add({ C: 3, E: 2, B: 1, A: -1 }); why.push("tight latency favors small, fast models"); }
+    if (lat === "interactive") { add({ A: 1, B: 1 }); }
+    if (lat === "batch") { add({ A: 1, D: 1 }); why.push("batch work can use slower models and batch discounts"); }
+    if (vol === "high") { add({ C: 2, E: 2, D: 1, A: -2 }); why.push("high volume multiplies every cent per request"); }
+    if (vol === "medium") { add({ B: 1 }); }
+    if (vol === "low") { add({ A: 1, D: -2 }); why.push("low volume rarely justifies running your own GPUs"); }
+    if (priv === "cloud") { add({ D: 1 }); why.push("many hosted models are offered inside major cloud accounts and regions"); }
+    if ($("context").checked) { add({ A: 1, B: 1, D: -1, E: -2 }); why.push("very long context is strongest on hosted models"); }
+    if ($("images").checked) { add({ E: -1 }); why.push("image input narrows the small-model options"); }
+    C.forEach(function (c) { out[c.id] = { s: s[c.id], out: false }; });
+    if (priv === "infra") { out.A.out = out.B.out = out.C.out = true; why.unshift("own servers only: hosted APIs are ruled out"); }
+    if (priv === "device") { out.A.out = out.B.out = out.C.out = out.D.out = true; why.unshift("on-device: only small local models fit"); }
+    return { r: out, why: why };
+  }
+  function draw() {
+    var res = score(), r = res.r, best = null, mn = Infinity, mx = -Infinity;
+    C.forEach(function (c) { if (!r[c.id].out) { mn = Math.min(mn, r[c.id].s); mx = Math.max(mx, r[c.id].s); if (!best || r[c.id].s > r[best.id].s) best = c; } });
+    clearEl(plot);
+    plot.appendChild(svgEl("text", { "class": "d-label", x: 10, y: 16 }, "FIT FOR YOUR CONSTRAINTS (rules of thumb, relative)"));
+    C.forEach(function (c, i) {
+      var y = 30 + i * 38, it = r[c.id];
+      plot.appendChild(svgEl("text", { "class": c === best ? "d-text d-text-good" : "d-text", x: 250, y: y + 19, "text-anchor": "end" }, c.name));
+      if (it.out) {
+        plot.appendChild(svgEl("rect", { "class": "d-fill", x: 260, y: y + 4, width: 360, height: 22, rx: 4 }));
+        plot.appendChild(svgEl("text", { "class": "d-label d-text-signal", x: 270, y: y + 20 }, "ruled out by data rules"));
+      } else {
+        var w = mx === mn ? 260 : 40 + 260 * (it.s - mn) / (mx - mn);
+        plot.appendChild(svgEl("rect", { "class": c === best ? "d-good" : "d-accent", x: 260, y: y + 4, width: w, height: 22, rx: 4 }));
+        if (c === best) plot.appendChild(svgEl("text", { "class": "d-label", x: 266 + w, y: y + 20 }, "best fit"));
+      }
+    });
+    readout.textContent = "Shortlist: " + best.name + ". Why: " + res.why.join("; ") + ". Confirm with an eval on your own examples.";
+  }
+  ["task", "latency", "volume", "privacy", "context", "images"].forEach(function (id) { $(id).addEventListener("change", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

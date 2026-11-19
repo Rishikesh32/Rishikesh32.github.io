@@ -1,0 +1,1626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI system design · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="system-design">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>AI system design</h1>
+    <p class="lede">System design is where models, retrieval, agents and infrastructure become one product that answers fast enough, costs little enough and keeps working when a provider falls over. This area teaches the recurring architectures, the numbers you use to size them, and how to defend your choices in a design review or an interview.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every AI system design follows the same arc: pick an <strong>architecture pattern</strong> that fits the job, size it against quality, latency, cost and reliability, make it survive rate limits and outages, and design a UX that makes a probabilistic system feel trustworthy. Case studies combine all four.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 230" role="img" aria-label="The five subtopics form a pipeline: choose a pattern, size its trade-offs, make it resilient, design the UX, and combine all four in end-to-end case studies.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="150" height="64" rx="8"/>
+              <text class="d-title" x="95" y="57" text-anchor="middle">13.1 Patterns</text>
+              <text class="d-label" x="95" y="77" text-anchor="middle">pick the shape</text>
+              <line class="d-line" x1="170" y1="62" x2="210" y2="62" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="210" y="30" width="150" height="64" rx="8"/>
+              <text class="d-title" x="285" y="57" text-anchor="middle">13.2 Trade-offs</text>
+              <text class="d-label" x="285" y="77" text-anchor="middle">size the budgets</text>
+              <line class="d-line" x1="360" y1="62" x2="400" y2="62" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="400" y="30" width="150" height="64" rx="8"/>
+              <text class="d-title" x="475" y="57" text-anchor="middle">13.3 Resilience</text>
+              <text class="d-label" x="475" y="77" text-anchor="middle">survive failure</text>
+              <line class="d-line" x1="550" y1="62" x2="590" y2="62" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="590" y="30" width="150" height="64" rx="8"/>
+              <text class="d-title" x="665" y="57" text-anchor="middle">13.4 UX</text>
+              <text class="d-label" x="665" y="77" text-anchor="middle">earn user trust</text>
+              <line class="d-line-accent" x1="95" y1="94" x2="250" y2="152" marker-end="url(#ov-arrow-acc)"/>
+              <line class="d-line-accent" x1="285" y1="94" x2="330" y2="152" marker-end="url(#ov-arrow-acc)"/>
+              <line class="d-line-accent" x1="475" y1="94" x2="430" y2="152" marker-end="url(#ov-arrow-acc)"/>
+              <line class="d-line-accent" x1="665" y1="94" x2="510" y2="152" marker-end="url(#ov-arrow-acc)"/>
+              <rect class="d-accent" x="200" y="152" width="360" height="60" rx="8"/>
+              <text class="d-title" x="380" y="178" text-anchor="middle">13.5 Design case studies</text>
+              <text class="d-label" x="380" y="198" text-anchor="middle">requirements → numbers → diagram → trade-offs</text>
+              <text class="d-label" x="20" y="18">Design arc</text>
+              <text class="d-label" x="610" y="140">all four feed in</text>
+            </svg>
+          </div>
+          <figcaption>The first four subtopics are the tools; the case studies use all of them at once on a concrete product.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="patterns">
+        <header class="topic-head">
+          <p class="eyebrow">13.1 · Reference shapes</p>
+          <h2>Architecture patterns</h2>
+        </header>
+
+        <p class="lead">Most AI products use the same parts: a gateway, an orchestrator, retrieval, tools, models and observability. An architecture pattern is a proven arrangement of those parts for a common job, so you can spend your thinking on what is different about this product.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Recognising the pattern behind "a Slack bot for HR questions" or "a coding assistant" tells you the latency target, the hard component and the main risk before you draw a single box.</p>
+        </div>
+
+        <h3>The building blocks</h3>
+        <p>The <strong>gateway</strong> is the single entry point for model traffic: auth, quotas, routing, caching and cost logging. The <strong>orchestrator</strong> is your application code that builds prompts, calls models and runs tool loops. Retrieval, tools and models hang off the orchestrator, and every box emits traces so you can answer "why did it say that?".</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 300" role="img" aria-label="Reference architecture: a client calls a gateway, which forwards allowed requests to an orchestrator; the orchestrator queries retrieval, calls tools and prompts models; an ingestion pipeline feeds the index; every component emits traces to an observability layer.">
+              <defs>
+                <marker id="patterns-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="patterns-arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="120" width="100" height="56" rx="8"/>
+              <text class="d-title" x="70" y="144" text-anchor="middle">Client</text>
+              <text class="d-label" x="70" y="162" text-anchor="middle">web · IDE · API</text>
+              <line class="d-line-accent" x1="120" y1="148" x2="160" y2="148" marker-end="url(#patterns-arrow)"/>
+              <rect class="d-accent" x="160" y="110" width="130" height="76" rx="8"/>
+              <text class="d-title" x="225" y="134" text-anchor="middle">Gateway</text>
+              <text class="d-label" x="225" y="153" text-anchor="middle">auth · quotas</text>
+              <text class="d-label" x="225" y="170" text-anchor="middle">route · cache · cost</text>
+              <line class="d-line-accent" x1="290" y1="148" x2="330" y2="148" marker-end="url(#patterns-arrow)"/>
+              <text class="d-label" x="310" y="140" text-anchor="middle">ok</text>
+              <rect class="d-accent" x="330" y="110" width="150" height="76" rx="8"/>
+              <text class="d-title" x="405" y="134" text-anchor="middle">Orchestrator</text>
+              <text class="d-label" x="405" y="153" text-anchor="middle">prompt + tool loop</text>
+              <text class="d-label" x="405" y="170" text-anchor="middle">guardrails in/out</text>
+              <rect class="d-box" x="330" y="20" width="150" height="50" rx="8"/>
+              <text class="d-text" x="405" y="41" text-anchor="middle">Ingestion</text>
+              <text class="d-label" x="405" y="58" text-anchor="middle">parse · chunk · embed</text>
+              <line class="d-line" x1="480" y1="45" x2="530" y2="55" marker-end="url(#patterns-arrow-m)"/>
+              <text class="d-label" x="505" y="38" text-anchor="middle">index</text>
+              <rect class="d-box" x="530" y="30" width="170" height="56" rx="8"/>
+              <text class="d-title" x="615" y="54" text-anchor="middle">Retrieval</text>
+              <text class="d-label" x="615" y="72" text-anchor="middle">vector + keyword + ACL</text>
+              <rect class="d-box" x="530" y="120" width="170" height="56" rx="8"/>
+              <text class="d-title" x="615" y="144" text-anchor="middle">Tools / APIs</text>
+              <text class="d-label" x="615" y="162" text-anchor="middle">CRM · code · search</text>
+              <rect class="d-good" x="530" y="210" width="170" height="56" rx="8"/>
+              <text class="d-title" x="615" y="234" text-anchor="middle">Models</text>
+              <text class="d-label" x="615" y="252" text-anchor="middle">large · small · embed</text>
+              <line class="d-line-accent" x1="480" y1="125" x2="530" y2="70" marker-start="url(#patterns-arrow)" marker-end="url(#patterns-arrow)"/>
+              <text class="d-label" x="498" y="96" text-anchor="end">query</text>
+              <line class="d-line-accent" x1="480" y1="148" x2="530" y2="148" marker-start="url(#patterns-arrow)" marker-end="url(#patterns-arrow)"/>
+              <line class="d-line-accent" x1="480" y1="172" x2="530" y2="230" marker-start="url(#patterns-arrow)" marker-end="url(#patterns-arrow)"/>
+              <text class="d-label" x="500" y="214" text-anchor="end">prompt</text>
+              <rect class="d-fill" x="20" y="236" width="460" height="40" rx="8"/>
+              <text class="d-text" x="250" y="261" text-anchor="middle">Observability: traces · tokens · latency · cost · evals</text>
+              <line class="d-line d-dash" x1="225" y1="186" x2="225" y2="236" marker-end="url(#patterns-arrow-m)"/>
+              <line class="d-line d-dash" x1="405" y1="186" x2="405" y2="236" marker-end="url(#patterns-arrow-m)"/>
+              <line class="d-line d-dash" x1="70" y1="176" x2="70" y2="236" marker-end="url(#patterns-arrow-m)"/>
+              <text class="d-label" x="80" y="214">feedback</text>
+            </svg>
+          </div>
+          <figcaption>The reference architecture. Each pattern below keeps these boxes but changes which one is the hard part.</figcaption>
+        </figure>
+
+        <h3>Six patterns you will meet again and again</h3>
+        <p>Each pattern keeps the same boxes but makes a different one the hard part. Pick a pattern below to see which components it uses (blue), where the difficulty concentrates (amber), and what it must hit.</p>
+
+        <div class="widget" id="patterns-explorer">
+          <div class="widget-head">
+            <span class="widget-title">Pattern explorer</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="patterns-explorer-sel">Pattern
+              <select id="patterns-explorer-sel">
+                <option value="chat">Chat assistant</option>
+                <option value="copilot">Copilot in an editor</option>
+                <option value="rag" selected>RAG enterprise search</option>
+                <option value="agent">Agent platform</option>
+                <option value="batch">Batch document processing</option>
+                <option value="router">Model router / gateway</option>
+              </select>
+            </label>
+          </div>
+          <svg id="patterns-explorer-plot" viewBox="0 0 600 220" role="img" aria-label="Component map with the components used by the selected pattern highlighted and its hardest component marked."></svg>
+          <p class="readout" id="patterns-explorer-readout"></p>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 230" role="img" aria-label="Latency targets of the six patterns on a log scale from 10 milliseconds to one day: router overhead tens of milliseconds, copilot hundreds of milliseconds, chat first token under a second, RAG search a few seconds, agent tasks seconds to tens of minutes, batch jobs hours.">
+              <line class="d-grid" x1="315.7" y1="20" x2="315.7" y2="198"/>
+              <line class="d-grid" x1="393.6" y1="20" x2="393.6" y2="198"/>
+              <text class="d-label" x="319" y="16">1 s: flow</text>
+              <text class="d-label" x="397" y="16">10 s: attention</text>
+              <text class="d-text" x="150" y="43" text-anchor="end">Router overhead</text>
+              <rect class="d-good" x="160" y="30" width="54" height="16" rx="3"/>
+              <text class="d-text" x="150" y="71" text-anchor="end">Copilot inline</text>
+              <rect class="d-accent" x="238" y="58" width="47" height="16" rx="3"/>
+              <text class="d-text" x="150" y="99" text-anchor="end">Chat first token</text>
+              <rect class="d-accent" x="275" y="86" width="41" height="16" rx="3"/>
+              <text class="d-text" x="150" y="127" text-anchor="end">RAG search answer</text>
+              <rect class="d-accent" x="339" y="114" width="31" height="16" rx="3"/>
+              <text class="d-text" x="150" y="155" text-anchor="end">Agent task</text>
+              <rect class="d-signal" x="394" y="142" width="175" height="16" rx="3"/>
+              <text class="d-text" x="150" y="183" text-anchor="end">Batch job</text>
+              <rect class="d-signal" x="593" y="170" width="107" height="16" rx="3"/>
+              <line class="d-line" x1="160" y1="198" x2="700" y2="198"/>
+              <text class="d-label" x="160" y="214" text-anchor="middle">10 ms</text>
+              <text class="d-label" x="238" y="214" text-anchor="middle">100 ms</text>
+              <text class="d-label" x="316" y="214" text-anchor="middle">1 s</text>
+              <text class="d-label" x="394" y="214" text-anchor="middle">10 s</text>
+              <text class="d-label" x="454" y="214" text-anchor="middle">1 min</text>
+              <text class="d-label" x="532" y="214" text-anchor="middle">10 min</text>
+              <text class="d-label" x="593" y="214" text-anchor="middle">1 h</text>
+              <text class="d-label" x="700" y="214" text-anchor="end">1 day</text>
+            </svg>
+          </div>
+          <figcaption>Latency targets on a log scale. Blue patterns are synchronous; amber ones run asynchronously.</figcaption>
+        </figure>
+
+        <h3>Composing patterns in practice</h3>
+        <p>Real products combine patterns. A support product is a chat assistant answering from RAG, with a few agent-style tools, behind a company gateway, plus a nightly batch job that labels conversations for evaluation. Saying the composition out loud shows you know which part needs which latency and model.</p>
+        <p>Start with the simplest pattern that could work. Anthropic's "Building effective agents" essay separates fixed <strong>workflows</strong> (code decides the steps) from agents (the model decides). Use an agent only when the steps cannot be known in advance.</p>
+
+        <pre class="code" data-lang="python"><code><span class="c"># A minimal gateway-style router: rules first, then fallbacks.</span>
+<span class="c"># `call` is whatever client function you use (OpenAI, Anthropic, vLLM...).</span>
+import time
+
+ROUTES = {
+    "classify":  ["small-model", "medium-model"],
+    "chat":      ["medium-model", "large-model", "small-model"],
+    "reasoning": ["large-model", "medium-model"],
+}
+
+def route(task: str, prompt_tokens: int) -&gt; list[str]:
+    chain = ROUTES.get(task, ROUTES["chat"])
+    if prompt_tokens &gt; 100_000:              <span class="c"># only some models take long inputs</span>
+        chain = [m for m in chain if m != "small-model"]
+    return chain
+
+def complete(task, messages, call, log, timeout_s=20):
+    chain = route(task, sum(len(m["content"]) // 4 for m in messages))
+    for model in chain:
+        t0 = time.monotonic()
+        try:
+            out = call(model=model, messages=messages, timeout=timeout_s)
+            log(model=model, ok=True, ms=1000 * (time.monotonic() - t0))
+            return out
+        except Exception as err:             <span class="c"># rate limit, timeout, 5xx</span>
+            log(model=model, ok=False, error=type(err).__name__)
+    raise RuntimeError("all models in the chain failed")</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>The pattern tells you the latency target and the hard component before you design anything else.</li>
+            <li>Editor copilots live or die on latency; RAG search on ingestion and permissions; agents on loop control and sandboxing; batch on throughput and validation.</li>
+            <li>Prefer a fixed workflow over an agent when the steps are known in advance.</li>
+            <li>A gateway centralises keys, quotas, routing, caching and cost logging for the whole organisation.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reaching for a multi-agent framework when one prompt plus retrieval would answer the question.</li>
+            <li>Filtering documents by permission after retrieval, or by instructing the model, instead of inside the retrieval query.</li>
+            <li>Running batch jobs through the synchronous API at full price and hitting rate limits that starve interactive traffic.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="patterns-1"><span>Draw the reference architecture from memory and name what each box is responsible for.</span></label></li>
+          <li><label><input type="checkbox" data-key="patterns-2"><span>Given a product description, name the pattern (or combination) and its latency target.</span></label></li>
+          <li><label><input type="checkbox" data-key="patterns-3"><span>Explain why an inline code completion needs a different model than the chat panel in the same editor.</span></label></li>
+          <li><label><input type="checkbox" data-key="patterns-4"><span>Argue for a workflow instead of an agent for a given task, or the reverse.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Essay</span><a href="https://www.anthropic.com/research/building-effective-agents">Building effective agents (Anthropic)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)</a></li>
+          <li><span class="kind">Blog</span><a href="https://huyenchip.com/">Chip Huyen's blog (AI engineering and system design essays)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="tradeoffs">
+        <header class="topic-head">
+          <p class="eyebrow">13.2 · The four forces</p>
+          <h2>Quality, latency, cost &amp; reliability</h2>
+        </header>
+
+        <p class="lead">Almost every design decision moves four numbers at once. A bigger model raises quality, cost and latency; caching lowers cost and latency but can go stale. Good design writes targets for all four, then measures each component's share so you know which lever to pull.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Features fail for boring reasons: a 12-second answer, or $0.40 per request when the plan assumed $0.02. Decomposing latency and cost turns "the model is slow" into "rerank adds 300 ms at p95".</p>
+        </div>
+
+        <h3>Latency: where the milliseconds go</h3>
+        <p>An LLM call has two phases. <strong>Prefill</strong> reads the whole prompt in parallel; its duration is the <strong>time to first token</strong> (TTFT) and grows with prompt length. <strong>Decode</strong> then emits tokens one at a time, each costing a roughly fixed time per output token (TPOT), often 10 to 50 ms.</p>
+
+        <div class="formula">
+          \[ T_{\text{total}} \approx T_{\text{net}} + T_{\text{retrieve}} + T_{\text{rerank}} + \text{TTFT} + N_{\text{out}} \cdot \text{TPOT} + T_{\text{guard}} \]
+          <span class="formula-note">\(N_{\text{out}}\): output tokens. 400 tokens at 25 ms each is 10 s, however fast the rest is.</span>
+        </div>
+
+        <p>So the cheapest latency win is fewer output tokens (concise answers, structured fields, a <code>max_tokens</code> cap). Streaming lets the user read while decode continues, which is why products set two targets: TTFT and total.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 220" role="img" aria-label="Timeline of a RAG request: network, retrieval, rerank and prefill take 0.85 seconds before the first token; decoding 300 tokens then takes about 6 more seconds.">
+              <defs>
+                <marker id="tradeoffs-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="60" y="18">Zoom: before the first token (milliseconds)</text>
+              <rect class="d-box" x="60" y="40" width="37" height="32"/>
+              <rect class="d-fill" x="97" y="40" width="50" height="32"/>
+              <rect class="d-box" x="147" y="40" width="93" height="32"/>
+              <rect class="d-accent" x="240" y="40" width="347" height="32"/>
+              <text class="d-label" x="78" y="34" text-anchor="middle">net</text>
+              <text class="d-label" x="122" y="34" text-anchor="middle">retrieve</text>
+              <text class="d-label" x="193" y="61" text-anchor="middle">rerank</text>
+              <text class="d-text" x="413" y="61" text-anchor="middle">prefill (TTFT 560 ms)</text>
+              <line class="d-line-signal" x1="587" y1="34" x2="587" y2="80"/>
+              <text class="d-label d-text-signal" x="593" y="50">first token</text>
+              <text class="d-label d-text-signal" x="593" y="64">at 850 ms</text>
+              <line class="d-grid" x1="60" y1="88" x2="680" y2="88"/>
+              <text class="d-label" x="60" y="102" text-anchor="middle">0</text>
+              <text class="d-label" x="215" y="102" text-anchor="middle">250</text>
+              <text class="d-label" x="370" y="102" text-anchor="middle">500</text>
+              <text class="d-label" x="525" y="102" text-anchor="middle">750</text>
+              <text class="d-label" x="680" y="102" text-anchor="middle">1000</text>
+              <line class="d-line d-dash" x1="60" y1="145" x2="60" y2="108"/>
+              <line class="d-line d-dash" x1="135" y1="145" x2="680" y2="108"/>
+              <text class="d-label" x="60" y="128">Whole request (seconds)</text>
+              <rect class="d-accent" x="60" y="145" width="75" height="32"/>
+              <rect class="d-good" x="135" y="145" width="532" height="32"/>
+              <text class="d-text" x="400" y="166" text-anchor="middle">decode: 300 tokens at 50 tok/s = 6 s (streamed to user)</text>
+              <line class="d-grid" x1="60" y1="190" x2="680" y2="190"/>
+              <text class="d-label" x="60" y="204" text-anchor="middle">0</text>
+              <text class="d-label" x="149" y="204" text-anchor="middle">1</text>
+              <text class="d-label" x="237" y="204" text-anchor="middle">2</text>
+              <text class="d-label" x="326" y="204" text-anchor="middle">3</text>
+              <text class="d-label" x="414" y="204" text-anchor="middle">4</text>
+              <text class="d-label" x="503" y="204" text-anchor="middle">5</text>
+              <text class="d-label" x="591" y="204" text-anchor="middle">6</text>
+              <text class="d-label" x="680" y="204" text-anchor="middle">7 s</text>
+            </svg>
+          </div>
+          <figcaption>Everything around the model fits in the first second; decoding takes six. Streaming starts reading at 0.85 s.</figcaption>
+        </figure>
+
+        <h3>Tail latency: percentiles do not add</h3>
+        <p>Report <strong>p50</strong> (the typical request) and <strong>p95</strong> (the slow request users remember). Summing component p95s overestimates the total p95, because every component is rarely slow at once. Fan-out works the other way: a request that waits on \(k\) parallel calls, each slow with probability \(q\), is slow with probability \(1-(1-q)^k\).</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 230" role="img" aria-label="Chart of the probability that a request is slow versus fan-out k, for per-call slow probability 1% and 5%. At k = 10 it is 9.6% and 40%.">
+              <line class="d-grid" x1="70" y1="150" x2="670" y2="150"/>
+              <line class="d-grid" x1="70" y1="110" x2="670" y2="110"/>
+              <line class="d-grid" x1="70" y1="70" x2="670" y2="70"/>
+              <line class="d-line" x1="70" y1="190" x2="670" y2="190"/>
+              <line class="d-line" x1="70" y1="190" x2="70" y2="40"/>
+              <text class="d-label" x="62" y="194" text-anchor="end">0%</text>
+              <text class="d-label" x="62" y="154" text-anchor="end">20%</text>
+              <text class="d-label" x="62" y="114" text-anchor="end">40%</text>
+              <text class="d-label" x="62" y="74" text-anchor="end">60%</text>
+              <text class="d-label" x="70" y="32">P(request is slow)</text>
+              <polyline class="d-line-signal" points="70,180 101.6,170.5 164.7,152.9 227.9,137 291.1,122.7 354.2,109.7 417.4,98.1 480.5,87.5 543.7,78 606.9,69.4 670,61.7"/>
+              <polyline class="d-line-accent" points="70,188 101.6,186 164.7,182.1 227.9,178.3 291.1,174.5 354.2,170.9 417.4,167.3 480.5,163.7 543.7,160.3 606.9,156.9 670,153.6"/>
+              <circle class="d-dot-signal" cx="354.2" cy="109.7" r="4"/>
+              <circle class="d-dot" cx="354.2" cy="170.9" r="4"/>
+              <text class="d-label d-text-signal" x="350" y="100" text-anchor="end">q = 5%: 40% at k = 10</text>
+              <text class="d-label d-text-accent" x="362" y="186">q = 1%: 9.6% at k = 10</text>
+              <text class="d-label" x="70" y="208" text-anchor="middle">1</text>
+              <text class="d-label" x="354" y="208" text-anchor="middle">10</text>
+              <text class="d-label" x="670" y="208" text-anchor="middle">20</text>
+              <text class="d-label" x="370" y="224" text-anchor="middle">fan-out k (parallel calls the request waits on)</text>
+            </svg>
+          </div>
+          <figcaption>Fan-out amplifies tails: a 1-in-100 slow call becomes a 1-in-10 slow request when ten calls run in parallel.</figcaption>
+        </figure>
+
+        <div class="widget" id="tradeoffs-latency">
+          <div class="widget-head">
+            <span class="widget-title">Latency budget builder</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls" id="tradeoffs-latency-comps"></div>
+          <div class="widget-controls">
+            <label for="tradeoffs-latency-out">Output tokens <input type="range" id="tradeoffs-latency-out" min="20" max="1000" step="10" value="300"><output id="tradeoffs-latency-out-v">300</output></label>
+            <label for="tradeoffs-latency-tps">Decode speed (tok/s) <input type="range" id="tradeoffs-latency-tps" min="15" max="200" step="5" value="60"><output id="tradeoffs-latency-tps-v">60</output></label>
+            <label for="tradeoffs-latency-target">Target (ms) <input type="range" id="tradeoffs-latency-target" min="300" max="15000" step="100" value="2000"><output id="tradeoffs-latency-target-v">2000</output></label>
+            <label for="tradeoffs-latency-mode">Measure to
+              <select id="tradeoffs-latency-mode">
+                <option value="first">first token (streamed)</option>
+                <option value="full">full response</option>
+              </select>
+            </label>
+          </div>
+          <svg id="tradeoffs-latency-plot" viewBox="0 0 600 270" role="img" aria-label="Stacked bar of median component latencies and a histogram of simulated total latency with p50, p95 and target markers."></svg>
+          <p class="readout" id="tradeoffs-latency-readout"></p>
+        </div>
+        <p>The demo fits a log-normal to each component's p50 and p95, simulates 4,000 requests and sums them. Compare the simulated p95 with the naive sum of p95s, and try removing one optional step.</p>
+
+        <h3>Cost: a per-request formula you can multiply</h3>
+        <p>Providers price per million tokens; output costs several times input, and cached input (prefix caching) is heavily discounted.</p>
+        <div class="formula">
+          \[ C_{\text{req}} = \frac{N_{\text{in}}\big[(1-h)\,p_{\text{in}} + h\,p_{\text{cache}}\big] + N_{\text{out}}\,p_{\text{out}}}{10^6} \cdot s \]
+          <span class="formula-note">\(h\): cached share of input; \(p\): price per million tokens; \(s\): model calls per request (an agent may make 10 to 50).</span>
+        </div>
+        <p>Put stable content (system prompt, tool definitions) first so prefix caching hits. The cost calculator in 13.5 lets you try these levers.</p>
+
+        <h3>Every lever moves all four numbers</h3>
+        <p>Reliability is written as a <strong>service level objective</strong> (SLO), such as "99.9% of requests succeed over 30 days". The remaining 0.1% is the error budget, about 43 minutes a month. Measure every quality lever on an eval set before paying for it.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Lever</th><th>Quality</th><th>Latency</th><th>Cost</th><th>Reliability</th></tr></thead>
+            <tbody>
+              <tr><td>Larger model</td><td>up</td><td>up</td><td>up a lot</td><td>same</td></tr>
+              <tr><td>Reranker on top-50</td><td>up</td><td>+50–300 ms</td><td>small</td><td>one more dependency</td></tr>
+              <tr><td>Prompt (prefix) caching</td><td>same</td><td>lower TTFT</td><td>down</td><td>same</td></tr>
+              <tr><td>Response cache</td><td>risk of stale</td><td>near zero on hit</td><td>down</td><td>up (serves during outages)</td></tr>
+              <tr><td>Route easy queries to small model</td><td>slightly down</td><td>down</td><td>down a lot</td><td>same</td></tr>
+              <tr><td>Reasoning / thinking tokens</td><td>up on hard tasks</td><td>up a lot</td><td>up</td><td>same</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Write explicit targets for quality, latency (p50 and p95, TTFT and total), cost per request and availability.</li>
+            <li>Input length drives TTFT; output length drives total latency. Fewer output tokens is the cheapest speed-up.</li>
+            <li>Percentiles do not add, and fan-out amplifies tail latency.</li>
+            <li>Cost per request is tokens times prices times calls; multiply by traffic before committing to a design.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reporting average latency, which hides the slow tail users complain about.</li>
+            <li>Ignoring the number of calls per request: an agent with 30 steps multiplies every per-call number by 30.</li>
+            <li>Putting dynamic content (timestamps, user names) at the top of the prompt, which breaks prefix caching.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="tradeoffs-1"><span>Decompose a request's latency into components and estimate TTFT and total for 300 output tokens.</span></label></li>
+          <li><label><input type="checkbox" data-key="tradeoffs-2"><span>Explain why the sum of component p95s overestimates the p95 of the total.</span></label></li>
+          <li><label><input type="checkbox" data-key="tradeoffs-3"><span>Compute the monthly cost of a feature from traffic, token counts, prices and cache rate.</span></label></li>
+          <li><label><input type="checkbox" data-key="tradeoffs-4"><span>For a given complaint ("too slow", "too expensive"), name the two levers you would try first and their side effects.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://sre.google/sre-book/table-of-contents/">Site Reliability Engineering (Google), chapters on SLOs and error budgets</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.05176">FrugalGPT: How to Use LLMs While Reducing Cost and Improving Performance (Chen et al., 2023)</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.vllm.ai/">vLLM documentation (serving metrics: TTFT, TPOT, throughput)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="resilience">
+        <header class="topic-head">
+          <p class="eyebrow">13.3 · Keep it up</p>
+          <h2>Rate limits &amp; fallbacks</h2>
+        </header>
+
+        <p class="lead">Model providers are shared, overloaded and occasionally down. A resilient system limits its own traffic before the provider does, retries carefully, stops calling a dependency that is clearly broken, and falls back to something useful instead of an error page.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>A single provider at 99.5% availability means over three hours of failures a month. Rate-limit errors (HTTP 429) are among the most common production errors in LLM apps, and naive retry loops turn them into self-inflicted outages.</p>
+        </div>
+
+        <h3>Rate limits and the token bucket</h3>
+        <p>Providers cap <strong>requests per minute</strong> (RPM) and <strong>tokens per minute</strong> (TPM), answering excess traffic with HTTP 429. Add per-tenant limits of your own so one runaway agent cannot drain the shared quota.</p>
+        <p>The standard algorithm is the <strong>token bucket</strong>: a bucket holds up to \(B\) tokens and refills at \(r\) per second; each request spends its cost (1 request, or its LLM token count). Over any window \(t\) it admits at most \(B + r\,t\). With several servers, keep the bucket in Redis and update it atomically.</p>
+
+        <div class="widget" id="resilience-bucket">
+          <div class="widget-head">
+            <span class="widget-title">Token-bucket rate limiter</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="resilience-bucket-cap">Capacity B <input type="range" id="resilience-bucket-cap" min="1" max="30" step="1" value="10"><output id="resilience-bucket-cap-v">10</output></label>
+            <label for="resilience-bucket-rate">Refill r (per s) <input type="range" id="resilience-bucket-rate" min="0.5" max="10" step="0.5" value="2"><output id="resilience-bucket-rate-v">2</output></label>
+            <label for="resilience-bucket-load">Traffic (req/s) <input type="range" id="resilience-bucket-load" min="0.5" max="10" step="0.5" value="2.5"><output id="resilience-bucket-load-v">2.5</output></label>
+            <label for="resilience-bucket-burst"><input type="checkbox" id="resilience-bucket-burst" checked> Burst of 15 at t = 20 s</label>
+          </div>
+          <svg id="resilience-bucket-plot" viewBox="0 0 600 250" role="img" aria-label="Bucket level over 60 seconds with accepted and rejected requests marked on a timeline."></svg>
+          <p class="readout" id="resilience-bucket-readout"></p>
+        </div>
+        <p>Capacity is the burst you tolerate; refill rate is the sustained throughput you promise. Push traffic just above the refill rate and watch rejections settle into a steady trickle.</p>
+
+        <h3>Retries, timeouts and circuit breakers</h3>
+        <p>Retry only errors that can succeed next time (429, 5xx, timeouts), never a 400. Use <strong>exponential backoff with jitter</strong>: the wait ceiling doubles per attempt and the actual sleep is random below it, so clients that failed together do not retry together. Cap attempts and keep a retry budget (for example at most 10% extra load).</p>
+        <p>Streams need a first-token timeout and an idle timeout. A <strong>circuit breaker</strong> stops calling a failing dependency so users skip its timeout. <strong>Hedged requests</strong> duplicate a call that has not answered by its p95.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 210" role="img" aria-label="Circuit breaker state machine: closed passes calls; too many errors moves it to open, which fails fast; after a cool-down it becomes half-open and sends probes; probe success closes it, probe failure reopens it.">
+              <defs>
+                <marker id="resilience-cb-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-good" x="30" y="70" width="170" height="70" rx="35"/>
+              <text class="d-title" x="115" y="100" text-anchor="middle">Closed</text>
+              <text class="d-label" x="115" y="118" text-anchor="middle">calls pass, count errors</text>
+              <rect class="d-signal" x="520" y="70" width="170" height="70" rx="35"/>
+              <text class="d-title" x="605" y="100" text-anchor="middle">Open</text>
+              <text class="d-label" x="605" y="118" text-anchor="middle">fail fast → fallback</text>
+              <rect class="d-accent" x="275" y="140" width="170" height="60" rx="30"/>
+              <text class="d-title" x="360" y="166" text-anchor="middle">Half-open</text>
+              <text class="d-label" x="360" y="184" text-anchor="middle">let a few probes through</text>
+              <path class="d-line" d="M200,90 C300,40 420,40 520,90" marker-end="url(#resilience-cb-arrow)"/>
+              <text class="d-label" x="360" y="40" text-anchor="middle">error rate &gt; 50% over last 20 calls</text>
+              <line class="d-line" x1="560" y1="140" x2="445" y2="165" marker-end="url(#resilience-cb-arrow)"/>
+              <text class="d-label" x="560" y="170">cool-down 30 s</text>
+              <line class="d-line" x1="275" y1="165" x2="160" y2="140" marker-end="url(#resilience-cb-arrow)"/>
+              <text class="d-label" x="160" y="170" text-anchor="end">probes succeed</text>
+              <path class="d-line d-dash" d="M420,140 C450,115 490,105 520,108" marker-end="url(#resilience-cb-arrow)"/>
+              <text class="d-label" x="430" y="112" text-anchor="end">probe fails</text>
+            </svg>
+          </div>
+          <figcaption>The three breaker states, with typical starting thresholds.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import random, time
+
+RETRYABLE = {429, 500, 502, 503, 504, 529}
+
+class TokenBucket:
+    def __init__(self, capacity: float, rate: float):
+        self.capacity, self.rate = capacity, rate
+        self.tokens, self.t = capacity, time.monotonic()
+
+    def allow(self, cost: float = 1.0) -&gt; bool:
+        now = time.monotonic()
+        self.tokens = min(self.capacity, self.tokens + (now - self.t) * self.rate)
+        self.t = now
+        if self.tokens &gt;= cost:
+            self.tokens -= cost
+            return True
+        return False
+
+def call_with_retry(send, max_attempts=3, base=0.5, cap=8.0):
+    for attempt in range(max_attempts):
+        status, body, retry_after = send()
+        if status &lt; 400:
+            return body
+        if status not in RETRYABLE or attempt == max_attempts - 1:
+            raise RuntimeError(f"giving up after status {status}")
+        ceiling = min(cap, base * 2 ** attempt)
+        sleep_s = retry_after if retry_after else random.uniform(0, ceiling)  <span class="c"># full jitter</span>
+        time.sleep(sleep_s)</code></pre>
+
+        <h3>Fallback chains and availability math</h3>
+        <p>A <strong>fallback chain</strong> is an ordered list of ways to answer, each cheaper and less capable than the last, ending in an honest degraded response.</p>
+        <div class="formula">
+          \[ A_{\text{serial}} = \prod_i a_i \qquad\qquad A_{\text{fallback}} = 1 - \prod_i (1 - a_i) \]
+          <span class="formula-note">Series: multiply availabilities. Fallbacks: multiply failure probabilities. Two independent 99.5% providers give \(1 - 0.005^2 = 99.9975\%\), if failures really are independent.</span>
+        </div>
+        <p>Independence is the trap. Endpoints sharing a region fail together, a too-long prompt fails on every model, and an outage at one provider sends everyone's traffic to the next. Diversify for real, keep a non-LLM last resort, and run evals on the fallback prompt too.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 230" role="img" aria-label="Fallback chain: the request goes through a circuit breaker to the primary model; on error or timeout it goes to a secondary provider, then a semantic cache, then a degraded non-LLM response.">
+              <defs>
+                <marker id="resilience-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="resilience-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="40" width="100" height="50" rx="8"/>
+              <text class="d-title" x="70" y="70" text-anchor="middle">Request</text>
+              <line class="d-line-accent" x1="120" y1="65" x2="160" y2="65" marker-end="url(#resilience-arrow)"/>
+              <rect class="d-fill" x="160" y="34" width="110" height="62" rx="8"/>
+              <text class="d-text" x="215" y="58" text-anchor="middle">Circuit</text>
+              <text class="d-text" x="215" y="76" text-anchor="middle">breaker</text>
+              <line class="d-line-accent" x1="270" y1="65" x2="320" y2="65" marker-end="url(#resilience-arrow)"/>
+              <text class="d-label" x="295" y="56" text-anchor="middle">closed</text>
+              <rect class="d-good" x="320" y="40" width="160" height="50" rx="8"/>
+              <text class="d-title" x="400" y="62" text-anchor="middle">Primary model</text>
+              <text class="d-label" x="400" y="79" text-anchor="middle">best quality</text>
+              <line class="d-line-accent" x1="480" y1="65" x2="560" y2="65" marker-end="url(#resilience-arrow)"/>
+              <text class="d-label" x="520" y="56" text-anchor="middle">success</text>
+              <rect class="d-box" x="560" y="40" width="140" height="50" rx="8"/>
+              <text class="d-title" x="630" y="70" text-anchor="middle">Answer</text>
+              <line class="d-line-signal" x1="400" y1="90" x2="400" y2="125" marker-end="url(#resilience-arrow-s)"/>
+              <text class="d-label d-text-signal" x="408" y="112">429 / 5xx / timeout</text>
+              <line class="d-line-signal" x1="215" y1="96" x2="320" y2="145" marker-end="url(#resilience-arrow-s)"/>
+              <text class="d-label d-text-signal" x="150" y="135">open: skip primary</text>
+              <rect class="d-box" x="320" y="125" width="160" height="40" rx="8"/>
+              <text class="d-text" x="400" y="150" text-anchor="middle">Secondary provider</text>
+              <line class="d-line-accent" x1="480" y1="140" x2="560" y2="80" marker-end="url(#resilience-arrow)"/>
+              <line class="d-line-signal" x1="400" y1="165" x2="400" y2="180" marker-end="url(#resilience-arrow-s)"/>
+              <rect class="d-box" x="250" y="180" width="140" height="36" rx="8"/>
+              <text class="d-text" x="320" y="203" text-anchor="middle">Semantic cache</text>
+              <line class="d-line-signal" x1="390" y1="198" x2="430" y2="198" marker-end="url(#resilience-arrow-s)"/>
+              <text class="d-label d-text-signal" x="410" y="190" text-anchor="middle">miss</text>
+              <rect class="d-signal" x="430" y="180" width="150" height="36" rx="8"/>
+              <text class="d-text" x="505" y="203" text-anchor="middle">Degraded response</text>
+              <line class="d-line-accent" x1="580" y1="198" x2="630" y2="90" marker-end="url(#resilience-arrow)"/>
+              <line class="d-line-accent" x1="250" y1="198" x2="170" y2="198" marker-end="url(#resilience-arrow)"/>
+              <text class="d-label" x="210" y="190" text-anchor="middle">hit</text>
+              <rect class="d-box" x="40" y="180" width="130" height="36" rx="8"/>
+              <text class="d-text" x="105" y="203" text-anchor="middle">Cached answer</text>
+            </svg>
+          </div>
+          <figcaption>Each step down the chain is cheaper and less capable; an open breaker skips the failing primary.</figcaption>
+        </figure>
+
+        <div class="widget" id="resilience-chain">
+          <div class="widget-head">
+            <span class="widget-title">Fallback chain simulator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="resilience-chain-p1">Primary fails <input type="range" id="resilience-chain-p1" min="0" max="50" step="0.5" value="10"><output id="resilience-chain-p1-v">10%</output></label>
+            <label for="resilience-chain-p2">Secondary fails <input type="range" id="resilience-chain-p2" min="0" max="50" step="0.5" value="10"><output id="resilience-chain-p2-v">10%</output></label>
+            <label for="resilience-chain-corr">Shared-cause correlation <input type="range" id="resilience-chain-corr" min="0" max="1" step="0.05" value="0.3"><output id="resilience-chain-corr-v">0.30</output></label>
+            <label for="resilience-chain-cache">Cache hit rate <input type="range" id="resilience-chain-cache" min="0" max="100" step="5" value="40"><output id="resilience-chain-cache-v">40%</output></label>
+            <label for="resilience-chain-cb"><input type="checkbox" id="resilience-chain-cb"> Circuit breaker open (skip primary)</label>
+            <button class="btn" type="button" id="resilience-chain-resample">Resample</button>
+          </div>
+          <svg id="resilience-chain-plot" viewBox="0 0 600 250" role="img" aria-label="Grid of 400 simulated requests colored by which tier served them, with availability figures."></svg>
+          <p class="readout" id="resilience-chain-readout"></p>
+        </div>
+        <p>Raise the correlation and availability falls towards the primary's own; open the breaker and mean latency drops.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Enforce your own per-user and per-tenant limits with token buckets so one caller cannot exhaust the shared provider quota.</li>
+            <li>Retry only retryable errors, with capped exponential backoff, jitter and a retry budget; honour <code>Retry-After</code>.</li>
+            <li>Serial availability multiplies; fallback availability multiplies failure probabilities, but only if failures are independent.</li>
+            <li>End every chain with a non-LLM degraded response, and evaluate the fallback path like the primary.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Retrying immediately in a tight loop, which multiplies load on an already overloaded provider.</li>
+            <li>Retrying non-idempotent tool calls (send email, charge card) without an idempotency key.</li>
+            <li>Falling back to a model whose prompt was never tested, so outages also become quality incidents.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="resilience-1"><span>Implement a token bucket and explain what capacity and refill rate each control.</span></label></li>
+          <li><label><input type="checkbox" data-key="resilience-2"><span>Write a retry wrapper with full jitter that skips non-retryable errors.</span></label></li>
+          <li><label><input type="checkbox" data-key="resilience-3"><span>Compute the availability of a two-provider fallback chain and explain why the real number is lower.</span></label></li>
+          <li><label><input type="checkbox" data-key="resilience-4"><span>Describe the three circuit-breaker states and when each transition happens.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/">Timeouts, retries, and backoff with jitter (Amazon Builders' Library)</a></li>
+          <li><span class="kind">Blog</span><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/">Exponential Backoff and Jitter (AWS Architecture Blog)</a></li>
+          <li><span class="kind">Book</span><a href="https://sre.google/sre-book/table-of-contents/">Site Reliability Engineering: handling overload and cascading failures</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="ux">
+        <header class="topic-head">
+          <p class="eyebrow">13.4 · Designing for a probabilistic system</p>
+          <h2>UX for AI products</h2>
+        </header>
+
+        <p class="lead">AI features are slow, sometimes wrong and a little unpredictable, so the interface has three extra jobs: make waiting feel short, help users judge how much to trust each answer, and let them correct or undo what the system did.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>These are engineering decisions in disguise. Streaming needs a server-sent-events endpoint, citations need stable chunk IDs, undo needs an action log, and feedback needs trace IDs. If the backend lacks them, no designer can add them later.</p>
+        </div>
+
+        <h3>Make waiting feel short</h3>
+        <p>Usability research gives three limits: 0.1 s feels instant, 1 s keeps the flow of thought, 10 s loses attention. LLM answers land between 1 and 10 s, so <strong>stream</strong> tokens, show steps ("Searching 3 sources..."), and go asynchronous with a notification beyond 10 to 20 s.</p>
+
+        <div class="widget" id="ux-stream">
+          <div class="widget-head">
+            <span class="widget-title">Blocking vs streaming: what the user sees</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="ux-stream-ttft">TTFT (ms) <input type="range" id="ux-stream-ttft" min="200" max="4000" step="100" value="900"><output id="ux-stream-ttft-v">900</output></label>
+            <label for="ux-stream-tps">Tokens/s <input type="range" id="ux-stream-tps" min="10" max="120" step="5" value="35"><output id="ux-stream-tps-v">35</output></label>
+            <button class="btn primary" type="button" id="ux-stream-play">Play</button>
+          </div>
+          <svg id="ux-stream-plot" viewBox="0 0 600 230" role="img" aria-label="Two simulated chat panels: the blocking one shows a spinner until the full answer is ready, the streaming one shows words as they are generated."></svg>
+          <p class="readout" id="ux-stream-readout"></p>
+        </div>
+
+        <h3>Calibrate trust</h3>
+        <p>Aim for <strong>calibrated trust</strong>: users rely on the answer when it is right and check it when it might be wrong. Each technique below needs backend support.</p>
+        <div class="grid-2">
+          <div class="card"><h4>Citations next to claims</h4><p>One click to verify. Needs stable chunk IDs from retrieval.</p></div>
+          <div class="card"><h4>An honest "not found" path</h4><p>A designed empty state beats a guess. Needs abstention in the prompt and the eval set.</p></div>
+          <div class="card"><h4>Clear scope</h4><p>Starter prompts show what the assistant is for, and steer users to questions you have evaluated.</p></div>
+          <div class="card"><h4>Concrete confidence</h4><p>"Based on 2 sources, updated March" beats an uncalibrated percentage. Label AI-generated content.</p></div>
+        </div>
+
+        <h3>Match autonomy to reversibility</h3>
+        <p>Let autonomy follow the cost and reversibility of a mistake. Ignoring a ghost-text suggestion costs nothing; a customer email needs draft-and-approve; moving money needs confirmation, limits and an audit log. Show diffs, keep undo, and prefer edit-in-place over "regenerate".</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 250" role="img" aria-label="Autonomy ladder with four levels: suggest, draft for review, act with confirmation, act autonomously with undo. Higher levels require more reversible actions and better evaluated quality.">
+              <defs>
+                <marker id="ux-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <line class="d-line" x1="40" y1="225" x2="40" y2="20" marker-end="url(#ux-arrow)"/>
+              <text class="d-label" x="48" y="24">more autonomy</text>
+              <line class="d-line" x1="40" y1="225" x2="680" y2="225" marker-end="url(#ux-arrow)"/>
+              <text class="d-label" x="676" y="216" text-anchor="end">needs: reversible actions + proven quality</text>
+              <rect class="d-good" x="60" y="170" width="140" height="44" rx="6"/>
+              <text class="d-title" x="130" y="190" text-anchor="middle">Suggest</text>
+              <text class="d-label" x="130" y="206" text-anchor="middle">ghost text, hints</text>
+              <rect class="d-accent" x="215" y="125" width="140" height="44" rx="6"/>
+              <text class="d-title" x="285" y="145" text-anchor="middle">Draft for review</text>
+              <text class="d-label" x="285" y="161" text-anchor="middle">email, reply, PR</text>
+              <rect class="d-box" x="370" y="80" width="140" height="44" rx="6"/>
+              <text class="d-title" x="440" y="100" text-anchor="middle">Act on confirm</text>
+              <text class="d-label" x="440" y="116" text-anchor="middle">refund under limit</text>
+              <rect class="d-signal" x="525" y="35" width="150" height="44" rx="6"/>
+              <text class="d-title" x="600" y="55" text-anchor="middle">Act autonomously</text>
+              <text class="d-label" x="600" y="71" text-anchor="middle">with undo + audit log</text>
+              <text class="d-label" x="130" y="160" text-anchor="middle">user ignores freely</text>
+              <text class="d-label" x="285" y="115" text-anchor="middle">user edits, then sends</text>
+              <text class="d-label" x="440" y="70" text-anchor="middle">user clicks approve</text>
+              <text class="d-label" x="600" y="25" text-anchor="middle">user reviews afterwards</text>
+            </svg>
+          </div>
+          <figcaption>Climb only as far as the cost of a mistake allows. Most successful AI features live on the first two rungs.</figcaption>
+        </figure>
+
+        <h3>Close the feedback loop</h3>
+        <p>Thumbs ratings are sparse (often under 1% of interactions) and skewed towards angry users. Implicit signals (copy, accept, heavy edit, regenerate, rephrase, abandon) are far richer. Join every signal to the request's trace ID so a bad answer leads to the exact prompt, chunks and model version.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 200" role="img" aria-label="Feedback loop: the product emits explicit and implicit signals tagged with trace IDs into a trace store; failing traces are sampled into an eval set; prompt or model changes are tested on the eval set before shipping back to the product.">
+              <defs>
+                <marker id="ux-loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="60" width="130" height="64" rx="8"/>
+              <text class="d-title" x="85" y="87" text-anchor="middle">Product UI</text>
+              <text class="d-label" x="85" y="106" text-anchor="middle">answer + trace_id</text>
+              <line class="d-line-accent" x1="150" y1="92" x2="210" y2="92" marker-end="url(#ux-loop-arrow)"/>
+              <rect class="d-fill" x="210" y="20" width="160" height="144" rx="8"/>
+              <text class="d-title" x="290" y="42" text-anchor="middle">Signals</text>
+              <text class="d-label" x="222" y="64">explicit: thumbs, reason</text>
+              <text class="d-label" x="222" y="84">accept / reject</text>
+              <text class="d-label" x="222" y="104">copy, edit distance</text>
+              <text class="d-label" x="222" y="124">regenerate, rephrase</text>
+              <text class="d-label" x="222" y="144">abandon, handoff</text>
+              <line class="d-line-accent" x1="370" y1="92" x2="420" y2="92" marker-end="url(#ux-loop-arrow)"/>
+              <text class="d-label" x="395" y="84" text-anchor="middle">join</text>
+              <rect class="d-accent" x="415" y="60" width="140" height="64" rx="8"/>
+              <text class="d-title" x="485" y="87" text-anchor="middle">Trace store</text>
+              <text class="d-label" x="485" y="106" text-anchor="middle">prompt, chunks, model</text>
+              <line class="d-line-accent" x1="550" y1="92" x2="580" y2="92" marker-end="url(#ux-loop-arrow)"/>
+              <rect class="d-good" x="580" y="60" width="120" height="64" rx="8"/>
+              <text class="d-title" x="640" y="87" text-anchor="middle">Eval set</text>
+              <text class="d-label" x="640" y="106" text-anchor="middle">sampled failures</text>
+              <path class="d-line-accent" d="M640,124 L640,184 L85,184 L85,124" marker-end="url(#ux-loop-arrow)"/>
+              <text class="d-label" x="362" y="178" text-anchor="middle">test prompt or model change on eval set, then ship</text>
+            </svg>
+          </div>
+          <figcaption>Feedback is useful only when it traces back to its request and becomes eval cases.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Streaming endpoint with server-sent events, plus a trace id the UI echoes</span>
+<span class="c"># back with feedback. Uses FastAPI and the Anthropic Python SDK.</span>
+import json, uuid
+import anthropic
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+
+app = FastAPI()
+client = anthropic.Anthropic()
+MODEL = "your-model-id"
+
+@app.post("/chat")
+def chat(body: dict):
+    trace_id = str(uuid.uuid4())
+    def events():
+        yield f"data: {json.dumps({'type': 'start', 'trace_id': trace_id})}\n\n"
+        with client.messages.stream(model=MODEL, max_tokens=800,
+                                    messages=body["messages"]) as stream:
+            for text in stream.text_stream:
+                yield f"data: {json.dumps({'type': 'text', 'text': text})}\n\n"
+        yield f"data: {json.dumps({'type': 'done'})}\n\n"
+    return StreamingResponse(events(), media_type="text/event-stream")
+
+@app.post("/feedback")
+def feedback(body: dict):
+    <span class="c"># body: {"trace_id": ..., "signal": "thumbs_down" | "copied" | "edited", ...}</span>
+    print(json.dumps(body))   <span class="c"># in production: write to your trace store</span>
+    return {"ok": True}</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Situation</th><th>UX pattern</th><th>Backend requirement</th></tr></thead>
+            <tbody>
+              <tr><td>Answer takes 3–10 s</td><td>stream tokens, show steps</td><td>SSE or WebSocket, incremental parsing</td></tr>
+              <tr><td>Task takes minutes</td><td>async task list, notification</td><td>job queue, durable state, status API</td></tr>
+              <tr><td>Factual answer</td><td>inline citations, "not found" state</td><td>stable chunk IDs, abstention eval</td></tr>
+              <tr><td>Generated change to user data</td><td>diff view, approve, undo</td><td>action log, reversible operations</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Streaming turns perceived latency into TTFT; show progress for multi-step work and go asynchronous past about 10–20 s.</li>
+            <li>Aim for calibrated trust: citations, honest abstention, clear scope and visible AI provenance.</li>
+            <li>Set autonomy by reversibility: suggest, draft, act on confirmation, act with undo.</li>
+            <li>Implicit signals (accept, copy, edit, regenerate) beat sparse thumbs ratings; join them to trace IDs.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>A blank spinner for eight seconds when the first tokens were ready after one.</li>
+            <li>Showing a numeric "confidence" that is not calibrated, which teaches users to trust the wrong answers.</li>
+            <li>Letting an agent take irreversible actions with no confirmation, limit or audit trail.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="ux-1"><span>Build a streaming endpoint and a client that renders tokens as they arrive.</span></label></li>
+          <li><label><input type="checkbox" data-key="ux-2"><span>Choose an autonomy level for three example features and justify each by reversibility.</span></label></li>
+          <li><label><input type="checkbox" data-key="ux-3"><span>List five implicit feedback signals for a copilot and how you would log them.</span></label></li>
+          <li><label><input type="checkbox" data-key="ux-4"><span>Design the "not found" and "degraded mode" states for a RAG assistant.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Guide</span><a href="https://pair.withgoogle.com/guidebook">People + AI Guidebook (Google PAIR)</a></li>
+          <li><span class="kind">Article</span><a href="https://www.nngroup.com/articles/response-times-3-important-limits/">Response Times: The 3 Important Limits (Nielsen Norman Group)</a></li>
+          <li><span class="kind">Toolkit</span><a href="https://www.microsoft.com/en-us/haxtoolkit/">HAX Toolkit: guidelines for human-AI interaction (Microsoft)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="case-studies">
+        <header class="topic-head">
+          <p class="eyebrow">13.5 · Putting it together</p>
+          <h2>Design case studies</h2>
+        </header>
+
+        <p class="lead">A system design answer is a story with numbers: clarify requirements, estimate load and cost, draw an architecture that meets the targets, go deep on the hardest parts, and close with trade-offs and how you would know it works.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>"Design an AI assistant for X" is a standard AI engineering interview question, and design docs with back-of-envelope numbers are what get real projects funded.</p>
+        </div>
+
+        <h3>A repeatable framework</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 170" role="img" aria-label="Five-step interview framework with suggested minutes: requirements 5, estimates 5, high-level design 10, deep dives 15, trade-offs and evaluation 10.">
+              <defs>
+                <marker id="case-studies-step-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="10" y="20" width="124" height="54" rx="8"/>
+              <text class="d-title" x="72" y="43" text-anchor="middle">1 Requirements</text>
+              <text class="d-label" x="72" y="62" text-anchor="middle">5 min</text>
+              <rect class="d-accent" x="154" y="20" width="124" height="54" rx="8"/>
+              <text class="d-title" x="216" y="43" text-anchor="middle">2 Estimates</text>
+              <text class="d-label" x="216" y="62" text-anchor="middle">5 min</text>
+              <rect class="d-accent" x="298" y="20" width="124" height="54" rx="8"/>
+              <text class="d-title" x="360" y="43" text-anchor="middle">3 Diagram</text>
+              <text class="d-label" x="360" y="62" text-anchor="middle">10 min</text>
+              <rect class="d-accent" x="442" y="20" width="124" height="54" rx="8"/>
+              <text class="d-title" x="504" y="43" text-anchor="middle">4 Deep dives</text>
+              <text class="d-label" x="504" y="62" text-anchor="middle">15 min</text>
+              <rect class="d-accent" x="586" y="20" width="124" height="54" rx="8"/>
+              <text class="d-title" x="648" y="43" text-anchor="middle">5 Trade-offs</text>
+              <text class="d-label" x="648" y="62" text-anchor="middle">10 min</text>
+              <line class="d-line" x1="134" y1="47" x2="154" y2="47" marker-end="url(#case-studies-step-arrow)"/>
+              <line class="d-line" x1="278" y1="47" x2="298" y2="47" marker-end="url(#case-studies-step-arrow)"/>
+              <line class="d-line" x1="422" y1="47" x2="442" y2="47" marker-end="url(#case-studies-step-arrow)"/>
+              <line class="d-line" x1="566" y1="47" x2="586" y2="47" marker-end="url(#case-studies-step-arrow)"/>
+              <text class="d-label" x="72" y="96" text-anchor="middle">users, actions, data</text>
+              <text class="d-label" x="72" y="112" text-anchor="middle">latency, quality bar</text>
+              <text class="d-label" x="72" y="128" text-anchor="middle">cost, privacy</text>
+              <text class="d-label" x="216" y="96" text-anchor="middle">corpus tokens</text>
+              <text class="d-label" x="216" y="112" text-anchor="middle">peak QPS, streams</text>
+              <text class="d-label" x="216" y="128" text-anchor="middle">$ per request</text>
+              <text class="d-label" x="360" y="96" text-anchor="middle">online + offline path</text>
+              <text class="d-label" x="360" y="112" text-anchor="middle">name the pattern</text>
+              <text class="d-label" x="504" y="96" text-anchor="middle">retrieval, context,</text>
+              <text class="d-label" x="504" y="112" text-anchor="middle">tool safety, evals</text>
+              <text class="d-label" x="648" y="96" text-anchor="middle">failure modes</text>
+              <text class="d-label" x="648" y="112" text-anchor="middle">eval + rollout</text>
+              <text class="d-label" x="648" y="128" text-anchor="middle">what you gave up</text>
+              <rect class="d-fill" x="10" y="142" width="700" height="22" rx="4"/>
+              <text class="d-label" x="360" y="157" text-anchor="middle">State assumptions out loud; keep numbers round; return to requirements when choosing.</text>
+            </svg>
+          </div>
+          <figcaption>A 45-minute design answer. Most candidates skip step 2 and step 5; those are where senior answers stand out.</figcaption>
+        </figure>
+        <p><strong>Little's law</strong> turns traffic into concurrency, which sizes streams, workers and sandboxes.</p>
+        <div class="formula">
+          \[ L = \lambda \cdot W \]
+          <span class="formula-note">\(L\): requests in flight; \(\lambda\): arrivals per second; \(W\): seconds per request. 7/s streaming for 8 s each is about 56 concurrent streams.</span>
+        </div>
+
+        <h3>Case 1: a customer-support assistant over 1M documents</h3>
+        <p><strong>Requirements.</strong> A retailer's help-page assistant answers from the help center, internal KB and past tickets (1M documents, several languages), looks up orders, issues small refunds after customer confirmation, and hands off to humans. Targets: 50,000 conversations a day of about 4 turns, p95 TTFT under 2 s, 90% correct and grounded on a 500-question eval set, a citation on every factual answer.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Quantity</th><th>Calculation</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr><td>Corpus</td><td>1M docs × 1,500 tokens</td><td>1.5B tokens</td></tr>
+              <tr><td>Chunks</td><td>~400 tokens each, small overlap</td><td>~4.5M chunks</td></tr>
+              <tr><td>Vector index</td><td>4.5M × 1,024 dims × 4 bytes</td><td>~18 GB (≈4.5 GB int8) + HNSW overhead</td></tr>
+              <tr><td>Embed corpus once</td><td>1.5B tokens × example $0.02/M</td><td>~$30</td></tr>
+              <tr><td>Model calls</td><td>50k × 4 turns</td><td>200k/day ≈ 2.3/s avg, ~7/s peak</td></tr>
+              <tr><td>Concurrent streams</td><td>7/s × 8 s (Little's law)</td><td>~56</td></tr>
+              <tr><td>Tokens per call</td><td>2k system+tools (cached) + 2k chunks + 1k history + 100</td><td>~5,100 in, 250 out</td></tr>
+              <tr><td>Cost per call</td><td>3,100×$3 + 2,000×$0.30 + 250×$15, per 1M</td><td>~$0.014</td></tr>
+              <tr><td>Monthly bill</td><td>200k × 30 × $0.014</td><td>~$82k; ~$38k if 60% routed to a 10× cheaper model</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 280" role="img" aria-label="Support assistant architecture: customer to gateway to intent router; the router sends questions to retrieval and an answer model with citations and output checks, actions to tools with confirmation, and difficult cases to a human queue; an ingestion pipeline keeps the index fresh and traces feed an evaluation loop.">
+              <defs>
+                <marker id="case-studies-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="case-studies-arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <path class="d-line-accent" d="M670,40 L670,14 L65,14 L65,40" marker-end="url(#case-studies-arrow)"/>
+              <text class="d-label" x="368" y="10" text-anchor="middle">streamed answer + source links</text>
+              <rect class="d-box" x="20" y="40" width="90" height="46" rx="8"/>
+              <text class="d-title" x="65" y="60" text-anchor="middle">Customer</text>
+              <text class="d-label" x="65" y="77" text-anchor="middle">chat widget</text>
+              <line class="d-line-accent" x1="110" y1="63" x2="130" y2="63" marker-end="url(#case-studies-arrow)"/>
+              <rect class="d-box" x="130" y="40" width="90" height="46" rx="8"/>
+              <text class="d-title" x="175" y="60" text-anchor="middle">Gateway</text>
+              <text class="d-label" x="175" y="77" text-anchor="middle">auth · quota</text>
+              <line class="d-line-accent" x1="220" y1="63" x2="240" y2="63" marker-end="url(#case-studies-arrow)"/>
+              <rect class="d-accent" x="240" y="40" width="110" height="46" rx="8"/>
+              <text class="d-title" x="295" y="60" text-anchor="middle">Intent router</text>
+              <text class="d-label" x="295" y="77" text-anchor="middle">small model</text>
+              <line class="d-line-accent" x1="350" y1="63" x2="370" y2="63" marker-end="url(#case-studies-arrow)"/>
+              <rect class="d-accent" x="370" y="40" width="120" height="46" rx="8"/>
+              <text class="d-title" x="430" y="60" text-anchor="middle">Retrieve</text>
+              <text class="d-label" x="430" y="77" text-anchor="middle">hybrid + rerank</text>
+              <line class="d-line-accent" x1="490" y1="63" x2="510" y2="63" marker-end="url(#case-studies-arrow)"/>
+              <rect class="d-good" x="510" y="40" width="100" height="46" rx="8"/>
+              <text class="d-title" x="560" y="60" text-anchor="middle">Answer LLM</text>
+              <text class="d-label" x="560" y="77" text-anchor="middle">with citations</text>
+              <line class="d-line-accent" x1="610" y1="63" x2="630" y2="63" marker-end="url(#case-studies-arrow)"/>
+              <rect class="d-box" x="630" y="40" width="80" height="46" rx="8"/>
+              <text class="d-title" x="670" y="60" text-anchor="middle">Checks</text>
+              <text class="d-label" x="670" y="77" text-anchor="middle">PII, cites</text>
+              <line class="d-line-accent" x1="295" y1="86" x2="295" y2="130" marker-end="url(#case-studies-arrow)"/>
+              <text class="d-label" x="301" y="112">action</text>
+              <rect class="d-box" x="240" y="130" width="110" height="46" rx="8"/>
+              <text class="d-title" x="295" y="150" text-anchor="middle">Tools</text>
+              <text class="d-label" x="295" y="167" text-anchor="middle">order, refund</text>
+              <line class="d-line-accent" x1="262" y1="86" x2="140" y2="130" marker-end="url(#case-studies-arrow)"/>
+              <text class="d-label" x="168" y="104" text-anchor="middle">handoff</text>
+              <rect class="d-signal" x="20" y="130" width="190" height="46" rx="8"/>
+              <text class="d-title" x="115" y="150" text-anchor="middle">Human agent queue</text>
+              <text class="d-label" x="115" y="167" text-anchor="middle">with summary of chat</text>
+              <line class="d-line" x1="430" y1="130" x2="430" y2="86" marker-end="url(#case-studies-arrow-m)"/>
+              <rect class="d-box" x="370" y="130" width="120" height="46" rx="8"/>
+              <text class="d-title" x="430" y="150" text-anchor="middle">Index</text>
+              <text class="d-label" x="430" y="167" text-anchor="middle">4.5M chunks + ACL</text>
+              <line class="d-line" x1="430" y1="220" x2="430" y2="176" marker-end="url(#case-studies-arrow-m)"/>
+              <text class="d-label" x="436" y="203">incremental</text>
+              <rect class="d-box" x="355" y="220" width="150" height="46" rx="8"/>
+              <text class="d-title" x="430" y="240" text-anchor="middle">Ingestion</text>
+              <text class="d-label" x="430" y="257" text-anchor="middle">parse · dedupe · scrub</text>
+              <line class="d-line" x1="330" y1="243" x2="355" y2="243" marker-end="url(#case-studies-arrow-m)"/>
+              <rect class="d-fill" x="190" y="220" width="140" height="46" rx="8"/>
+              <text class="d-title" x="260" y="240" text-anchor="middle">Sources</text>
+              <text class="d-label" x="260" y="257" text-anchor="middle">help · KB · tickets</text>
+              <line class="d-line d-dash" x1="560" y1="86" x2="590" y2="130" marker-end="url(#case-studies-arrow-m)"/>
+              <rect class="d-fill" x="530" y="130" width="180" height="46" rx="8"/>
+              <text class="d-title" x="620" y="150" text-anchor="middle">Traces + feedback</text>
+              <text class="d-label" x="620" y="167" text-anchor="middle">eval set · judge · dashboards</text>
+            </svg>
+          </div>
+          <figcaption>Online path along the top; actions and handoffs branch off the router; ingestion feeds the index offline.</figcaption>
+        </figure>
+
+        <p><strong>Deep dive.</strong> Hybrid search (BM25 for order numbers, vectors for paraphrases) with locale and visibility filters inside the query, then rerank 50 to 5. Ingest only recent resolved tickets, PII-scrubbed and ranked below official articles. Freshness beats embedding choice: ingest CMS change events within minutes.</p>
+        <p><strong>Trade-offs.</strong> The router adds ~200 ms but saves most of the cost. Ticket text is untrusted, so refunds need customer confirmation and server-side limits. Evaluate offline on the golden set and online with resolution, handoff and repeat-contact rates.</p>
+
+        <div class="widget" id="case-studies-cost">
+          <div class="widget-head">
+            <span class="widget-title">Cost per request and monthly bill</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <span class="muted">Presets:</span>
+            <button class="btn" type="button" data-preset="support">Support assistant</button>
+            <button class="btn" type="button" data-preset="agent">Coding agent</button>
+            <button class="btn" type="button" data-preset="batch">Batch extraction</button>
+          </div>
+          <div class="widget-controls">
+            <label for="case-studies-cost-rpd">Requests/day <input type="number" id="case-studies-cost-rpd" min="0" step="100" value="50000" style="width:12ch"></label>
+            <label for="case-studies-cost-calls">Model calls/request <input type="number" id="case-studies-cost-calls" min="1" step="1" value="4" style="width:7ch"></label>
+            <label for="case-studies-cost-in">Input tokens/call <input type="number" id="case-studies-cost-in" min="0" step="100" value="5100" style="width:10ch"></label>
+            <label for="case-studies-cost-out">Output tokens/call <input type="number" id="case-studies-cost-out" min="0" step="10" value="250" style="width:9ch"></label>
+          </div>
+          <div class="widget-controls">
+            <label for="case-studies-cost-cache">Cached share of input <input type="range" id="case-studies-cost-cache" min="0" max="95" step="1" value="39"><output id="case-studies-cost-cache-v">39%</output></label>
+            <label for="case-studies-cost-route">Calls routed to small model <input type="range" id="case-studies-cost-route" min="0" max="90" step="5" value="0"><output id="case-studies-cost-route-v">0%</output></label>
+            <label for="case-studies-cost-batch"><input type="checkbox" id="case-studies-cost-batch"> Batch API (50% off)</label>
+          </div>
+          <div class="widget-controls">
+            <span class="muted">Example prices, $ per 1M tokens (edit to match your provider):</span>
+            <label for="case-studies-cost-pin">input <input type="number" id="case-studies-cost-pin" min="0" step="0.05" value="3" style="width:9ch"></label>
+            <label for="case-studies-cost-pcache">cached input <input type="number" id="case-studies-cost-pcache" min="0" step="0.01" value="0.30" style="width:9ch"></label>
+            <label for="case-studies-cost-pout">output <input type="number" id="case-studies-cost-pout" min="0" step="0.5" value="15" style="width:9ch"></label>
+            <label for="case-studies-cost-small">small model price factor <input type="number" id="case-studies-cost-small" min="0.01" max="1" step="0.01" value="0.10" style="width:9ch"></label>
+          </div>
+          <svg id="case-studies-cost-plot" viewBox="0 0 600 200" role="img" aria-label="Bar chart of monthly cost split into uncached input, cached input and output, compared with the same traffic without caching or routing."></svg>
+          <p class="readout" id="case-studies-cost-readout"></p>
+        </div>
+        <p>The prices are placeholders; plug in current numbers from your provider. For chat, output and uncached input cost about the same; for agents, input dominates and caching is the main lever.</p>
+
+<h3>Case 2: a coding agent that turns issues into pull requests</h3>
+        <p><strong>Requirements.</strong> An agent picks up tracker issues, edits a repository of up to 1M lines, runs tests in a sandbox and opens a pull request for human review. 500 tasks a day, under 30 minutes and a few dollars each, never pushing to the main branch or touching production secrets.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 720 270" role="img" aria-label="Coding agent architecture: issue webhook to durable task queue to agent loop, which calls models through the gateway and runs tools inside a per-task sandbox with an egress allow-list; output is a branch and pull request reviewed by CI and a human; traces feed evaluation.">
+              <defs>
+                <marker id="case-studies-ag-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="case-studies-ag-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="70" y="52" text-anchor="middle">Issue</text>
+              <text class="d-label" x="70" y="70" text-anchor="middle">webhook</text>
+              <line class="d-line-accent" x1="120" y1="55" x2="140" y2="55" marker-end="url(#case-studies-ag-arrow)"/>
+              <rect class="d-box" x="140" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="190" y="52" text-anchor="middle">Task queue</text>
+              <text class="d-label" x="190" y="70" text-anchor="middle">durable state</text>
+              <line class="d-line-accent" x1="240" y1="55" x2="260" y2="55" marker-end="url(#case-studies-ag-arrow)"/>
+              <rect class="d-accent" x="260" y="20" width="180" height="70" rx="8"/>
+              <text class="d-title" x="350" y="42" text-anchor="middle">Agent loop</text>
+              <text class="d-label" x="350" y="60" text-anchor="middle">plan · act · observe</text>
+              <text class="d-label" x="350" y="77" text-anchor="middle">budget: 40 steps, $5, 30 min</text>
+              <line class="d-line-accent" x1="440" y1="55" x2="480" y2="55" marker-start="url(#case-studies-ag-arrow)" marker-end="url(#case-studies-ag-arrow)"/>
+              <rect class="d-good" x="480" y="30" width="110" height="50" rx="8"/>
+              <text class="d-title" x="535" y="52" text-anchor="middle">Models</text>
+              <text class="d-label" x="535" y="70" text-anchor="middle">via gateway</text>
+              <line class="d-line d-dash" x1="590" y1="55" x2="610" y2="55"/>
+              <rect class="d-fill" x="610" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="660" y="52" text-anchor="middle">Traces</text>
+              <text class="d-label" x="660" y="70" text-anchor="middle">+ eval runs</text>
+              <line class="d-line-accent" x1="350" y1="90" x2="350" y2="130" marker-start="url(#case-studies-ag-arrow)" marker-end="url(#case-studies-ag-arrow)"/>
+              <text class="d-label" x="358" y="114">tool calls / output</text>
+              <rect class="d-fill" x="230" y="130" width="240" height="124" rx="8"/>
+              <text class="d-text" x="350" y="150" text-anchor="middle">Sandbox container (per task)</text>
+              <rect class="d-box" x="245" y="162" width="100" height="34" rx="6"/>
+              <text class="d-label" x="295" y="183" text-anchor="middle">search · read</text>
+              <rect class="d-box" x="355" y="162" width="100" height="34" rx="6"/>
+              <text class="d-label" x="405" y="183" text-anchor="middle">edit (patch)</text>
+              <rect class="d-box" x="245" y="206" width="100" height="34" rx="6"/>
+              <text class="d-label" x="295" y="227" text-anchor="middle">build</text>
+              <rect class="d-box" x="355" y="206" width="100" height="34" rx="6"/>
+              <text class="d-label" x="405" y="227" text-anchor="middle">run tests</text>
+              <line class="d-line-signal d-dash" x1="470" y1="170" x2="510" y2="170" marker-end="url(#case-studies-ag-arrow-s)"/>
+              <rect class="d-signal" x="510" y="150" width="190" height="40" rx="8"/>
+              <text class="d-text" x="605" y="175" text-anchor="middle">egress: package registry only</text>
+              <rect class="d-box" x="510" y="206" width="190" height="40" rx="8"/>
+              <text class="d-text" x="605" y="231" text-anchor="middle">scoped token: branch + PR</text>
+              <line class="d-line-accent" x1="230" y1="170" x2="190" y2="162" marker-end="url(#case-studies-ag-arrow)"/>
+              <rect class="d-box" x="20" y="140" width="170" height="44" rx="8"/>
+              <text class="d-title" x="105" y="160" text-anchor="middle">Branch + PR</text>
+              <text class="d-label" x="105" y="176" text-anchor="middle">bot account, never main</text>
+              <line class="d-line-accent" x1="105" y1="184" x2="105" y2="206" marker-end="url(#case-studies-ag-arrow)"/>
+              <rect class="d-good" x="20" y="206" width="170" height="44" rx="8"/>
+              <text class="d-title" x="105" y="226" text-anchor="middle">CI + human review</text>
+              <text class="d-label" x="105" y="242" text-anchor="middle">merge decision</text>
+            </svg>
+          </div>
+          <figcaption>The model decides the steps; the sandbox, the egress allow-list and the scoped token decide what those steps can possibly do.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Quantity</th><th>Calculation</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr><td>Repository</td><td>1M lines × ~10 tokens</td><td>~10M tokens: never fits; navigate with tools</td></tr>
+              <tr><td>Input per task</td><td>40 steps × ~45k average context</td><td>~1.8M tokens</td></tr>
+              <tr><td>Input cost</td><td>15% uncached × $3 + 85% cached × $0.30</td><td>~$1.27</td></tr>
+              <tr><td>Output cost</td><td>40 × 400 tokens × $15/M</td><td>~$0.24, so ~$1.50/task</td></tr>
+              <tr><td>Monthly bill</td><td>500 tasks × 30 days × $1.50</td><td>~$22k + sandbox compute</td></tr>
+              <tr><td>Sandboxes</td><td>~62 tasks/h × 0.25 h (Little's law)</td><td>~16 concurrent, plan 3× for peaks</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Trade-offs.</strong> Text search and language-server symbol lookup beat a stale embedding index for most code navigation. Long tasks need context compaction (summarise old tool output) and a stable prompt prefix for caching. Issue text and repository files are untrusted input, so all safety lives in the sandbox and token scope. Evaluate on historical issues with hidden tests, SWE-bench style, tracking resolve rate, cost per task and PR merge rate.</p>
+
+        <h3>Case 3: batch extraction from 10M pages a month</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Decision</th><th>Numbers and reasoning</th></tr></thead>
+            <tbody>
+              <tr><td>Throughput</td><td>10M / 30 days ≈ 333k pages/day ≈ 4 pages/s; a queue with a worker pool, no user waiting</td></tr>
+              <tr><td>Cost</td><td>~1,000 in + 200 out per page ≈ $0.006 at the example prices; batch API halves it to ≈ $1,000/day, a small model cuts it far more</td></tr>
+              <tr><td>Correctness</td><td>JSON schema plus arithmetic checks (line items sum to total); ~5% low-confidence pages go to human review</td></tr>
+              <tr><td>Idempotency</td><td>key = document hash + schema version, so retries and re-runs never duplicate rows</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Follow the five steps: requirements, estimates, diagram, deep dives, trade-offs with evaluation.</li>
+            <li>Back-of-envelope numbers (tokens, QPS, concurrency, dollars) turn a box diagram into a design.</li>
+            <li>Little's law sizes streams, workers and sandboxes.</li>
+            <li>Put safety in architecture (sandboxes, scoped tokens, server-side limits), not in the prompt.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Drawing boxes before asking about traffic, latency and quality targets.</li>
+            <li>Forgetting to multiply per-call cost by calls per request, which hides most of an agent's bill.</li>
+            <li>No evaluation plan, or "we'll use an LLM judge" with no golden set to calibrate it.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="case-studies-1"><span>Run the five-step framework on a new prompt ("design a meeting-notes assistant") in 45 minutes.</span></label></li>
+          <li><label><input type="checkbox" data-key="case-studies-2"><span>Estimate index size, peak QPS, concurrent streams and monthly cost for a RAG assistant.</span></label></li>
+          <li><label><input type="checkbox" data-key="case-studies-3"><span>Explain where the safety boundary of a coding agent lives and why.</span></label></li>
+          <li><label><input type="checkbox" data-key="case-studies-4"><span>Propose offline and online metrics for a support assistant and say which one gates a release.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2310.06770">SWE-bench: Can Language Models Resolve Real-World GitHub Issues? (Jimenez et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2307.03172">Lost in the Middle: How Language Models Use Long Contexts (Liu et al., 2023)</a></li>
+          <li><span class="kind">Essay</span><a href="https://www.anthropic.com/research/building-effective-agents">Building effective agents (Anthropic)</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Write a one-page design doc</h4><p>Pick a product you use (a meeting-notes bot, a docs assistant) and write its design: requirements, back-of-envelope table, diagram, and three trade-offs. Have a friend play interviewer and poke holes in the numbers.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Build a resilient mini-gateway</h4><p>Write a small HTTP service in front of two model providers with per-user token buckets, retries with jitter, a circuit breaker and a cached fallback. Inject failures and plot availability and p95 latency with and without each mechanism.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Ship a RAG assistant with a cost and latency budget</h4><p>Build a streaming RAG assistant over a public corpus with citations, a "not found" path and feedback logging. Set targets for p95 TTFT and cost per answer, then hit them with routing and caching while an eval set shows quality holding.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Name the pattern, latency target and hardest component for any AI product description.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Decompose latency and cost into components and estimate both on a whiteboard.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Design rate limiting, retries, circuit breakers and a fallback chain, and compute the resulting availability.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Choose autonomy levels and trust cues for an AI feature and justify them by reversibility.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Deliver a 45-minute end-to-end design with numbers, diagram, deep dives and an evaluation plan.</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widgets for AI system design. Each widget is a self-contained IIFE. */
+
+/* 13.1 Pattern explorer */
+(function () {
+  var svg = document.getElementById("patterns-explorer-plot");
+  if (!svg) return;
+  var sel = document.getElementById("patterns-explorer-sel");
+  var out = document.getElementById("patterns-explorer-readout");
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  var nodes = {
+    client: [10, 92, 80, "Client"], gateway: [110, 92, 100, "Gateway"],
+    queue: [110, 154, 100, "Queue + workers"], ctx: [230, 30, 110, "Context builder"],
+    orch: [230, 92, 110, "Orchestrator"], agent: [230, 154, 110, "Agent loop"],
+    retrieval: [360, 30, 110, "Retrieval"], tools: [360, 92, 110, "Tools"],
+    small: [360, 154, 110, "Small model"], ingest: [490, 30, 100, "Ingestion"],
+    sandbox: [490, 92, 100, "Sandbox"], large: [490, 154, 100, "Large model"]
+  };
+  var P = {
+    chat: { path: ["client", "gateway", "orch", "retrieval", "large"], hard: ["orch"], target: "first token < 1 s, streamed",
+      hardTxt: "context and memory management", risk: "cost grows with conversation length", tip: "summarise old turns; keep the system prompt stable for prefix caching" },
+    copilot: { path: ["client", "gateway", "ctx", "small"], hard: ["ctx", "small"], target: "inline ~100-400 ms end to end",
+      hardTxt: "context builder + small fill-in-the-middle model", risk: "stale or noisy suggestions", tip: "debounce keystrokes, cancel in-flight requests, track acceptance rate" },
+    rag: { path: ["client", "gateway", "orch", "retrieval", "large"], hard: ["retrieval", "ingest"], target: "2-5 s, streamed with citations",
+      hardTxt: "offline ingestion and freshness, plus permission filtering at query time", risk: "leaking documents across permissions", tip: "filter by the user's ACL inside the retrieval query" },
+    agent: { path: ["client", "gateway", "agent", "large", "tools", "sandbox"], hard: ["agent", "sandbox"], target: "seconds to minutes, asynchronous",
+      hardTxt: "loop control, sandboxing, durable state", risk: "runaway cost and unsafe actions", tip: "step and dollar budgets; approval gates for irreversible actions" },
+    batch: { path: ["queue", "gateway", "small", "large"], hard: ["queue"], target: "hours, per-batch SLA",
+      hardTxt: "queue, workers, schema validation, idempotency", risk: "silent bad rows at scale", tip: "use provider batch APIs; dead-letter queue for failures" },
+    router: { path: ["client", "gateway", "small", "large"], hard: ["gateway"], target: "adds < 10-50 ms",
+      hardTxt: "routing policy, quotas, fallbacks", risk: "single point of failure", tip: "run it replicated and keep it simpler than the services behind it" }
+  };
+  function draw() {
+    var p = P[sel.value];
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    el("text", { x: 10, y: 16, "class": "d-label" }, svg).textContent = "blue = used, amber = hardest part, number = request order";
+    Object.keys(nodes).forEach(function (k) {
+      var n = nodes[k], idx = p.path.indexOf(k);
+      var cls = p.hard.indexOf(k) >= 0 ? "d-signal" : (idx >= 0 ? "d-accent" : "d-box");
+      var r = el("rect", { x: n[0], y: n[1], width: n[2], height: 36, rx: 7, "class": cls }, svg);
+      if (idx < 0 && p.hard.indexOf(k) < 0) r.setAttribute("opacity", "0.45");
+      var t = el("text", { x: n[0] + n[2] / 2, y: n[1] + 22, "text-anchor": "middle", "class": idx >= 0 ? "d-text" : "d-label" }, svg);
+      t.textContent = n[3];
+      if (idx >= 0) {
+        el("circle", { cx: n[0] + 2, cy: n[1] + 2, r: 8, "class": "d-dot" }, svg);
+        var b = el("text", { x: n[0] + 2, y: n[1] + 6, "text-anchor": "middle", "class": "d-label" }, svg);
+        b.setAttribute("style", "fill: var(--accent-ink); font-size: 10px; font-weight: 600");
+        b.textContent = String(idx + 1);
+      }
+    });
+    el("text", { x: 10, y: 214, "class": "d-label" }, svg).textContent = "Latency target: " + p.target;
+    out.textContent = "Flow: " + p.path.map(function (k) { return nodes[k][3]; }).join(" → ") +
+      ". Hard part: " + p.hardTxt + ". Main risk: " + p.risk + ". Tip: " + p.tip + ".";
+  }
+  sel.addEventListener("change", draw);
+  draw();
+})();
+
+/* 13.2 Latency budget builder (log-normal Monte Carlo) */
+(function () {
+  var svg = document.getElementById("tradeoffs-latency-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  var box = document.getElementById("tradeoffs-latency-comps");
+  var outT = document.getElementById("tradeoffs-latency-out"), tps = document.getElementById("tradeoffs-latency-tps");
+  var target = document.getElementById("tradeoffs-latency-target"), mode = document.getElementById("tradeoffs-latency-mode");
+  var readout = document.getElementById("tradeoffs-latency-readout");
+  var comps = [
+    { id: "net", name: "Network + gateway", p50: 40, p95: 120, on: true },
+    { id: "rewrite", name: "Query rewrite (LLM)", p50: 300, p95: 900, on: false },
+    { id: "embed", name: "Embed query", p50: 30, p95: 80, on: true },
+    { id: "search", name: "Hybrid search", p50: 40, p95: 150, on: true },
+    { id: "rerank", name: "Rerank top-50", p50: 120, p95: 350, on: true },
+    { id: "guardin", name: "Input guardrail", p50: 80, p95: 250, on: false },
+    { id: "ttft", name: "Prefill (TTFT)", p50: 500, p95: 1500, on: true, fixed: true },
+    { id: "decode", name: "Decode", p50: 0, p95: 0, on: true, fixed: true, post: true },
+    { id: "guardout", name: "Output guardrail", p50: 100, p95: 300, on: false, post: true }
+  ];
+  comps.forEach(function (c) {
+    if (c.fixed) return;
+    var lab = document.createElement("label");
+    lab.setAttribute("for", "tradeoffs-latency-c-" + c.id);
+    var cb = document.createElement("input");
+    cb.type = "checkbox"; cb.id = "tradeoffs-latency-c-" + c.id; cb.checked = c.on;
+    cb.addEventListener("change", function () { c.on = cb.checked; draw(); });
+    lab.appendChild(cb);
+    lab.appendChild(document.createTextNode(" " + c.name + " (" + c.p50 + "/" + c.p95 + " ms)"));
+    box.appendChild(lab);
+  });
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var N = 4000;
+  function draw() {
+    document.getElementById("tradeoffs-latency-out-v").textContent = outT.value;
+    document.getElementById("tradeoffs-latency-tps-v").textContent = tps.value;
+    document.getElementById("tradeoffs-latency-target-v").textContent = target.value;
+    var full = mode.value === "full";
+    var dec = comps[7];
+    dec.p50 = +outT.value / +tps.value * 1000; dec.p95 = dec.p50 * 1.3;
+    dec.name = "Decode (" + outT.value + " tok)";
+    var act = comps.filter(function (c) { return c.on && (full || !c.post); });
+    var rand = rng(42), totals = new Float64Array(N), sumP50 = 0, sumP95 = 0;
+    act.forEach(function (c) { sumP50 += c.p50; sumP95 += c.p95; });
+    for (var i = 0; i < N; i++) {
+      var s = 0;
+      for (var j = 0; j < act.length; j++) {
+        var c = act[j], mu = Math.log(c.p50), sg = Math.log(c.p95 / c.p50) / 1.645;
+        var u1 = rand() || 1e-9, u2 = rand();
+        var z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        s += Math.exp(mu + sg * z);
+      }
+      totals[i] = s;
+    }
+    var sorted = Array.prototype.slice.call(totals).sort(function (a, b) { return a - b; });
+    var p50 = sorted[Math.floor(N * 0.5)], p95 = sorted[Math.floor(N * 0.95)], tg = +target.value;
+    var met = 0; for (i = 0; i < N; i++) if (sorted[i] <= tg) met++;
+    var maxV = Math.max(sumP95, tg, sorted[Math.floor(N * 0.99)]) * 1.05;
+    var X0 = 20, W = 560, sx = function (v) { return X0 + Math.min(v, maxV) / maxV * W; };
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    el("text", { x: X0, y: 14, "class": "d-label" }, svg).textContent = "Median contribution of each component";
+    var cls = ["d-accent", "d-good", "d-signal", "d-box", "d-fill"], x = X0;
+    act.forEach(function (c, k) {
+      var w = c.p50 / maxV * W;
+      el("rect", { x: x, y: 20, width: Math.max(w, 1), height: 30, "class": cls[k % cls.length] }, svg);
+      if (w > 64) { var t = el("text", { x: x + w / 2, y: 39, "text-anchor": "middle", "class": "d-label" }, svg); t.textContent = c.name.split(" (")[0]; }
+      x += w;
+    });
+    el("text", { x: X0, y: 76, "class": "d-label" }, svg).textContent = "Simulated total latency, " + N + " requests";
+    var bins = 48, counts = new Array(bins).fill(0), bw = maxV / bins;
+    for (i = 0; i < N; i++) { if (sorted[i] >= maxV) continue; var b = Math.floor(sorted[i] / bw); counts[b]++; }
+    var cmax = Math.max.apply(null, counts), base = 222, H = 88;
+    for (b = 0; b < bins; b++) {
+      var h = counts[b] / cmax * H;
+      el("rect", { x: sx(b * bw) + 0.5, y: base - h, width: Math.max(W / bins - 1, 1), height: h, "class": (b + 0.5) * bw <= tg ? "d-accent" : "d-signal" }, svg);
+    }
+    el("line", { x1: X0, y1: base, x2: X0 + W, y2: base, "class": "d-line" }, svg);
+    function mark(v, clsName, label, yy) {
+      el("line", { x1: sx(v), y1: yy + 4, x2: sx(v), y2: base, "class": clsName }, svg);
+      var t = el("text", { x: sx(v) + 4, y: yy, "class": "d-label" }, svg); t.textContent = label;
+      if (sx(v) > X0 + W - 90) { t.setAttribute("x", sx(v) - 4); t.setAttribute("text-anchor", "end"); }
+    }
+    mark(p50, "d-line-accent", "p50 " + Math.round(p50), 94);
+    mark(p95, "d-line-signal", "p95 " + Math.round(p95), 108);
+    mark(tg, "d-line d-dash", "target " + tg, 122);
+    var step = maxV > 8000 ? 2000 : maxV > 3000 ? 1000 : maxV > 1200 ? 500 : 200;
+    for (var v = 0; v <= maxV; v += step) {
+      var tt = el("text", { x: sx(v), y: base + 16, "text-anchor": "middle", "class": "d-label" }, svg);
+      tt.textContent = v >= 1000 ? (v / 1000) + " s" : v + " ms";
+    }
+    readout.textContent = (full ? "Full response" : "First token") + ": simulated p50 ≈ " + Math.round(p50) + " ms, p95 ≈ " + Math.round(p95) +
+      " ms. Naive sum of component p95s = " + Math.round(sumP95) + " ms (pessimistic). " +
+      (met / N * 100).toFixed(1) + "% of requests meet the " + tg + " ms target.";
+  }
+  [outT, tps, target].forEach(function (i) { i.addEventListener("input", draw); });
+  mode.addEventListener("change", draw);
+  draw();
+})();
+
+/* 13.3 Token bucket */
+(function () {
+  var svg = document.getElementById("resilience-bucket-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  var cap = document.getElementById("resilience-bucket-cap"), rate = document.getElementById("resilience-bucket-rate");
+  var load = document.getElementById("resilience-bucket-load"), burst = document.getElementById("resilience-bucket-burst");
+  var readout = document.getElementById("resilience-bucket-readout");
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function draw() {
+    var B = +cap.value, r = +rate.value, lam = +load.value, T = 60;
+    document.getElementById("resilience-bucket-cap-v").textContent = B;
+    document.getElementById("resilience-bucket-rate-v").textContent = r;
+    document.getElementById("resilience-bucket-load-v").textContent = lam;
+    var rand = rng(7), arr = [], t = 0;
+    while (true) { t += -Math.log(1 - rand()) / lam; if (t >= T) break; arr.push(t); }
+    if (burst.checked) for (var i = 0; i < 15; i++) arr.push(20 + i * 0.03);
+    arr.sort(function (a, b) { return a - b; });
+    var tokens = B, last = 0, levels = [[0, B]], res = [];
+    arr.forEach(function (a) {
+      tokens = Math.min(B, tokens + (a - last) * r);
+      levels.push([a, tokens]);
+      var ok = tokens >= 1;
+      if (ok) tokens -= 1;
+      levels.push([a, tokens]);
+      res.push([a, ok]); last = a;
+    });
+    tokens = Math.min(B, tokens + (T - last) * r); levels.push([T, tokens]);
+    var X0 = 50, W = 530, sx = function (v) { return X0 + v / T * W; };
+    var Y0 = 160, H = 130, sy = function (v) { return Y0 - v / B * H; };
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    el("line", { x1: X0, y1: sy(B), x2: X0 + W, y2: sy(B), "class": "d-grid" }, svg);
+    el("line", { x1: X0, y1: Y0, x2: X0 + W, y2: Y0, "class": "d-line" }, svg);
+    el("text", { x: X0 - 6, y: sy(B) + 4, "text-anchor": "end", "class": "d-label" }, svg).textContent = "B=" + B;
+    el("text", { x: X0 - 6, y: Y0 + 4, "text-anchor": "end", "class": "d-label" }, svg).textContent = "0";
+    el("text", { x: X0, y: 16, "class": "d-label" }, svg).textContent = "Tokens in bucket";
+    // refill between events is linear, so a straight-line polyline through the samples is exact (capped segments are approximated)
+    var pts = [], prev = null;
+    levels.forEach(function (p) {
+      if (prev && p[0] > prev[0]) {
+        var full = prev[1] + (p[0] - prev[0]) * r;
+        if (full > B) { var tc = prev[0] + (B - prev[1]) / r; pts.push(sx(tc).toFixed(1) + "," + sy(B).toFixed(1)); }
+      }
+      pts.push(sx(p[0]).toFixed(1) + "," + sy(p[1]).toFixed(1)); prev = p;
+    });
+    el("polyline", { points: pts.join(" "), "class": "d-line-accent" }, svg);
+    var acc = 0;
+    res.forEach(function (q) {
+      if (q[1]) acc++;
+      el("circle", { cx: sx(q[0]), cy: q[1] ? 190 : 212, r: 2.6, "class": q[1] ? "d-dot-good" : "d-dot-signal" }, svg);
+    });
+    el("text", { x: X0 - 6, y: 194, "text-anchor": "end", "class": "d-label d-text-good" }, svg).textContent = "pass";
+    el("text", { x: X0 - 6, y: 216, "text-anchor": "end", "class": "d-label d-text-signal" }, svg).textContent = "429";
+    for (var s = 0; s <= T; s += 10) el("text", { x: sx(s), y: 238, "text-anchor": "middle", "class": "d-label" }, svg).textContent = s + " s";
+    readout.textContent = "Accepted " + acc + " of " + res.length + " requests (" + (res.length ? (acc / res.length * 100).toFixed(0) : 0) +
+      "%). Bound over 60 s: B + r·t = " + (B + r * T) + " requests. Offered " + (res.length / T).toFixed(2) + "/s vs refill " + r + "/s.";
+  }
+  [cap, rate, load].forEach(function (i) { i.addEventListener("input", draw); });
+  burst.addEventListener("change", draw);
+  draw();
+})();
+
+/* 13.3 Fallback chain simulator */
+(function () {
+  var svg = document.getElementById("resilience-chain-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  var p1 = document.getElementById("resilience-chain-p1"), p2 = document.getElementById("resilience-chain-p2");
+  var corr = document.getElementById("resilience-chain-corr"), cache = document.getElementById("resilience-chain-cache");
+  var cb = document.getElementById("resilience-chain-cb"), readout = document.getElementById("resilience-chain-readout");
+  var seed = 11;
+  function rng(s) { return function () { s |= 0; s = s + 0x6D2B79F5 | 0; var t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var TIERS = [
+    { name: "Primary model", cls: "d-dot-good", ms: 1200 },
+    { name: "Secondary provider", cls: "d-dot", ms: 1500 },
+    { name: "Semantic cache", cls: "d-dot-muted", ms: 30 },
+    { name: "Degraded response", cls: "d-dot-signal", ms: 30 }
+  ];
+  var DETECT = 2000; // ms lost waiting for a failing call to error or time out
+  function draw() {
+    var f1 = +p1.value / 100, f2 = +p2.value / 100, rho = +corr.value, h = +cache.value / 100, open = cb.checked;
+    document.getElementById("resilience-chain-p1-v").textContent = p1.value + "%";
+    document.getElementById("resilience-chain-p2-v").textContent = p2.value + "%";
+    document.getElementById("resilience-chain-corr-v").textContent = rho.toFixed(2);
+    document.getElementById("resilience-chain-cache-v").textContent = cache.value + "%";
+    var rand = rng(seed), N = 400, served = [0, 0, 0, 0], lat = 0, foLat = 0, fo = 0, who = [];
+    for (var i = 0; i < N; i++) {
+      var t = 0, w;
+      var primaryFails = open ? true : rand() < f1;
+      if (!open && primaryFails) t += DETECT;
+      if (!primaryFails) w = 0;
+      else {
+        var secFail = rand() < (rho + (1 - rho) * f2);
+        if (!secFail) w = 1;
+        else { t += DETECT; w = rand() < h ? 2 : 3; }
+      }
+      t += TIERS[w].ms; served[w]++; who.push(w); lat += t;
+      if (w > 0) { fo++; foLat += t; }
+    }
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    for (i = 0; i < N; i++) {
+      var col = i % 20, row = Math.floor(i / 20);
+      el("circle", { cx: 24 + col * 14, cy: 20 + row * 11, r: 4, "class": TIERS[who[i]].cls }, svg);
+    }
+    var X0 = 340, W = 170;
+    TIERS.forEach(function (tr, k) {
+      var y = 30 + k * 46, frac = served[k] / N;
+      el("circle", { cx: X0 + 5, cy: y - 4, r: 5, "class": tr.cls }, svg);
+      el("text", { x: X0 + 16, y: y, "class": "d-text" }, svg).textContent = tr.name;
+      el("rect", { x: X0, y: y + 8, width: W, height: 12, rx: 3, "class": "d-fill" }, svg);
+      el("rect", { x: X0, y: y + 8, width: Math.max(frac * W, 0.5), height: 12, rx: 3, "class": k === 3 ? "d-signal" : "d-accent" }, svg);
+      el("text", { x: X0 + W + 8, y: y + 18, "class": "d-mono" }, svg).textContent = (frac * 100).toFixed(1) + "%";
+    });
+    var avail = (served[0] + served[1] + served[2]) / N;
+    var indep = open ? 1 - (rho + (1 - rho) * f2) * (1 - h) : 1 - f1 * (rho + (1 - rho) * f2) * (1 - h);
+    var naive = open ? 1 - f2 * (1 - h) : 1 - f1 * f2 * (1 - h);
+    el("text", { x: X0, y: 222, "class": "d-title" }, svg).textContent = "AI answer: " + (avail * 100).toFixed(1) + "% (sample)";
+    el("text", { x: X0, y: 242, "class": "d-label" }, svg).textContent = "expected " + (indep * 100).toFixed(2) + "%, if independent " + (naive * 100).toFixed(2) + "%";
+    readout.textContent = (open ? "Breaker open: primary skipped. " : "") + "Mean latency " + Math.round(lat / N) + " ms; requests that failed over averaged " +
+      (fo ? Math.round(foLat / fo) : 0) + " ms (each failing hop costs ~" + DETECT + " ms to detect). Every request still gets a response thanks to the degraded tier.";
+  }
+  [p1, p2, corr, cache].forEach(function (i) { i.addEventListener("input", draw); });
+  cb.addEventListener("change", draw);
+  document.getElementById("resilience-chain-resample").addEventListener("click", function () { seed = Math.floor(Math.random() * 1e9); draw(); });
+  draw();
+})();
+
+/* 13.4 Blocking vs streaming */
+(function () {
+  var svg = document.getElementById("ux-stream-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  var ttft = document.getElementById("ux-stream-ttft"), tps = document.getElementById("ux-stream-tps");
+  var play = document.getElementById("ux-stream-play"), readout = document.getElementById("ux-stream-readout");
+  var answer = "To reset your router, hold the recessed button on the back for ten seconds until the light blinks amber. " +
+    "Wait two minutes for it to restart, then reconnect using the network name and password printed on the label. " +
+    "If the light stays red, check that the cable from the wall socket is firmly connected, and contact support with your order number.";
+  var words = answer.split(" ");
+  var tokens = Math.round(words.length * 1.3); // rough tokens-per-word ratio for English
+  function wrap(ws) {
+    var lines = [], cur = "";
+    ws.forEach(function (w) { if ((cur + " " + w).trim().length > 40) { lines.push(cur.trim()); cur = w; } else cur += " " + w; });
+    if (cur.trim()) lines.push(cur.trim());
+    return lines;
+  }
+  function panel(x, title, lines, status) {
+    el("rect", { x: x, y: 8, width: 284, height: 214, rx: 8, "class": "d-box" }, svg);
+    el("text", { x: x + 12, y: 28, "class": "d-title" }, svg).textContent = title;
+    lines.slice(0, 8).forEach(function (ln, i) { el("text", { x: x + 12, y: 52 + i * 18, "class": "d-label" }, svg).textContent = ln; });
+    el("text", { x: x + 12, y: 210, "class": "d-mono" }, svg).textContent = status;
+  }
+  function render(tms) {
+    var T1 = +ttft.value, rate = +tps.value, done = T1 + tokens / rate * 1000;
+    document.getElementById("ux-stream-ttft-v").textContent = T1;
+    document.getElementById("ux-stream-tps-v").textContent = rate;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var sec = (tms / 1000).toFixed(1) + " s";
+    var bl = tms >= done ? wrap(words) : ["Thinking..."];
+    panel(6, "Blocking", bl, tms >= done ? "complete at " + (done / 1000).toFixed(1) + " s" : "spinner, t = " + sec);
+    var shownTok = tms < T1 ? 0 : Math.min(tokens, Math.floor((tms - T1) / 1000 * rate));
+    var shownW = Math.min(words.length, Math.round(shownTok / 1.3));
+    var sl = shownW ? wrap(words.slice(0, shownW)) : ["..."];
+    panel(310, "Streaming", sl, shownW >= words.length ? "complete at " + (done / 1000).toFixed(1) + " s" : "reading, t = " + sec);
+    readout.textContent = "Answer ≈ " + tokens + " tokens. Blocking: nothing visible until " + (done / 1000).toFixed(1) +
+      " s. Streaming: first words at " + (T1 / 1000).toFixed(1) + " s, same finish time. Perceived wait drops by " + ((done - T1) / 1000).toFixed(1) + " s.";
+    return done;
+  }
+  var raf = null;
+  function snapshot() { if (raf) { cancelAnimationFrame(raf); raf = null; } render(+ttft.value + 1500); }
+  play.addEventListener("click", function () {
+    if (raf) cancelAnimationFrame(raf);
+    var start = performance.now();
+    function frame(now) {
+      var t = now - start, done = render(t);
+      if (t < done + 300) raf = requestAnimationFrame(frame); else raf = null;
+    }
+    raf = requestAnimationFrame(frame);
+  });
+  [ttft, tps].forEach(function (i) { i.addEventListener("input", snapshot); });
+  snapshot();
+})();
+
+/* 13.5 Cost calculator */
+(function () {
+  var svg = document.getElementById("case-studies-cost-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  var ids = ["rpd", "calls", "in", "out", "cache", "route", "pin", "pcache", "pout", "small"];
+  var f = {};
+  ids.forEach(function (k) { f[k] = document.getElementById("case-studies-cost-" + k); });
+  var batch = document.getElementById("case-studies-cost-batch"), readout = document.getElementById("case-studies-cost-readout");
+  var presets = {
+    support: { rpd: 50000, calls: 4, "in": 5100, out: 250, cache: 39, route: 0, batch: false },
+    agent: { rpd: 500, calls: 40, "in": 45000, out: 400, cache: 85, route: 0, batch: false },
+    batch: { rpd: 333000, calls: 1, "in": 1000, out: 200, cache: 0, route: 0, batch: true }
+  };
+  function money(x) {
+    if (x >= 1000) return "$" + Math.round(x).toLocaleString("en-US");
+    if (x >= 1) return "$" + x.toFixed(2);
+    return "$" + x.toFixed(4);
+  }
+  function num(el2) { var v = parseFloat(el2.value); return isFinite(v) && v >= 0 ? v : 0; }
+  function draw() {
+    var h = num(f.cache) / 100, r = num(f.route) / 100, sf = num(f.small);
+    document.getElementById("case-studies-cost-cache-v").textContent = f.cache.value + "%";
+    document.getElementById("case-studies-cost-route-v").textContent = f.route.value + "%";
+    var mult = ((1 - r) + r * sf) * (batch.checked ? 0.5 : 1);
+    var IN = num(f["in"]), OUT = num(f.out), pin = num(f.pin), pc = num(f.pcache), po = num(f.pout);
+    var parts = [IN * (1 - h) * pin / 1e6 * mult, IN * h * pc / 1e6 * mult, OUT * po / 1e6 * mult];
+    var base = [IN * pin / 1e6, 0, OUT * po / 1e6];
+    var callsMonth = num(f.rpd) * Math.max(1, num(f.calls)) * 30;
+    var perCall = parts[0] + parts[1] + parts[2], baseCall = base[0] + base[2];
+    var month = perCall * callsMonth, baseMonth = baseCall * callsMonth;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var X0 = 150, W = 420, maxV = Math.max(month, baseMonth) || 1;
+    var cls = ["d-accent", "d-good", "d-signal"], names = ["uncached input", "cached input", "output"];
+    [["Your design", parts, month], ["Unoptimised", base, baseMonth]].forEach(function (row, k) {
+      var y = 30 + k * 60, x = X0;
+      el("text", { x: X0 - 8, y: y + 20, "text-anchor": "end", "class": "d-text" }, svg).textContent = row[0];
+      row[1].forEach(function (p, j) {
+        var w = p * callsMonth / maxV * W;
+        if (w > 0) el("rect", { x: x, y: y, width: w, height: 30, "class": cls[j] }, svg);
+        x += w;
+      });
+      el("text", { x: Math.min(x + 6, X0 + W - 4), y: y + 48, "text-anchor": x + 6 > X0 + W - 60 ? "end" : "start", "class": "d-mono" }, svg).textContent = money(row[2]) + "/month";
+    });
+    names.forEach(function (n, j) {
+      el("rect", { x: X0 + j * 140, y: 168, width: 12, height: 12, "class": cls[j] }, svg);
+      el("text", { x: X0 + j * 140 + 18, y: 178, "class": "d-label" }, svg).textContent = n;
+    });
+    readout.textContent = "Per call " + money(perCall) + " · per request " + money(perCall * Math.max(1, num(f.calls))) +
+      " · per day " + money(perCall * callsMonth / 30) + " · per month " + money(month) +
+      (baseMonth > 0 ? " (" + Math.round((1 - month / baseMonth) * 100) + "% below the unoptimised baseline with no cache, routing or batch)." : ".");
+  }
+  ids.forEach(function (k) { f[k].addEventListener("input", draw); });
+  batch.addEventListener("change", draw);
+  Array.prototype.forEach.call(document.querySelectorAll("#case-studies-cost [data-preset]"), function (b) {
+    b.addEventListener("click", function () {
+      var p = presets[b.getAttribute("data-preset")];
+      ["rpd", "calls", "in", "out", "cache", "route"].forEach(function (k) { f[k].value = p[k]; });
+      batch.checked = p.batch; draw();
+    });
+  });
+  draw();
+})();
+</script>
+</body>
+</html>

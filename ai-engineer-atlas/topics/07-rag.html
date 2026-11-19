@@ -1,0 +1,1943 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Retrieval-augmented generation · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="rag">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Retrieval-augmented generation</h1>
+    <p class="lede">A language model only knows what was in its training data and what you put in its prompt. Retrieval-augmented generation (RAG) searches your own documents at question time and hands the best passages to the model, so answers are current, specific and citable. Most production LLM features that touch company knowledge are RAG systems underneath.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every RAG system has two pipelines. The ingest pipeline runs offline: it parses documents, splits them into chunks, embeds each chunk and writes it to an index. The query pipeline runs on every request: it rewrites the question, retrieves candidates from the indexes, reranks them and lets the model answer from the winners. Each box below is a subtopic on this page, and evaluation measures both halves.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 340" role="img" aria-label="Ingest pipeline: documents, parse, chunk, embed, into vector and keyword indexes. Query pipeline: question, rewrite, hybrid retrieve from the indexes, rerank, generate, answer. An agentic loop returns from generate to rewrite, and evaluation spans retrieval and answer.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="24">INGEST · offline, when documents change</text>
+              <rect class="d-box" x="20" y="40" width="100" height="44" rx="8"/>
+              <text class="d-title" x="70" y="67" text-anchor="middle">Documents</text>
+              <line class="d-line" x1="120" y1="62" x2="143" y2="62" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="145" y="40" width="100" height="44" rx="8"/>
+              <text class="d-title" x="195" y="60" text-anchor="middle">Parse</text>
+              <text class="d-label" x="195" y="76" text-anchor="middle">PDF, HTML → text</text>
+              <line class="d-line" x1="245" y1="62" x2="268" y2="62" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="270" y="40" width="100" height="44" rx="8"/>
+              <text class="d-title" x="320" y="60" text-anchor="middle">Chunk</text>
+              <text class="d-label" x="320" y="76" text-anchor="middle">07.2</text>
+              <line class="d-line" x1="370" y1="62" x2="393" y2="62" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="395" y="40" width="100" height="44" rx="8"/>
+              <text class="d-title" x="445" y="60" text-anchor="middle">Embed</text>
+              <text class="d-label" x="445" y="76" text-anchor="middle">07.1</text>
+              <line class="d-line" x1="495" y1="62" x2="548" y2="62" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="521" y="54" text-anchor="middle">vectors</text>
+              <rect class="d-grid d-dash" x="540" y="32" width="160" height="116" rx="10"/>
+              <rect class="d-good" x="550" y="44" width="140" height="36" rx="7"/>
+              <text class="d-text" x="620" y="67" text-anchor="middle">Vector index</text>
+              <rect class="d-good" x="550" y="100" width="140" height="36" rx="7"/>
+              <text class="d-text" x="620" y="123" text-anchor="middle">Keyword (BM25)</text>
+              <path class="d-line" d="M320 84 V118 H548" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="430" y="112" text-anchor="middle">raw text</text>
+              <text class="d-label" x="710" y="94">07.3</text>
+
+              <path class="d-line-accent" d="M620 148 V172 H315 V206" marker-end="url(#ov-arrow-acc)"/>
+              <text class="d-label" x="470" y="166" text-anchor="middle">top-k candidates from both</text>
+
+              <text class="d-label" x="20" y="196">QUERY · online, every request</text>
+              <rect class="d-box" x="20" y="210" width="95" height="44" rx="8"/>
+              <text class="d-title" x="67" y="237" text-anchor="middle">Question</text>
+              <line class="d-line" x1="115" y1="232" x2="133" y2="232" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="135" y="210" width="100" height="44" rx="8"/>
+              <text class="d-title" x="185" y="230" text-anchor="middle">Rewrite</text>
+              <text class="d-label" x="185" y="246" text-anchor="middle">07.5</text>
+              <line class="d-line" x1="235" y1="232" x2="258" y2="232" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="260" y="210" width="110" height="44" rx="8"/>
+              <text class="d-title" x="315" y="230" text-anchor="middle">Hybrid retrieve</text>
+              <text class="d-label" x="315" y="246" text-anchor="middle">07.4</text>
+              <line class="d-line" x1="370" y1="232" x2="388" y2="232" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="379" y="224" text-anchor="middle">50</text>
+              <rect class="d-accent" x="390" y="210" width="95" height="44" rx="8"/>
+              <text class="d-title" x="437" y="230" text-anchor="middle">Rerank</text>
+              <text class="d-label" x="437" y="246" text-anchor="middle">07.4</text>
+              <line class="d-line" x1="485" y1="232" x2="508" y2="232" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="496" y="224" text-anchor="middle">5</text>
+              <rect class="d-box" x="510" y="210" width="110" height="44" rx="8"/>
+              <text class="d-title" x="565" y="230" text-anchor="middle">LLM generates</text>
+              <text class="d-label" x="565" y="246" text-anchor="middle">with citations</text>
+              <line class="d-line" x1="620" y1="232" x2="643" y2="232" marker-end="url(#ov-arrow)"/>
+              <rect class="d-good" x="645" y="210" width="95" height="44" rx="8"/>
+              <text class="d-title" x="692" y="237" text-anchor="middle">Answer</text>
+
+              <path class="d-line d-dash" d="M565 254 C565 290 185 290 185 258" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="375" y="284" text-anchor="middle">07.6 agentic loop: not enough evidence? search again</text>
+              <line class="d-line-signal" x1="260" y1="310" x2="740" y2="310"/>
+              <line class="d-line-signal" x1="260" y1="303" x2="260" y2="317"/>
+              <line class="d-line-signal" x1="740" y1="303" x2="740" y2="317"/>
+              <text class="d-label d-text-signal" x="500" y="326" text-anchor="middle">07.7 evaluate: recall@k, MRR, nDCG for retrieval · faithfulness, relevance for answers</text>
+            </svg>
+          </div>
+          <figcaption>The ingest pipeline fills two indexes offline; the query pipeline searches both, keeps the best five passages and grounds the answer in them.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="embeddings-search">
+        <header class="topic-head">
+          <p class="eyebrow">07.1 · Meaning as geometry</p>
+          <h2>Embeddings &amp; semantic search</h2>
+        </header>
+
+        <p class="lead">An <strong>embedding model</strong> turns a piece of text into a fixed-length list of numbers, such as 384 or 1,536 of them, so that texts with similar meaning land close together. Semantic search embeds the question with the same model and returns the stored vectors nearest to it. "I forgot my login" and "Reset your password" share no words, yet their vectors sit side by side.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Retrieval quality caps answer quality: if the right passage is not in the top results, no prompt can fix the answer. The same vectors also power deduplication, clustering, recommendations and classification.</p>
+        </div>
+
+        <h3>From text to vector</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="A query and a document pass through the same encoder, are pooled and normalized into vectors, and are compared with cosine similarity.">
+              <defs>
+                <marker id="embeddings-search-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="10" y="40" width="160" height="40" rx="8"/>
+              <text class="d-text" x="90" y="65" text-anchor="middle">"I forgot my login"</text>
+              <rect class="d-box" x="10" y="150" width="160" height="40" rx="8"/>
+              <text class="d-text" x="90" y="175" text-anchor="middle">"Reset your password"</text>
+              <text class="d-label" x="10" y="30">query</text>
+              <text class="d-label" x="10" y="140">stored chunk</text>
+              <line class="d-line" x1="170" y1="60" x2="188" y2="60" marker-end="url(#embeddings-search-arrow)"/>
+              <line class="d-line" x1="170" y1="170" x2="188" y2="170" marker-end="url(#embeddings-search-arrow)"/>
+              <rect class="d-fill" x="190" y="40" width="130" height="40" rx="8"/>
+              <text class="d-mono" x="255" y="65" text-anchor="middle">[I][forgot][my]…</text>
+              <rect class="d-fill" x="190" y="150" width="130" height="40" rx="8"/>
+              <text class="d-mono" x="255" y="175" text-anchor="middle">[Reset][your]…</text>
+              <text class="d-label" x="255" y="110" text-anchor="middle">tokenize</text>
+              <line class="d-line" x1="320" y1="60" x2="338" y2="60" marker-end="url(#embeddings-search-arrow)"/>
+              <line class="d-line" x1="320" y1="170" x2="338" y2="170" marker-end="url(#embeddings-search-arrow)"/>
+              <rect class="d-accent" x="340" y="30" width="100" height="170" rx="10"/>
+              <text class="d-title" x="390" y="110" text-anchor="middle">Encoder</text>
+              <text class="d-label" x="390" y="128" text-anchor="middle">same weights</text>
+              <text class="d-label" x="390" y="143" text-anchor="middle">for both</text>
+              <line class="d-line" x1="440" y1="60" x2="478" y2="60" marker-end="url(#embeddings-search-arrow)"/>
+              <line class="d-line" x1="440" y1="170" x2="478" y2="170" marker-end="url(#embeddings-search-arrow)"/>
+              <text class="d-label" x="459" y="112" text-anchor="middle">pool +</text>
+              <text class="d-label" x="459" y="126" text-anchor="middle">normalize</text>
+              <rect class="d-good" x="480" y="40" width="130" height="40" rx="8"/>
+              <text class="d-mono" x="545" y="65" text-anchor="middle">q=[.12,-.40,…]</text>
+              <rect class="d-good" x="480" y="150" width="130" height="40" rx="8"/>
+              <text class="d-mono" x="545" y="175" text-anchor="middle">d=[.09,-.35,…]</text>
+              <text class="d-label" x="545" y="100" text-anchor="middle">384 numbers each</text>
+              <path class="d-line" d="M610 60 H640 V83" marker-end="url(#embeddings-search-arrow)"/>
+              <path class="d-line" d="M610 170 H640 V147" marker-end="url(#embeddings-search-arrow)"/>
+              <circle class="d-signal" cx="650" cy="115" r="30"/>
+              <text class="d-title" x="650" y="112" text-anchor="middle">cos</text>
+              <text class="d-mono" x="650" y="128" text-anchor="middle">0.82</text>
+            </svg>
+          </div>
+          <figcaption>A bi-encoder embeds the query and each chunk separately with the same model. Chunk vectors are computed once at ingest; only the query is embedded at request time.</figcaption>
+        </figure>
+        <p>The encoder is a transformer that outputs one vector per token. Pooling (usually the mean) collapses them into one vector. The model was trained with <strong>contrastive learning</strong>: matching question–passage pairs are pulled together and other passages in the batch are pushed apart, so distance comes to mean "relevance".</p>
+
+        <h3>Closeness is an angle</h3>
+        <div class="formula">
+          \[ \cos(q,d) = \frac{q \cdot d}{\lVert q \rVert\,\lVert d \rVert} \qquad \lVert q-d \rVert^2 = 2 - 2\cos(q,d) \;\text{ for unit vectors} \]
+          <span class="formula-note">Normalize every vector to length 1 and cosine becomes a plain dot product. Euclidean distance then gives the same ranking.</span>
+        </div>
+        <figure>
+          <div class="diagram narrow">
+            <svg viewBox="0 0 600 240" role="img" aria-label="Unit vectors on a semicircle: the query is 15 degrees from 'reset password' with cosine 0.97, 40 degrees from 'account settings' with 0.77, and 90 degrees from 'shipping rates' with 0.00.">
+              <path class="d-grid" d="M130 200 A150 150 0 0 1 430 200"/>
+              <line class="d-grid" x1="110" y1="200" x2="450" y2="200"/>
+              <line class="d-line-accent" x1="280" y1="200" x2="355" y2="70"/>
+              <circle class="d-dot" cx="355" cy="70" r="5"/>
+              <text class="d-text d-text-accent" x="364" y="64">query</text>
+              <line class="d-line" x1="280" y1="200" x2="319" y2="55"/>
+              <circle class="d-dot-good" cx="319" cy="55" r="5"/>
+              <text class="d-label" x="232" y="40">reset password · 0.97</text>
+              <line class="d-line" x1="280" y1="200" x2="421" y2="149"/>
+              <circle class="d-dot-muted" cx="421" cy="149" r="5"/>
+              <text class="d-label" x="432" y="146">account settings · 0.77</text>
+              <line class="d-line" x1="280" y1="200" x2="150" y2="125"/>
+              <circle class="d-dot-signal" cx="150" cy="125" r="5"/>
+              <text class="d-label" x="28" y="112">shipping rates · 0.00</text>
+              <path class="d-line-accent" d="M298 169 A36 36 0 0 0 290 166"/>
+              <text class="d-label" x="300" y="158">15°</text>
+              <text class="d-label" x="280" y="220" text-anchor="middle">origin</text>
+            </svg>
+          </div>
+          <figcaption>Cosine depends only on the angle between vectors: 15° gives 0.97, 40° gives 0.77, 90° gives 0.</figcaption>
+        </figure>
+
+        <div class="widget" id="embeddings-search-demo">
+          <div class="widget-head">
+            <span class="widget-title">Drag the query through embedding space</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="embeddings-search-k">Top-k <input type="range" id="embeddings-search-k" min="1" max="6" step="1" value="3"><output id="embeddings-search-k-out">3</output></label>
+            <label for="embeddings-search-angle">Query direction <input type="range" id="embeddings-search-angle" min="0" max="359" step="1" value="35"><output id="embeddings-search-angle-out">35°</output></label>
+          </div>
+          <svg id="embeddings-search-plot" viewBox="0 0 600 360" role="img" aria-label="Two-dimensional embedding space with login, billing and shipping clusters; lines connect the query to its top-k neighbours by cosine similarity."></svg>
+          <p class="readout" id="embeddings-search-readout"></p>
+        </div>
+        <p>Drag the query point (or use the slider). Moving it outward without turning changes nothing, because cosine ignores length. Real embeddings have hundreds of dimensions, but the geometry works the same way.</p>
+
+        <h3>In practice</h3>
+        <pre class="code" data-lang="python"><code>from sentence_transformers import SentenceTransformer
+import numpy as np
+
+model = SentenceTransformer("all-MiniLM-L6-v2")      <span class="c"># 384-dim, small and fast</span>
+docs = ["Reset your password from the login page.",
+        "Refunds take 5-7 business days.",
+        "We ship to 40 countries."]
+D = model.encode(docs, normalize_embeddings=True)   <span class="c"># shape (3, 384), done once at ingest</span>
+q = model.encode(["I forgot my login"], normalize_embeddings=True)[0]
+scores = D @ q                                      <span class="c"># cosine, because vectors are unit length</span>
+for i in np.argsort(-scores)[:2]:
+    print(f"{scores[i]:.3f}  {docs[i]}")</code></pre>
+        <p>Storage adds up fast: 1 million chunks × 1,536 dimensions × 4 bytes is about 6 GB of float32. Pick a model from a public benchmark such as MTEB, then confirm it on your own queries.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Embeddings map meaning to direction; nearby vectors mean related text.</li>
+            <li>Use the same model, and the same query/passage prefixes if the model requires them, for queries and documents.</li>
+            <li>With unit vectors, cosine similarity, dot product and Euclidean distance all rank the same.</li>
+            <li>Chunk vectors are computed once; only the query is embedded per request.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Swapping the embedding model without re-embedding the whole corpus. Vectors from different models are not comparable.</li>
+            <li>Trusting semantic search for exact identifiers like error codes and SKUs. Pair it with keyword search (07.4).</li>
+            <li>Treating a cosine of 0.8 as a universal "relevant" threshold. Score ranges differ by model.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="embeddings-search-1"><span>Embed 100 sentences with sentence-transformers and return the top-3 for a query</span></label></li>
+          <li><label><input type="checkbox" data-key="embeddings-search-2"><span>Show that cosine and Euclidean distance rank unit vectors identically</span></label></li>
+          <li><label><input type="checkbox" data-key="embeddings-search-3"><span>Estimate the memory for N chunks at a given dimension and precision</span></label></li>
+          <li><label><input type="checkbox" data-key="embeddings-search-4"><span>Explain what contrastive training does to the geometry of the space</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1908.10084">Sentence-BERT (Reimers &amp; Gurevych, 2019)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2210.07316">MTEB: Massive Text Embedding Benchmark (2022)</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.sbert.net/">Sentence Transformers documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="chunking">
+        <header class="topic-head">
+          <p class="eyebrow">07.2 · Units of retrieval</p>
+          <h2>Chunking</h2>
+        </header>
+
+        <p class="lead">One vector cannot summarize a 40-page manual, and the whole manual will not fit in a cheap prompt. So you split documents into <strong>chunks</strong> and embed, index and retrieve each one on its own. A good chunk is about one thing and still makes sense when read alone.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Chunking is the cheapest change with the largest effect on retrieval. Chunks that are too big blur several topics into one vector; chunks that are too small lose the context that makes them findable and useful.</p>
+        </div>
+
+        <h3>Size, overlap and stride</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 200" role="img" aria-label="A 1,000-token document split into five 300-token chunks with 75-token overlaps; a sentence cut at the end of chunk 1 appears whole in chunk 2.">
+              <text class="d-label" x="40" y="24">document · 1,000 tokens</text>
+              <rect class="d-fill" x="40" y="32" width="620" height="18" rx="4"/>
+              <rect class="d-signal" x="179.5" y="32" width="46.5" height="18"/>
+              <rect class="d-signal" x="319" y="32" width="46.5" height="18"/>
+              <rect class="d-signal" x="458.5" y="32" width="46.5" height="18"/>
+              <rect class="d-signal" x="598" y="32" width="46.5" height="18"/>
+              <rect class="d-accent" x="40" y="66" width="186" height="26" rx="5"/>
+              <text class="d-label" x="133" y="83" text-anchor="middle">1 · 0–300</text>
+              <rect class="d-good" x="179.5" y="100" width="186" height="26" rx="5"/>
+              <text class="d-label" x="272" y="117" text-anchor="middle">2 · 225–525</text>
+              <rect class="d-accent" x="319" y="66" width="186" height="26" rx="5"/>
+              <text class="d-label" x="412" y="83" text-anchor="middle">3 · 450–750</text>
+              <rect class="d-good" x="458.5" y="100" width="186" height="26" rx="5"/>
+              <text class="d-label" x="551" y="117" text-anchor="middle">4 · 675–975</text>
+              <rect class="d-accent" x="598" y="66" width="62" height="26" rx="5"/>
+              <text class="d-label" x="629" y="83" text-anchor="middle">5</text>
+              <line class="d-line-signal" x1="213.6" y1="140" x2="238.4" y2="140"/>
+              <line class="d-line-signal" x1="213.6" y1="134" x2="213.6" y2="146"/>
+              <line class="d-line-signal" x1="238.4" y1="134" x2="238.4" y2="146"/>
+              <text class="d-label" x="226" y="164" text-anchor="middle">sentence at tokens 280–320:</text>
+              <text class="d-label" x="226" y="179" text-anchor="middle">cut in chunk 1, whole in chunk 2</text>
+              <text class="d-label d-text-signal" x="460" y="164">shaded = overlap (75 tokens)</text>
+              <text class="d-label" x="460" y="179">stride = 300 − 75 = 225</text>
+            </svg>
+          </div>
+          <figcaption>Fixed-size chunking with overlap: each chunk starts one stride after the previous one, so text near a boundary lands whole in at least one chunk.</figcaption>
+        </figure>
+        <div class="formula">
+          \[ n_{\text{chunks}} = \left\lceil \frac{N - O}{S - O} \right\rceil \qquad \text{overhead} = \frac{O}{S-O} \]
+          <span class="formula-note">\(N\) document tokens, \(S\) chunk size, \(O\) overlap. A 10,000-token report with \(S=500, O=100\) gives 25 chunks and stores 25% extra text.</span>
+        </div>
+
+        <div class="widget" id="chunking-demo">
+          <div class="widget-head">
+            <span class="widget-title">Split a document</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="chunking-size">Chunk size (words) <input type="range" id="chunking-size" min="10" max="80" step="5" value="35"><output id="chunking-size-out">35</output></label>
+            <label for="chunking-overlap">Overlap <input type="range" id="chunking-overlap" min="0" max="30" step="1" value="8"><output id="chunking-overlap-out">8</output></label>
+            <label for="chunking-snap"><input type="checkbox" id="chunking-snap"> Snap to sentence ends</label>
+          </div>
+          <div id="chunking-text" style="line-height:1.9;font-size:.95rem;"></div>
+          <svg id="chunking-strip" viewBox="0 0 600 70" role="img" aria-label="Bars showing the word range covered by each chunk."></svg>
+          <p class="readout" id="chunking-readout"></p>
+        </div>
+        <p>Colours mark chunks; an amber underline marks words stored twice because of overlap. Turn on snapping and watch the count of cut sentences drop to zero while chunk sizes become uneven.</p>
+
+        <h3>Strategies</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="The same document split four ways: fixed-size cuts through a sentence and a table; recursive cuts at paragraph breaks; structure-aware cuts at headings and keeps the table whole; semantic cuts where the topic shifts.">
+              <text class="d-label" x="160" y="24" text-anchor="middle"># Title</text>
+              <text class="d-label" x="235" y="24" text-anchor="middle">para</text>
+              <text class="d-label" x="340" y="24" text-anchor="middle">para</text>
+              <text class="d-label" x="390" y="38" text-anchor="middle">## H</text>
+              <text class="d-label" x="460" y="24" text-anchor="middle">table</text>
+              <text class="d-label" x="600" y="24" text-anchor="middle">para</text>
+              <g>
+                <text class="d-text" x="10" y="62">Fixed-size</text>
+                <text class="d-label" x="10" y="76">cuts anywhere</text>
+                <rect class="d-fill" x="150" y="50" width="530" height="26" rx="4"/>
+                <rect class="d-box" x="400" y="50" width="120" height="26"/>
+                <line class="d-line-signal" x1="282.5" y1="44" x2="282.5" y2="82"/>
+                <line class="d-line-signal" x1="415" y1="44" x2="415" y2="82"/>
+                <line class="d-line-signal" x1="547.5" y1="44" x2="547.5" y2="82"/>
+              </g>
+              <g>
+                <text class="d-text" x="10" y="107">Recursive</text>
+                <text class="d-label" x="10" y="121">paragraph, then sentence</text>
+                <rect class="d-fill" x="150" y="95" width="530" height="26" rx="4"/>
+                <rect class="d-box" x="400" y="95" width="120" height="26"/>
+                <line class="d-line-accent" x1="300" y1="89" x2="300" y2="127"/>
+                <line class="d-line-accent" x1="400" y1="89" x2="400" y2="127"/>
+                <line class="d-line-accent" x1="520" y1="89" x2="520" y2="127"/>
+              </g>
+              <g>
+                <text class="d-text" x="10" y="152">Structure-aware</text>
+                <text class="d-label" x="10" y="166">headings; table whole</text>
+                <rect class="d-fill" x="150" y="140" width="530" height="26" rx="4"/>
+                <rect class="d-good" x="400" y="140" width="120" height="26"/>
+                <line class="d-line-accent" x1="380" y1="134" x2="380" y2="172"/>
+                <line class="d-line-accent" x1="520" y1="134" x2="520" y2="172"/>
+              </g>
+              <g>
+                <text class="d-text" x="10" y="197">Semantic</text>
+                <text class="d-label" x="10" y="211">where topic shifts</text>
+                <rect class="d-fill" x="150" y="185" width="530" height="26" rx="4"/>
+                <rect class="d-box" x="400" y="185" width="120" height="26"/>
+                <line class="d-line-accent" x1="240" y1="179" x2="240" y2="217"/>
+                <line class="d-line-accent" x1="460" y1="179" x2="460" y2="217"/>
+              </g>
+              <line class="d-grid d-dash" x1="380" y1="30" x2="380" y2="220"/>
+              <line class="d-grid d-dash" x1="400" y1="40" x2="400" y2="220"/>
+              <text class="d-label d-text-signal" x="690" y="66" text-anchor="end">✗</text>
+              <text class="d-label d-text-good" x="690" y="156" text-anchor="end">✓</text>
+            </svg>
+          </div>
+          <figcaption>Amber cuts break a sentence or a table. Structure-aware splitting follows the document's own headings and keeps the table in one piece.</figcaption>
+        </figure>
+        <p>A sensible default is recursive splitting at 300 to 800 tokens with 10 to 20% overlap, then structure-aware rules for Markdown, HTML, code and tables. Store metadata with every chunk: source, page, heading path and date. A <strong>parent–child</strong> setup indexes small chunks for precise matching but returns the larger parent section to the model.</p>
+
+        <pre class="code" data-lang="python"><code>from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1200,          <span class="c"># characters, roughly 300 tokens of English</span>
+    chunk_overlap=150,
+    separators=["\n\n", "\n", ". ", " ", ""],   <span class="c"># try paragraph, line, sentence, word</span>
+)
+chunks = splitter.split_text(manual_text)
+records = [{"id": f"manual-{i}", "text": c, "source": "manual.pdf"}
+           for i, c in enumerate(chunks)]</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Chunk size trades precision (small) against context (large); test a few sizes on your eval set.</li>
+            <li>Overlap protects text near boundaries at the cost of extra storage and duplicate hits.</li>
+            <li>Split along the document's structure whenever it has one.</li>
+            <li>Metadata travels with each chunk so you can filter and cite.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Splitting tables and code blocks mid-way, which makes both halves useless.</li>
+            <li>Chunking beyond the embedding model's input limit, so the tail is silently truncated.</li>
+            <li>Mixing up characters and tokens when setting sizes.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="chunking-1"><span>Compute chunk count and overlap overhead for given N, S and O</span></label></li>
+          <li><label><input type="checkbox" data-key="chunking-2"><span>Write a Markdown splitter that keeps the heading path in each chunk</span></label></li>
+          <li><label><input type="checkbox" data-key="chunking-3"><span>Compare recall@5 for three chunk sizes on 30 test questions</span></label></li>
+          <li><label><input type="checkbox" data-key="chunking-4"><span>Explain when a parent–child (small-to-big) index helps</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.llamaindex.ai/">LlamaIndex documentation (node parsers and chunking)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2307.03172">Lost in the Middle: How Language Models Use Long Contexts (2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="vector-db">
+        <header class="topic-head">
+          <p class="eyebrow">07.3 · Fast nearest neighbours</p>
+          <h2>Vector databases</h2>
+        </header>
+
+        <p class="lead">A <strong>vector database</strong> stores each chunk's embedding, text and metadata, and answers one question fast: which k vectors are closest to this one? Comparing the query with every vector is exact but slow: 10 million vectors × 768 dimensions is about 7.7 billion multiply-adds per query. Approximate nearest neighbour (ANN) indexes skip most of that work and give up a little recall in exchange.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Index type and parameters set your latency, memory bill and recall ceiling. Metadata filtering decides whether multi-tenant and permission-aware search actually works.</p>
+        </div>
+
+        <h3>HNSW: a graph you descend</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 250" role="img" aria-label="HNSW search: start at the entry point in the sparse top layer, hop greedily toward the query, drop a layer, repeat, and finish at the nearest node in the full bottom layer.">
+              <defs>
+                <marker id="vector-db-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="150" y="24" width="540" height="50" rx="8"/>
+              <rect class="d-fill" x="150" y="96" width="540" height="50" rx="8"/>
+              <rect class="d-fill" x="150" y="168" width="540" height="64" rx="8"/>
+              <text class="d-text" x="10" y="46">Layer 2</text>
+              <text class="d-label" x="10" y="61">few nodes, long links</text>
+              <text class="d-text" x="10" y="118">Layer 1</text>
+              <text class="d-label" x="10" y="133">more nodes</text>
+              <text class="d-text" x="10" y="196">Layer 0</text>
+              <text class="d-label" x="10" y="211">every vector</text>
+              <line class="d-line" x1="220" y1="49" x2="580" y2="49"/>
+              <path class="d-line" d="M220 121 L340 114 L460 128 L580 121 L660 114 M220 121 L460 128 M340 114 L580 121"/>
+              <path class="d-line" d="M180 190 L220 210 L260 186 L300 214 L340 192 L380 212 L420 188 L460 208 L500 190 L540 214 L580 196 L620 212 L660 188 M180 190 L260 186 M300 214 L380 212 M420 188 L500 190 M540 214 L620 212"/>
+              <g class="d-dot-muted">
+                <circle cx="180" cy="190" r="4"/><circle cx="220" cy="210" r="4"/><circle cx="260" cy="186" r="4"/><circle cx="300" cy="214" r="4"/>
+                <circle cx="340" cy="192" r="4"/><circle cx="380" cy="212" r="4"/><circle cx="420" cy="188" r="4"/><circle cx="460" cy="208" r="4"/>
+                <circle cx="540" cy="214" r="4"/><circle cx="580" cy="196" r="4"/><circle cx="620" cy="212" r="4"/><circle cx="660" cy="188" r="4"/>
+                <circle cx="220" cy="121" r="4"/><circle cx="340" cy="114" r="4"/><circle cx="460" cy="128" r="4"/><circle cx="580" cy="121" r="4"/><circle cx="660" cy="114" r="4"/>
+                <circle cx="580" cy="49" r="4"/>
+              </g>
+              <circle class="d-dot" cx="220" cy="49" r="6"/>
+              <text class="d-label" x="220" y="38" text-anchor="middle">entry point</text>
+              <line class="d-line-accent" x1="226" y1="49" x2="570" y2="49" marker-end="url(#vector-db-arrow)"/>
+              <text class="d-label" x="400" y="42" text-anchor="middle">greedy hop toward query</text>
+              <line class="d-line-accent d-dash" x1="580" y1="55" x2="580" y2="113" marker-end="url(#vector-db-arrow)"/>
+              <line class="d-line-accent" x1="574" y1="121" x2="470" y2="127" marker-end="url(#vector-db-arrow)"/>
+              <line class="d-line-accent d-dash" x1="460" y1="134" x2="460" y2="200" marker-end="url(#vector-db-arrow)"/>
+              <line class="d-line-accent" x1="465" y1="205" x2="493" y2="193" marker-end="url(#vector-db-arrow)"/>
+              <circle class="d-dot-good" cx="500" cy="190" r="6"/>
+              <circle class="d-signal" cx="505" cy="205" r="5"/>
+              <text class="d-label d-text-signal" x="514" y="230">query</text>
+              <text class="d-label d-text-good" x="508" y="180">nearest</text>
+              <text class="d-label" x="596" y="88">drop a layer</text>
+            </svg>
+          </div>
+          <figcaption>HNSW search touches a few dozen nodes instead of millions: long hops in sparse upper layers, short hops in the full bottom layer.</figcaption>
+        </figure>
+        <p><strong>HNSW</strong> (Hierarchical Navigable Small World) links each vector to about <code>M</code> neighbours (often 16 to 32). A larger <code>efSearch</code> keeps more candidates during the descent, raising recall and latency together. HNSW gives high recall at low latency but keeps vectors and graph links in RAM.</p>
+
+        <h3>IVF: search only nearby cells</h3>
+        <p><strong>IVF</strong> (inverted file) runs k-means to cut the space into <code>nlist</code> cells. A query scans only the <code>nprobe</code> cells whose centroids are closest. Pair it with <strong>product quantization</strong> (PQ), which compresses a 768-dim float32 vector from 3,072 bytes to, say, 96 bytes, and a billion vectors fit on one machine.</p>
+
+        <div class="widget" id="vector-db-demo">
+          <div class="widget-head">
+            <span class="widget-title">IVF: probe more cells, find more true neighbours</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="vector-db-nprobe">nprobe <input type="range" id="vector-db-nprobe" min="1" max="8" step="1" value="1"><output id="vector-db-nprobe-out">1</output></label>
+          </div>
+          <svg id="vector-db-plot" viewBox="0 0 600 340" role="img" aria-label="Points in eight IVF cells; probed cells are highlighted, the five true nearest neighbours of the query are ringed, and missed neighbours are marked."></svg>
+          <p class="readout" id="vector-db-readout"></p>
+        </div>
+        <p>Click anywhere to move the query. Near a cell boundary, <code>nprobe = 1</code> misses true neighbours that sit just across the line. Raising <code>nprobe</code> buys recall with more scanning.</p>
+
+        <h3>Filters and choosing a store</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 190" role="img" aria-label="Post-filtering the top 10 by tenant leaves one result; filtering during search returns ten matching results.">
+              <defs>
+                <marker id="vector-db-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="10" y="24">Post-filter</text>
+              <text class="d-label" x="10" y="42">ANN top-10, then keep tenant = acme (5% of data)</text>
+              <g class="d-signal">
+                <rect x="10" y="60" width="22" height="22" rx="4"/><rect x="38" y="60" width="22" height="22" rx="4"/><rect x="66" y="60" width="22" height="22" rx="4"/>
+                <rect x="122" y="60" width="22" height="22" rx="4"/><rect x="150" y="60" width="22" height="22" rx="4"/><rect x="178" y="60" width="22" height="22" rx="4"/>
+                <rect x="206" y="60" width="22" height="22" rx="4"/><rect x="234" y="60" width="22" height="22" rx="4"/><rect x="262" y="60" width="22" height="22" rx="4"/>
+              </g>
+              <rect class="d-good" x="94" y="60" width="22" height="22" rx="4"/>
+              <line class="d-line" x1="147" y1="92" x2="147" y2="118" marker-end="url(#vector-db-arrow2)"/>
+              <text class="d-label" x="155" y="110">filter</text>
+              <rect class="d-good" x="136" y="124" width="22" height="22" rx="4"/>
+              <text class="d-text d-text-signal" x="10" y="172">1 result, wanted 10</text>
+              <line class="d-grid" x1="345" y1="16" x2="345" y2="180"/>
+              <text class="d-title" x="370" y="24">Filter during search</text>
+              <text class="d-label" x="370" y="42">index walks only acme vectors</text>
+              <g class="d-good">
+                <rect x="370" y="60" width="22" height="22" rx="4"/><rect x="398" y="60" width="22" height="22" rx="4"/><rect x="426" y="60" width="22" height="22" rx="4"/>
+                <rect x="454" y="60" width="22" height="22" rx="4"/><rect x="482" y="60" width="22" height="22" rx="4"/><rect x="510" y="60" width="22" height="22" rx="4"/>
+                <rect x="538" y="60" width="22" height="22" rx="4"/><rect x="566" y="60" width="22" height="22" rx="4"/><rect x="594" y="60" width="22" height="22" rx="4"/>
+                <rect x="622" y="60" width="22" height="22" rx="4"/>
+              </g>
+              <text class="d-text d-text-good" x="370" y="172">10 results, all allowed</text>
+            </svg>
+          </div>
+          <figcaption>Filtering after a top-k search can leave almost nothing when the filter is selective. Good stores apply the filter inside the index walk.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Option</th><th>Good when</th><th>Watch out for</th></tr></thead>
+            <tbody>
+              <tr><td>FAISS (library)</td><td>In-process search, research, batch jobs</td><td>No server, persistence or filtering out of the box</td></tr>
+              <tr><td>pgvector (Postgres)</td><td>Data already in Postgres; joins and SQL filters</td><td>Tune HNSW or IVFFlat settings at large scale</td></tr>
+              <tr><td>Dedicated DB (Qdrant, Weaviate, Milvus, Pinecone)</td><td>Large scale, filtered search, managed ops</td><td>One more system to run, secure and sync</td></tr>
+              <tr><td>Search engine (Elasticsearch, OpenSearch)</td><td>You need BM25 and vectors in one place</td><td>Heavier ops; vector features vary by version</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import faiss, numpy as np
+
+d = 384
+xb = np.random.rand(100_000, d).astype("float32")
+faiss.normalize_L2(xb)                               <span class="c"># unit vectors: inner product = cosine</span>
+
+hnsw = faiss.IndexHNSWFlat(d, 32, faiss.METRIC_INNER_PRODUCT)   <span class="c"># M = 32</span>
+hnsw.hnsw.efConstruction = 200
+hnsw.add(xb)
+hnsw.hnsw.efSearch = 64                              <span class="c"># raise for recall, lower for speed</span>
+
+quant = faiss.IndexFlatIP(d)
+ivf = faiss.IndexIVFFlat(quant, d, 1024, faiss.METRIC_INNER_PRODUCT)   <span class="c"># nlist = 1024</span>
+ivf.train(xb); ivf.add(xb)
+ivf.nprobe = 16
+
+scores, ids = hnsw.search(xb[:1], 5)                <span class="c"># top-5 for one query</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>ANN indexes trade a small, tunable recall loss for orders-of-magnitude speed.</li>
+            <li>HNSW: graph descent; tune <code>M</code>, <code>efConstruction</code>, <code>efSearch</code>. Memory-hungry.</li>
+            <li>IVF: cluster then probe; tune <code>nlist</code> and <code>nprobe</code>. Add PQ to compress.</li>
+            <li>Measure ANN recall against exact search on a sample before trusting settings.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Post-filtering a small top-k with a selective filter and getting empty results.</li>
+            <li>Forgetting deletes and updates: stale chunks keep being retrieved after a document changes.</li>
+            <li>Adding a dedicated vector DB when a few hundred thousand vectors fit in pgvector or in memory.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="vector-db-1"><span>Trace an HNSW search through the layers by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="vector-db-2"><span>Measure recall@10 of an IVF index against brute force for three nprobe values</span></label></li>
+          <li><label><input type="checkbox" data-key="vector-db-3"><span>Compute memory for 10M vectors as float32 versus PQ codes</span></label></li>
+          <li><label><input type="checkbox" data-key="vector-db-4"><span>Explain why post-filtering fails for selective filters</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1603.09320">Efficient and robust ANN search using HNSW graphs (Malkov &amp; Yashunin)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2401.08281">The Faiss library (Douze et al., 2024)</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/facebookresearch/faiss">FAISS on GitHub</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/pgvector/pgvector">pgvector on GitHub</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="hybrid-rerank">
+        <header class="topic-head">
+          <p class="eyebrow">07.4 · Recall first, precision second</p>
+          <h2>Hybrid search &amp; reranking</h2>
+        </header>
+
+        <p class="lead">Vector search understands paraphrase but fumbles exact tokens such as error code <code>E1043</code>, part numbers and names. Keyword search nails exact tokens but misses paraphrase. <strong>Hybrid search</strong> runs both and fuses the two ranked lists. A <strong>reranker</strong> then reads the top few dozen candidates closely and puts the best ones first.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Hybrid retrieval plus reranking is the most reliable upgrade over plain vector search in production RAG. It costs one extra index and one small model call per query.</p>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 220" role="img" aria-label="The query goes to BM25 and to vector search in parallel; their ranked lists are fused with RRF into 50 candidates; a cross-encoder reranks them to the top 5.">
+              <defs>
+                <marker id="hybrid-rerank-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="10" y="88" width="130" height="44" rx="8"/>
+              <text class="d-mono" x="75" y="108" text-anchor="middle">"E1043 printer</text>
+              <text class="d-mono" x="75" y="123" text-anchor="middle">won't connect"</text>
+              <path class="d-line" d="M140 100 L168 52" marker-end="url(#hybrid-rerank-arrow)"/>
+              <path class="d-line" d="M140 120 L168 168" marker-end="url(#hybrid-rerank-arrow)"/>
+              <rect class="d-accent" x="170" y="30" width="120" height="44" rx="8"/>
+              <text class="d-title" x="230" y="50" text-anchor="middle">BM25</text>
+              <text class="d-label" x="230" y="66" text-anchor="middle">matches "E1043"</text>
+              <rect class="d-good" x="170" y="146" width="120" height="44" rx="8"/>
+              <text class="d-title" x="230" y="166" text-anchor="middle">Vector</text>
+              <text class="d-label" x="230" y="182" text-anchor="middle">matches meaning</text>
+              <line class="d-line" x1="290" y1="52" x2="318" y2="52" marker-end="url(#hybrid-rerank-arrow)"/>
+              <line class="d-line" x1="290" y1="168" x2="318" y2="168" marker-end="url(#hybrid-rerank-arrow)"/>
+              <rect class="d-box" x="320" y="18" width="100" height="68" rx="6"/>
+              <text class="d-mono" x="332" y="38">1  d7</text><text class="d-mono" x="332" y="56">2  d3</text><text class="d-mono" x="332" y="74">3  d9 …</text>
+              <rect class="d-box" x="320" y="134" width="100" height="68" rx="6"/>
+              <text class="d-mono" x="332" y="154">1  d3</text><text class="d-mono" x="332" y="172">2  d5</text><text class="d-mono" x="332" y="190">3  d7 …</text>
+              <path class="d-line" d="M420 52 L448 100" marker-end="url(#hybrid-rerank-arrow)"/>
+              <path class="d-line" d="M420 168 L448 120" marker-end="url(#hybrid-rerank-arrow)"/>
+              <rect class="d-signal" x="450" y="88" width="80" height="44" rx="8"/>
+              <text class="d-title" x="490" y="108" text-anchor="middle">RRF</text>
+              <text class="d-label" x="490" y="124" text-anchor="middle">fuse ranks</text>
+              <line class="d-line" x1="530" y1="110" x2="566" y2="110" marker-end="url(#hybrid-rerank-arrow)"/>
+              <text class="d-label" x="548" y="102" text-anchor="middle">top 50</text>
+              <rect class="d-accent" x="568" y="80" width="122" height="60" rx="8"/>
+              <text class="d-title" x="629" y="104" text-anchor="middle">Cross-encoder</text>
+              <text class="d-label" x="629" y="122" text-anchor="middle">rerank → top 5</text>
+            </svg>
+          </div>
+          <figcaption>Two retrievers cast a wide net for recall; fusion merges them by rank; the reranker spends real compute on only 50 candidates.</figcaption>
+        </figure>
+
+        <h3>BM25: keyword scoring</h3>
+        <div class="formula">
+          \[ \text{BM25}(D,Q) = \sum_{t \in Q} \text{IDF}(t)\cdot \frac{f(t,D)\,(k_1+1)}{f(t,D) + k_1\left(1 - b + b\,\frac{|D|}{\text{avgdl}}\right)} \]
+          <span class="formula-note">\(f(t,D)\) is how often term \(t\) appears in document \(D\). Rare terms get a high IDF. \(k_1 \approx 1.2\) caps the reward for repeats; \(b \approx 0.75\) penalizes long documents.</span>
+        </div>
+        <figure>
+          <div class="diagram narrow">
+            <svg viewBox="0 0 680 210" role="img" aria-label="Chart: the BM25 term-frequency factor rises quickly and saturates toward k1 plus 1 equals 2.2, while a raw count keeps growing.">
+              <line class="d-line" x1="60" y1="170" x2="650" y2="170"/>
+              <line class="d-line" x1="60" y1="170" x2="60" y2="24"/>
+              <line class="d-grid d-dash" x1="60" y1="46.8" x2="650" y2="46.8"/>
+              <text class="d-label" x="650" y="40" text-anchor="end">ceiling k₁+1 = 2.2</text>
+              <line class="d-line-signal" x1="60" y1="170" x2="205" y2="30"/>
+              <text class="d-label d-text-signal" x="212" y="36">raw count</text>
+              <path class="d-line-accent" d="M60 170 L89 133.8 L118 114 L176 93 L234 82 L292 75.2 L408 67.4 L524 62.9 L640 60"/>
+              <text class="d-label d-text-accent" x="420" y="88">BM25 factor (k₁ = 1.2)</text>
+              <circle class="d-dot" cx="118" cy="114" r="4"/><text class="d-mono" x="124" y="130">1.00</text>
+              <circle class="d-dot" cx="176" cy="93" r="4"/><text class="d-mono" x="182" y="110">1.38</text>
+              <circle class="d-dot" cx="640" cy="60" r="4"/><text class="d-mono" x="600" y="80">1.96</text>
+              <text class="d-label" x="60" y="188" text-anchor="middle">0</text>
+              <text class="d-label" x="118" y="188" text-anchor="middle">1</text>
+              <text class="d-label" x="176" y="188" text-anchor="middle">2</text>
+              <text class="d-label" x="350" y="188" text-anchor="middle">5</text>
+              <text class="d-label" x="640" y="188" text-anchor="middle">10</text>
+              <text class="d-label" x="350" y="205" text-anchor="middle">term count in document</text>
+            </svg>
+          </div>
+          <figcaption>Saturation: the tenth mention of "printer" adds almost nothing, so keyword stuffing cannot dominate the ranking.</figcaption>
+        </figure>
+
+        <h3>Reciprocal rank fusion</h3>
+        <p>BM25 scores run from 0 to about 30 and cosine from −1 to 1, so adding raw scores is meaningless. <strong>Reciprocal rank fusion</strong> (RRF) ignores scores and uses only positions. The constant \(k = 60\) from the original paper flattens the gap between rank 1 and rank 5.</p>
+        <div class="formula">
+          \[ \text{RRF}(d) = \sum_{\text{lists } \ell} \frac{w_\ell}{k + \text{rank}_\ell(d)} \]
+          <span class="formula-note">A document missing from a list contributes 0 from that list. Weights \(w_\ell\) default to 1.</span>
+        </div>
+
+        <div class="widget" id="hybrid-rerank-demo">
+          <div class="widget-head">
+            <span class="widget-title">Reciprocal rank fusion calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="hybrid-rerank-bm25">BM25 list <input type="text" id="hybrid-rerank-bm25" value="d7, d3, d9, d1, d4" size="18"></label>
+            <label for="hybrid-rerank-vec">Vector list <input type="text" id="hybrid-rerank-vec" value="d3, d5, d7, d2, d9" size="18"></label>
+            <label for="hybrid-rerank-k">k <input type="range" id="hybrid-rerank-k" min="1" max="100" step="1" value="60"><output id="hybrid-rerank-k-out">60</output></label>
+            <label for="hybrid-rerank-w">Vector weight <input type="range" id="hybrid-rerank-w" min="0" max="2" step="0.1" value="1"><output id="hybrid-rerank-w-out">1.0</output></label>
+          </div>
+          <svg id="hybrid-rerank-plot" viewBox="0 0 600 260" role="img" aria-label="Fused ranking as stacked bars: the BM25 contribution and the vector contribution for each document."></svg>
+          <p class="readout" id="hybrid-rerank-readout"></p>
+        </div>
+        <p>Documents that appear in both lists (d3, d7) win even if neither list put them first. Drop <code>k</code> to 1 and the top rank of each list starts to dominate.</p>
+
+        <h3>Cross-encoder reranking</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 190" role="img" aria-label="Bi-encoder: query and document are encoded separately and compared by dot product. Cross-encoder: query and document are read together by one transformer that outputs a relevance score.">
+              <defs>
+                <marker id="hybrid-rerank-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="10" y="20">Bi-encoder (retrieval)</text>
+              <rect class="d-box" x="10" y="36" width="70" height="30" rx="6"/><text class="d-text" x="45" y="56" text-anchor="middle">query</text>
+              <rect class="d-box" x="10" y="100" width="70" height="30" rx="6"/><text class="d-text" x="45" y="120" text-anchor="middle">doc</text>
+              <line class="d-line" x1="80" y1="51" x2="108" y2="51" marker-end="url(#hybrid-rerank-arrow2)"/>
+              <line class="d-line" x1="80" y1="115" x2="108" y2="115" marker-end="url(#hybrid-rerank-arrow2)"/>
+              <rect class="d-good" x="110" y="36" width="80" height="30" rx="6"/><text class="d-label" x="150" y="56" text-anchor="middle">encoder</text>
+              <rect class="d-good" x="110" y="100" width="80" height="30" rx="6"/><text class="d-label" x="150" y="120" text-anchor="middle">encoder</text>
+              <path class="d-line" d="M190 51 H230 V72" marker-end="url(#hybrid-rerank-arrow2)"/>
+              <path class="d-line" d="M190 115 H230 V94" marker-end="url(#hybrid-rerank-arrow2)"/>
+              <circle class="d-signal" cx="230" cy="83" r="10"/><text class="d-mono" x="230" y="87" text-anchor="middle">·</text>
+              <text class="d-label" x="250" y="87">score</text>
+              <text class="d-label" x="10" y="158">doc vectors precomputed</text>
+              <text class="d-label" x="10" y="174">millions of docs in milliseconds</text>
+              <line class="d-grid" x1="345" y1="10" x2="345" y2="180"/>
+              <text class="d-title" x="370" y="20">Cross-encoder (reranking)</text>
+              <rect class="d-box" x="370" y="66" width="130" height="34" rx="6"/>
+              <text class="d-mono" x="435" y="88" text-anchor="middle">[query ; doc]</text>
+              <line class="d-line" x1="500" y1="83" x2="528" y2="83" marker-end="url(#hybrid-rerank-arrow2)"/>
+              <rect class="d-accent" x="530" y="50" width="90" height="66" rx="8"/>
+              <text class="d-label" x="575" y="78" text-anchor="middle">transformer</text>
+              <text class="d-label" x="575" y="93" text-anchor="middle">full attention</text>
+              <line class="d-line" x1="620" y1="83" x2="648" y2="83" marker-end="url(#hybrid-rerank-arrow2)"/>
+              <text class="d-mono" x="652" y="87">0.94</text>
+              <text class="d-label" x="370" y="158">one forward pass per pair</text>
+              <text class="d-label" x="370" y="174">50 pairs ≈ tens of ms on a GPU</text>
+            </svg>
+          </div>
+          <figcaption>A cross-encoder lets every query token attend to every document token, which is why it ranks better and why it cannot be precomputed.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+from rank_bm25 import BM25Okapi
+from sentence_transformers import CrossEncoder
+
+def rrf(rankings, k=60):
+    scores = {}
+    for ranking in rankings:
+        for rank, doc_id in enumerate(ranking, start=1):
+            scores[doc_id] = scores.get(doc_id, 0.0) + 1.0 / (k + rank)
+    return sorted(scores, key=scores.get, reverse=True)
+
+bm25 = BM25Okapi([d.lower().split() for d in docs])
+bm25_rank = np.argsort(-bm25.get_scores(query.lower().split()))[:50].tolist()
+vec_rank = vector_search(query, k=50)                 <span class="c"># ids from your vector index</span>
+
+candidates = rrf([bm25_rank, vec_rank])[:50]
+reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+scores = reranker.predict([(query, docs[i]) for i in candidates])
+top5 = [candidates[i] for i in np.argsort(-scores)[:5]]</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>BM25 and vectors fail on different queries, so combining them raises recall.</li>
+            <li>RRF fuses by rank, so no score normalization is needed.</li>
+            <li>Retrieve wide (50 to 100) with cheap methods, then rerank narrow (5 to 10) with an expensive one.</li>
+            <li>Cross-encoders score a query–document pair jointly and cannot be precomputed.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Adding raw BM25 and cosine scores together.</li>
+            <li>Reranking only the top 5: the reranker cannot promote a document that was never a candidate.</li>
+            <li>Tokenizing differently at index and query time for BM25 (case, stemming, stop words).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="hybrid-rerank-1"><span>Fuse two ranked lists with RRF by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="hybrid-rerank-2"><span>Explain what k₁ and b do in BM25</span></label></li>
+          <li><label><input type="checkbox" data-key="hybrid-rerank-3"><span>Add a cross-encoder reranker and measure the change in MRR</span></label></li>
+          <li><label><input type="checkbox" data-key="hybrid-rerank-4"><span>Name three query types where BM25 beats vector search</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2104.08663">BEIR: a heterogeneous benchmark for zero-shot IR (2021)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1901.04085">Passage Re-ranking with BERT (Nogueira &amp; Cho, 2019)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2004.12832">ColBERT: late interaction retrieval (2020)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="query-transform">
+        <header class="topic-head">
+          <p class="eyebrow">07.5 · Ask the index the right question</p>
+          <h2>Query rewriting</h2>
+        </header>
+
+        <p class="lead">Users type short, vague questions full of pronouns that point back at earlier chat turns. Documents are written in complete, formal sentences. <strong>Query rewriting</strong> uses a fast LLM call to turn the raw input into one or more queries that look like the text you want to find.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>In chat products, follow-up questions like "what about for teams?" retrieve nothing useful unless you rewrite them. A rewrite step often fixes more failures than a better embedding model.</p>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 220" role="img" aria-label="Chat history and the raw question go to an LLM rewriter, which emits three query variants and a hypothetical answer; each is searched and the results are fused with RRF.">
+              <defs>
+                <marker id="query-transform-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="30" width="160" height="50" rx="8"/>
+              <text class="d-label" x="20" y="50">history</text>
+              <text class="d-text" x="20" y="68">"We're on the Pro plan."</text>
+              <rect class="d-box" x="10" y="110" width="160" height="50" rx="8"/>
+              <text class="d-label" x="20" y="130">question</text>
+              <text class="d-text" x="20" y="148">"how do I add people?"</text>
+              <path class="d-line" d="M170 55 L198 90" marker-end="url(#query-transform-arrow)"/>
+              <path class="d-line" d="M170 135 L198 110" marker-end="url(#query-transform-arrow)"/>
+              <rect class="d-accent" x="200" y="68" width="90" height="64" rx="8"/>
+              <text class="d-title" x="245" y="96" text-anchor="middle">LLM</text>
+              <text class="d-label" x="245" y="113" text-anchor="middle">rewriter</text>
+              <path class="d-line" d="M290 90 L318 33" marker-end="url(#query-transform-arrow)"/>
+              <path class="d-line" d="M290 95 L318 77" marker-end="url(#query-transform-arrow)"/>
+              <path class="d-line" d="M290 105 L318 121" marker-end="url(#query-transform-arrow)"/>
+              <path class="d-line" d="M290 110 L318 165" marker-end="url(#query-transform-arrow)"/>
+              <rect class="d-box" x="320" y="18" width="210" height="30" rx="6"/><text class="d-mono" x="330" y="38">add people to Pro plan</text>
+              <rect class="d-box" x="320" y="62" width="210" height="30" rx="6"/><text class="d-mono" x="330" y="82">invite teammates, Pro</text>
+              <rect class="d-box" x="320" y="106" width="210" height="30" rx="6"/><text class="d-mono" x="330" y="126">add teammates as members</text>
+              <rect class="d-signal" x="320" y="150" width="210" height="30" rx="6"/><text class="d-mono" x="330" y="170">HyDE: "Open Settings…"</text>
+              <path class="d-line" d="M530 33 L568 95" marker-end="url(#query-transform-arrow)"/>
+              <path class="d-line" d="M530 77 L568 100" marker-end="url(#query-transform-arrow)"/>
+              <path class="d-line" d="M530 121 L568 108" marker-end="url(#query-transform-arrow)"/>
+              <path class="d-line" d="M530 165 L568 115" marker-end="url(#query-transform-arrow)"/>
+              <text class="d-label" x="548" y="200" text-anchor="middle">search each</text>
+              <rect class="d-good" x="570" y="80" width="110" height="44" rx="8"/>
+              <text class="d-title" x="625" y="100" text-anchor="middle">RRF fuse</text>
+              <text class="d-label" x="625" y="116" text-anchor="middle">→ candidates</text>
+            </svg>
+          </div>
+          <figcaption>One cheap LLM call produces several search queries; their result lists are fused exactly like hybrid search.</figcaption>
+        </figure>
+
+        <h3>The techniques</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Technique</th><th>What it does</th><th>Fixes</th><th>Cost</th></tr></thead>
+            <tbody>
+              <tr><td>Standalone rewrite</td><td>Folds chat history into a self-contained question</td><td>Pronouns, follow-ups</td><td>1 LLM call</td></tr>
+              <tr><td>Multi-query</td><td>Generates 3 to 5 paraphrases, fuses results</td><td>Vocabulary mismatch</td><td>1 call, N searches</td></tr>
+              <tr><td>HyDE</td><td>Writes a hypothetical answer and embeds that</td><td>Short query vs long passages</td><td>1 call, longer output</td></tr>
+              <tr><td>Decomposition</td><td>Splits a multi-part question into sub-questions</td><td>Multi-hop and comparison questions</td><td>1+ calls, N searches</td></tr>
+              <tr><td>Step-back</td><td>Asks a broader question to fetch background</td><td>Questions needing principles first</td><td>1 call</td></tr>
+              <tr><td>Self-query</td><td>Extracts filters such as dates, product or author</td><td>"invoices from March over $500"</td><td>1 call, structured output</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <figure>
+          <div class="diagram narrow">
+            <svg viewBox="0 0 600 220" role="img" aria-label="HyDE in embedding space: the short question lands far from the cluster of documents; the LLM's hypothetical answer lands inside the cluster next to the right document.">
+              <defs>
+                <marker id="query-transform-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <ellipse class="d-grid d-dash" cx="440" cy="105" rx="130" ry="75"/>
+              <text class="d-label" x="440" y="22" text-anchor="middle">help-centre passages</text>
+              <g class="d-dot-muted">
+                <circle cx="360" cy="80" r="4"/><circle cx="390" cy="140" r="4"/><circle cx="470" cy="60" r="4"/><circle cx="520" cy="130" r="4"/>
+                <circle cx="500" cy="95" r="4"/><circle cx="350" cy="120" r="4"/><circle cx="545" cy="80" r="4"/>
+              </g>
+              <circle class="d-dot-good" cx="430" cy="110" r="6"/>
+              <text class="d-label d-text-good" x="440" y="132">d2 Invite teammates…</text>
+              <circle class="d-dot-signal" cx="90" cy="175" r="6"/>
+              <text class="d-label" x="30" y="200">"how do I add people?"</text>
+              <circle class="d-dot" cx="412" cy="96" r="6"/>
+              <text class="d-label d-text-accent" x="300" y="66">hypothetical answer</text>
+              <path class="d-line-accent" d="M100 168 C200 120 300 100 402 97" marker-end="url(#query-transform-arrow2)"/>
+              <text class="d-label" x="190" y="125">LLM writes a plausible answer</text>
+              <line class="d-line d-dash" x1="96" y1="176" x2="424" y2="113"/>
+              <text class="d-label" x="250" y="170">query alone: far</text>
+            </svg>
+          </div>
+          <figcaption>HyDE searches with a fake answer because answers look like documents. The fake answer may contain wrong facts; only its position in the space matters.</figcaption>
+        </figure>
+
+        <div class="widget" id="query-transform-demo">
+          <div class="widget-head">
+            <span class="widget-title">Rewrite the query, watch the ranking</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="query-transform-mode">Strategy
+              <select id="query-transform-mode">
+                <option value="none">None (raw question)</option>
+                <option value="standalone">Standalone rewrite</option>
+                <option value="multi">Multi-query + RRF</option>
+                <option value="hyde">HyDE</option>
+              </select>
+            </label>
+            <output id="query-transform-mode-out">raw</output>
+          </div>
+          <div id="query-transform-queries" class="readout"></div>
+          <svg id="query-transform-plot" viewBox="0 0 600 200" role="img" aria-label="Top five documents for the selected strategy; the relevant document d2 is highlighted."></svg>
+          <p class="readout" id="query-transform-readout"></p>
+        </div>
+        <p>The toy retriever counts shared keywords across an 8-document help centre. The raw question matches a project-sharing page about "adding people"; rewrites pull the real answer, d2, to the top.</p>
+
+        <pre class="code" data-lang="python"><code>REWRITE_PROMPT = """Rewrite the user's last message as {n} different, self-contained
+search queries for a help-centre search engine. Use the chat history to resolve
+pronouns. Return one query per line.
+
+History:
+{history}
+
+Last message: {question}"""
+
+def multi_query_search(llm, search, history, question, n=3, k=50):
+    text = llm(REWRITE_PROMPT.format(n=n, history=history, question=question))
+    queries = [q.strip() for q in text.splitlines() if q.strip()][:n]
+    rankings = [search(q, k=k) for q in queries]    <span class="c"># each returns a list of ids</span>
+    return rrf(rankings)                              <span class="c"># rrf() from 07.4</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Always rewrite follow-up questions into standalone ones in chat RAG.</li>
+            <li>Multiple query variants raise recall; fuse their results with RRF.</li>
+            <li>HyDE moves a short query into the region where answers live.</li>
+            <li>Each rewrite adds an LLM call; use a small, fast model and measure the gain.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Showing the rewritten query to the answer model instead of the user's real question.</li>
+            <li>Rewrites that drop exact identifiers such as error codes. Keep the original query as one of the variants.</li>
+            <li>Adding rewriting everywhere without measuring; it adds latency to every request.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="query-transform-1"><span>Write a prompt that turns a follow-up into a standalone question</span></label></li>
+          <li><label><input type="checkbox" data-key="query-transform-2"><span>Implement multi-query retrieval with RRF fusion</span></label></li>
+          <li><label><input type="checkbox" data-key="query-transform-3"><span>Explain why HyDE works even when the hypothetical answer is wrong</span></label></li>
+          <li><label><input type="checkbox" data-key="query-transform-4"><span>Decompose a comparison question into sub-queries</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2212.10496">HyDE: Precise Zero-Shot Dense Retrieval without Relevance Labels (2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2303.07678">Query2doc: Query Expansion with LLMs (2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2310.06117">Step-Back Prompting (2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="advanced-rag">
+        <header class="topic-head">
+          <p class="eyebrow">07.6 · Fixes for known failures</p>
+          <h2>Advanced RAG patterns</h2>
+        </header>
+
+        <p class="lead">Naive RAG (chunk, embed, take the top k, stuff the prompt) fails in predictable ways. Chunks lose the context that made them findable, broad questions need facts spread across hundreds of documents, and hard questions need several rounds of searching. Each advanced pattern targets one of these failures.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Knowing which failure you have tells you which pattern to add. Adding all of them at once makes a slow, expensive system that is hard to debug.</p>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 280" role="img" aria-label="Four pipelines compared: naive RAG; contextual retrieval adds an LLM-written context to each chunk at ingest; GraphRAG extracts an entity graph and community summaries; agentic RAG loops between an agent and search tools.">
+              <defs>
+                <marker id="advanced-rag-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-text" x="10" y="44">Naive</text>
+              <text class="d-label" x="10" y="58">query time</text>
+              <rect class="d-box" x="130" y="30" width="110" height="32" rx="6"/><text class="d-label" x="185" y="50" text-anchor="middle">question</text>
+              <rect class="d-box" x="260" y="30" width="110" height="32" rx="6"/><text class="d-label" x="315" y="50" text-anchor="middle">embed + top-k</text>
+              <rect class="d-box" x="390" y="30" width="110" height="32" rx="6"/><text class="d-label" x="445" y="50" text-anchor="middle">stuff prompt</text>
+              <rect class="d-box" x="520" y="30" width="110" height="32" rx="6"/><text class="d-label" x="575" y="50" text-anchor="middle">answer</text>
+              <path class="d-line" d="M240 46 H258 M370 46 H388 M500 46 H518" marker-end="url(#advanced-rag-arrow)"/>
+
+              <text class="d-text" x="10" y="104">Contextual</text>
+              <text class="d-label" x="10" y="118">ingest time</text>
+              <rect class="d-box" x="130" y="90" width="110" height="32" rx="6"/><text class="d-label" x="185" y="110" text-anchor="middle">chunk + full doc</text>
+              <rect class="d-accent" x="260" y="90" width="110" height="32" rx="6"/><text class="d-label" x="315" y="110" text-anchor="middle">LLM writes context</text>
+              <rect class="d-box" x="390" y="90" width="110" height="32" rx="6"/><text class="d-label" x="445" y="110" text-anchor="middle">context + chunk</text>
+              <rect class="d-box" x="520" y="90" width="110" height="32" rx="6"/><text class="d-label" x="575" y="110" text-anchor="middle">embed + BM25</text>
+              <line class="d-line" x1="240" y1="106" x2="258" y2="106" marker-end="url(#advanced-rag-arrow)"/>
+              <line class="d-line" x1="370" y1="106" x2="388" y2="106" marker-end="url(#advanced-rag-arrow)"/>
+              <line class="d-line" x1="500" y1="106" x2="518" y2="106" marker-end="url(#advanced-rag-arrow)"/>
+
+              <text class="d-text" x="10" y="164">GraphRAG</text>
+              <text class="d-label" x="10" y="178">ingest time</text>
+              <rect class="d-box" x="130" y="150" width="110" height="32" rx="6"/><text class="d-label" x="185" y="170" text-anchor="middle">all chunks</text>
+              <rect class="d-accent" x="260" y="150" width="110" height="32" rx="6"/><text class="d-label" x="315" y="170" text-anchor="middle">extract entities</text>
+              <rect class="d-box" x="390" y="150" width="110" height="32" rx="6"/><text class="d-label" x="445" y="170" text-anchor="middle">graph + clusters</text>
+              <rect class="d-box" x="520" y="150" width="110" height="32" rx="6"/><text class="d-label" x="575" y="170" text-anchor="middle">cluster summaries</text>
+              <line class="d-line" x1="240" y1="166" x2="258" y2="166" marker-end="url(#advanced-rag-arrow)"/>
+              <line class="d-line" x1="370" y1="166" x2="388" y2="166" marker-end="url(#advanced-rag-arrow)"/>
+              <line class="d-line" x1="500" y1="166" x2="518" y2="166" marker-end="url(#advanced-rag-arrow)"/>
+
+              <text class="d-text" x="10" y="224">Agentic</text>
+              <text class="d-label" x="10" y="238">query time</text>
+              <rect class="d-box" x="130" y="210" width="110" height="32" rx="6"/><text class="d-label" x="185" y="230" text-anchor="middle">question</text>
+              <rect class="d-accent" x="260" y="210" width="110" height="32" rx="6"/><text class="d-label" x="315" y="230" text-anchor="middle">agent decides</text>
+              <rect class="d-box" x="390" y="210" width="110" height="32" rx="6"/><text class="d-label" x="445" y="230" text-anchor="middle">vector / SQL / web</text>
+              <rect class="d-good" x="520" y="210" width="110" height="32" rx="6"/><text class="d-label" x="575" y="230" text-anchor="middle">answer when enough</text>
+              <line class="d-line" x1="240" y1="226" x2="258" y2="226" marker-end="url(#advanced-rag-arrow)"/>
+              <line class="d-line" x1="370" y1="226" x2="388" y2="226" marker-end="url(#advanced-rag-arrow)"/>
+              <path class="d-line d-dash" d="M445 242 C445 266 315 266 315 246" marker-end="url(#advanced-rag-arrow)"/>
+              <text class="d-label" x="380" y="274" text-anchor="middle">observe, search again</text>
+              <path class="d-line" d="M370 218 C440 196 500 196 518 220" marker-end="url(#advanced-rag-arrow)"/>
+              <text class="d-label" x="650" y="230">stop</text>
+            </svg>
+          </div>
+          <figcaption>Contextual retrieval and GraphRAG change the index you build; agentic RAG changes how you query it.</figcaption>
+        </figure>
+
+        <h3>Contextual retrieval</h3>
+        <p>A chunk such as "Revenue grew 3% over the previous quarter" does not say which company or quarter. <strong>Contextual retrieval</strong> asks an LLM, at ingest, to write one or two sentences placing each chunk in its document, and prepends them before embedding and BM25 indexing. Anthropic reported that this cut top-20 retrieval failures by roughly half, and by about two-thirds with reranking. Prompt caching keeps the cost down because the full document is the shared prefix for all of its chunks.</p>
+
+        <div class="widget" id="advanced-rag-demo">
+          <div class="widget-head">
+            <span class="widget-title">Add context to chunks</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="advanced-rag-query">Query
+              <select id="advanced-rag-query">
+                <option value="0">ACME Q2 2023 revenue growth</option>
+                <option value="1">Globex Q2 2023 revenue</option>
+                <option value="2">ACME Q1 2023 revenue</option>
+              </select>
+            </label>
+            <label for="advanced-rag-ctx"><input type="checkbox" id="advanced-rag-ctx"> Prepend context</label>
+            <output id="advanced-rag-ctx-out">off</output>
+          </div>
+          <svg id="advanced-rag-plot" viewBox="0 0 600 250" role="img" aria-label="Three chunks with matching query words highlighted and a keyword score bar for each."></svg>
+          <p class="readout" id="advanced-rag-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>CONTEXT_PROMPT = """&lt;document&gt;
+{document}
+&lt;/document&gt;
+Here is a chunk from that document:
+&lt;chunk&gt;
+{chunk}
+&lt;/chunk&gt;
+Write one or two sentences that situate this chunk within the document
+(company, period, section) to improve search retrieval. Answer with the context only."""
+
+def contextualize(llm, document, chunks):
+    <span class="c"># the document is identical for every chunk: cache it as the prompt prefix</span>
+    return [llm(CONTEXT_PROMPT.format(document=document, chunk=c)) + "\n" + c
+            for c in chunks]</code></pre>
+
+        <h3>GraphRAG and agentic RAG</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="An entity graph with two communities, an ACME organisation cluster and a supply-risk cluster, each condensed into a summary that answers a global question.">
+              <defs>
+                <marker id="advanced-rag-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <ellipse class="d-grid d-dash" cx="160" cy="115" rx="150" ry="95"/>
+              <ellipse class="d-grid d-dash" cx="420" cy="115" rx="100" ry="95"/>
+              <path class="d-line" d="M120 64 L230 64 M120 64 L80 160 M120 64 L220 160 M230 64 L220 160 M230 64 L380 64 M380 64 L470 104 M470 104 L460 150"/>
+              <text class="d-label" x="175" y="58" text-anchor="middle">makes</text>
+              <text class="d-label" x="78" y="110">CEO</text>
+              <text class="d-label" x="130" y="128">operates</text>
+              <text class="d-label" x="232" y="116">built at</text>
+              <text class="d-label" x="305" y="58" text-anchor="middle">parts from</text>
+              <text class="d-label" x="445" y="84">hit by</text>
+              <text class="d-label" x="470" y="132">caused</text>
+              <rect class="d-box" x="80" y="52" width="80" height="24" rx="12"/><text class="d-label" x="120" y="68" text-anchor="middle">ACME</text>
+              <rect class="d-box" x="190" y="52" width="80" height="24" rx="12"/><text class="d-label" x="230" y="68" text-anchor="middle">Widget X</text>
+              <rect class="d-box" x="40" y="148" width="80" height="24" rx="12"/><text class="d-label" x="80" y="164" text-anchor="middle">J. Rivera</text>
+              <rect class="d-box" x="180" y="148" width="80" height="24" rx="12"/><text class="d-label" x="220" y="164" text-anchor="middle">Austin plant</text>
+              <rect class="d-box" x="340" y="52" width="80" height="24" rx="12"/><text class="d-label" x="380" y="68" text-anchor="middle">Supplier Z</text>
+              <rect class="d-box" x="430" y="92" width="80" height="24" rx="12"/><text class="d-label" x="470" y="108" text-anchor="middle">chip shortage</text>
+              <rect class="d-box" x="420" y="138" width="80" height="24" rx="12"/><text class="d-label" x="460" y="154" text-anchor="middle">Q3 delay</text>
+              <text class="d-label" x="160" y="200" text-anchor="middle">community A</text>
+              <text class="d-label" x="420" y="200" text-anchor="middle">community B</text>
+              <rect class="d-good" x="560" y="40" width="130" height="44" rx="8"/>
+              <text class="d-label" x="625" y="58" text-anchor="middle">Summary A:</text>
+              <text class="d-label" x="625" y="74" text-anchor="middle">ACME products, sites</text>
+              <rect class="d-good" x="560" y="120" width="130" height="44" rx="8"/>
+              <text class="d-label" x="625" y="138" text-anchor="middle">Summary B:</text>
+              <text class="d-label" x="625" y="154" text-anchor="middle">supply-chain risk</text>
+              <path class="d-line-accent" d="M310 40 C450 10 520 30 556 52" marker-end="url(#advanced-rag-arrow2)"/>
+              <path class="d-line-accent" d="M520 130 L556 138" marker-end="url(#advanced-rag-arrow2)"/>
+              <text class="d-label" x="625" y="196" text-anchor="middle">"What risks does</text>
+              <text class="d-label" x="625" y="212" text-anchor="middle">ACME face?" → map-reduce</text>
+            </svg>
+          </div>
+          <figcaption>GraphRAG answers broad questions from pre-written community summaries, which no single top-k chunk could cover.</figcaption>
+        </figure>
+        <p><strong>GraphRAG</strong> has an LLM extract entities and relationships from every chunk, clusters the graph into communities and summarizes each one. Global questions run map-reduce over the summaries; local questions start from an entity and walk its neighbours. Indexing costs LLM calls over the whole corpus, so reserve it for corpora that get broad, thematic questions.</p>
+        <p><strong>Agentic RAG</strong> gives the model search as a tool. It decides whether to retrieve, which source to query, reads results and searches again until it has enough evidence. Variants such as Self-RAG and Corrective RAG grade retrieved passages and retry when they are weak. Expect higher quality on multi-hop questions and two to five times the latency, so cap the number of steps.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Diagnose first: missing context, global questions or multi-hop reasoning each need a different fix.</li>
+            <li>Contextual retrieval repairs chunks that are ambiguous out of context; it is cheap with prompt caching.</li>
+            <li>GraphRAG suits "what are the themes across everything?" questions.</li>
+            <li>Agentic RAG trades latency and tokens for multi-step search.</li>
+            <li>Long context windows complement RAG; they do not replace search over large, changing or permissioned corpora.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reaching for GraphRAG or agents before hybrid search and reranking are tuned.</li>
+            <li>Letting an agentic loop run without a step or token budget.</li>
+            <li>Regenerating chunk contexts on every ingest instead of only for changed documents.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="advanced-rag-1"><span>Add contextual headers to chunks and compare recall@20 with and without them</span></label></li>
+          <li><label><input type="checkbox" data-key="advanced-rag-2"><span>Explain when GraphRAG beats top-k retrieval and what it costs to build</span></label></li>
+          <li><label><input type="checkbox" data-key="advanced-rag-3"><span>Build a retrieve-grade-retry loop with a maximum of three searches</span></label></li>
+          <li><label><input type="checkbox" data-key="advanced-rag-4"><span>Argue when to use a long context window instead of retrieval</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://www.anthropic.com/news/contextual-retrieval">Introducing Contextual Retrieval (Anthropic, 2024)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2404.16130">From Local to Global: A GraphRAG Approach (2024)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2310.11511">Self-RAG (2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation for Knowledge-Intensive NLP (Lewis et al., 2020)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="rag-eval">
+        <header class="topic-head">
+          <p class="eyebrow">07.7 · Measure both halves</p>
+          <h2>Evaluating RAG</h2>
+        </header>
+
+        <p class="lead">A RAG answer can be wrong for two separate reasons: retrieval missed the right passage, or the model misused the passage it got. So you measure retrieval and generation separately. Retrieval metrics ask whether the right chunks came back near the top; generation metrics ask whether the answer is supported by those chunks and actually answers the question.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Every chunk size, model swap and reranker in this area is a guess until you have an eval set. Separate metrics tell you which component to fix, and a fixed eval set catches regressions before users do.</p>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="The RAG triad: question, retrieved context and answer at the corners of a triangle; the edges are context relevance, faithfulness and answer relevance.">
+              <line class="d-line-accent" x1="300" y1="62" x2="150" y2="180"/>
+              <line class="d-line-signal" x1="190" y1="200" x2="450" y2="200"/>
+              <line class="d-line-accent" x1="340" y1="62" x2="490" y2="180"/>
+              <rect class="d-box" x="260" y="22" width="120" height="40" rx="8"/>
+              <text class="d-title" x="320" y="47" text-anchor="middle">Question</text>
+              <rect class="d-good" x="70" y="180" width="120" height="40" rx="8"/>
+              <text class="d-title" x="130" y="205" text-anchor="middle">Context</text>
+              <rect class="d-accent" x="450" y="180" width="120" height="40" rx="8"/>
+              <text class="d-title" x="510" y="205" text-anchor="middle">Answer</text>
+              <text class="d-text" x="40" y="110">Context relevance</text>
+              <text class="d-label" x="40" y="126">right chunks retrieved?</text>
+              <text class="d-label" x="40" y="141">recall@k · MRR · nDCG</text>
+              <text class="d-text" x="440" y="110">Answer relevance</text>
+              <text class="d-label" x="440" y="126">does it answer the</text>
+              <text class="d-label" x="440" y="141">question asked?</text>
+              <text class="d-text d-text-signal" x="320" y="236" text-anchor="middle">Faithfulness: every claim supported by the context?</text>
+            </svg>
+          </div>
+          <figcaption>Each edge of the triad is a separate check. A low score on one edge points at one component: retriever, prompt or model.</figcaption>
+        </figure>
+
+        <h3>Retrieval metrics</h3>
+        <div class="formula">
+          \[ \text{recall@}k = \frac{|\text{relevant} \cap \text{top-}k|}{|\text{relevant}|} \qquad \text{MRR} = \frac{1}{|Q|}\sum_{q} \frac{1}{\text{rank of first relevant}} \]
+          \[ \text{nDCG@}k = \frac{\text{DCG@}k}{\text{IDCG@}k}, \qquad \text{DCG@}k = \sum_{i=1}^{k} \frac{\text{rel}_i}{\log_2(i+1)} \]
+          <span class="formula-note">Recall ignores order inside the top k. MRR only cares about the first hit. nDCG rewards putting the most relevant results highest and uses graded relevance; IDCG is the DCG of the ideal ordering.</span>
+        </div>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="Worked example: results at ranks 1 to 5 are not relevant, relevant, not, relevant, not, with three relevant chunks in total. Recall at 5 is 0.67, precision 0.40, reciprocal rank 0.50 and nDCG 0.50.">
+              <text class="d-label" x="20" y="24">rank</text>
+              <text class="d-label" x="80" y="24">result</text>
+              <text class="d-label" x="200" y="24">1 / log₂(i+1)</text>
+              <g>
+                <text class="d-mono" x="28" y="52">1</text><rect class="d-box" x="70" y="36" width="100" height="24" rx="5"/><text class="d-label" x="120" y="52" text-anchor="middle">not relevant</text><text class="d-mono" x="210" y="52">1.00</text>
+                <text class="d-mono" x="28" y="84">2</text><rect class="d-good" x="70" y="68" width="100" height="24" rx="5"/><text class="d-label" x="120" y="84" text-anchor="middle">relevant</text><text class="d-mono d-text-good" x="210" y="84">0.63</text>
+                <text class="d-mono" x="28" y="116">3</text><rect class="d-box" x="70" y="100" width="100" height="24" rx="5"/><text class="d-label" x="120" y="116" text-anchor="middle">not relevant</text><text class="d-mono" x="210" y="116">0.50</text>
+                <text class="d-mono" x="28" y="148">4</text><rect class="d-good" x="70" y="132" width="100" height="24" rx="5"/><text class="d-label" x="120" y="148" text-anchor="middle">relevant</text><text class="d-mono d-text-good" x="210" y="148">0.43</text>
+                <text class="d-mono" x="28" y="180">5</text><rect class="d-box" x="70" y="164" width="100" height="24" rx="5"/><text class="d-label" x="120" y="180" text-anchor="middle">not relevant</text><text class="d-mono" x="210" y="180">0.39</text>
+              </g>
+              <text class="d-label" x="20" y="210">3 relevant chunks exist; 1 was never retrieved</text>
+              <line class="d-grid" x1="290" y1="30" x2="290" y2="200"/>
+              <text class="d-mono" x="310" y="52">recall@5 = 2/3 = 0.67</text>
+              <text class="d-mono" x="310" y="84">precision@5 = 2/5 = 0.40</text>
+              <text class="d-mono" x="310" y="116">RR = 1/2 (first hit at rank 2) = 0.50</text>
+              <text class="d-mono" x="310" y="148">DCG@5 = 0.63 + 0.43 = 1.06</text>
+              <text class="d-mono" x="310" y="180">IDCG@5 = 1 + 0.63 + 0.50 = 2.13</text>
+              <text class="d-mono d-text-accent" x="310" y="210">nDCG@5 = 1.06 / 2.13 = 0.50</text>
+            </svg>
+          </div>
+          <figcaption>One query worked by hand. MRR is the mean of RR over all test queries.</figcaption>
+        </figure>
+
+        <div class="widget" id="rag-eval-demo">
+          <div class="widget-head">
+            <span class="widget-title">Retrieval metrics calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="rag-eval-k">k <input type="range" id="rag-eval-k" min="1" max="10" step="1" value="5"><output id="rag-eval-k-out">5</output></label>
+            <label for="rag-eval-total">Relevant chunks in corpus <input type="number" id="rag-eval-total" min="1" max="20" value="4" style="width:5em"></label>
+            <button class="btn" type="button" id="rag-eval-reset">Reset</button>
+          </div>
+          <svg id="rag-eval-plot" viewBox="0 0 600 270" role="img" aria-label="Ten ranked results with clickable relevance grades, the k cutoff, and bars for precision, recall, reciprocal rank and nDCG."></svg>
+          <p class="readout" id="rag-eval-readout"></p>
+        </div>
+        <p>Click a result to cycle its relevance grade from 0 to 3 (or focus it and press Enter). Move a relevant result from rank 6 to rank 1 and watch nDCG and RR jump while recall@10 stays the same.</p>
+
+        <h3>Generation metrics and the eval set</h3>
+        <p><strong>Faithfulness</strong> (or groundedness) is the share of claims in the answer that the retrieved context supports. A judge LLM splits the answer into claims and checks each one against the context. Calibrate any judge against 50 or so human labels before trusting it.</p>
+        <p>Build the eval set from 50 to 200 real user questions, each labelled with the chunk ids that answer it. Synthetic questions generated from chunks fill gaps. Slice results by question type and run the suite in CI on every change.</p>
+
+        <pre class="code" data-lang="python"><code>import math
+
+def recall_at_k(ranked, relevant, k):
+    return len(set(ranked[:k]) &amp; relevant) / len(relevant)
+
+def reciprocal_rank(ranked, relevant):
+    for i, doc in enumerate(ranked, start=1):
+        if doc in relevant:
+            return 1.0 / i
+    return 0.0
+
+def ndcg_at_k(ranked, grades, k):              <span class="c"># grades: {doc_id: 0..3}</span>
+    dcg = sum(grades.get(d, 0) / math.log2(i + 1) for i, d in enumerate(ranked[:k], 1))
+    ideal = sorted(grades.values(), reverse=True)[:k]
+    idcg = sum(g / math.log2(i + 1) for i, g in enumerate(ideal, 1))
+    return dcg / idcg if idcg else 0.0
+
+<span class="c"># MRR over a test set</span>
+mrr = sum(reciprocal_rank(r, rel) for r, rel in runs) / len(runs)</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Evaluate retrieval and generation separately so failures point at one component.</li>
+            <li>recall@k tells you if the answer is reachable; MRR and nDCG tell you how high it ranks.</li>
+            <li>Faithfulness catches answers that sound right but are not supported by the context.</li>
+            <li>A small labelled eval set run on every change beats a large one run once.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Judging the whole system only by end-to-end answer quality, which hides whether retrieval or generation broke.</li>
+            <li>Trusting an LLM judge that was never checked against human labels.</li>
+            <li>Building the eval set only from synthetic questions that copy the chunk's wording, which flatters retrieval.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="rag-eval-1"><span>Compute recall@5, MRR and nDCG@5 for a ranked list by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="rag-eval-2"><span>Label 50 questions with gold chunk ids and score your retriever</span></label></li>
+          <li><label><input type="checkbox" data-key="rag-eval-3"><span>Write a claim-level faithfulness judge and compare it with human labels</span></label></li>
+          <li><label><input type="checkbox" data-key="rag-eval-4"><span>Explain which metric to watch when you add a reranker, and why</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2309.15217">RAGAS: Automated Evaluation of RAG (2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2311.09476">ARES: An Automated Evaluation Framework for RAG (2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge with MT-Bench (2023)</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Docs Q&amp;A with citations</h4><p>Chunk a folder of Markdown docs, embed them with sentence-transformers and search with FAISS. Answer questions with an LLM that must cite chunk ids, and show the sources under each answer.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Measured hybrid retrieval</h4><p>Label 50 questions with gold chunks. Measure recall@10 and MRR for vector-only search, then add BM25 with RRF, then a cross-encoder reranker, and chart the gain from each step.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Agentic RAG with a CI gate</h4><p>Add contextual retrieval, query rewriting and a retrieve-grade-retry loop over two sources (docs and a SQL table). Run a faithfulness judge and the retrieval suite in CI and fail the build on regressions.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Draw the ingest and query pipelines from memory and name a failure for each box</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Choose chunk size, index type and k for a new corpus and justify them with numbers</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Implement hybrid search with RRF and cross-encoder reranking</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Diagnose a bad answer as a retrieval or a generation failure using metrics</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Decide when contextual retrieval, GraphRAG or agentic RAG is worth its cost</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* 07.1 Embedding space: drag the query, see top-k by cosine */
+(function () {
+  var svg = document.getElementById("embeddings-search-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, a, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  var kIn = document.getElementById("embeddings-search-k"), kOut = document.getElementById("embeddings-search-k-out");
+  var aIn = document.getElementById("embeddings-search-angle"), aOut = document.getElementById("embeddings-search-angle-out");
+  var readout = document.getElementById("embeddings-search-readout");
+  var cx = 300, cy = 180;
+  /* [angle in degrees, radius in px, label] */
+  var pts = [
+    [38, 150, "reset password"], [50, 95, "forgot login"], [64, 150, "2FA code missing"], [25, 110, "change email"], [70, 105, "locked account"],
+    [160, 120, "refund request"], [178, 150, "invoice copy"], [145, 100, "update card"], [190, 110, "charged twice"], [135, 155, "cancel plan"],
+    [255, 140, "track parcel"], [272, 100, "delivery delay"], [295, 150, "ship abroad"], [245, 110, "lost package"], [310, 155, "return label"]
+  ];
+  var q = { ang: 35, r: 120 };
+  function xy(ang, r) { var t = ang * Math.PI / 180; return [cx + r * Math.cos(t), cy - r * Math.sin(t)]; }
+  function draw() {
+    var k = +kIn.value;
+    kOut.textContent = k;
+    aOut.textContent = Math.round(q.ang) + "°";
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.appendChild(mk("line", { "class": "d-grid", x1: 20, y1: cy, x2: 580, y2: cy }));
+    svg.appendChild(mk("line", { "class": "d-grid", x1: cx, y1: 10, x2: cx, y2: 350 }));
+    svg.appendChild(mk("text", { "class": "d-label", x: 590, y: 30, "text-anchor": "end" }, "angle decides similarity"));
+    var scored = pts.map(function (p) {
+      return { p: p, cos: Math.cos((p[0] - q.ang) * Math.PI / 180) };
+    }).sort(function (a, b) { return b.cos - a.cos; });
+    var top = scored.slice(0, k);
+    var qp = xy(q.ang, q.r);
+    svg.appendChild(mk("line", { "class": "d-line-accent", x1: cx, y1: cy, x2: qp[0], y2: qp[1] }));
+    top.forEach(function (s) {
+      var pp = xy(s.p[0], s.p[1]);
+      svg.appendChild(mk("line", { "class": "d-line d-dash", x1: cx, y1: cy, x2: pp[0], y2: pp[1] }));
+    });
+    var topSet = top.map(function (s) { return s.p; });
+    pts.forEach(function (p) {
+      var pp = xy(p[0], p[1]);
+      var isTop = topSet.indexOf(p) >= 0;
+      svg.appendChild(mk("circle", { "class": isTop ? "d-dot-good" : "d-dot-muted", cx: pp[0], cy: pp[1], r: isTop ? 6 : 4 }));
+      var right = Math.cos(p[0] * Math.PI / 180) >= 0;
+      svg.appendChild(mk("text", {
+        "class": "d-label" + (isTop ? " d-text-good" : ""), x: pp[0] + (right ? 9 : -9), y: pp[1] + 4,
+        "text-anchor": right ? "start" : "end"
+      }, p[2]));
+    });
+    var qc = mk("circle", { "class": "d-signal", cx: qp[0], cy: qp[1], r: 9 });
+    qc.style.cursor = "grab";
+    svg.appendChild(qc);
+    svg.appendChild(mk("text", { "class": "d-title d-text-signal", x: qp[0], y: qp[1] - 14, "text-anchor": "middle" }, "query"));
+    readout.textContent = "Top-" + k + ": " + top.map(function (s) {
+      return s.p[2] + " (" + s.cos.toFixed(2) + ")";
+    }).join(" · ");
+  }
+  function fromEvent(ev) {
+    var pt = svg.createSVGPoint();
+    pt.x = ev.clientX; pt.y = ev.clientY;
+    var m = svg.getScreenCTM();
+    if (!m) return;
+    var p = pt.matrixTransform(m.inverse());
+    var dx = p.x - cx, dy = cy - p.y;
+    var r = Math.sqrt(dx * dx + dy * dy);
+    if (r < 5) return;
+    var ang = Math.atan2(dy, dx) * 180 / Math.PI;
+    if (ang < 0) ang += 360;
+    q.ang = ang; q.r = Math.max(30, Math.min(165, r));
+    aIn.value = Math.round(ang) % 360;
+    draw();
+  }
+  var dragging = false;
+  svg.style.touchAction = "none";
+  svg.addEventListener("pointerdown", function (ev) {
+    dragging = true;
+    if (svg.setPointerCapture) svg.setPointerCapture(ev.pointerId);
+    fromEvent(ev);
+  });
+  svg.addEventListener("pointermove", function (ev) { if (dragging) fromEvent(ev); });
+  svg.addEventListener("pointerup", function () { dragging = false; });
+  svg.addEventListener("pointercancel", function () { dragging = false; });
+  kIn.addEventListener("input", draw);
+  aIn.addEventListener("input", function () { q.ang = +aIn.value; draw(); });
+  draw();
+})();
+
+/* 07.2 Chunking: size, overlap, sentence snapping */
+(function () {
+  var box = document.getElementById("chunking-text");
+  if (!box) return;
+  var NS = "http://www.w3.org/2000/svg";
+  var strip = document.getElementById("chunking-strip");
+  var sIn = document.getElementById("chunking-size"), sOut = document.getElementById("chunking-size-out");
+  var oIn = document.getElementById("chunking-overlap"), oOut = document.getElementById("chunking-overlap-out");
+  var snap = document.getElementById("chunking-snap");
+  var readout = document.getElementById("chunking-readout");
+  var doc = "Retrieval-augmented generation grounds a language model in your own documents. First, an ingest job parses each file into plain text. " +
+    "The text is split into chunks of a few hundred tokens. Each chunk is embedded and written to a vector index together with its source and page number. " +
+    "At question time, the user's query is embedded with the same model. The index returns the closest chunks, often combined with keyword search. " +
+    "A reranker reorders the best candidates. Finally, the model answers using only the retrieved passages and cites them. " +
+    "If the answer is wrong, check retrieval first: was the right chunk in the top results at all? Small chunks match precisely but lose context. " +
+    "Large chunks keep context but blur several topics into one vector. Overlap keeps sentences that cross a boundary intact in at least one chunk.";
+  var words = doc.split(/\s+/);
+  var n = words.length;
+  var ends = words.map(function (w) { return /[.?!]$/.test(w); });
+  var palette = ["--t1", "--t2", "--t3", "--t4", "--t5"];
+  function split(S, O, doSnap) {
+    var chunks = [], start = 0;
+    while (start < n) {
+      var end = Math.min(start + S, n);
+      if (doSnap && end < n) {
+        for (var j = end - 1; j >= start + Math.floor(S / 2); j--) {
+          if (ends[j]) { end = j + 1; break; }
+        }
+      }
+      chunks.push([start, end]);
+      if (end >= n) break;
+      var next = end - O;
+      if (next <= start) next = start + 1;
+      start = next;
+    }
+    return chunks;
+  }
+  function draw() {
+    var S = +sIn.value, Oraw = +oIn.value;
+    var O = Math.min(Oraw, S - 1);
+    sOut.textContent = S;
+    oOut.textContent = O + (O < Oraw ? " (capped)" : "");
+    var chunks = split(S, O, snap.checked);
+    box.textContent = "";
+    var owner = [], count = [];
+    for (var i = 0; i < n; i++) { owner.push(-1); count.push(0); }
+    chunks.forEach(function (c, ci) {
+      for (var i = c[0]; i < c[1]; i++) { if (owner[i] < 0) owner[i] = ci; count[i]++; }
+    });
+    var starts = {};
+    chunks.forEach(function (c, ci) { if (!(c[0] in starts)) starts[c[0]] = ci; });
+    for (var w = 0; w < n; w++) {
+      if (w in starts) {
+        var tag = document.createElement("span");
+        tag.textContent = "[" + (starts[w] + 1) + "]";
+        tag.style.cssText = "font-family:var(--font-mono);font-size:.7em;color:var(--ink-3);margin-right:2px;";
+        box.appendChild(tag);
+      }
+      var sp = document.createElement("span");
+      sp.textContent = words[w] + " ";
+      var col = "var(" + palette[owner[w] % palette.length] + ")";
+      sp.style.background = "color-mix(in srgb, " + col + " 22%, transparent)";
+      if (count[w] > 1) sp.style.boxShadow = "inset 0 -3px 0 var(--signal)";
+      box.appendChild(sp);
+    }
+    while (strip.firstChild) strip.removeChild(strip.firstChild);
+    chunks.forEach(function (c, ci) {
+      var x = 10 + c[0] / n * 580, wpx = Math.max(2, (c[1] - c[0]) / n * 580);
+      var y = ci % 2 ? 36 : 8;
+      var col = "var(" + palette[ci % palette.length] + ")";
+      var r = document.createElementNS(NS, "rect");
+      r.setAttribute("x", x); r.setAttribute("y", y); r.setAttribute("width", wpx); r.setAttribute("height", 24); r.setAttribute("rx", 4);
+      r.style.fill = "color-mix(in srgb, " + col + " 30%, transparent)";
+      r.style.stroke = col;
+      strip.appendChild(r);
+      var t = document.createElementNS(NS, "text");
+      t.setAttribute("class", "d-label"); t.setAttribute("x", x + 5); t.setAttribute("y", y + 16);
+      t.textContent = String(ci + 1);
+      strip.appendChild(t);
+    });
+    var stored = chunks.reduce(function (a, c) { return a + c[1] - c[0]; }, 0);
+    var cut = chunks.filter(function (c) { return c[1] < n && !ends[c[1] - 1]; }).length;
+    readout.textContent = chunks.length + " chunks · avg " + (stored / chunks.length).toFixed(1) + " words · stores " + stored +
+      " words for a " + n + "-word text (+" + Math.round((stored - n) / n * 100) + "%) · " + cut + " chunk" + (cut === 1 ? "" : "s") + " end mid-sentence";
+  }
+  [sIn, oIn].forEach(function (el) { el.addEventListener("input", draw); });
+  snap.addEventListener("change", draw);
+  draw();
+})();
+
+/* 07.3 IVF: probe more cells */
+(function () {
+  var svg = document.getElementById("vector-db-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, a, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  var pIn = document.getElementById("vector-db-nprobe"), pOut = document.getElementById("vector-db-nprobe-out");
+  var readout = document.getElementById("vector-db-readout");
+  var seed = 7;
+  function rnd() { /* mulberry32 */
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+  var W = 600, H = 340, N = 260;
+  var cents = [[110, 90], [260, 70], [430, 90], [530, 210], [380, 235], [220, 250], [90, 250], [300, 160]];
+  var pts = [];
+  for (var i = 0; i < N; i++) pts.push([15 + rnd() * (W - 30), 15 + rnd() * (H - 30)]);
+  function d2(a, b) { var dx = a[0] - b[0], dy = a[1] - b[1]; return dx * dx + dy * dy; }
+  function nearestCent(p) {
+    var best = 0;
+    for (var c = 1; c < cents.length; c++) if (d2(p, cents[c]) < d2(p, cents[best])) best = c;
+    return best;
+  }
+  var cellOf = pts.map(nearestCent);
+  /* exact Voronoi cells by clipping the frame with half-planes */
+  function clip(poly, a, b) {
+    var m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], d = [b[0] - a[0], b[1] - a[1]];
+    function f(p) { return (p[0] - m[0]) * d[0] + (p[1] - m[1]) * d[1]; }
+    var out = [];
+    for (var i = 0; i < poly.length; i++) {
+      var P = poly[i], Q = poly[(i + 1) % poly.length], fp = f(P), fq = f(Q);
+      if (fp <= 0) out.push(P);
+      if ((fp <= 0) !== (fq <= 0)) {
+        var t = fp / (fp - fq);
+        out.push([P[0] + t * (Q[0] - P[0]), P[1] + t * (Q[1] - P[1])]);
+      }
+    }
+    return out;
+  }
+  var cells = cents.map(function (c, ci) {
+    var poly = [[0, 0], [W, 0], [W, H], [0, H]];
+    cents.forEach(function (o, oi) { if (oi !== ci) poly = clip(poly, c, o); });
+    return poly.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" ");
+  });
+  var query = [225, 185];
+  function draw() {
+    var np = +pIn.value;
+    pOut.textContent = np;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var order = cents.map(function (c, i) { return i; }).sort(function (a, b) { return d2(query, cents[a]) - d2(query, cents[b]); });
+    var probed = order.slice(0, np);
+    cells.forEach(function (poly, ci) {
+      var on = probed.indexOf(ci) >= 0;
+      var pg = mk("polygon", { "class": on ? "d-accent" : "d-grid", points: poly });
+      if (on) { pg.setAttribute("fill-opacity", "0.45"); pg.style.strokeWidth = "1"; }
+      svg.appendChild(pg);
+    });
+    var byDist = pts.map(function (p, i) { return i; }).sort(function (a, b) { return d2(query, pts[a]) - d2(query, pts[b]); });
+    var truth = byDist.slice(0, 5);
+    var found = truth.filter(function (i) { return probed.indexOf(cellOf[i]) >= 0; }).length;
+    truth.forEach(function (i) {
+      var hit = probed.indexOf(cellOf[i]) >= 0;
+      svg.appendChild(mk("circle", { "class": hit ? "d-good" : "d-signal", cx: pts[i][0], cy: pts[i][1], r: 8 }));
+    });
+    var scanned = 0;
+    pts.forEach(function (p, i) {
+      var on = probed.indexOf(cellOf[i]) >= 0;
+      if (on) scanned++;
+      svg.appendChild(mk("circle", { "class": on ? "d-dot" : "d-dot-muted", cx: p[0], cy: p[1], r: on ? 3 : 2.5 }));
+    });
+    cents.forEach(function (c) {
+      svg.appendChild(mk("path", { "class": "d-line", d: "M" + (c[0] - 6) + " " + c[1] + " h12 M" + c[0] + " " + (c[1] - 6) + " v12" }));
+    });
+    svg.appendChild(mk("circle", { "class": "d-dot-signal", cx: query[0], cy: query[1], r: 6 }));
+    svg.appendChild(mk("text", { "class": "d-title d-text-signal", x: query[0] + 10, y: query[1] - 10 }, "query"));
+    readout.textContent = "Scanned " + scanned + " of " + N + " vectors (" + Math.round(scanned / N * 100) + "%) · recall@5 = " +
+      found + "/5" + (found < 5 ? " · amber rings are true neighbours in cells you did not probe" : " · every true neighbour found");
+  }
+  function moveTo(ev) {
+    var pt = svg.createSVGPoint();
+    pt.x = ev.clientX; pt.y = ev.clientY;
+    var m = svg.getScreenCTM();
+    if (!m) return;
+    var p = pt.matrixTransform(m.inverse());
+    query = [Math.max(5, Math.min(W - 5, p.x)), Math.max(5, Math.min(H - 5, p.y))];
+    draw();
+  }
+  var dragging = false;
+  svg.style.touchAction = "none";
+  svg.addEventListener("pointerdown", function (ev) { dragging = true; if (svg.setPointerCapture) svg.setPointerCapture(ev.pointerId); moveTo(ev); });
+  svg.addEventListener("pointermove", function (ev) { if (dragging) moveTo(ev); });
+  svg.addEventListener("pointerup", function () { dragging = false; });
+  svg.addEventListener("pointercancel", function () { dragging = false; });
+  pIn.addEventListener("input", draw);
+  draw();
+})();
+
+/* 07.4 Reciprocal rank fusion calculator */
+(function () {
+  var svg = document.getElementById("hybrid-rerank-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, a, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  var bIn = document.getElementById("hybrid-rerank-bm25"), vIn = document.getElementById("hybrid-rerank-vec");
+  var kIn = document.getElementById("hybrid-rerank-k"), kOut = document.getElementById("hybrid-rerank-k-out");
+  var wIn = document.getElementById("hybrid-rerank-w"), wOut = document.getElementById("hybrid-rerank-w-out");
+  var readout = document.getElementById("hybrid-rerank-readout");
+  function parse(s) {
+    var seen = {}, out = [];
+    s.split(/[\s,;]+/).forEach(function (t) { if (t && !seen[t]) { seen[t] = 1; out.push(t); } });
+    return out.slice(0, 10);
+  }
+  function draw() {
+    var k = +kIn.value, w = +wIn.value;
+    kOut.textContent = k;
+    wOut.textContent = w.toFixed(1);
+    var B = parse(bIn.value), V = parse(vIn.value);
+    var docs = {};
+    B.forEach(function (d, i) { docs[d] = docs[d] || { id: d, b: 0, v: 0, rb: null, rv: null }; docs[d].b = 1 / (k + i + 1); docs[d].rb = i + 1; });
+    V.forEach(function (d, i) { docs[d] = docs[d] || { id: d, b: 0, v: 0, rb: null, rv: null }; docs[d].v = w / (k + i + 1); docs[d].rv = i + 1; });
+    var rows = Object.keys(docs).map(function (id) { var o = docs[id]; o.t = o.b + o.v; return o; })
+      .sort(function (a, b) { return b.t - a.t || (a.id < b.id ? -1 : 1); });
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (!rows.length) {
+      svg.appendChild(mk("text", { "class": "d-label", x: 300, y: 120, "text-anchor": "middle" }, "Type comma-separated document ids in either list."));
+      readout.textContent = "";
+      return;
+    }
+    var shown = rows.slice(0, 8), max = shown[0].t || 1, x0 = 170, span = 330;
+    svg.appendChild(mk("text", { "class": "d-label", x: 10, y: 14 }, "fused rank"));
+    svg.appendChild(mk("text", { "class": "d-label", x: 70, y: 14 }, "BM25 / vector rank"));
+    shown.forEach(function (r, i) {
+      var y = 24 + i * 27;
+      svg.appendChild(mk("text", { "class": "d-mono", x: 10, y: y + 15 }, (i + 1) + ". " + r.id));
+      svg.appendChild(mk("text", { "class": "d-label", x: 70, y: y + 15 }, (r.rb ? "#" + r.rb : "–") + " / " + (r.rv ? "#" + r.rv : "–")));
+      var wb = r.b / max * span, wv = r.v / max * span;
+      if (wb > 0) svg.appendChild(mk("rect", { "class": "d-accent", x: x0, y: y + 2, width: wb, height: 18, rx: 3 }));
+      if (wv > 0) svg.appendChild(mk("rect", { "class": "d-good", x: x0 + wb, y: y + 2, width: wv, height: 18, rx: 3 }));
+      svg.appendChild(mk("text", { "class": "d-mono", x: x0 + wb + wv + 8, y: y + 15 }, r.t.toFixed(4)));
+    });
+    var ly = 252;
+    svg.appendChild(mk("rect", { "class": "d-accent", x: 170, y: ly - 10, width: 12, height: 12, rx: 2 }));
+    svg.appendChild(mk("text", { "class": "d-label", x: 188, y: ly }, "from BM25 list"));
+    svg.appendChild(mk("rect", { "class": "d-good", x: 300, y: ly - 10, width: 12, height: 12, rx: 2 }));
+    svg.appendChild(mk("text", { "class": "d-label", x: 318, y: ly }, "from vector list"));
+    var both = rows.filter(function (r) { return r.rb && r.rv; }).map(function (r) { return r.id; });
+    readout.textContent = "Fused order: " + rows.map(function (r) { return r.id; }).join(" > ") +
+      (both.length ? " · in both lists: " + both.join(", ") : "") + " · rank-1 score = 1/(" + k + "+1) = " + (1 / (k + 1)).toFixed(4);
+  }
+  [bIn, vIn, kIn, wIn].forEach(function (el) { el.addEventListener("input", draw); });
+  draw();
+})();
+
+/* 07.5 Query rewriting on a toy help centre */
+(function () {
+  var svg = document.getElementById("query-transform-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, a, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  var mode = document.getElementById("query-transform-mode"), modeOut = document.getElementById("query-transform-mode-out");
+  var qBox = document.getElementById("query-transform-queries"), readout = document.getElementById("query-transform-readout");
+  var corpus = [
+    ["d1", "Pro plan pricing: $20 per user per month, billed annually."],
+    ["d2", "Invite teammates to your workspace from Settings > Members."],
+    ["d3", "Add a payment method under Billing > Cards."],
+    ["d4", "Remove a member: open Settings > Members and click Remove."],
+    ["d5", "Free plan limits: 3 projects and 1 user."],
+    ["d6", "Add people to a project by sharing the project link."],
+    ["d7", "Each extra seat on the Pro plan is billed monthly."],
+    ["d8", "Export your data as CSV from Settings > Export."]
+  ];
+  var GOLD = "d2";
+  var STOP = {};
+  "how do i to it my a the your from and by on is as per of an me can what under we are be in for with our this that".split(" ")
+    .forEach(function (w) { STOP[w] = 1; });
+  function toks(s) {
+    var out = {};
+    s.toLowerCase().replace(/[^a-z0-9]+/g, " ").split(" ").forEach(function (w) {
+      if (!w || STOP[w]) return;
+      if (w.length > 3 && /s$/.test(w) && !/ss$/.test(w)) w = w.slice(0, -1);
+      out[w] = 1;
+    });
+    return out;
+  }
+  var docToks = corpus.map(function (d) { return toks(d[1]); });
+  var plans = {
+    none: { label: "raw", llm: 0, queries: ["how do I add people to it?"] },
+    standalone: { label: "1 rewrite", llm: 1, queries: ["How do I add people to our Pro plan workspace?"] },
+    multi: { label: "3 variants", llm: 1, queries: ["How do I add people to our Pro plan workspace?", "invite teammates to the Pro workspace", "add teammates as workspace members"] },
+    hyde: { label: "fake answer", llm: 1, queries: ["Open Settings > Members and click Invite to add teammates to your workspace by email."] }
+  };
+  function rankFor(q) {
+    var qt = toks(q);
+    return corpus.map(function (d, i) {
+      var s = 0;
+      for (var w in qt) if (docToks[i][w]) s++;
+      return { id: d[0], i: i, s: s };
+    }).filter(function (r) { return r.s > 0; })
+      .sort(function (a, b) { return b.s - a.s || a.i - b.i; });
+  }
+  function draw() {
+    var plan = plans[mode.value];
+    modeOut.textContent = plan.label;
+    qBox.textContent = plan.queries.map(function (q, i) { return (plan.queries.length > 1 ? "q" + (i + 1) + ": " : "query: ") + q; }).join("  |  ");
+    var results;
+    if (plan.queries.length === 1) {
+      results = rankFor(plan.queries[0]).map(function (r) { return { id: r.id, i: r.i, score: r.s, txt: r.s + " shared" }; });
+    } else {
+      var acc = {};
+      plan.queries.forEach(function (q) {
+        rankFor(q).forEach(function (r, rank) {
+          acc[r.id] = acc[r.id] || { id: r.id, i: r.i, score: 0 };
+          acc[r.id].score += 1 / (60 + rank + 1);
+        });
+      });
+      results = Object.keys(acc).map(function (k) { var o = acc[k]; o.txt = "RRF " + o.score.toFixed(4); return o; })
+        .sort(function (a, b) { return b.score - a.score || a.i - b.i; });
+    }
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var shown = results.slice(0, 5), max = shown.length ? shown[0].score : 1;
+    shown.forEach(function (r, i) {
+      var y = 8 + i * 38, gold = r.id === GOLD;
+      var txt = corpus[r.i][1];
+      if (txt.length > 44) txt = txt.slice(0, 43) + "…";
+      svg.appendChild(mk("text", { "class": "d-mono" + (gold ? " d-text-good" : ""), x: 6, y: y + 14 }, "#" + (i + 1) + " " + r.id));
+      svg.appendChild(mk("text", { "class": "d-label", x: 70, y: y + 14 }, txt));
+      svg.appendChild(mk("rect", { "class": gold ? "d-good" : "d-accent", x: 370, y: y + 2, width: Math.max(4, r.score / max * 150), height: 16, rx: 3 }));
+      svg.appendChild(mk("text", { "class": "d-label", x: 528, y: y + 14 }, r.txt));
+    });
+    if (!shown.length) svg.appendChild(mk("text", { "class": "d-label", x: 300, y: 100, "text-anchor": "middle" }, "No document shares a keyword with the query."));
+    var pos = -1;
+    results.forEach(function (r, i) { if (r.id === GOLD) pos = i + 1; });
+    var searches = plan.queries.length;
+    readout.textContent = (pos > 0 ? "Relevant doc d2 ranks #" + pos : "Relevant doc d2 not retrieved at all") +
+      " · LLM calls: " + plan.llm + " · searches: " + searches;
+  }
+  mode.addEventListener("change", draw);
+  draw();
+})();
+
+/* 07.6 Contextual retrieval toggle */
+(function () {
+  var svg = document.getElementById("advanced-rag-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, a, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  var qSel = document.getElementById("advanced-rag-query"), ctx = document.getElementById("advanced-rag-ctx");
+  var ctxOut = document.getElementById("advanced-rag-ctx-out"), readout = document.getElementById("advanced-rag-readout");
+  var chunks = [
+    { text: "Revenue grew 3% over the previous quarter.", ctx: "From ACME Corp's Q2 2023 quarterly report, results section." },
+    { text: "Revenue grew 5% over the previous quarter.", ctx: "From Globex Inc's Q2 2023 quarterly report, results section." },
+    { text: "Revenue fell 2% over the previous quarter.", ctx: "From ACME Corp's Q1 2023 quarterly report, results section." }
+  ];
+  var STOP = { from: 1, the: 1, over: 1, s: 1 };
+  function norm(w) { return w.toLowerCase().replace(/'s$/, "").replace(/[^a-z0-9]/g, ""); }
+  function draw() {
+    var qi = +qSel.value, on = ctx.checked;
+    ctxOut.textContent = on ? "on" : "off";
+    var qWords = {};
+    qSel.options[qi].text.split(/\s+/).forEach(function (w) { var n = norm(w); if (n && !STOP[n]) qWords[n] = 1; });
+    var scores = chunks.map(function (c) {
+      var full = (on ? c.ctx + " " : "") + c.text, seen = {}, s = 0;
+      full.split(/\s+/).forEach(function (w) { var n = norm(w); if (qWords[n] && !seen[n]) { seen[n] = 1; s++; } });
+      return s;
+    });
+    var max = Math.max.apply(null, scores);
+    var winners = scores.filter(function (s) { return s === max; }).length;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    chunks.forEach(function (c, i) {
+      var y = 10 + i * 80, target = i === qi;
+      svg.appendChild(mk("rect", { "class": target ? "d-good" : "d-box", x: 4, y: y, width: 420, height: 66, rx: 8 }));
+      var lines = [];
+      if (on) lines.push([c.ctx, true]);
+      lines.push([c.text, false]);
+      lines.forEach(function (ln, li) {
+        var t = mk("text", { "class": ln[1] ? "d-label" : "d-text", x: 14, y: y + (on ? 24 + li * 22 : 38) });
+        ln[0].split(" ").forEach(function (w, wi) {
+          var hit = !!qWords[norm(w)];
+          var sp = mk("tspan", hit ? { "class": "d-text-accent", "font-weight": "700" } : {}, (wi ? " " : "") + w);
+          t.appendChild(sp);
+        });
+        svg.appendChild(t);
+      });
+      svg.appendChild(mk("rect", { "class": scores[i] === max && winners === 1 ? "d-accent" : "d-fill", x: 440, y: y + 22, width: Math.max(4, scores[i] / 5 * 120), height: 20, rx: 3 }));
+      svg.appendChild(mk("text", { "class": "d-mono", x: 440 + Math.max(4, scores[i] / 5 * 120) + 8, y: y + 37 }, String(scores[i])));
+      if (target) svg.appendChild(mk("text", { "class": "d-label d-text-good", x: 440, y: y + 14 }, "correct chunk"));
+    });
+    if (winners > 1) {
+      readout.textContent = winners + "-way tie at score " + max + ": without context the retriever cannot tell which company or quarter each chunk is about.";
+    } else {
+      var best = scores.indexOf(max);
+      readout.textContent = best === qi ? "The correct chunk ranks #1 (score " + max + "); the added context names the company and quarter."
+        : "The wrong chunk wins (score " + max + ").";
+    }
+  }
+  qSel.addEventListener("change", draw);
+  ctx.addEventListener("change", draw);
+  draw();
+})();
+
+/* 07.7 Retrieval metrics calculator */
+(function () {
+  var svg = document.getElementById("rag-eval-plot");
+  if (!svg) return;
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, a, txt) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  var kIn = document.getElementById("rag-eval-k"), kOut = document.getElementById("rag-eval-k-out");
+  var totIn = document.getElementById("rag-eval-total"), reset = document.getElementById("rag-eval-reset");
+  var readout = document.getElementById("rag-eval-readout");
+  var DEFAULT = [0, 2, 0, 1, 0, 3, 0, 0, 1, 0];
+  var grades = DEFAULT.slice();
+  var focusIdx = -1;
+  function disc(i) { return 1 / (Math.log(i + 2) / Math.LN2); } /* i is 0-based: 1/log2(rank+1) */
+  function draw() {
+    var k = +kIn.value;
+    kOut.textContent = k;
+    var inList = grades.filter(function (g) { return g > 0; }).length;
+    var total = Math.max(+totIn.value || 1, inList, 1);
+    var top = grades.slice(0, k);
+    var hits = top.filter(function (g) { return g > 0; }).length;
+    var prec = hits / k, rec = hits / total, rr = 0;
+    for (var i = 0; i < k; i++) if (grades[i] > 0) { rr = 1 / (i + 1); break; }
+    var dcg = 0;
+    top.forEach(function (g, i) { dcg += g * disc(i); });
+    var ideal = grades.filter(function (g) { return g > 0; }).sort(function (a, b) { return b - a; });
+    for (var m = inList; m < total; m++) ideal.push(1); /* unseen relevant chunks assumed grade 1 */
+    var idcg = 0;
+    ideal.slice(0, k).forEach(function (g, i) { idcg += g * disc(i); });
+    var ndcg = idcg ? dcg / idcg : 0;
+
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.appendChild(mk("text", { "class": "d-label", x: 20, y: 14 }, "ranked results (click to set grade 0–3)"));
+    grades.forEach(function (g, i) {
+      var x = 20 + i * 57;
+      svg.appendChild(mk("text", { "class": "d-label", x: x + 25, y: 32, "text-anchor": "middle" }, "#" + (i + 1)));
+      var r = mk("rect", {
+        "class": g > 0 ? "d-good" : "d-box", x: x, y: 38, width: 50, height: 44, rx: 6, tabindex: "0", role: "button",
+        "aria-label": "Result " + (i + 1) + ", relevance grade " + g + ". Press Enter to change."
+      });
+      if (g > 0) r.setAttribute("fill-opacity", String(0.35 + g * 0.22));
+      r.style.cursor = "pointer";
+      r.addEventListener("click", function () { grades[i] = (grades[i] + 1) % 4; focusIdx = i; draw(); });
+      r.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); grades[i] = (grades[i] + 1) % 4; focusIdx = i; draw(); }
+      });
+      svg.appendChild(r);
+      var t = mk("text", { "class": "d-title", x: x + 25, y: 66, "text-anchor": "middle" }, String(g));
+      t.style.pointerEvents = "none";
+      svg.appendChild(t);
+      var h = 36 * disc(i);
+      svg.appendChild(mk("rect", { "class": "d-fill", x: x + 10, y: 136 - h, width: 30, height: h }));
+      svg.appendChild(mk("text", { "class": "d-label", x: x + 25, y: 150, "text-anchor": "middle" }, disc(i).toFixed(2)));
+    });
+    svg.appendChild(mk("text", { "class": "d-label", x: 20, y: 96 }, "discount 1/log₂(i+1)"));
+    var cx = 20 + k * 57 - 4;
+    svg.appendChild(mk("line", { "class": "d-line-accent d-dash", x1: cx, y1: 24, x2: cx, y2: 156 }));
+    svg.appendChild(mk("text", { "class": "d-label d-text-accent", x: Math.min(cx + 4, 560), y: 24 }, "k=" + k));
+    [["precision@" + k, prec], ["recall@" + k, rec], ["RR@" + k, rr], ["nDCG@" + k, ndcg]].forEach(function (row, i) {
+      var y = 172 + i * 24;
+      svg.appendChild(mk("text", { "class": "d-label", x: 20, y: y + 13 }, row[0]));
+      svg.appendChild(mk("rect", { "class": "d-fill", x: 130, y: y + 2, width: 380, height: 14, rx: 3 }));
+      svg.appendChild(mk("rect", { "class": "d-accent", x: 130, y: y + 2, width: Math.max(0.5, row[1] * 380), height: 14, rx: 3 }));
+      svg.appendChild(mk("text", { "class": "d-mono", x: 520, y: y + 14 }, row[1].toFixed(2)));
+    });
+    readout.textContent = hits + " relevant in top " + k + " of " + total + " relevant overall · DCG " + dcg.toFixed(2) + " / IDCG " + idcg.toFixed(2) +
+      (total > inList ? " · " + (total - inList) + " relevant chunk(s) never retrieved" : "");
+    if (focusIdx >= 0) {
+      var cellsNow = svg.querySelectorAll("rect[role='button']");
+      if (cellsNow[focusIdx] && cellsNow[focusIdx].focus) cellsNow[focusIdx].focus();
+      focusIdx = -1;
+    }
+  }
+  kIn.addEventListener("input", draw);
+  totIn.addEventListener("input", draw);
+  reset.addEventListener("click", function () { grades = DEFAULT.slice(); kIn.value = 5; totIn.value = 4; draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inference &amp; optimization · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="inference">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Inference &amp; optimization</h1>
+    <p class="lede">Training a model happens once. Inference happens on every request, so it is where most of the money, latency and hardware planning goes. This area teaches you why generating tokens is slow, which tricks make it fast and cheap, and how to estimate memory and speed before you rent a single GPU.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every LLM request has two phases. <strong>Prefill</strong> reads the whole prompt in one parallel pass and fills the KV cache. <strong>Decode</strong> then produces one token per step, and each step has to stream the model weights and the cache out of GPU memory. Almost every optimization in this area attacks one of those costs: quantization shrinks the bytes per weight, the KV cache and PagedAttention manage the memory that grows with context, batching shares each weight read across many users, and speculative decoding produces several tokens per expensive step. Serving engines package all of this, GPU memory math tells you what fits, and running models locally applies the same ideas to a laptop.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 280" role="img" aria-label="A request flows from prompt through prefill into a decode loop that reads the KV cache; quantization, batching and speculative decoding act on decode, all inside a serving engine bounded by GPU memory.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box d-dash" x="150" y="78" width="450" height="148" rx="10"/>
+              <text class="d-label" x="162" y="96">Serving engine · 11.5</text>
+              <rect class="d-fill" x="20" y="112" width="100" height="48" rx="8"/>
+              <text class="d-title" x="70" y="141" text-anchor="middle">Prompt</text>
+              <line class="d-line-accent" x1="120" y1="136" x2="178" y2="136" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="180" y="108" width="150" height="56" rx="8"/>
+              <text class="d-title" x="255" y="132" text-anchor="middle">Prefill</text>
+              <text class="d-label" x="255" y="151" text-anchor="middle">all tokens at once</text>
+              <line class="d-line-accent" x1="330" y1="136" x2="398" y2="136" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="364" y="128" text-anchor="middle">1st token</text>
+              <rect class="d-signal" x="400" y="108" width="170" height="56" rx="8"/>
+              <text class="d-title" x="485" y="132" text-anchor="middle">Decode loop</text>
+              <text class="d-label" x="485" y="151" text-anchor="middle">1 token per step</text>
+              <path class="d-line-accent" d="M540 108 C 540 86, 430 86, 430 104" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label" x="485" y="104" text-anchor="middle">repeat</text>
+              <line class="d-line-accent" x1="570" y1="136" x2="638" y2="136" marker-end="url(#ov-arrow)"/>
+              <rect class="d-fill" x="640" y="112" width="100" height="48" rx="8"/>
+              <text class="d-title" x="690" y="141" text-anchor="middle">Tokens</text>
+              <rect class="d-good" x="300" y="180" width="140" height="34" rx="8"/>
+              <text class="d-text" x="370" y="202" text-anchor="middle">KV cache · 11.2</text>
+              <line class="d-line" x1="255" y1="164" x2="300" y2="190" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="262" y="194" text-anchor="end">writes</text>
+              <line class="d-line" x1="440" y1="190" x2="470" y2="166" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="476" y="190">reads every step</text>
+              <rect class="d-box" x="300" y="16" width="120" height="30" rx="6"/>
+              <text class="d-text" x="360" y="36" text-anchor="middle">Quantization 11.1</text>
+              <rect class="d-box" x="430" y="16" width="110" height="30" rx="6"/>
+              <text class="d-text" x="485" y="36" text-anchor="middle">Batching 11.3</text>
+              <rect class="d-box" x="550" y="16" width="130" height="30" rx="6"/>
+              <text class="d-text" x="615" y="36" text-anchor="middle">Speculative 11.4</text>
+              <line class="d-line d-dash" x1="360" y1="46" x2="420" y2="106" marker-end="url(#ov-arrow)"/>
+              <line class="d-line d-dash" x1="485" y1="46" x2="485" y2="80" marker-end="url(#ov-arrow)"/>
+              <line class="d-line d-dash" x1="615" y1="46" x2="560" y2="106" marker-end="url(#ov-arrow)"/>
+              <rect class="d-fill" x="150" y="240" width="450" height="28" rx="6"/>
+              <text class="d-text" x="375" y="259" text-anchor="middle">GPU memory = weights + KV cache + overhead · 11.6</text>
+              <text class="d-label" x="690" y="200" text-anchor="middle">Same stack on</text>
+              <text class="d-label" x="690" y="216" text-anchor="middle">a laptop · 11.7</text>
+            </svg>
+          </div>
+          <figcaption>Prefill fills the KV cache once; the decode loop then reads weights and cache on every step. The levers on top all make that loop cheaper, and GPU memory sets the budget underneath.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="quantization">
+        <header class="topic-head">
+          <p class="eyebrow">11.1 · Fewer bits per weight</p>
+          <h2>Quantization</h2>
+        </header>
+
+        <p class="lead">Quantization stores each weight in 8 or 4 bits instead of 16 by snapping it to the nearest point on a small grid. Weights get slightly less precise; the model gets two to four times smaller and faster to decode.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Quantization decides what fits where: a 70B model needs about 140 GB in 16-bit (two 80 GB GPUs) and 35–40 GB in 4-bit (one). You will choose between variants named <code>FP8</code>, <code>AWQ</code>, <code>GPTQ</code> and <code>Q4_K_M</code>.</p>
+        </div>
+
+        <h3>How a number gets fewer bits</h3>
+        <p>In <strong>symmetric quantization</strong> you take a block of weights, set the <em>scale</em> to the largest absolute value divided by the largest storable integer (7 for signed 4-bit), and store <code>round(w / scale)</code>. To use a weight you <strong>dequantize</strong>: integer × scale. The gap between the two is the rounding error, at most half a grid step.</p>
+
+        <div class="formula">
+          \[ s = \frac{\max_i |w_i|}{2^{b-1}-1}, \qquad q_i = \operatorname{clamp}\!\left(\operatorname{round}\!\left(\frac{w_i}{s}\right),\, -2^{b-1},\, 2^{b-1}-1\right), \qquad \hat{w}_i = s\, q_i \]
+          <span class="formula-note">\(b\) is the bit width, \(s\) the scale shared by the block, \(q_i\) the stored integer and \(\hat{w}_i\) the value the kernel actually multiplies with. Each extra bit halves the grid step and roughly quarters the mean squared error.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Seven continuous fp16 weights on a number line are each snapped to the nearest of fifteen evenly spaced 4-bit levels; the stored value is the integer code.">
+              <defs>
+                <marker id="quantization-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="70" y="30">fp16 weights (continuous)</text>
+              <line class="d-line" x1="70" y1="56" x2="590" y2="56"/>
+              <text class="d-label" x="70" y="76" text-anchor="middle">−1</text>
+              <text class="d-label" x="330" y="76" text-anchor="middle">0</text>
+              <text class="d-label" x="590" y="76" text-anchor="middle">+1</text>
+              <circle class="d-dot-signal" cx="114.2" cy="56" r="5"/>
+              <circle class="d-dot-signal" cx="223.4" cy="56" r="5"/>
+              <circle class="d-dot-signal" cx="317" cy="56" r="5"/>
+              <circle class="d-dot-signal" cx="361.2" cy="56" r="5"/>
+              <circle class="d-dot-signal" cx="415.8" cy="56" r="5"/>
+              <circle class="d-dot-signal" cx="480.8" cy="56" r="5"/>
+              <circle class="d-dot-signal" cx="582.2" cy="56" r="5"/>
+              <line class="d-line-accent" x1="114.2" y1="62" x2="107.1" y2="140" marker-end="url(#quantization-arrow)"/>
+              <line class="d-line-accent" x1="223.4" y1="62" x2="218.6" y2="140" marker-end="url(#quantization-arrow)"/>
+              <line class="d-line-accent" x1="317" y1="62" x2="330" y2="140" marker-end="url(#quantization-arrow)"/>
+              <line class="d-line-accent" x1="361.2" y1="62" x2="367.1" y2="140" marker-end="url(#quantization-arrow)"/>
+              <line class="d-line-accent" x1="415.8" y1="62" x2="404.3" y2="140" marker-end="url(#quantization-arrow)"/>
+              <line class="d-line-accent" x1="480.8" y1="62" x2="478.6" y2="140" marker-end="url(#quantization-arrow)"/>
+              <line class="d-line-accent" x1="582.2" y1="62" x2="590" y2="140" marker-end="url(#quantization-arrow)"/>
+              <text class="d-label" x="440" y="108">round(w / s)</text>
+              <line class="d-line" x1="70" y1="150" x2="590" y2="150"/>
+              <g class="d-line">
+                <line x1="70" y1="144" x2="70" y2="156"/><line x1="107.1" y1="144" x2="107.1" y2="156"/><line x1="144.3" y1="144" x2="144.3" y2="156"/>
+                <line x1="181.4" y1="144" x2="181.4" y2="156"/><line x1="218.6" y1="144" x2="218.6" y2="156"/><line x1="255.7" y1="144" x2="255.7" y2="156"/>
+                <line x1="292.9" y1="144" x2="292.9" y2="156"/><line x1="330" y1="144" x2="330" y2="156"/><line x1="367.1" y1="144" x2="367.1" y2="156"/>
+                <line x1="404.3" y1="144" x2="404.3" y2="156"/><line x1="441.4" y1="144" x2="441.4" y2="156"/><line x1="478.6" y1="144" x2="478.6" y2="156"/>
+                <line x1="515.7" y1="144" x2="515.7" y2="156"/><line x1="552.9" y1="144" x2="552.9" y2="156"/><line x1="590" y1="144" x2="590" y2="156"/>
+              </g>
+              <text class="d-mono" x="107.1" y="174" text-anchor="middle">−6</text>
+              <text class="d-mono" x="218.6" y="174" text-anchor="middle">−3</text>
+              <text class="d-mono" x="330" y="174" text-anchor="middle">0</text>
+              <text class="d-mono" x="367.1" y="174" text-anchor="middle">1</text>
+              <text class="d-mono" x="404.3" y="174" text-anchor="middle">2</text>
+              <text class="d-mono" x="478.6" y="174" text-anchor="middle">4</text>
+              <text class="d-mono" x="590" y="174" text-anchor="middle">7</text>
+              <text class="d-label" x="70" y="204">4-bit levels: stored integer q ∈ {−7 … 7}, value = q × s, with s = max|w| / 7</text>
+            </svg>
+          </div>
+          <figcaption>Each continuous weight (orange) is replaced by the nearest grid level. Only the small integer and one shared scale per block are stored; the gap between dot and tick is the rounding error.</figcaption>
+        </figure>
+
+        <h3>Outliers, groups and the named methods</h3>
+        <p>One large weight stretches the scale and squashes its neighbours onto a few levels. The fix is one scale per <strong>group</strong> of 32–128 weights (about 4.13 bits per weight at 4-bit). The named <strong>post-training quantization</strong> methods add smarter rounding:</p>
+        <div class="grid-2">
+          <div class="card"><h4>GPTQ</h4><p>Column by column, nudging the remaining weights to cancel the error. INT4 for GPUs.</p></div>
+          <div class="card"><h4>AWQ</h4><p>Protects the ~1% of channels hit by large activations by scaling them up before rounding.</p></div>
+          <div class="card"><h4>GGUF k-quants</h4><p>llama.cpp's file format: <code>Q4_K_M</code>, <code>Q8_0</code>; the digit is roughly bits per weight.</p></div>
+          <div class="card"><h4>FP8 / FP4</h4><p>Hardware float formats (Hopper, Blackwell) that also speed up the math.</p></div>
+        </div>
+
+        <div class="widget" id="quantization-demo">
+          <div class="widget-head">
+            <span class="widget-title">Snap weights to a grid</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="quantization-bits">Bits <input type="range" id="quantization-bits" min="2" max="8" step="1" value="4"><output id="quantization-bits-out">4</output></label>
+            <label for="quantization-gran">Scale per <select id="quantization-gran"><option value="tensor">whole tensor</option><option value="group" selected>group of 64</option></select></label>
+            <label for="quantization-outlier"><input type="checkbox" id="quantization-outlier" checked> Add outlier weights</label>
+          </div>
+          <svg id="quantization-plot" viewBox="0 0 600 240" role="img" aria-label="Histogram of original weights with the quantized values shown as spikes at grid levels."></svg>
+          <p class="readout" id="quantization-readout"></p>
+        </div>
+        <p>With outliers and one scale per tensor, 4-bit weights collapse onto a few levels; per-group scales confine the damage.</p>
+
+        <h3>What you gain, what you risk</h3>
+        <p>Kernels dequantize 4-bit weights in registers: the math is unchanged, bytes read per token drop 4×, and decoding speeds up two to three times.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="Bar chart of a 70B model's weight memory by format: BF16 140 GB, FP8 70 GB, INT4 about 38 GB, Q4_K_M about 42 GB, 3-bit about 34 GB, 2-bit about 26 GB, against 24, 48 and 80 GB GPU lines.">
+              <line class="d-grid d-dash" x1="216" y1="22" x2="216" y2="200"/>
+              <line class="d-grid d-dash" x1="282" y1="22" x2="282" y2="200"/>
+              <line class="d-grid d-dash" x1="370" y1="22" x2="370" y2="200"/>
+              <text class="d-label" x="216" y="216" text-anchor="middle">24 GB</text>
+              <text class="d-label" x="282" y="216" text-anchor="middle">48 GB</text>
+              <text class="d-label" x="370" y="216" text-anchor="middle">80 GB</text>
+              <text class="d-text" x="140" y="45" text-anchor="end">BF16</text>
+              <rect class="d-good" x="150" y="30" width="385" height="20" rx="3"/><text class="d-mono" x="543" y="45">140 GB</text>
+              <text class="d-text" x="140" y="75" text-anchor="end">FP8</text>
+              <rect class="d-good" x="150" y="60" width="192" height="20" rx="3"/><text class="d-mono" x="350" y="75">70 GB</text>
+              <text class="d-text" x="140" y="105" text-anchor="end">Q4_K_M (GGUF)</text>
+              <rect class="d-accent" x="150" y="90" width="117" height="20" rx="3"/><text class="d-mono" x="388" y="105">~42 GB</text>
+              <text class="d-text" x="140" y="135" text-anchor="end">INT4 AWQ/GPTQ</text>
+              <rect class="d-accent" x="150" y="120" width="104" height="20" rx="3"/><text class="d-mono" x="388" y="135">~38 GB</text>
+              <text class="d-text" x="140" y="165" text-anchor="end">3-bit</text>
+              <rect class="d-signal" x="150" y="150" width="94" height="20" rx="3"/><text class="d-mono" x="388" y="165">~34 GB</text>
+              <text class="d-text" x="140" y="195" text-anchor="end">2-bit</text>
+              <rect class="d-signal" x="150" y="180" width="72" height="20" rx="3"/><text class="d-mono" x="388" y="195">~26 GB</text>
+              <rect class="d-good" x="150" y="226" width="12" height="10" rx="2"/><text class="d-label" x="168" y="235">near-lossless</text>
+              <rect class="d-accent" x="270" y="226" width="12" height="10" rx="2"/><text class="d-label" x="288" y="235">small loss</text>
+              <rect class="d-signal" x="380" y="226" width="12" height="10" rx="2"/><text class="d-label" x="398" y="235">visible degradation</text>
+            </svg>
+          </div>
+          <figcaption>Weight memory for a 70B-parameter model. 4-bit is the usual sweet spot: it fits one 48 GB or 80 GB GPU with room left for the KV cache.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Group-wise symmetric quantization, the core of most 4-bit formats</span>
+import numpy as np
+
+def quantize(w, bits=4, group=64):
+    qmax = 2 ** (bits - 1) - 1
+    g = w.reshape(-1, group)                         <span class="c"># one scale per group</span>
+    scale = np.abs(g).max(axis=1, keepdims=True) / qmax
+    scale[scale == 0] = 1.0
+    q = np.clip(np.round(g / scale), -qmax - 1, qmax).astype(np.int8)
+    return q, scale.astype(np.float16)
+
+def dequantize(q, scale):
+    return (q * scale.astype(np.float32)).reshape(-1)
+
+w = np.random.randn(4096 * 64).astype(np.float32) * 0.02
+for b in (8, 4, 3):
+    q, s = quantize(w, bits=b)
+    err = np.mean((w - dequantize(q, s)) ** 2)
+    sqnr = 10 * np.log10(np.mean(w ** 2) / err)
+    print(f"{b}-bit: SQNR {sqnr:.1f} dB")         <span class="c"># roughly 6 dB per bit</span></code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Format</th><th>Bits / weight</th><th>Typical home</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>BF16 / FP16</td><td>16</td><td>Reference, training</td><td>Baseline quality; 2 bytes per parameter</td></tr>
+              <tr><td>FP8 (W8A8)</td><td>8</td><td>vLLM, TensorRT-LLM, SGLang on Hopper/Blackwell</td><td>Near-lossless for large models; speeds up compute and memory</td></tr>
+              <tr><td>INT8 (LLM.int8, SmoothQuant)</td><td>8</td><td>bitsandbytes, older GPUs</td><td>Needs outlier handling for activations</td></tr>
+              <tr><td>GPTQ / AWQ INT4</td><td>~4.1–4.3</td><td>GPU serving engines</td><td>Weight-only; small quality loss, big memory savings</td></tr>
+              <tr><td>GGUF Q4_K_M / Q5_K_M</td><td>~4.8 / ~5.7</td><td>llama.cpp, Ollama, LM Studio</td><td>CPU and Apple Silicon friendly; mixed precision per tensor</td></tr>
+              <tr><td>NF4 (bitsandbytes)</td><td>~4.1</td><td>QLoRA fine-tuning</td><td>Grid tuned for normally distributed weights</td></tr>
+              <tr><td>2–3 bit</td><td>2–3.5</td><td>Research, extreme local use</td><td>Noticeable degradation, especially on small models</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Bigger models tolerate quantization better, so a 4-bit 70B usually beats a 16-bit 8B. Math, code, long context and non-English text show damage first: evaluate on your own tasks.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Quantization stores an integer per weight plus a shared scale per block; dequantize = integer × scale.</li>
+            <li>Weight-only 4-bit speeds up decoding because decoding is limited by bytes read, not by arithmetic.</li>
+            <li>Outliers stretch the scale; group-wise scales and methods like GPTQ and AWQ keep error low.</li>
+            <li>8-bit is near-lossless, 4-bit is the usual sweet spot, below 4 bits quality drops fast.</li>
+            <li>A larger model at 4-bit often beats a smaller model at 16-bit in the same memory.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Comparing quantized variants only on perplexity and shipping one that fails on your actual task (code, JSON, long context).</li>
+            <li>Expecting weight-only INT4 to speed up a heavily batched, compute-bound server as much as it speeds up a single user.</li>
+            <li>Using a quantized checkpoint with an engine or GPU that has no fast kernel for it, so it falls back to slow dequantization.</li>
+            <li>Calibrating GPTQ or AWQ on data unlike your traffic (for example English prose for a code model).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="quantization-1"><span>Quantize the vector [0.9, −0.3, 0.05, −1.2] to symmetric 4-bit by hand and compute the error of each element</span></label></li>
+          <li><label><input type="checkbox" data-key="quantization-2"><span>Explain why weight-only quantization speeds up decoding but not prefill</span></label></li>
+          <li><label><input type="checkbox" data-key="quantization-3"><span>Compute the effective bits per weight of a 4-bit format with an FP16 scale per 128 weights</span></label></li>
+          <li><label><input type="checkbox" data-key="quantization-4"><span>Describe in one sentence each what GPTQ, AWQ and GGUF are</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2208.07339">LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale (Dettmers et al., 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2210.17323">GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers (Frantar et al., 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2306.00978">AWQ: Activation-aware Weight Quantization (Lin et al., 2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="kv-cache">
+        <header class="topic-head">
+          <p class="eyebrow">11.2 · Memory that grows with context</p>
+          <h2>KV cache</h2>
+        </header>
+
+        <p class="lead">To generate token 500, attention needs keys and values for all 499 earlier tokens. The model stores them once in the <strong>KV cache</strong> and appends one row per step, trading recomputation for GPU memory that grows with context and users.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>The KV cache, more than the weights, decides how many users a GPU serves and how long their contexts can be.</p>
+        </div>
+
+        <h3>Prefill and decode</h3>
+        <p><strong>Prefill</strong> runs the whole prompt through the model in one pass. Each loaded weight is used for every prompt token, so prefill is <em>compute-bound</em>; it fills the cache and sets the <strong>time to first token</strong> (TTFT).</p>
+        <p><strong>Decode</strong> then makes one token per step: compute q, k, v for the newest token, append k and v, attend over the cache. Each weight byte read is used for only about two FLOPs, so decode is <em>memory-bandwidth-bound</em>. One step is the <strong>time per output token</strong> (TPOT).</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 690 240" role="img" aria-label="Left: at decode step 6 only k6 and v6 are computed and the query attends over cached k1 to k5 and v1 to v5. Right: PagedAttention stores a request's logical blocks in non-contiguous physical blocks through a block table.">
+              <defs>
+                <marker id="kv-cache-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="26">Decode step for token 6</text>
+              <text class="d-text" x="30" y="69">K</text>
+              <text class="d-text" x="30" y="107">V</text>
+              <rect class="d-good" x="50" y="50" width="36" height="28" rx="4"/><text class="d-mono" x="68" y="69" text-anchor="middle">k1</text>
+              <rect class="d-good" x="92" y="50" width="36" height="28" rx="4"/><text class="d-mono" x="110" y="69" text-anchor="middle">k2</text>
+              <rect class="d-good" x="134" y="50" width="36" height="28" rx="4"/><text class="d-mono" x="152" y="69" text-anchor="middle">k3</text>
+              <rect class="d-good" x="176" y="50" width="36" height="28" rx="4"/><text class="d-mono" x="194" y="69" text-anchor="middle">k4</text>
+              <rect class="d-good" x="218" y="50" width="36" height="28" rx="4"/><text class="d-mono" x="236" y="69" text-anchor="middle">k5</text>
+              <rect class="d-accent" x="260" y="50" width="36" height="28" rx="4"/><text class="d-mono" x="278" y="69" text-anchor="middle">k6</text>
+              <rect class="d-good" x="50" y="88" width="36" height="28" rx="4"/><text class="d-mono" x="68" y="107" text-anchor="middle">v1</text>
+              <rect class="d-good" x="92" y="88" width="36" height="28" rx="4"/><text class="d-mono" x="110" y="107" text-anchor="middle">v2</text>
+              <rect class="d-good" x="134" y="88" width="36" height="28" rx="4"/><text class="d-mono" x="152" y="107" text-anchor="middle">v3</text>
+              <rect class="d-good" x="176" y="88" width="36" height="28" rx="4"/><text class="d-mono" x="194" y="107" text-anchor="middle">v4</text>
+              <rect class="d-good" x="218" y="88" width="36" height="28" rx="4"/><text class="d-mono" x="236" y="107" text-anchor="middle">v5</text>
+              <rect class="d-accent" x="260" y="88" width="36" height="28" rx="4"/><text class="d-mono" x="278" y="107" text-anchor="middle">v6</text>
+              <path class="d-line" d="M50 124 L50 130 L296 130 L296 124"/>
+              <line class="d-line-accent" x1="173" y1="168" x2="173" y2="136" marker-end="url(#kv-cache-arrow)"/>
+              <text class="d-label" x="182" y="156">attend over all 6</text>
+              <rect class="d-accent" x="118" y="170" width="110" height="30" rx="6"/>
+              <text class="d-mono" x="173" y="190" text-anchor="middle">q6 (new token)</text>
+              <rect class="d-good" x="20" y="214" width="14" height="12" rx="2"/><text class="d-label" x="40" y="224">read from cache</text>
+              <rect class="d-accent" x="150" y="214" width="14" height="12" rx="2"/><text class="d-label" x="170" y="224">computed this step</text>
+              <line class="d-grid" x1="340" y1="16" x2="340" y2="226"/>
+              <text class="d-title" x="370" y="26">PagedAttention</text>
+              <text class="d-label" x="370" y="50">Request A, logical blocks</text>
+              <rect class="d-accent" x="370" y="58" width="44" height="26" rx="4"/><text class="d-mono" x="392" y="76" text-anchor="middle">A0</text>
+              <rect class="d-accent" x="420" y="58" width="44" height="26" rx="4"/><text class="d-mono" x="442" y="76" text-anchor="middle">A1</text>
+              <rect class="d-accent" x="470" y="58" width="44" height="26" rx="4"/><text class="d-mono" x="492" y="76" text-anchor="middle">A2</text>
+              <rect class="d-box" x="540" y="44" width="130" height="46" rx="6"/>
+              <text class="d-label" x="605" y="62" text-anchor="middle">block table A</text>
+              <text class="d-mono" x="605" y="80" text-anchor="middle">0→5 1→1 2→6</text>
+              <line class="d-line-accent" x1="392" y1="84" x2="574" y2="154" marker-end="url(#kv-cache-arrow)"/>
+              <line class="d-line-accent" x1="442" y1="84" x2="426" y2="154" marker-end="url(#kv-cache-arrow)"/>
+              <line class="d-line-accent" x1="492" y1="84" x2="613" y2="154" marker-end="url(#kv-cache-arrow)"/>
+              <text class="d-label" x="370" y="150">physical blocks in GPU memory</text>
+              <rect class="d-box" x="370" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="387" y="178" text-anchor="middle">0</text>
+              <rect class="d-accent" x="408" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="425" y="178" text-anchor="middle">1</text>
+              <rect class="d-good" x="446" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="463" y="178" text-anchor="middle">2</text>
+              <rect class="d-box" x="484" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="501" y="178" text-anchor="middle">3</text>
+              <rect class="d-box" x="522" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="539" y="178" text-anchor="middle">4</text>
+              <rect class="d-accent" x="560" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="577" y="178" text-anchor="middle">5</text>
+              <rect class="d-accent" x="598" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="615" y="178" text-anchor="middle">6</text>
+              <rect class="d-good" x="636" y="158" width="34" height="30" rx="4"/><text class="d-mono" x="653" y="178" text-anchor="middle">7</text>
+              <text class="d-label" x="370" y="208">green = request B, white = free</text>
+              <text class="d-label" x="370" y="224">each block holds e.g. 16 tokens</text>
+            </svg>
+          </div>
+          <figcaption>Left: each decode step computes one new key and value and reads all earlier ones from the cache. Right: PagedAttention stores the cache in fixed-size blocks that can live anywhere in memory, like virtual memory pages.</figcaption>
+        </figure>
+
+        <h3>How big is the cache?</h3>
+        <p>Every token stores, in every layer, one key and one value vector per <em>key-value head</em>:</p>
+
+        <div class="formula">
+          \[ \text{KV bytes} = 2 \times L \times n_{kv} \times d_{head} \times T \times B \times \text{bytes per element} \]
+          <span class="formula-note">The 2 is for keys and values. \(L\) = layers, \(n_{kv}\) = key-value heads, \(d_{head}\) = head dimension, \(T\) = tokens in context (prompt plus generated), \(B\) = concurrent sequences, and bytes per element is 2 for FP16/BF16 or 1 for an FP8 cache.</span>
+        </div>
+
+        <p>Llama 3.1 8B (32 layers, 8 KV heads, head dim 128, BF16): 2 × 32 × 8 × 128 × 2 = 128 KiB per token. One 8k conversation is 1 GiB; thirty-two of them are 32 GiB, twice the 16 GB of weights.</p>
+        <p><strong>Grouped-query attention</strong> (GQA) lets several query heads share one key-value head, shrinking the cache by the group factor. DeepSeek's MLA caches a compressed latent instead.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="Multi-head attention has one KV head per query head, grouped-query attention shares one KV head among four query heads, multi-query attention shares one KV head among all eight.">
+              <text class="d-title" x="105" y="30" text-anchor="middle">MHA</text>
+              <text class="d-title" x="320" y="30" text-anchor="middle">GQA (group of 4)</text>
+              <text class="d-title" x="535" y="30" text-anchor="middle">MQA</text>
+              <g class="d-line">
+                <line x1="28" y1="68" x2="28" y2="120"/><line x1="50" y1="68" x2="50" y2="120"/><line x1="72" y1="68" x2="72" y2="120"/><line x1="94" y1="68" x2="94" y2="120"/>
+                <line x1="116" y1="68" x2="116" y2="120"/><line x1="138" y1="68" x2="138" y2="120"/><line x1="160" y1="68" x2="160" y2="120"/><line x1="182" y1="68" x2="182" y2="120"/>
+                <line x1="243" y1="68" x2="276" y2="120"/><line x1="265" y1="68" x2="276" y2="120"/><line x1="287" y1="68" x2="276" y2="120"/><line x1="309" y1="68" x2="276" y2="120"/>
+                <line x1="331" y1="68" x2="364" y2="120"/><line x1="353" y1="68" x2="364" y2="120"/><line x1="375" y1="68" x2="364" y2="120"/><line x1="397" y1="68" x2="364" y2="120"/>
+                <line x1="458" y1="68" x2="535" y2="120"/><line x1="480" y1="68" x2="535" y2="120"/><line x1="502" y1="68" x2="535" y2="120"/><line x1="524" y1="68" x2="535" y2="120"/>
+                <line x1="546" y1="68" x2="535" y2="120"/><line x1="568" y1="68" x2="535" y2="120"/><line x1="590" y1="68" x2="535" y2="120"/><line x1="612" y1="68" x2="535" y2="120"/>
+              </g>
+              <g class="d-accent">
+                <rect x="20" y="50" width="16" height="18" rx="3"/><rect x="42" y="50" width="16" height="18" rx="3"/><rect x="64" y="50" width="16" height="18" rx="3"/><rect x="86" y="50" width="16" height="18" rx="3"/>
+                <rect x="108" y="50" width="16" height="18" rx="3"/><rect x="130" y="50" width="16" height="18" rx="3"/><rect x="152" y="50" width="16" height="18" rx="3"/><rect x="174" y="50" width="16" height="18" rx="3"/>
+                <rect x="235" y="50" width="16" height="18" rx="3"/><rect x="257" y="50" width="16" height="18" rx="3"/><rect x="279" y="50" width="16" height="18" rx="3"/><rect x="301" y="50" width="16" height="18" rx="3"/>
+                <rect x="323" y="50" width="16" height="18" rx="3"/><rect x="345" y="50" width="16" height="18" rx="3"/><rect x="367" y="50" width="16" height="18" rx="3"/><rect x="389" y="50" width="16" height="18" rx="3"/>
+                <rect x="450" y="50" width="16" height="18" rx="3"/><rect x="472" y="50" width="16" height="18" rx="3"/><rect x="494" y="50" width="16" height="18" rx="3"/><rect x="516" y="50" width="16" height="18" rx="3"/>
+                <rect x="538" y="50" width="16" height="18" rx="3"/><rect x="560" y="50" width="16" height="18" rx="3"/><rect x="582" y="50" width="16" height="18" rx="3"/><rect x="604" y="50" width="16" height="18" rx="3"/>
+              </g>
+              <g class="d-good">
+                <rect x="20" y="120" width="16" height="18" rx="3"/><rect x="42" y="120" width="16" height="18" rx="3"/><rect x="64" y="120" width="16" height="18" rx="3"/><rect x="86" y="120" width="16" height="18" rx="3"/>
+                <rect x="108" y="120" width="16" height="18" rx="3"/><rect x="130" y="120" width="16" height="18" rx="3"/><rect x="152" y="120" width="16" height="18" rx="3"/><rect x="174" y="120" width="16" height="18" rx="3"/>
+                <rect x="268" y="120" width="16" height="18" rx="3"/><rect x="356" y="120" width="16" height="18" rx="3"/>
+                <rect x="527" y="120" width="16" height="18" rx="3"/>
+              </g>
+              <text class="d-mono" x="105" y="164" text-anchor="middle">cache × 1</text>
+              <text class="d-mono" x="320" y="164" text-anchor="middle">cache × 1/4</text>
+              <text class="d-mono" x="535" y="164" text-anchor="middle">cache × 1/8</text>
+              <text class="d-label" x="105" y="184" text-anchor="middle">Llama 2 7B: 512 KiB/token</text>
+              <text class="d-label" x="320" y="184" text-anchor="middle">Llama 3.1 8B: 128 KiB/token</text>
+              <text class="d-label" x="535" y="184" text-anchor="middle">some older models</text>
+            </svg>
+          </div>
+          <figcaption>Query heads (blue) and the key-value heads they read (green). Only key-value heads are cached, so sharing them shrinks the cache by the group factor.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Layers × KV heads × d</th><th>KV per token (BF16)</th><th>One 32k-token sequence</th></tr></thead>
+            <tbody>
+              <tr><td>Llama 2 7B (MHA)</td><td>32 × 32 × 128</td><td>512 KiB</td><td>16 GiB</td></tr>
+              <tr><td>Llama 3.1 8B (GQA)</td><td>32 × 8 × 128</td><td>128 KiB</td><td>4 GiB</td></tr>
+              <tr><td>Qwen2.5 7B (GQA)</td><td>28 × 4 × 128</td><td>56 KiB</td><td>1.75 GiB</td></tr>
+              <tr><td>Llama 3.1 70B (GQA)</td><td>80 × 8 × 128</td><td>320 KiB</td><td>10 GiB</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="widget" id="kv-cache-demo">
+          <div class="widget-head">
+            <span class="widget-title">KV-cache memory calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="kv-cache-model">Model <select id="kv-cache-model">
+              <option value="32,32,32,128">Llama 2 7B (MHA)</option>
+              <option value="32,32,8,128" selected>Llama 3.1 8B (GQA)</option>
+              <option value="28,28,4,128">Qwen2.5 7B (GQA)</option>
+              <option value="80,64,8,128">Llama 3.1 70B (GQA)</option>
+              <option value="126,128,8,128">Llama 3.1 405B (GQA)</option>
+            </select></label>
+            <label for="kv-cache-ctx">Context <input type="range" id="kv-cache-ctx" min="9" max="17" step="1" value="13"><output id="kv-cache-ctx-out">8,192</output></label>
+            <label for="kv-cache-batch">Concurrent seqs <input type="range" id="kv-cache-batch" min="0" max="8" step="1" value="4"><output id="kv-cache-batch-out">16</output></label>
+            <label for="kv-cache-dtype">Cache dtype <select id="kv-cache-dtype"><option value="2" selected>BF16 (2 B)</option><option value="1">FP8 (1 B)</option></select></label>
+          </div>
+          <svg id="kv-cache-plot" viewBox="0 0 600 170" role="img" aria-label="Bar comparing KV-cache memory for this architecture against the same model with full multi-head attention, with GPU memory sizes marked."></svg>
+          <p class="readout" id="kv-cache-readout"></p>
+        </div>
+
+        <h3>PagedAttention, prefix caching and other cache tricks</h3>
+        <p>Early servers reserved a max-length slab per request and wasted 60–80% of KV memory. <strong>PagedAttention</strong> (diagram above, right) allocates 16-token blocks on demand through a block table; waste falls under 4%.</p>
+        <p>Requests sharing a system prompt can point at the same blocks and skip that prefill: <strong>prefix caching</strong> (SGLang: RadixAttention). An FP8 cache (<code>--kv-cache-dtype fp8</code> in vLLM) halves memory again.</p>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Read a model's architecture and compute KV-cache size per token</span>
+from transformers import AutoConfig
+
+cfg = AutoConfig.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
+layers = cfg.num_hidden_layers
+kv_heads = getattr(cfg, "num_key_value_heads", cfg.num_attention_heads)
+head_dim = getattr(cfg, "head_dim", None) or cfg.hidden_size // cfg.num_attention_heads
+
+def kv_bytes(tokens, batch=1, bytes_per_elem=2):
+    return 2 * layers * kv_heads * head_dim * tokens * batch * bytes_per_elem
+
+per_token = kv_bytes(1)
+print(f"{per_token / 1024:.0f} KiB per token")                  <span class="c"># 56 KiB</span>
+print(f"{kv_bytes(32_768, batch=8) / 2**30:.1f} GiB for 8 x 32k")  <span class="c"># 14.0 GiB</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Prefill is compute-bound and sets TTFT; decode is memory-bound and sets time per output token.</li>
+            <li>KV bytes = 2 × layers × KV heads × head dim × tokens × batch × bytes per element.</li>
+            <li>GQA and MQA shrink the cache by sharing key-value heads across query heads.</li>
+            <li>PagedAttention allocates the cache in small blocks, nearly eliminating waste and enabling prefix sharing.</li>
+            <li>Shared prefixes (system prompts, tool definitions) can skip prefill entirely with prefix caching.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Using the number of attention heads instead of key-value heads in the formula, overestimating GQA models by 4–8×.</li>
+            <li>Budgeting only for the weights and discovering at load time that a long max context leaves room for two concurrent users.</li>
+            <li>Putting per-user data (a timestamp, the user's name) at the start of the prompt, which breaks prefix-cache hits for everyone.</li>
+            <li>Setting the maximum context to the model's limit "just in case" when real traffic never exceeds 8k tokens.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="kv-cache-1"><span>Compute the KV-cache size of Llama 3.1 70B for 16 users at 8k tokens in BF16 and in FP8</span></label></li>
+          <li><label><input type="checkbox" data-key="kv-cache-2"><span>Explain why prefill is compute-bound and decode is memory-bound</span></label></li>
+          <li><label><input type="checkbox" data-key="kv-cache-3"><span>Explain the difference between MHA, MQA and GQA and their effect on cache size</span></label></li>
+          <li><label><input type="checkbox" data-key="kv-cache-4"><span>Describe how a block table lets PagedAttention share a system prompt across requests</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2309.06180">Efficient Memory Management for LLM Serving with PagedAttention (Kwon et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.13245">GQA: Training Generalized Multi-Query Transformer Models (Ainslie et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1911.02150">Fast Transformer Decoding: One Write-Head is All You Need (Shazeer, 2019)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="batching">
+        <header class="topic-head">
+          <p class="eyebrow">11.3 · Share every weight read</p>
+          <h2>Batching &amp; throughput</h2>
+        </header>
+
+        <p class="lead">Each decode step reads every weight from memory. With sixty-four users waiting, that one read can produce sixty-four tokens for almost the same cost, which is why self-hosting only gets cheap when the GPU is busy.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Cost per token is GPU-hour price divided by tokens per hour, which depends mostly on batch size. Bigger batches cost less but make each user wait longer per token.</p>
+        </div>
+
+        <h3>Why decode wastes the GPU at batch size 1</h3>
+        <p><strong>Arithmetic intensity</strong> is FLOPs done per byte read. Batch-1 decode does 2 FLOPs per 2-byte weight: about 1 FLOP/byte. An H100 needs about 295 to keep its tensor cores busy. The <strong>roofline</strong> chart shows the consequence: below that ridge, speed is capped by memory bandwidth.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 225" role="img" aria-label="Roofline chart for an H100: performance rises along a bandwidth slope until about 295 FLOP per byte, then flattens at 989 TFLOPS; batch 1 decode sits far down the slope, batch 256 near the ridge.">
+              <defs>
+                <marker id="batching-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <line class="d-line" x1="70" y1="190" x2="605" y2="190" marker-end="url(#batching-arrow)"/>
+              <line class="d-line" x1="70" y1="190" x2="70" y2="14" marker-end="url(#batching-arrow)"/>
+              <text class="d-label" x="78" y="20">TFLOPS (log)</text>
+              <text class="d-label" x="600" y="210" text-anchor="end">arithmetic intensity, FLOP/byte (log)</text>
+              <line class="d-line-accent" x1="70" y1="178.5" x2="477.7" y2="35.8"/>
+              <line class="d-line-signal" x1="477.7" y1="35.8" x2="600" y2="35.8"/>
+              <line class="d-grid d-dash" x1="477.7" y1="35.8" x2="477.7" y2="190"/>
+              <text class="d-label" x="477.7" y="205" text-anchor="middle">≈295</text>
+              <text class="d-label d-text-signal" x="540" y="28" text-anchor="middle">compute roof 989</text>
+              <text class="d-label d-text-accent" x="230" y="100" transform="rotate(-19 230 100)">bandwidth roof: 3.35 TB/s × intensity</text>
+              <circle class="d-dot-signal" cx="114.3" cy="163" r="6"/><text class="d-mono" x="124" y="180">B=1 · 3 TFLOPS</text>
+              <circle class="d-dot" cx="335.7" cy="85.5" r="6"/><text class="d-mono" x="346" y="104">B=32</text>
+              <circle class="d-dot-good" cx="468.6" cy="39" r="6"/><text class="d-mono" x="420" y="60">B=256</text>
+              <text class="d-label" x="78" y="145">memory-bound</text>
+              <text class="d-label" x="490" y="60">compute-bound</text>
+            </svg>
+          </div>
+          <figcaption>H100 SXM roofline for BF16 decode, counting weight reads only. Each doubling of the batch doubles intensity and, until the ridge, roughly doubles useful work per second.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \text{intensity}_{\text{decode}} \approx \frac{2 \cdot P \cdot B}{P \cdot b_w} = \frac{2B}{b_w}\ \text{FLOP/byte}, \qquad t_{\text{step}} \approx \max\!\left(\frac{P\,b_w + B\,\text{KV}_{seq}}{\text{BW}},\ \frac{2PB}{\text{FLOPS}}\right) \]
+          <span class="formula-note">\(P\) parameters, \(b_w\) bytes per weight, \(B\) sequences in the batch, \(\text{KV}_{seq}\) cache bytes per sequence. Batching multiplies the work done per weight byte by \(B\). The KV term does not amortize, because each sequence reads its own cache.</span>
+        </div>
+
+        <p>At small batches the weight term dominates, so adding sequences is nearly free. Then each sequence's own KV reads, and eventually compute, take over: throughput flattens and per-token latency climbs.</p>
+
+        <div class="widget" id="batching-demo">
+          <div class="widget-head">
+            <span class="widget-title">Throughput vs latency as the batch grows</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="batching-setup">Setup <select id="batching-setup">
+              <option value="8,2,131072,1" selected>8B BF16 on 1×H100</option>
+              <option value="8,1,65536,1">8B FP8 + FP8 KV on 1×H100</option>
+              <option value="70,1,163840,2">70B FP8 + FP8 KV on 2×H100</option>
+            </select></label>
+            <label for="batching-b">Batch size <input type="range" id="batching-b" min="0" max="40" step="1" value="25"><output id="batching-b-out">32</output></label>
+            <label for="batching-ctx">Avg context <input type="range" id="batching-ctx" min="9" max="15" step="1" value="11"><output id="batching-ctx-out">2,048</output></label>
+          </div>
+          <svg id="batching-plot" viewBox="0 0 600 250" role="img" aria-label="Two curves against batch size on a log axis: total throughput rises then flattens, while time per output token stays flat then rises."></svg>
+          <p class="readout" id="batching-readout"></p>
+        </div>
+        <p>The demo assumes 80% of peak bandwidth and 50% of peak compute. KV reads, not compute, end the free lunch.</p>
+
+        <h3>Static vs continuous batching</h3>
+        <p><strong>Static batching</strong> runs a fixed group until its longest member finishes, so slots sit idle. <strong>Continuous batching</strong> (in-flight or iteration-level batching, from the Orca system) reschedules after every decode step: finished sequences leave and waiting ones join immediately.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 690 290" role="img" aria-label="Static batching leaves slots idle until the longest request finishes; continuous batching refills each slot as soon as its request ends.">
+              <text class="d-title" x="20" y="22">Static batching</text>
+              <text class="d-label" x="20" y="48">slot 1</text><text class="d-label" x="20" y="72">slot 2</text><text class="d-label" x="20" y="96">slot 3</text><text class="d-label" x="20" y="120">slot 4</text>
+              <rect class="d-accent" x="80" y="34" width="116" height="20" rx="3"/><text class="d-mono" x="138" y="49" text-anchor="middle">A</text>
+              <rect class="d-fill" x="200" y="34" width="116" height="20" rx="3"/><text class="d-label" x="258" y="49" text-anchor="middle">idle</text>
+              <rect class="d-good" x="320" y="34" width="156" height="20" rx="3"/><text class="d-mono" x="398" y="49" text-anchor="middle">E</text>
+              <rect class="d-accent" x="80" y="58" width="236" height="20" rx="3"/><text class="d-mono" x="198" y="73" text-anchor="middle">B</text>
+              <rect class="d-good" x="320" y="58" width="236" height="20" rx="3"/><text class="d-mono" x="438" y="73" text-anchor="middle">F</text>
+              <rect class="d-accent" x="80" y="82" width="76" height="20" rx="3"/><text class="d-mono" x="118" y="97" text-anchor="middle">C</text>
+              <rect class="d-fill" x="160" y="82" width="156" height="20" rx="3"/><text class="d-label" x="238" y="97" text-anchor="middle">idle</text>
+              <rect class="d-good" x="320" y="82" width="116" height="20" rx="3"/><text class="d-mono" x="378" y="97" text-anchor="middle">G</text>
+              <rect class="d-accent" x="80" y="106" width="196" height="20" rx="3"/><text class="d-mono" x="178" y="121" text-anchor="middle">D</text>
+              <rect class="d-fill" x="280" y="106" width="36" height="20" rx="3"/>
+              <rect class="d-good" x="320" y="106" width="196" height="20" rx="3"/><text class="d-mono" x="418" y="121" text-anchor="middle">H</text>
+              <line class="d-line-signal d-dash" x1="318" y1="28" x2="318" y2="132"/>
+              <text class="d-label d-text-signal" x="324" y="26">E–H waited for B</text>
+              <text class="d-label" x="575" y="60">slots stay idle until</text>
+              <text class="d-label" x="575" y="76">the longest request</text>
+              <text class="d-label" x="575" y="92">in the batch ends</text>
+              <text class="d-title" x="20" y="158">Continuous batching</text>
+              <text class="d-label" x="20" y="184">slot 1</text><text class="d-label" x="20" y="208">slot 2</text><text class="d-label" x="20" y="232">slot 3</text><text class="d-label" x="20" y="256">slot 4</text>
+              <rect class="d-accent" x="80" y="170" width="116" height="20" rx="3"/><text class="d-mono" x="138" y="185" text-anchor="middle">A</text>
+              <rect class="d-good" x="200" y="170" width="156" height="20" rx="3"/><text class="d-mono" x="278" y="185" text-anchor="middle">E</text>
+              <rect class="d-accent" x="360" y="170" width="196" height="20" rx="3"/><text class="d-mono" x="458" y="185" text-anchor="middle">I</text>
+              <rect class="d-accent" x="80" y="194" width="236" height="20" rx="3"/><text class="d-mono" x="198" y="209" text-anchor="middle">B</text>
+              <rect class="d-good" x="320" y="194" width="236" height="20" rx="3"/><text class="d-mono" x="438" y="209" text-anchor="middle">F</text>
+              <rect class="d-accent" x="80" y="218" width="76" height="20" rx="3"/><text class="d-mono" x="118" y="233" text-anchor="middle">C</text>
+              <rect class="d-good" x="160" y="218" width="196" height="20" rx="3"/><text class="d-mono" x="258" y="233" text-anchor="middle">G</text>
+              <rect class="d-accent" x="360" y="218" width="196" height="20" rx="3"/><text class="d-mono" x="458" y="233" text-anchor="middle">J</text>
+              <rect class="d-accent" x="80" y="242" width="196" height="20" rx="3"/><text class="d-mono" x="178" y="257" text-anchor="middle">D</text>
+              <rect class="d-good" x="280" y="242" width="276" height="20" rx="3"/><text class="d-mono" x="418" y="257" text-anchor="middle">H</text>
+              <text class="d-label" x="575" y="196">a finished slot is</text>
+              <text class="d-label" x="575" y="212">refilled at the very</text>
+              <text class="d-label" x="575" y="228">next decode step</text>
+              <line class="d-line" x1="80" y1="276" x2="556" y2="276"/>
+              <text class="d-label" x="318" y="288" text-anchor="middle">decode steps →</text>
+            </svg>
+          </div>
+          <figcaption>Same requests, same GPU. With static batching new work waits for the slowest member of the batch; with continuous batching every slot is refilled as soon as it frees up, so the same time window serves ten requests instead of eight.</figcaption>
+        </figure>
+
+        <h3>The metrics you report</h3>
+        <p>A long prompt joining the batch stalls everyone's next token, so engines use <strong>chunked prefill</strong> to interleave it with decode steps. Large deployments sometimes split prefill and decode onto separate GPU pools (<strong>disaggregated serving</strong>).</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Metric</th><th>What it is</th><th>Matters most for</th></tr></thead>
+            <tbody>
+              <tr><td>TTFT</td><td>Queueing + prefill</td><td>Streaming chat</td></tr>
+              <tr><td>TPOT / ITL</td><td>One decode step (20–50 ms reads smoothly)</td><td>Reading speed</td></tr>
+              <tr><td>End-to-end</td><td>TTFT + TPOT × (tokens − 1)</td><td>Agents, batch jobs</td></tr>
+              <tr><td>Throughput</td><td>Output tokens/s across all users</td><td>Cost</td></tr>
+              <tr><td>Goodput</td><td>Throughput from requests that met their latency target</td><td>Honest capacity planning</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Report p50/p95/p99 at a stated concurrency and prompt/output mix. A throughput number without its latency tells you little.</p>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Measure TTFT, TPOT and throughput against any OpenAI-compatible server (vLLM, SGLang, llama-server...)</span>
+import asyncio, time
+from openai import AsyncOpenAI
+
+client = AsyncOpenAI(base_url="http://localhost:8000/v1", api_key="unused")
+MODEL = "meta-llama/Llama-3.1-8B-Instruct"
+
+async def one_request(prompt):
+    t0 = time.perf_counter(); first = None; chunks = 0
+    stream = await client.chat.completions.create(
+        model=MODEL, messages=[{"role": "user", "content": prompt}],
+        max_tokens=256, stream=True)
+    async for chunk in stream:
+        if chunk.choices and chunk.choices[0].delta.content:
+            first = first or time.perf_counter()
+            chunks += 1                       <span class="c"># roughly one chunk per token</span>
+    end = time.perf_counter()
+    return first - t0, (end - first) / max(chunks - 1, 1), chunks
+
+async def sweep():
+    for concurrency in (1, 8, 32, 128):
+        t0 = time.perf_counter()
+        res = await asyncio.gather(*[one_request("Explain KV caching.") for _ in range(concurrency)])
+        wall = time.perf_counter() - t0
+        ttft = sorted(r[0] for r in res)
+        tpot = sum(r[1] for r in res) / len(res)
+        print(f"c={concurrency:3d}  p50 TTFT {ttft[len(ttft) // 2] * 1e3:6.0f} ms  "
+              f"TPOT {tpot * 1e3:5.1f} ms  throughput {sum(r[2] for r in res) / wall:6.0f} tok/s")
+
+asyncio.run(sweep())</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Decode at batch 1 has an arithmetic intensity near 1 FLOP/byte; GPUs need hundreds to be compute-bound.</li>
+            <li>Batching reuses each weight read across many sequences, so throughput rises almost for free at first.</li>
+            <li>Per-sequence KV reads do not amortize, so throughput flattens and per-token latency rises at large batches.</li>
+            <li>Continuous batching schedules per decode step; chunked prefill keeps long prompts from stalling everyone.</li>
+            <li>Report TTFT, TPOT and throughput together, as percentiles, at a stated concurrency.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Benchmarking a server with one request at a time and concluding self-hosting is too expensive.</li>
+            <li>Quoting peak throughput measured at a concurrency where p95 latency is unacceptable.</li>
+            <li>Testing with short prompts and short outputs when production traffic has 10k-token RAG contexts.</li>
+            <li>Running a hand-written <code>model.generate()</code> loop in production instead of an engine with continuous batching.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="batching-1"><span>Compute the arithmetic intensity of batch-1 decode and compare it with your GPU's FLOPs-to-bandwidth ratio</span></label></li>
+          <li><label><input type="checkbox" data-key="batching-2"><span>Explain why throughput flattens as batch size grows even before compute saturates</span></label></li>
+          <li><label><input type="checkbox" data-key="batching-3"><span>Draw a timeline showing how continuous batching beats static batching for mixed output lengths</span></label></li>
+          <li><label><input type="checkbox" data-key="batching-4"><span>Run a concurrency sweep against a local server and plot TTFT, TPOT and throughput</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2309.06180">vLLM / PagedAttention paper, includes continuous batching evaluation (Kwon et al., 2023)</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.vllm.ai/">vLLM documentation (benchmarking and scheduler settings)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="speculative">
+        <header class="topic-head">
+          <p class="eyebrow">11.4 · Several tokens per big step</p>
+          <h2>Speculative decoding</h2>
+        </header>
+
+        <p class="lead">A batch-1 decode step barely uses the GPU's compute, so checking five tokens costs about the same as producing one. Speculative decoding exploits that: a cheap guesser drafts a few tokens, the big model verifies them all in one pass, and every correct guess is a token you got for free. With the right acceptance rule the output distribution is exactly the big model's.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>It is one of the few latency optimizations with no quality cost, typically 2–3× faster single-stream decoding. Serving engines ship it as a configuration option, and it is especially strong for code editing and RAG, where outputs copy text from the prompt.</p>
+        </div>
+
+        <h3>Draft, verify, accept</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="A draft model proposes four tokens; the target model scores them in one pass, accepts the first two, rejects the third and replaces it, and drops the fourth.">
+              <defs>
+                <marker id="speculative-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="40" y="26">1 · draft model proposes γ = 4 tokens, one at a time (cheap)</text>
+              <rect class="d-box" x="40" y="36" width="76" height="30" rx="5"/><text class="d-mono" x="78" y="56" text-anchor="middle">the</text>
+              <rect class="d-box" x="130" y="36" width="76" height="30" rx="5"/><text class="d-mono" x="168" y="56" text-anchor="middle">cat</text>
+              <rect class="d-box" x="220" y="36" width="76" height="30" rx="5"/><text class="d-mono" x="258" y="56" text-anchor="middle">sat</text>
+              <rect class="d-box" x="310" y="36" width="76" height="30" rx="5"/><text class="d-mono" x="348" y="56" text-anchor="middle">on</text>
+              <line class="d-line" x1="116" y1="51" x2="128" y2="51" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="206" y1="51" x2="218" y2="51" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="296" y1="51" x2="308" y2="51" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="78" y1="66" x2="78" y2="104" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="168" y1="66" x2="168" y2="104" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="258" y1="66" x2="258" y2="104" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="348" y1="66" x2="348" y2="104" marker-end="url(#speculative-arrow)"/>
+              <rect class="d-accent" x="40" y="106" width="346" height="38" rx="6"/>
+              <text class="d-text" x="213" y="130" text-anchor="middle">2 · target model: ONE forward pass scores all 4</text>
+              <line class="d-line" x1="78" y1="144" x2="78" y2="176" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="168" y1="144" x2="168" y2="176" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="258" y1="144" x2="258" y2="176" marker-end="url(#speculative-arrow)"/>
+              <line class="d-line" x1="348" y1="144" x2="348" y2="176" marker-end="url(#speculative-arrow)"/>
+              <rect class="d-good" x="40" y="178" width="76" height="30" rx="5"/><text class="d-mono" x="78" y="198" text-anchor="middle">the ✓</text>
+              <rect class="d-good" x="130" y="178" width="76" height="30" rx="5"/><text class="d-mono" x="168" y="198" text-anchor="middle">cat ✓</text>
+              <rect class="d-signal" x="220" y="178" width="76" height="30" rx="5"/><text class="d-mono" x="258" y="198" text-anchor="middle">sat→is</text>
+              <rect class="d-fill" x="310" y="178" width="76" height="30" rx="5"/><text class="d-label" x="348" y="198" text-anchor="middle">dropped</text>
+              <text class="d-label" x="40" y="230">3 · accept left to right; first rejection is resampled from the target, the rest dropped</text>
+              <rect class="d-box" x="420" y="36" width="240" height="172" rx="8"/>
+              <text class="d-title" x="436" y="60">This round</text>
+              <text class="d-text" x="436" y="86">1 target pass</text>
+              <text class="d-text" x="436" y="108">+ 4 draft passes</text>
+              <text class="d-text" x="436" y="130">→ 3 tokens out</text>
+              <text class="d-label" x="436" y="160">if all 4 are accepted, the</text>
+              <text class="d-label" x="436" y="176">same pass also yields a 5th</text>
+              <text class="d-label" x="436" y="192">"bonus" token</text>
+            </svg>
+          </div>
+          <figcaption>One speculative round. The target model's single pass both checks the draft and supplies the correction, so every round yields at least one token.</figcaption>
+        </figure>
+        <p>Each draft token \(x\) is accepted with probability \(\min(1, p(x)/q(x))\), where \(p\) is the target's probability and \(q\) the draft's. On rejection, the replacement is sampled from the leftover distribution \(\max(0, p-q)\), normalized. This rejection-sampling rule makes the output exactly as if the target had sampled alone. With greedy decoding it reduces to "accept while the tokens match".</p>
+
+        <h3>How much faster?</h3>
+        <div class="formula">
+          \[ \mathbb{E}[\text{tokens per round}] = \frac{1-\alpha^{\gamma+1}}{1-\alpha}, \qquad \text{speed-up} = \frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)} \]
+          <span class="formula-note">\(\alpha\) = probability each draft token is accepted, \(\gamma\) = tokens drafted per round, \(c\) = cost of one draft step relative to one target step (Leviathan et al.). Assumes acceptances are independent.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Expected tokens per target pass against acceptance rate for draft lengths 2, 4 and 8; the curves only separate when acceptance is high.">
+              <line class="d-line" x1="70" y1="190" x2="560" y2="190"/>
+              <line class="d-line" x1="70" y1="190" x2="70" y2="26"/>
+              <line class="d-grid" x1="70" y1="150" x2="560" y2="150"/><line class="d-grid" x1="70" y1="110" x2="560" y2="110"/><line class="d-grid" x1="70" y1="70" x2="560" y2="70"/><line class="d-grid" x1="70" y1="30" x2="560" y2="30"/>
+              <text class="d-label" x="62" y="194" text-anchor="end">1</text><text class="d-label" x="62" y="154" text-anchor="end">3</text><text class="d-label" x="62" y="114" text-anchor="end">5</text><text class="d-label" x="62" y="74" text-anchor="end">7</text><text class="d-label" x="62" y="34" text-anchor="end">9</text>
+              <text class="d-label" x="70" y="208" text-anchor="middle">0</text><text class="d-label" x="196.3" y="208" text-anchor="middle">0.25</text><text class="d-label" x="322.6" y="208" text-anchor="middle">0.5</text><text class="d-label" x="448.9" y="208" text-anchor="middle">0.75</text><text class="d-label" x="550" y="208" text-anchor="middle">0.95</text>
+              <text class="d-label" x="315" y="226" text-anchor="middle">acceptance rate α</text>
+              <text class="d-label" x="78" y="20">tokens per target pass</text>
+              <path class="d-line" d="M70.0 190.0 L95.3 188.9 L120.5 187.8 L145.8 186.6 L171.1 185.2 L196.3 183.8 L221.6 182.2 L246.8 180.6 L272.1 178.8 L297.4 176.9 L322.6 175.0 L347.9 172.9 L373.2 170.8 L398.4 168.6 L423.7 166.2 L448.9 163.8 L474.2 161.2 L499.5 158.6 L524.7 155.8 L550.0 153.0"/>
+              <path class="d-line-accent" d="M70.0 190.0 L95.3 188.9 L120.5 187.8 L145.8 186.5 L171.1 185.0 L196.3 183.4 L221.6 181.5 L246.8 179.4 L272.1 177.0 L297.4 174.3 L322.6 171.3 L347.9 167.8 L373.2 163.9 L398.4 159.5 L423.7 154.5 L448.9 149.0 L474.2 142.8 L499.5 135.8 L524.7 128.1 L550.0 119.5"/>
+              <path class="d-line-signal" d="M70.0 190.0 L95.3 188.9 L120.5 187.8 L145.8 186.5 L171.1 185.0 L196.3 183.3 L221.6 181.4 L246.8 179.2 L272.1 176.7 L297.4 173.7 L322.6 170.1 L347.9 165.8 L373.2 160.5 L398.4 154.0 L423.7 146.0 L448.9 136.0 L474.2 123.4 L499.5 107.5 L524.7 87.5 L550.0 62.1"/>
+              <text class="d-mono" x="568" y="157">γ=2</text>
+              <text class="d-mono d-text-accent" x="568" y="123">γ=4</text>
+              <text class="d-mono d-text-signal" x="568" y="66">γ=8</text>
+            </svg>
+          </div>
+          <figcaption>Drafting more tokens only pays off when acceptance is high. At α = 0.6 even γ = 8 yields barely 2.5 tokens per pass, while each extra draft token still costs time.</figcaption>
+        </figure>
+
+        <div class="widget" id="speculative-demo">
+          <div class="widget-head">
+            <span class="widget-title">Speculative decoding simulator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="speculative-alpha">Acceptance α <input type="range" id="speculative-alpha" min="0" max="0.95" step="0.05" value="0.75"><output id="speculative-alpha-out">0.75</output></label>
+            <label for="speculative-gamma">Draft length γ <input type="range" id="speculative-gamma" min="1" max="10" step="1" value="4"><output id="speculative-gamma-out">4</output></label>
+            <label for="speculative-cost">Draft cost c <input type="range" id="speculative-cost" min="0" max="0.5" step="0.01" value="0.05"><output id="speculative-cost-out">0.05</output></label>
+            <button class="btn" type="button" id="speculative-roll">Re-roll rounds</button>
+          </div>
+          <svg id="speculative-plot" viewBox="0 0 600 300" role="img" aria-label="Bars of expected speed-up for each draft length, plus a strip of simulated rounds showing accepted, rejected and bonus tokens."></svg>
+          <p class="readout" id="speculative-readout"></p>
+        </div>
+
+        <h3>Where the draft comes from</h3>
+        <div class="grid-2">
+          <div class="card"><h4>Small draft model</h4><p>A smaller model from the same family with the same tokenizer (e.g. 0.5B drafting for 7B). Simple; costs extra memory.</p></div>
+          <div class="card"><h4>Medusa / EAGLE heads</h4><p>Extra lightweight heads trained on the target's hidden states predict several tokens ahead. Higher acceptance, needs trained heads.</p></div>
+          <div class="card"><h4>N-gram / prompt lookup</h4><p>Copy the continuation of a matching n-gram from the prompt. Free, and excellent for code edits and RAG answers that quote sources.</p></div>
+          <div class="card"><h4>Multi-token prediction</h4><p>Models trained with MTP heads (e.g. DeepSeek-V3) can use them as a built-in drafter.</p></div>
+        </div>
+        <p>Speed-ups shrink at high batch sizes: the GPU is no longer idle, so verifying rejected tokens costs real compute. Engines often disable speculation under heavy load.</p>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Assisted generation in Hugging Face transformers</span>
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+tok = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
+target = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-7B-Instruct", torch_dtype=torch.bfloat16, device_map="auto")
+draft = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-0.5B-Instruct", torch_dtype=torch.bfloat16, device_map="auto")
+
+inputs = tok("Explain the KV cache in two sentences.", return_tensors="pt").to(target.device)
+out = target.generate(**inputs, assistant_model=draft, max_new_tokens=120)    <span class="c"># draft-model speculation</span>
+out = target.generate(**inputs, prompt_lookup_num_tokens=10, max_new_tokens=120)  <span class="c"># n-gram lookup, no draft model</span>
+print(tok.decode(out[0], skip_special_tokens=True))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Verifying several tokens costs about the same as generating one when decode is memory-bound.</li>
+            <li>The min(1, p/q) acceptance rule keeps the output distribution identical to the target model's.</li>
+            <li>Expected tokens per round = (1 − α^(γ+1)) / (1 − α); acceptance rate matters more than draft length.</li>
+            <li>Gains are largest at low batch sizes and for outputs that copy from the input.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Pairing a draft and target with different tokenizers, or a draft from an unrelated family with low acceptance.</li>
+            <li>Setting γ large "for more speed" when acceptance is mediocre, which wastes draft and verify compute.</li>
+            <li>Benchmarking speculation at batch 1 and enabling it on a saturated, high-throughput server.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="speculative-1"><span>Compute expected tokens per round for α = 0.8 and γ = 4, then the speed-up with c = 0.1</span></label></li>
+          <li><label><input type="checkbox" data-key="speculative-2"><span>Explain why the acceptance rule preserves the target distribution</span></label></li>
+          <li><label><input type="checkbox" data-key="speculative-3"><span>Pick a drafting method for a code-editing assistant and justify it</span></label></li>
+          <li><label><input type="checkbox" data-key="speculative-4"><span>Explain why speculative decoding helps less at high batch sizes</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2211.17192">Fast Inference from Transformers via Speculative Decoding (Leviathan et al., 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2302.01318">Accelerating LLM Decoding with Speculative Sampling (Chen et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2401.10774">Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads (Cai et al., 2024)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="serving">
+        <header class="topic-head">
+          <p class="eyebrow">11.5 · The software that runs it all</p>
+          <h2>Serving engines</h2>
+        </header>
+
+        <p class="lead">A serving engine is the program between your HTTP request and the GPU. It accepts requests, decides every few milliseconds which sequences run together, manages KV-cache blocks, and calls optimized kernels. Everything earlier on this page, from paged caches to continuous batching to speculation, reaches you as engine features and flags.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Picking an engine, and configuring its context length, memory share and parallelism, is often the first infrastructure decision when you self-host. The same model on the same GPU can differ several-fold in throughput between a naive loop and a tuned engine.</p>
+        </div>
+
+        <h3>Inside an engine</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="Requests enter an OpenAI-compatible API server, a scheduler forms a batch every step using a KV block manager, a GPU model runner executes the step, and tokens stream back to clients.">
+              <defs>
+                <marker id="serving-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="90" width="90" height="44" rx="8"/>
+              <text class="d-title" x="65" y="117" text-anchor="middle">Clients</text>
+              <rect class="d-box" x="140" y="76" width="120" height="72" rx="8"/>
+              <text class="d-title" x="200" y="100" text-anchor="middle">API server</text>
+              <text class="d-label" x="200" y="118" text-anchor="middle">OpenAI-compatible</text>
+              <text class="d-label" x="200" y="134" text-anchor="middle">tokenize</text>
+              <rect class="d-accent" x="290" y="30" width="150" height="72" rx="8"/>
+              <text class="d-title" x="365" y="54" text-anchor="middle">Scheduler</text>
+              <text class="d-label" x="365" y="72" text-anchor="middle">waiting → running</text>
+              <text class="d-label" x="365" y="88" text-anchor="middle">every decode step</text>
+              <rect class="d-good" x="290" y="138" width="150" height="62" rx="8"/>
+              <text class="d-title" x="365" y="162" text-anchor="middle">KV block manager</text>
+              <text class="d-label" x="365" y="182" text-anchor="middle">allocate · share · evict</text>
+              <rect class="d-signal" x="480" y="66" width="180" height="76" rx="8"/>
+              <text class="d-title" x="570" y="90" text-anchor="middle">Model runner (GPU)</text>
+              <text class="d-label" x="570" y="110" text-anchor="middle">fused attention kernels</text>
+              <text class="d-label" x="570" y="126" text-anchor="middle">quantized matmuls</text>
+              <line class="d-line-accent" x1="110" y1="104" x2="138" y2="104" marker-end="url(#serving-arrow)"/>
+              <line class="d-line-accent" x1="260" y1="96" x2="288" y2="78" marker-end="url(#serving-arrow)"/>
+              <text class="d-label" x="262" y="76" text-anchor="end">request</text>
+              <line class="d-line-accent" x1="350" y1="102" x2="350" y2="136" marker-end="url(#serving-arrow)"/>
+              <line class="d-line-accent" x1="380" y1="136" x2="380" y2="104" marker-end="url(#serving-arrow)"/>
+              <text class="d-label" x="388" y="124">blocks free?</text>
+              <line class="d-line-accent" x1="440" y1="66" x2="478" y2="84" marker-end="url(#serving-arrow)"/>
+              <text class="d-label" x="462" y="58" text-anchor="middle">batch</text>
+              <path class="d-line-accent" d="M570 142 L570 222 L200 222 L200 150" marker-end="url(#serving-arrow)"/>
+              <text class="d-label" x="460" y="216" text-anchor="middle">new tokens → detokenize → stream</text>
+              <line class="d-line-accent" x1="140" y1="124" x2="112" y2="124" marker-end="url(#serving-arrow)"/>
+            </svg>
+          </div>
+          <figcaption>The loop that runs every few milliseconds: the scheduler admits sequences while KV blocks are free, the runner executes one step for the whole batch, and new tokens stream back.</figcaption>
+        </figure>
+
+        <p>Engines expose an OpenAI-compatible HTTP API, so client code does not change when you swap engines or move between a hosted API and your own server. The key knobs are the maximum context length (which caps KV per sequence), the fraction of GPU memory the engine may claim, and tensor parallelism across GPUs.</p>
+
+        <pre class="code" data-lang="bash"><code><span class="c"># vLLM: serve a model with an OpenAI-compatible API on port 8000</span>
+pip install vllm
+vllm serve Qwen/Qwen2.5-7B-Instruct --max-model-len 16384 --gpu-memory-utilization 0.90
+
+<span class="c"># SGLang: same idea, port 30000</span>
+python -m sglang.launch_server --model-path Qwen/Qwen2.5-7B-Instruct --port 30000
+
+<span class="c"># llama.cpp: a GGUF file, all layers on the GPU, 8k context</span>
+llama-server -m qwen2.5-7b-instruct-q4_k_m.gguf -c 8192 -ngl 99 --port 8080</code></pre>
+
+        <h3>The landscape</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Engine</th><th>Standout features</th><th>Typical use</th></tr></thead>
+            <tbody>
+              <tr><td>vLLM</td><td>PagedAttention, continuous batching, prefix caching, very wide model and quantization support</td><td>Default for GPU serving</td></tr>
+              <tr><td>SGLang</td><td>RadixAttention prefix reuse, fast constrained (JSON) decoding</td><td>Multi-turn, agentic and structured-output workloads</td></tr>
+              <tr><td>TensorRT-LLM</td><td>NVIDIA's optimized kernels, in-flight batching, FP8/FP4; served via Triton or <code>trtllm-serve</code></td><td>Peak performance on NVIDIA GPUs</td></tr>
+              <tr><td>TGI</td><td>Hugging Face's Rust + Python server with continuous batching</td><td>Existing HF deployments; placed in maintenance mode in 2025, so check its README</td></tr>
+              <tr><td>llama.cpp</td><td>C/C++, GGUF, CPU, Metal, CUDA and Vulkan backends, partial GPU offload</td><td>Local, edge, Apple Silicon</td></tr>
+              <tr><td>Ollama</td><td>One-command pull and run on the llama.cpp/GGML stack, REST API on port 11434</td><td>Developer laptops, prototypes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 650 230" role="img" aria-label="Decision tree: on a laptop, Mac or CPU choose Ollama for simplicity or llama.cpp for control; on GPU servers choose vLLM for breadth, SGLang for shared prefixes and JSON, or TensorRT-LLM for peak NVIDIA performance.">
+              <defs>
+                <marker id="serving-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="235" y="12" width="180" height="34" rx="8"/>
+              <text class="d-title" x="325" y="34" text-anchor="middle">Where will it run?</text>
+              <line class="d-line" x1="280" y1="46" x2="150" y2="88" marker-end="url(#serving-arrow2)"/>
+              <text class="d-label" x="196" y="62" text-anchor="end">laptop · Mac · CPU</text>
+              <line class="d-line" x1="370" y1="46" x2="500" y2="88" marker-end="url(#serving-arrow2)"/>
+              <text class="d-label" x="454" y="62">GPU servers</text>
+              <rect class="d-box" x="50" y="90" width="200" height="34" rx="8"/>
+              <text class="d-text" x="150" y="112" text-anchor="middle">Want one command?</text>
+              <rect class="d-box" x="400" y="90" width="200" height="34" rx="8"/>
+              <text class="d-text" x="500" y="112" text-anchor="middle">What matters most?</text>
+              <line class="d-line" x1="110" y1="124" x2="80" y2="170" marker-end="url(#serving-arrow2)"/>
+              <text class="d-label" x="86" y="150" text-anchor="end">yes</text>
+              <line class="d-line" x1="190" y1="124" x2="210" y2="170" marker-end="url(#serving-arrow2)"/>
+              <text class="d-label" x="206" y="150">control</text>
+              <rect class="d-good" x="20" y="172" width="120" height="40" rx="8"/>
+              <text class="d-title" x="80" y="197" text-anchor="middle">Ollama</text>
+              <rect class="d-good" x="150" y="172" width="120" height="40" rx="8"/>
+              <text class="d-title" x="210" y="197" text-anchor="middle">llama.cpp</text>
+              <line class="d-line" x1="440" y1="124" x2="370" y2="170" marker-end="url(#serving-arrow2)"/>
+              <line class="d-line" x1="500" y1="124" x2="490" y2="170" marker-end="url(#serving-arrow2)"/>
+              <line class="d-line" x1="560" y1="124" x2="600" y2="170" marker-end="url(#serving-arrow2)"/>
+              <text class="d-label" x="392" y="148" text-anchor="end">breadth</text>
+              <text class="d-label" x="484" y="156" text-anchor="end">prefixes</text>
+              <text class="d-label" x="586" y="146">peak perf</text>
+              <rect class="d-accent" x="310" y="172" width="100" height="40" rx="8"/>
+              <text class="d-title" x="360" y="197" text-anchor="middle">vLLM</text>
+              <rect class="d-accent" x="430" y="172" width="100" height="40" rx="8"/>
+              <text class="d-title" x="480" y="197" text-anchor="middle">SGLang</text>
+              <rect class="d-accent" x="545" y="172" width="100" height="40" rx="8"/>
+              <text class="d-title" x="595" y="197" text-anchor="middle">TensorRT-LLM</text>
+            </svg>
+          </div>
+          <figcaption>A first-pass choice. All of these speak an OpenAI-compatible API, so switching later mostly means changing a base URL and benchmarking again.</figcaption>
+        </figure>
+
+        <h3>Prefix caching in action</h3>
+        <p>The engine feature you can influence most from application code is prefix caching: keep the shared part of your prompt (system prompt, tool definitions, documents) identical and at the front.</p>
+        <div class="widget" id="serving-demo">
+          <div class="widget-head">
+            <span class="widget-title">What prefix caching saves</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="serving-sys">Shared prefix tokens <input type="range" id="serving-sys" min="0" max="8000" step="250" value="3000"><output id="serving-sys-out">3000</output></label>
+            <label for="serving-user">Unique tokens <input type="range" id="serving-user" min="50" max="2000" step="50" value="300"><output id="serving-user-out">300</output></label>
+            <label for="serving-cache"><input type="checkbox" id="serving-cache" checked> Prefix caching on</label>
+          </div>
+          <svg id="serving-plot" viewBox="0 0 600 200" role="img" aria-label="For eight requests, bars show prompt tokens served from cache versus computed in prefill, with estimated time to first token."></svg>
+          <p class="readout" id="serving-readout"></p>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>An engine = API server + per-step scheduler + KV block manager + optimized GPU kernels.</li>
+            <li>vLLM is the broad default, SGLang excels with shared prefixes and structured output, TensorRT-LLM squeezes NVIDIA hardware.</li>
+            <li>llama.cpp and Ollama target laptops, CPUs and Apple Silicon using GGUF files.</li>
+            <li>OpenAI-compatible APIs make engines swappable; benchmark on your own traffic before choosing.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Leaving max context at the model's 128k limit, which shrinks how many sequences fit in KV memory.</li>
+            <li>Running two engines (or an engine and a notebook) on one GPU when each preallocates most of its memory.</li>
+            <li>Pinning <code>latest</code> container tags; engine releases change defaults and performance often.</li>
+            <li>Copying flags from a blog post without checking them against the engine's current docs.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="serving-1"><span>Serve a 7B model with vLLM or SGLang and call it with the OpenAI Python client</span></label></li>
+          <li><label><input type="checkbox" data-key="serving-2"><span>Explain what the scheduler and KV block manager do on every step</span></label></li>
+          <li><label><input type="checkbox" data-key="serving-3"><span>Choose an engine for three scenarios (Mac laptop, single A100, 8×H100 cluster) and justify each</span></label></li>
+          <li><label><input type="checkbox" data-key="serving-4"><span>Reorder a prompt template so its shared part is cacheable</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.vllm.ai/">vLLM documentation</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2312.07104">SGLang: Efficient Execution of Structured Language Model Programs (Zheng et al., 2023)</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/ggml-org/llama.cpp">llama.cpp on GitHub</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="gpu-math">
+        <header class="topic-head">
+          <p class="eyebrow">11.6 · Back-of-envelope sizing</p>
+          <h2>GPU memory math</h2>
+        </header>
+
+        <p class="lead">Before you rent hardware, two pieces of arithmetic tell you almost everything: whether the model fits, and how fast it can possibly decode. Memory is weights plus KV cache plus overhead. Speed is capped by how many times per second the GPU can read the weights.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>"Can we run this model on that GPU, for how many users, at what speed?" comes up in every self-hosting discussion. Five minutes of arithmetic saves days of trial-and-error with out-of-memory errors.</p>
+        </div>
+
+        <h3>What fills the GPU</h3>
+        <div class="formula">
+          \[ M_{\text{GPU}} \approx \underbrace{P \cdot b_w}_{\text{weights}} + \underbrace{2 L\, n_{kv} d_{head}\, T B\, b_{kv}}_{\text{KV cache}} + \underbrace{\sim 1\text{–}3\ \text{GB}}_{\text{runtime, activations}} \]
+          <span class="formula-note">Weights: 7–8B in BF16 ≈ 14–16 GB; 70B ≈ 140 GB in BF16, ≈ 70 GB in FP8, ≈ 35–42 GB in 4-bit. Training is far heavier: about 16 bytes per parameter with Adam in mixed precision, before activations.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 180" role="img" aria-label="Stacked bar for Llama 3.1 8B in BF16 on a 24 GB GPU: 16 GB weights, about 1.5 GB runtime, about 1 GB activations, leaving about 5.5 GB for KV cache.">
+              <text class="d-title" x="40" y="22">Llama 3.1 8B, BF16, on a 24 GB GPU</text>
+              <rect class="d-accent" x="40" y="60" width="373" height="44" rx="4"/>
+              <rect class="d-fill" x="413" y="60" width="35" height="44"/>
+              <rect class="d-signal" x="448" y="60" width="23" height="44"/>
+              <rect class="d-good" x="471" y="60" width="128" height="44" rx="4"/>
+              <text class="d-text" x="226" y="87" text-anchor="middle">weights 16 GB</text>
+              <text class="d-text" x="535" y="87" text-anchor="middle">KV ≈ 5.5 GB</text>
+              <line class="d-line" x1="430" y1="104" x2="430" y2="122"/>
+              <text class="d-label" x="430" y="134" text-anchor="end">runtime ≈ 1.5 GB</text>
+              <line class="d-line" x1="459" y1="104" x2="459" y2="140"/>
+              <text class="d-label" x="465" y="140">activations ≈ 1 GB</text>
+              <text class="d-label" x="40" y="52">0</text>
+              <text class="d-label" x="599" y="52" text-anchor="end">24 GB</text>
+              <text class="d-mono" x="40" y="168">5.5 GiB ÷ 128 KiB/token ≈ 45k tokens of context, shared by all users</text>
+            </svg>
+          </div>
+          <figcaption>The weights take two thirds of the card. Whatever is left becomes KV cache, and that pool is what concurrent users and long contexts compete for.</figcaption>
+        </figure>
+
+        <p>Engines claim most of the GPU up front: vLLM takes 90% by default (<code>--gpu-memory-utilization</code>), loads the weights, and turns the remainder into KV blocks. If the remainder cannot hold even one maximum-length sequence, startup fails. For models larger than one GPU, <strong>tensor parallelism</strong> splits every weight matrix (and the KV cache) across GPUs, so 70B in BF16 runs on 2×80 GB.</p>
+
+        <div class="widget" id="gpu-math-demo">
+          <div class="widget-head">
+            <span class="widget-title">Will it fit on my GPU?</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="gpu-math-model">Model <select id="gpu-math-model">
+              <option value="3.2,28,8,128">Llama 3.2 3B</option>
+              <option value="8,32,8,128" selected>Llama 3.1 8B</option>
+              <option value="32.5,64,8,128">Qwen2.5 32B</option>
+              <option value="70.6,80,8,128">Llama 3.1 70B</option>
+              <option value="405,126,8,128">Llama 3.1 405B</option>
+            </select></label>
+            <label for="gpu-math-prec">Weights <select id="gpu-math-prec"><option value="2" selected>BF16</option><option value="1">FP8 / INT8</option><option value="0.56">4-bit (incl. scales)</option></select></label>
+            <label for="gpu-math-ctx">Context <input type="range" id="gpu-math-ctx" min="10" max="17" step="1" value="13"><output id="gpu-math-ctx-out">8,192</output></label>
+            <label for="gpu-math-batch">Concurrent seqs <input type="range" id="gpu-math-batch" min="1" max="64" step="1" value="4"><output id="gpu-math-batch-out">4</output></label>
+            <label for="gpu-math-gpu">GPU <select id="gpu-math-gpu">
+              <option value="24,1008">RTX 4090 · 24 GB</option>
+              <option value="32,1792">RTX 5090 · 32 GB</option>
+              <option value="48,864">L40S · 48 GB</option>
+              <option value="80,2039">A100 · 80 GB</option>
+              <option value="80,3350" selected>H100 SXM · 80 GB</option>
+              <option value="141,4800">H200 · 141 GB</option>
+            </select></label>
+            <label for="gpu-math-n">GPUs <select id="gpu-math-n"><option>1</option><option>2</option><option>4</option><option>8</option></select></label>
+          </div>
+          <svg id="gpu-math-plot" viewBox="0 0 600 150" role="img" aria-label="Stacked bar of weights, KV cache and overhead against total GPU memory, with a verdict."></svg>
+          <p class="readout" id="gpu-math-readout"></p>
+        </div>
+
+        <h3>The speed ceiling</h3>
+        <p>Each decode step reads every weight once, so a single stream can never exceed <em>memory bandwidth ÷ weight bytes</em> tokens per second. Real systems reach roughly 60–80% of this. It also explains why quantization speeds up decoding and why Apple Silicon, with high-bandwidth unified memory, runs local models well.</p>
+
+        <div class="formula">
+          \[ \text{tokens/s}_{\text{max, one stream}} \approx \frac{\text{memory bandwidth}}{P \cdot b_w} \qquad \text{e.g. } \frac{3.35\ \text{TB/s}}{16\ \text{GB}} \approx 209 \]
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Upper bound on single-stream decode speed for an 8B BF16 model: H200 300, H100 209, A100 127, RTX 4090 63, M4 Max 34, dual-channel DDR5 CPU about 6 tokens per second.">
+              <text class="d-label" x="180" y="18">tokens/s ceiling, 8B model in BF16 (16 GB read per token)</text>
+              <text class="d-text" x="170" y="45" text-anchor="end">H200 · 4.8 TB/s</text>
+              <rect class="d-accent" x="180" y="30" width="400" height="20" rx="3"/><text class="d-mono" x="586" y="45">300</text>
+              <text class="d-text" x="170" y="75" text-anchor="end">H100 · 3.35 TB/s</text>
+              <rect class="d-accent" x="180" y="60" width="279" height="20" rx="3"/><text class="d-mono" x="465" y="75">209</text>
+              <text class="d-text" x="170" y="105" text-anchor="end">A100 · 2.0 TB/s</text>
+              <rect class="d-accent" x="180" y="90" width="170" height="20" rx="3"/><text class="d-mono" x="356" y="105">127</text>
+              <text class="d-text" x="170" y="135" text-anchor="end">RTX 4090 · 1.0 TB/s</text>
+              <rect class="d-good" x="180" y="120" width="84" height="20" rx="3"/><text class="d-mono" x="270" y="135">63</text>
+              <text class="d-text" x="170" y="165" text-anchor="end">M4 Max · 546 GB/s</text>
+              <rect class="d-good" x="180" y="150" width="45" height="20" rx="3"/><text class="d-mono" x="231" y="165">34</text>
+              <text class="d-text" x="170" y="195" text-anchor="end">CPU DDR5 · ~90 GB/s</text>
+              <rect class="d-signal" x="180" y="180" width="8" height="20" rx="2"/><text class="d-mono" x="194" y="195">~6</text>
+            </svg>
+          </div>
+          <figcaption>Bandwidth sets the ceiling. Halve the bytes with FP8 or 4-bit and every bar roughly doubles; batching raises total throughput but not this per-stream limit.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>def fits(params_b, bytes_w, layers, kv_heads, head_dim, ctx, batch,
+         vram_gb, n_gpus=1, kv_bytes=2, overhead_gb=2.0, util=0.90):
+    weights = params_b * 1e9 * bytes_w
+    kv = 2 * layers * kv_heads * head_dim * ctx * batch * kv_bytes
+    need = weights + kv + overhead_gb * 1e9 * n_gpus
+    have = vram_gb * 1e9 * n_gpus * util
+    return need / 1e9, have / 1e9, need &lt;= have
+
+<span class="c"># Llama 3.1 70B, FP8 weights, 8 users x 8k context, on 1 vs 2 H100s</span>
+print(fits(70.6, 1, 80, 8, 128, 8192, 8, vram_gb=80))           <span class="c"># (~94.1, 72.0, False)</span>
+print(fits(70.6, 1, 80, 8, 128, 8192, 8, vram_gb=80, n_gpus=2)) <span class="c"># (~96.1, 144.0, True)</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Weights = parameters × bytes per weight; 1B parameters ≈ 2 GB in BF16, 1 GB in FP8, ~0.5 GB in 4-bit.</li>
+            <li>What remains after weights and overhead is the KV pool that users and context lengths share.</li>
+            <li>Single-stream decode speed ≤ memory bandwidth ÷ weight bytes.</li>
+            <li>Tensor parallelism splits weights and KV across GPUs when one is not enough.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Sizing for weights only and forgetting the KV cache and runtime overhead.</li>
+            <li>Mixing GB (10⁹) and GiB (2³⁰); the 7% gap matters when you are close to the limit.</li>
+            <li>Estimating speed from TFLOPS instead of memory bandwidth for single-user decoding.</li>
+            <li>Using training memory rules (16 bytes/param) for inference, or inference rules for fine-tuning.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="gpu-math-1"><span>Estimate whether Qwen2.5 32B in FP8 serves 16 users at 8k context on one 80 GB GPU</span></label></li>
+          <li><label><input type="checkbox" data-key="gpu-math-2"><span>Compute the single-stream tokens/s ceiling for a 4-bit 70B model on an H100</span></label></li>
+          <li><label><input type="checkbox" data-key="gpu-math-3"><span>Explain what <code>--gpu-memory-utilization</code> controls and what happens if it is set too low</span></label></li>
+          <li><label><input type="checkbox" data-key="gpu-math-4"><span>Explain why training needs roughly 8× more memory per parameter than BF16 inference</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://jax-ml.github.io/scaling-book/">How to Scale Your Model (Google DeepMind, JAX scaling book)</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.vllm.ai/">vLLM documentation (memory and parallelism settings)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="local">
+        <header class="topic-head">
+          <p class="eyebrow">11.7 · Your own machine</p>
+          <h2>Running models locally</h2>
+        </header>
+
+        <p class="lead">A quantized 8B model is about 5 GB, which fits on a gaming GPU, a recent Mac or even plain RAM. Running models locally means no API bill, no data leaving the machine and no rate limits, in exchange for smaller models and your own hardware's speed. The same rules apply as in the datacenter: quantization decides what fits, bandwidth decides speed.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Local models are handy for offline development, private data, cheap bulk jobs and testing against an OpenAI-compatible endpoint without spending money. They are also how you build intuition for everything on this page, on hardware you can poke.</p>
+        </div>
+
+        <h3>Pick a file size</h3>
+        <p>Local runtimes use GGUF files named by quantization. <code>Q4_K_M</code> is the common default; <code>Q5_K_M</code> or <code>Q6_K</code> buy a little quality if memory allows. Leave 1–2 GB plus the KV cache free on top of the file size.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="GGUF file sizes for Llama 3.1 8B: Q8_0 8.5 GB, Q6_K 6.6, Q5_K_M 5.7, Q4_K_M 4.9, Q3_K_M 4.0, Q2_K 3.2; Q4_K_M and Q5_K_M marked as the sweet spot.">
+              <text class="d-label" x="150" y="18">Llama 3.1 8B GGUF file size (BF16 original ≈ 16 GB)</text>
+              <text class="d-mono" x="140" y="45" text-anchor="end">Q8_0</text>
+              <rect class="d-good" x="150" y="30" width="374" height="20" rx="3"/><text class="d-mono" x="530" y="45">8.5 GB</text>
+              <text class="d-mono" x="140" y="75" text-anchor="end">Q6_K</text>
+              <rect class="d-good" x="150" y="60" width="290" height="20" rx="3"/><text class="d-mono" x="446" y="75">6.6 GB</text>
+              <text class="d-mono" x="140" y="105" text-anchor="end">Q5_K_M</text>
+              <rect class="d-accent" x="150" y="90" width="251" height="20" rx="3"/><text class="d-mono" x="407" y="105">5.7 GB</text>
+              <text class="d-mono" x="140" y="135" text-anchor="end">Q4_K_M</text>
+              <rect class="d-accent" x="150" y="120" width="216" height="20" rx="3"/><text class="d-mono" x="372" y="135">4.9 GB</text>
+              <text class="d-mono" x="140" y="165" text-anchor="end">Q3_K_M</text>
+              <rect class="d-signal" x="150" y="150" width="176" height="20" rx="3"/><text class="d-mono" x="332" y="165">4.0 GB</text>
+              <text class="d-mono" x="140" y="195" text-anchor="end">Q2_K</text>
+              <rect class="d-signal" x="150" y="180" width="141" height="20" rx="3"/><text class="d-mono" x="297" y="195">3.2 GB</text>
+              <path class="d-line-accent" d="M470 92 L480 92 L480 138 L470 138"/>
+              <text class="d-label d-text-accent" x="488" y="112">usual sweet spot</text>
+              <text class="d-label d-text-signal" x="400" y="180">quality drops</text>
+            </svg>
+          </div>
+          <figcaption>Approximate GGUF sizes. Green is near-lossless, blue is the usual trade-off, orange loses noticeable quality on an 8B model.</figcaption>
+        </figure>
+
+        <h3>When it doesn't fit: partial offload</h3>
+        <p>llama.cpp can put some layers on the GPU and run the rest from system RAM (<code>-ngl</code> sets the GPU layer count). Every token still passes through every layer, so the slow RAM part dominates. Apple Silicon avoids the split: the GPU reads unified memory directly at 270–550 GB/s on Pro and Max chips.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 230" role="img" aria-label="A 12 GB, 32-layer model split with 24 layers in GPU memory and 8 in system RAM; per token the GPU part takes about 18 ms and the RAM part about 50 ms.">
+              <defs>
+                <marker id="local-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="300" height="110" rx="10"/>
+              <text class="d-title" x="36" y="54">GPU VRAM · ~500 GB/s</text>
+              <rect class="d-accent" x="36" y="70" width="268" height="34" rx="5"/>
+              <text class="d-text" x="170" y="92" text-anchor="middle">layers 1–24 · 9 GB</text>
+              <text class="d-label" x="36" y="128">9 GB ÷ 500 GB/s ≈ 18 ms</text>
+              <rect class="d-box" x="360" y="30" width="280" height="110" rx="10"/>
+              <text class="d-title" x="376" y="54">System RAM · ~60 GB/s</text>
+              <rect class="d-signal" x="376" y="70" width="248" height="34" rx="5"/>
+              <text class="d-text" x="500" y="92" text-anchor="middle">layers 25–32 · 3 GB</text>
+              <text class="d-label" x="376" y="128">3 GB ÷ 60 GB/s ≈ 50 ms</text>
+              <line class="d-line" x1="304" y1="87" x2="374" y2="87" marker-end="url(#local-arrow)"/>
+              <text class="d-label" x="340" y="80" text-anchor="middle">activations</text>
+              <text class="d-label" x="20" y="166">time per token</text>
+              <rect class="d-accent" x="20" y="174" width="159" height="24" rx="3"/>
+              <text class="d-label" x="99" y="190" text-anchor="middle">GPU 18 ms</text>
+              <rect class="d-signal" x="179" y="174" width="441" height="24" rx="3"/>
+              <text class="d-label" x="400" y="190" text-anchor="middle">RAM 50 ms</text>
+              <text class="d-mono" x="20" y="220">≈ 15 tok/s split · ≈ 40 tok/s if all 12 GB fit on the GPU</text>
+            </svg>
+          </div>
+          <figcaption>A quarter of the model in RAM takes nearly three quarters of the time. Partial offload makes big models runnable, not fast.</figcaption>
+        </figure>
+
+        <div class="widget" id="local-demo">
+          <div class="widget-head">
+            <span class="widget-title">Local speed estimator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="local-model">Model <select id="local-model"><option value="8" selected>8B</option><option value="14">14B</option><option value="32">32B</option><option value="70">70B</option></select></label>
+            <label for="local-quant">Quant <select id="local-quant"><option value="1.06">Q8_0</option><option value="0.71">Q5_K_M</option><option value="0.6" selected>Q4_K_M</option></select></label>
+            <label for="local-dev">Machine <select id="local-dev">
+              <option value="gpu,16,288">GPU 16 GB · 288 GB/s</option>
+              <option value="gpu,24,1008" selected>GPU 24 GB · 1 TB/s</option>
+              <option value="mac,48,273">Mac 48 GB · 273 GB/s</option>
+              <option value="mac,128,546">Mac 128 GB · 546 GB/s</option>
+              <option value="cpu,0,0">CPU only</option>
+            </select></label>
+            <label for="local-ram">RAM bandwidth <input type="range" id="local-ram" min="40" max="120" step="10" value="70"><output id="local-ram-out">70 GB/s</output></label>
+          </div>
+          <svg id="local-plot" viewBox="0 0 600 140" role="img" aria-label="Bar showing how much of the model sits in fast memory versus system RAM, and the estimated tokens per second."></svg>
+          <p class="readout" id="local-readout"></p>
+        </div>
+
+        <h3>Tools</h3>
+        <div class="grid-3">
+          <div class="card"><h4>Ollama</h4><p><code>ollama run</code> pulls and runs a model; serves REST and OpenAI-compatible APIs on port 11434. Raise <code>num_ctx</code> for long prompts.</p></div>
+          <div class="card"><h4>llama.cpp</h4><p>The engine underneath much of the ecosystem: CLI, <code>llama-server</code>, quantization tools, full control of offload and context.</p></div>
+          <div class="card"><h4>LM Studio / MLX</h4><p>LM Studio is a desktop app with a local server. MLX is Apple's array framework; <code>mlx-lm</code> runs models natively on Apple Silicon.</p></div>
+        </div>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Terminal:  ollama pull llama3.1:8b   (a ~4.9 GB Q4_K_M download)</span>
+from openai import OpenAI
+
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")  <span class="c"># key is required but ignored</span>
+resp = client.chat.completions.create(
+    model="llama3.1:8b",
+    messages=[{"role": "user", "content": "Explain PagedAttention in one sentence."}],
+)
+print(resp.choices[0].message.content)</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Q4_K_M GGUF puts an 8B model in about 5 GB; Q5/Q6 trade memory for a little quality.</li>
+            <li>Local speed is bandwidth-bound: VRAM and Apple unified memory are fast, system RAM is slow.</li>
+            <li>Partial offload runs bigger models, but the RAM-resident layers dominate token time.</li>
+            <li>Ollama, llama-server and LM Studio expose OpenAI-compatible endpoints, so app code stays the same.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Leaving the default context window small and wondering why long documents get truncated.</li>
+            <li>Judging a model family by a Q2 or Q3 build of its smallest size.</li>
+            <li>Downloading a model file that barely fits, leaving no room for the KV cache or the rest of the system.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="local-1"><span>Run an 8B model locally and call it from Python through the OpenAI client</span></label></li>
+          <li><label><input type="checkbox" data-key="local-2"><span>Predict tokens/s for your machine from its memory bandwidth, then measure it</span></label></li>
+          <li><label><input type="checkbox" data-key="local-3"><span>Choose a quantization level for a 32B model on a 24 GB GPU and justify it</span></label></li>
+          <li><label><input type="checkbox" data-key="local-4"><span>Explain why partial offload slows generation so much</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Code</span><a href="https://github.com/ggml-org/llama.cpp">llama.cpp on GitHub</a></li>
+          <li><span class="kind">Docs</span><a href="https://ollama.com/">Ollama</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/ml-explore/mlx">MLX on GitHub</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Quantization bake-off on your laptop</h4><p>Run one 8B model at Q8_0, Q5_K_M and Q4_K_M with llama.cpp or Ollama. Measure tokens/s, memory and accuracy on 50 questions from your own domain, and compare the speed with your bandwidth-based prediction.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Benchmark a serving engine</h4><p>Serve a 7–8B model with vLLM or SGLang on a rented GPU. Sweep concurrency from 1 to 128 and plot TTFT, TPOT and throughput; then turn on prefix caching with a long shared system prompt and measure the TTFT change.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Cost model for self-hosting</h4><p>Build a calculator that takes a model, GPU type, price per hour and a traffic profile and outputs required GPUs, p95 latency and cost per million tokens. Validate it against real benchmark runs and compare with a hosted API's price.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Explain prefill vs decode and why decode is memory-bandwidth-bound</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Compute weight and KV-cache memory for any model, context and batch size</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Choose a quantization format and verify its quality on your own task</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Deploy a model on a serving engine and report TTFT, TPOT and throughput at several concurrencies</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Estimate the speed-up from speculative decoding given an acceptance rate</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Shared helpers for this page's widgets (SVG built with the d-* theme classes). */
+var H = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function fmt(n, d) { d = d || 0; return Number(n).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function rng(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) { var u = 1 - r(), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function $(id) { return document.getElementById(id); }
+  return { el: el, clear: clear, fmt: fmt, rng: rng, gauss: gauss, $: $ };
+})();
+
+/* 11.1 Quantization: snap weights to a grid */
+(function () {
+  if (!document.getElementById("quantization-demo")) return;
+  var $ = H.$, svg = $("quantization-plot"), bitsIn = $("quantization-bits"), granIn = $("quantization-gran"), outIn = $("quantization-outlier");
+  var r = H.rng(7), N = 2048, base = [], outlierIdx = [];
+  for (var i = 0; i < N; i++) base.push(H.gauss(r));
+  for (var j = 0; j < 6; j++) outlierIdx.push(Math.floor(r() * N));
+  var X0 = 40, X1 = 580, Y0 = 20, Y1 = 186, LO = -4, HI = 4;
+  function xOf(v) { return X0 + (Math.max(LO, Math.min(HI, v)) - LO) / (HI - LO) * (X1 - X0); }
+
+  function draw() {
+    var b = +bitsIn.value, gran = granIn.value, outl = outIn.checked;
+    $("quantization-bits-out").textContent = b;
+    var w = base.slice();
+    if (outl) outlierIdx.forEach(function (k, n) { w[k] = (n % 2 ? -1 : 1) * (6 + n * 0.5); });
+    var qmax = Math.pow(2, b - 1) - 1, G = gran === "group" ? 64 : N, deq = new Array(N), zeroed = 0, se = 0, sw = 0, maxErr = 0;
+    var levelsTensor = null;
+    for (var g = 0; g < N; g += G) {
+      var m = 0;
+      for (var k = g; k < g + G; k++) m = Math.max(m, Math.abs(w[k]));
+      var s = m / qmax || 1;
+      if (G === N) levelsTensor = s;
+      for (k = g; k < g + G; k++) {
+        var q = Math.max(-qmax - 1, Math.min(qmax, Math.round(w[k] / s)));
+        deq[k] = q * s;
+        if (q === 0 && w[k] !== 0) zeroed++;
+        var e = w[k] - deq[k]; se += e * e; sw += w[k] * w[k]; maxErr = Math.max(maxErr, Math.abs(e));
+      }
+    }
+    var mse = se / N, sqnr = 10 * Math.log10((sw / N) / mse);
+
+    H.clear(svg);
+    var bins = 80, hist = new Array(bins).fill(0), qh = {}, maxH = 0, maxQ = 0;
+    w.forEach(function (v) { if (v >= LO && v < HI) { var bi = Math.floor((v - LO) / (HI - LO) * bins); hist[bi]++; } });
+    hist.forEach(function (c) { maxH = Math.max(maxH, c); });
+    deq.forEach(function (v) { if (v >= LO && v <= HI) { var key = Math.round(xOf(v)); qh[key] = (qh[key] || 0) + 1; } });
+    for (var key in qh) maxQ = Math.max(maxQ, qh[key]);
+    var bw = (X1 - X0) / bins;
+    hist.forEach(function (c, bi) {
+      if (!c) return;
+      var h = c / maxH * (Y1 - Y0) * 0.8;
+      H.el("rect", { "class": "d-fill", x: X0 + bi * bw + 0.5, y: Y1 - h, width: bw - 1, height: h }, svg);
+    });
+    if (levelsTensor && qmax <= 31) {
+      for (var q = -qmax - 1; q <= qmax; q++) {
+        var lv = q * levelsTensor;
+        if (lv < LO || lv > HI) continue;
+        H.el("line", { "class": "d-grid", x1: xOf(lv), x2: xOf(lv), y1: Y0, y2: Y1 }, svg);
+      }
+    }
+    for (key in qh) {
+      var hh = Math.max(2, qh[key] / maxQ * (Y1 - Y0));
+      H.el("rect", { "class": "d-dot", x: +key - 1, y: Y1 - hh, width: 2, height: hh, opacity: 0.85 }, svg);
+    }
+    H.el("line", { "class": "d-line", x1: X0, x2: X1, y1: Y1, y2: Y1 }, svg);
+    for (var t = LO; t <= HI; t += 2) H.el("text", { "class": "d-label", x: xOf(t), y: Y1 + 16, "text-anchor": "middle" }, svg, String(t));
+    H.el("rect", { "class": "d-fill", x: X0, y: 214, width: 12, height: 10 }, svg);
+    H.el("text", { "class": "d-label", x: X0 + 18, y: 223 }, svg, "original weights");
+    H.el("rect", { "class": "d-dot", x: X0 + 140, y: 214, width: 12, height: 10 }, svg);
+    H.el("text", { "class": "d-label", x: X0 + 158, y: 223 }, svg, "values after quantization (share)");
+    if (outl) H.el("text", { "class": "d-label d-text-signal", x: X1, y: 223, "text-anchor": "end" }, svg, "outliers up to ±8.5 drawn at the edges");
+
+    $("quantization-readout").textContent = (Math.pow(2, b)) + " levels · SQNR " + H.fmt(sqnr, 1) + " dB · max error " + H.fmt(maxErr, 3) +
+      " · " + H.fmt(zeroed / N * 100, 1) + "% of weights rounded to 0 · 7B model ≈ " + H.fmt(7 * (b + (G === N ? 0 : 16 / 64)) / 8, 1) + " GB";
+  }
+  [bitsIn, granIn, outIn].forEach(function (c) { c.addEventListener("input", draw); c.addEventListener("change", draw); });
+  draw();
+})();
+
+/* 11.2 KV-cache memory calculator */
+(function () {
+  if (!document.getElementById("kv-cache-demo")) return;
+  var $ = H.$, svg = $("kv-cache-plot");
+  var ids = ["kv-cache-model", "kv-cache-ctx", "kv-cache-batch", "kv-cache-dtype"];
+  function draw() {
+    var p = $("kv-cache-model").value.split(",").map(Number), L = p[0], nq = p[1], nkv = p[2], d = p[3];
+    var ctx = Math.pow(2, +$("kv-cache-ctx").value), B = Math.pow(2, +$("kv-cache-batch").value), bytes = +$("kv-cache-dtype").value;
+    $("kv-cache-ctx-out").textContent = H.fmt(ctx);
+    $("kv-cache-batch-out").textContent = B;
+    var perTok = 2 * L * nkv * d * bytes, total = perTok * ctx * B / 1e9, mha = total * nq / nkv;
+    H.clear(svg);
+    var X0 = 140, X1 = 560, maxV = Math.max(mha, total, 24) * 1.08;
+    function xOf(v) { return X0 + v / maxV * (X1 - X0); }
+    [24, 80, 141, 640].forEach(function (g) {
+      if (g > maxV) return;
+      H.el("line", { "class": "d-grid d-dash", x1: xOf(g), x2: xOf(g), y1: 20, y2: 118 }, svg);
+      H.el("text", { "class": "d-label", x: xOf(g), y: 134, "text-anchor": "middle" }, svg, g === 640 ? "8×80 GB" : g + " GB");
+    });
+    H.el("text", { "class": "d-text", x: X0 - 10, y: 50, "text-anchor": "end" }, svg, nq === nkv ? "this model (MHA)" : "this model (GQA)");
+    H.el("rect", { "class": "d-accent", x: X0, y: 34, width: Math.max(2, xOf(total) - X0), height: 26, rx: 3 }, svg);
+    H.el("text", { "class": "d-mono", x: Math.min(xOf(total) + 6, X1 - 4), y: 52, "text-anchor": xOf(total) + 80 > X1 ? "end" : "start" }, svg, H.fmt(total, 1) + " GB");
+    H.el("text", { "class": "d-text", x: X0 - 10, y: 94, "text-anchor": "end" }, svg, "if it used MHA");
+    H.el("rect", { "class": "d-signal", x: X0, y: 78, width: Math.max(2, xOf(mha) - X0), height: 26, rx: 3 }, svg);
+    H.el("text", { "class": "d-mono", x: Math.min(xOf(mha) + 6, X1 - 4), y: 96, "text-anchor": xOf(mha) + 80 > X1 ? "end" : "start" }, svg, H.fmt(mha, 1) + " GB");
+    H.el("text", { "class": "d-label", x: X0, y: 160 }, svg, "2 × " + L + " layers × " + nkv + " KV heads × " + d + " × " + H.fmt(ctx) + " tokens × " + B + " seqs × " + bytes + " B");
+    $("kv-cache-readout").textContent = H.fmt(perTok / 1024) + " KiB per token · " + H.fmt(total, 2) + " GB in total" +
+      (nq === nkv ? " · this model already uses full multi-head attention" : " · GQA saves " + (nq / nkv) + "× vs MHA (" + nq + " query heads share " + nkv + " KV heads)");
+  }
+  ids.forEach(function (id) { $(id).addEventListener("input", draw); $(id).addEventListener("change", draw); });
+  draw();
+})();
+
+/* 11.3 Batching: throughput vs per-token latency */
+(function () {
+  if (!document.getElementById("batching-demo")) return;
+  var $ = H.$, svg = $("batching-plot");
+  function bOf(v) { return Math.max(1, Math.round(Math.pow(2, v / 5))); }
+  function model(cfg, B, ctx) {
+    var P = cfg[0] * 1e9, bw = cfg[1], kvTok = cfg[2], n = cfg[3];
+    var W = P * bw, kvSeq = kvTok * ctx;
+    var BW = 3.35e12 * 0.8 * n, FL = (bw === 1 ? 1979e12 : 989e12) * 0.5 * n, mem = 80e9 * 0.9 * n - 2e9 * n;
+    var tMem = (W + B * kvSeq) / BW, tCmp = 2 * P * B / FL, t = Math.max(tMem, tCmp);
+    return { t: t, thr: B / t, fits: W + B * kvSeq <= mem, kvGB: B * kvSeq / 1e9, kvShare: B * kvSeq / (W + B * kvSeq), memBound: tMem >= tCmp };
+  }
+  function draw() {
+    var cfg = $("batching-setup").value.split(",").map(Number), B = bOf(+$("batching-b").value), ctx = Math.pow(2, +$("batching-ctx").value);
+    $("batching-b-out").textContent = B;
+    $("batching-ctx-out").textContent = H.fmt(ctx);
+    H.clear(svg);
+    var X0 = 60, X1 = 540, Y0 = 24, Y1 = 200, pts = [], maxThr = 0, maxT = 0;
+    for (var v = 0; v <= 40; v++) { var b = bOf(v), m = model(cfg, b, ctx); pts.push({ b: b, m: m }); maxThr = Math.max(maxThr, m.thr); maxT = Math.max(maxT, m.t); }
+    maxThr *= 1.1; maxT *= 1.1;
+    function xOf(b) { return X0 + Math.log2(b) / 8 * (X1 - X0); }
+    function yThr(t) { return Y1 - t / maxThr * (Y1 - Y0); }
+    function yLat(t) { return Y1 - t / maxT * (Y1 - Y0); }
+    var firstBad = null;
+    pts.forEach(function (p) { if (!p.m.fits && firstBad === null) firstBad = p.b; });
+    if (firstBad !== null) {
+      H.el("rect", { "class": "d-fill", x: xOf(firstBad), y: Y0, width: X1 - xOf(firstBad), height: Y1 - Y0 }, svg);
+      H.el("text", { "class": "d-label", x: (xOf(firstBad) + X1) / 2, y: Y0 + 14, "text-anchor": "middle" }, svg, "KV cache doesn't fit");
+    }
+    [1, 2, 4, 8, 16, 32, 64, 128, 256].forEach(function (b) {
+      H.el("line", { "class": "d-grid", x1: xOf(b), x2: xOf(b), y1: Y0, y2: Y1 }, svg);
+      H.el("text", { "class": "d-label", x: xOf(b), y: Y1 + 15, "text-anchor": "middle" }, svg, String(b));
+    });
+    H.el("text", { "class": "d-label", x: (X0 + X1) / 2, y: Y1 + 32, "text-anchor": "middle" }, svg, "batch size (concurrent sequences, log scale)");
+    H.el("line", { "class": "d-line", x1: X0, x2: X1, y1: Y1, y2: Y1 }, svg);
+    var d1 = "", d2 = "";
+    pts.forEach(function (p, i) { d1 += (i ? " L" : "M") + xOf(p.b).toFixed(1) + " " + yThr(p.m.thr).toFixed(1); d2 += (i ? " L" : "M") + xOf(p.b).toFixed(1) + " " + yLat(p.m.t).toFixed(1); });
+    H.el("path", { "class": "d-line-accent", d: d1 }, svg);
+    H.el("path", { "class": "d-line-signal", d: d2 }, svg);
+    H.el("text", { "class": "d-label d-text-accent", x: X0, y: 14 }, svg, "throughput, tok/s (max " + H.fmt(maxThr / 1.1) + ")");
+    H.el("text", { "class": "d-label d-text-signal", x: X1, y: 14, "text-anchor": "end" }, svg, "time per output token, ms (max " + H.fmt(maxT / 1.1 * 1000, 1) + ")");
+    var m = model(cfg, B, ctx);
+    H.el("line", { "class": "d-line d-dash", x1: xOf(B), x2: xOf(B), y1: Y0, y2: Y1 }, svg);
+    H.el("circle", { "class": "d-dot", cx: xOf(B), cy: yThr(m.thr), r: 5 }, svg);
+    H.el("circle", { "class": "d-dot-signal", cx: xOf(B), cy: yLat(m.t), r: 5 }, svg);
+    $("batching-readout").textContent = "B=" + B + ": TPOT " + H.fmt(m.t * 1000, 1) + " ms · " + H.fmt(m.thr) + " tok/s total · " + H.fmt(1 / m.t) + " tok/s per user · " +
+      (m.memBound ? "memory-bound (KV is " + H.fmt(m.kvShare * 100) + "% of bytes read)" : "compute-bound") + " · KV " + H.fmt(m.kvGB, 1) + " GB" + (m.fits ? "" : " · does NOT fit");
+  }
+  ["batching-setup", "batching-b", "batching-ctx"].forEach(function (id) { $(id).addEventListener("input", draw); $(id).addEventListener("change", draw); });
+  draw();
+})();
+
+/* 11.4 Speculative decoding simulator */
+(function () {
+  if (!document.getElementById("speculative-demo")) return;
+  var $ = H.$, svg = $("speculative-plot"), seed = 11;
+  function expTok(a, g) { return a >= 1 ? g + 1 : (1 - Math.pow(a, g + 1)) / (1 - a); }
+  function draw() {
+    var a = +$("speculative-alpha").value, g = +$("speculative-gamma").value, c = +$("speculative-cost").value;
+    $("speculative-alpha-out").textContent = a.toFixed(2);
+    $("speculative-gamma-out").textContent = g;
+    $("speculative-cost-out").textContent = c.toFixed(2);
+    H.clear(svg);
+    var sp = [], best = 1, maxSp = 1;
+    for (var k = 1; k <= 10; k++) { var s = expTok(a, k) / (k * c + 1); sp.push(s); if (s > sp[best - 1]) best = k; maxSp = Math.max(maxSp, s); }
+    maxSp = Math.max(2, maxSp * 1.15);
+    var X0 = 60, Y0 = 20, Y1 = 130, bw = 48;
+    function yOf(v) { return Y1 - v / maxSp * (Y1 - Y0); }
+    H.el("line", { "class": "d-line", x1: X0, x2: X0 + 10 * bw, y1: Y1, y2: Y1 }, svg);
+    H.el("line", { "class": "d-line-signal d-dash", x1: X0, x2: X0 + 10 * bw, y1: yOf(1), y2: yOf(1) }, svg);
+    H.el("text", { "class": "d-label d-text-signal", x: X0 + 10 * bw + 6, y: yOf(1) + 4 }, svg, "1× (no gain)");
+    sp.forEach(function (s, i) {
+      var k = i + 1, x = X0 + i * bw + 6;
+      H.el("rect", { "class": k === g ? "d-accent" : "d-fill", x: x, y: yOf(s), width: bw - 12, height: Y1 - yOf(s), rx: 3 }, svg);
+      H.el("text", { "class": "d-mono", x: x + (bw - 12) / 2, y: yOf(s) - 4, "text-anchor": "middle" }, svg, s.toFixed(2));
+      H.el("text", { "class": "d-label", x: x + (bw - 12) / 2, y: Y1 + 14, "text-anchor": "middle" }, svg, "γ=" + k);
+    });
+    H.el("text", { "class": "d-label", x: X0 - 8, y: Y0 + 4, "text-anchor": "end" }, svg, "speed-up");
+    // simulated rounds
+    var r = H.rng(seed), total = 0;
+    H.el("text", { "class": "d-label", x: 40, y: 166 }, svg, "10 simulated rounds (each row = one target pass)");
+    for (var round = 0; round < 10; round++) {
+      var col = round < 5 ? 0 : 1, row = round % 5, x0 = 40 + col * 280, y0 = 176 + row * 20, n = 0, rejected = false;
+      for (var i = 0; i < g; i++) {
+        var cls;
+        if (rejected) cls = "d-box";
+        else if (r() < a) { cls = "d-good"; n++; }
+        else { cls = "d-signal"; rejected = true; n++; }
+        H.el("rect", { "class": cls, x: x0 + i * 18, y: y0, width: 14, height: 14, rx: 2 }, svg);
+      }
+      if (!rejected) { H.el("rect", { "class": "d-accent", x: x0 + g * 18, y: y0, width: 14, height: 14, rx: 2 }, svg); n++; }
+      H.el("text", { "class": "d-mono", x: x0 + 11 * 18 + 6, y: y0 + 12 }, svg, "+" + n);
+      total += n;
+    }
+    var lx = 40, ly = 292;
+    [["d-good", "accepted"], ["d-signal", "rejected → resampled"], ["d-box", "dropped"], ["d-accent", "bonus token"]].forEach(function (it) {
+      H.el("rect", { "class": it[0], x: lx, y: ly - 10, width: 12, height: 12, rx: 2 }, svg);
+      var t = H.el("text", { "class": "d-label", x: lx + 18, y: ly }, svg, it[1]);
+      lx += 30 + it[1].length * 6.2;
+    });
+    $("speculative-readout").textContent = "expected " + expTok(a, g).toFixed(2) + " tokens per target pass · speed-up " + sp[g - 1].toFixed(2) +
+      "× · best γ here = " + best + " (" + sp[best - 1].toFixed(2) + "×) · simulated: " + total + " tokens in 10 passes";
+  }
+  ["speculative-alpha", "speculative-gamma", "speculative-cost"].forEach(function (id) { $(id).addEventListener("input", draw); });
+  $("speculative-roll").addEventListener("click", function () { seed += 1; draw(); });
+  draw();
+})();
+
+/* 11.5 Prefix caching savings */
+(function () {
+  if (!document.getElementById("serving-demo")) return;
+  var $ = H.$, svg = $("serving-plot"), PREFILL_TPS = 12000, N = 8;
+  function draw() {
+    var S = +$("serving-sys").value, U = +$("serving-user").value, on = $("serving-cache").checked;
+    $("serving-sys-out").textContent = S;
+    $("serving-user-out").textContent = U;
+    H.clear(svg);
+    var X0 = 90, X1 = 470, maxT = 10000, computedAll = 0, ttftSum = 0;
+    function w(t) { return t / maxT * (X1 - X0); }
+    for (var i = 0; i < N; i++) {
+      var y = 10 + i * 21, cached = (on && i > 0) ? S : 0, comp = S + U - cached, ttft = comp / PREFILL_TPS * 1000 + 20;
+      computedAll += comp; ttftSum += ttft;
+      H.el("text", { "class": "d-label", x: X0 - 8, y: y + 13, "text-anchor": "end" }, svg, "request " + (i + 1));
+      if (cached) H.el("rect", { "class": "d-good", x: X0, y: y, width: w(cached), height: 16, rx: 2 }, svg);
+      H.el("rect", { "class": "d-accent", x: X0 + w(cached), y: y, width: Math.max(1, w(comp)), height: 16, rx: 2 }, svg);
+      H.el("text", { "class": "d-mono", x: X1 + 10, y: y + 13 }, svg, "TTFT ≈ " + H.fmt(ttft) + " ms");
+    }
+    H.el("rect", { "class": "d-good", x: X0, y: 184, width: 12, height: 10 }, svg);
+    H.el("text", { "class": "d-label", x: X0 + 18, y: 193 }, svg, "prefix read from cache");
+    H.el("rect", { "class": "d-accent", x: X0 + 180, y: 184, width: 12, height: 10 }, svg);
+    H.el("text", { "class": "d-label", x: X0 + 198, y: 193 }, svg, "tokens computed in prefill");
+    var noCache = N * (S + U);
+    $("serving-readout").textContent = "prefill tokens: " + H.fmt(computedAll) + " vs " + H.fmt(noCache) + " without caching (" +
+      H.fmt((1 - computedAll / noCache) * 100) + "% saved) · mean TTFT " + H.fmt(ttftSum / N) + " ms (assumes ~12k prefill tok/s)";
+  }
+  ["serving-sys", "serving-user", "serving-cache"].forEach(function (id) { $(id).addEventListener("input", draw); $(id).addEventListener("change", draw); });
+  draw();
+})();
+
+/* 11.6 Will it fit on my GPU? */
+(function () {
+  if (!document.getElementById("gpu-math-demo")) return;
+  var $ = H.$, svg = $("gpu-math-plot");
+  var ids = ["gpu-math-model", "gpu-math-prec", "gpu-math-ctx", "gpu-math-batch", "gpu-math-gpu", "gpu-math-n"];
+  function draw() {
+    var m = $("gpu-math-model").value.split(",").map(Number), P = m[0], L = m[1], nkv = m[2], d = m[3];
+    var bw = +$("gpu-math-prec").value, ctx = Math.pow(2, +$("gpu-math-ctx").value), B = +$("gpu-math-batch").value;
+    var g = $("gpu-math-gpu").value.split(",").map(Number), vram = g[0], bwGPU = g[1], n = +$("gpu-math-n").value;
+    $("gpu-math-ctx-out").textContent = H.fmt(ctx);
+    $("gpu-math-batch-out").textContent = B;
+    var W = P * bw, kvSeq = 2 * L * nkv * d * ctx * 2 / 1e9, KV = kvSeq * B, OV = 2 * n, need = W + KV + OV, total = vram * n, cap = total * 0.9;
+    H.clear(svg);
+    var X0 = 20, X1 = 580, maxV = Math.max(need, total) * 1.05;
+    function x(v) { return X0 + v / maxV * (X1 - X0); }
+    H.el("rect", { "class": "d-accent", x: x(0), y: 40, width: x(W) - X0, height: 34 }, svg);
+    H.el("rect", { "class": "d-good", x: x(W), y: 40, width: Math.max(1, x(W + KV) - x(W)), height: 34 }, svg);
+    H.el("rect", { "class": "d-fill", x: x(W + KV), y: 40, width: x(need) - x(W + KV), height: 34 }, svg);
+    H.el("line", { "class": "d-line-signal", x1: x(total), x2: x(total), y1: 26, y2: 88 }, svg);
+    H.el("text", { "class": "d-label d-text-signal", x: x(total), y: 20, "text-anchor": x(total) > X1 - 60 ? "end" : "middle" }, svg, H.fmt(total) + " GB VRAM");
+    H.el("line", { "class": "d-line d-dash", x1: x(cap), x2: x(cap), y1: 32, y2: 82 }, svg);
+    var lx = X0;
+    [["d-accent", "weights " + H.fmt(W, 1) + " GB"], ["d-good", "KV " + H.fmt(KV, 1) + " GB"], ["d-fill", "overhead " + OV + " GB"]].forEach(function (it) {
+      H.el("rect", { "class": it[0], x: lx, y: 100, width: 12, height: 10 }, svg);
+      H.el("text", { "class": "d-label", x: lx + 18, y: 109 }, svg, it[1]);
+      lx += 40 + it[1].length * 6;
+    });
+    var ok = need <= cap, maxSeqs = Math.floor((cap - W - OV) / kvSeq);
+    H.el("text", { "class": ok ? "d-title d-text-good" : "d-title d-text-signal", x: X0, y: 138 }, svg,
+      ok ? "Fits (" + H.fmt(need, 1) + " of " + H.fmt(cap, 1) + " GB usable at 90%)" : "Does not fit: needs " + H.fmt(need, 1) + " GB, usable " + H.fmt(cap, 1) + " GB");
+    var ceiling = bwGPU * n / W;
+    $("gpu-math-readout").textContent = (maxSeqs >= 1 ? "max concurrent seqs at this context: " + maxSeqs : "weights alone exceed usable memory") +
+      " · single-stream ceiling ≈ " + H.fmt(ceiling) + " tok/s (" + H.fmt(bwGPU * n) + " GB/s ÷ " + H.fmt(W, 1) + " GB) · KV in BF16, " + H.fmt(2 * L * nkv * d * 2 / 1024) + " KiB/token";
+  }
+  ids.forEach(function (id) { $(id).addEventListener("input", draw); $(id).addEventListener("change", draw); });
+  draw();
+})();
+
+/* 11.7 Local speed estimator */
+(function () {
+  if (!document.getElementById("local-demo")) return;
+  var $ = H.$, svg = $("local-plot"), SYS_RAM = 64;
+  function draw() {
+    var P = +$("local-model").value, bpw = +$("local-quant").value, dev = $("local-dev").value.split(","), ram = +$("local-ram").value;
+    var kind = dev[0], mem = +dev[1], bw = +dev[2], size = P * bpw;
+    $("local-ram-out").textContent = ram + " GB/s";
+    var fast = 0, slow = 0, note = "", fits = true, t;
+    if (kind === "gpu") { fast = Math.max(0, Math.min(size, mem - 1.5)); slow = size - fast; if (slow > SYS_RAM - 8) fits = false; t = fast / bw + slow / ram; note = slow > 0 ? "partial offload" : "all layers on the GPU"; }
+    else if (kind === "mac") { var usable = mem * 0.75 - 1.5; fast = Math.min(size, usable); fits = size <= usable; t = size / bw; note = "unified memory (~75% usable by the GPU)"; }
+    else { slow = size; fits = size <= SYS_RAM - 8; t = size / ram; note = "CPU only, " + SYS_RAM + " GB system RAM assumed"; }
+    var tps = fits ? 0.7 / t : 0;
+    H.clear(svg);
+    var X0 = 20, X1 = 580, maxV = Math.max(size, 10);
+    function w(v) { return v / maxV * (X1 - X0); }
+    H.el("text", { "class": "d-label", x: X0, y: 16 }, svg, "model file " + H.fmt(size, 1) + " GB · " + note);
+    if (fast > 0) H.el("rect", { "class": "d-accent", x: X0, y: 24, width: w(fast), height: 30, rx: 3 }, svg);
+    if (slow > 0) H.el("rect", { "class": "d-signal", x: X0 + w(fast), y: 24, width: w(slow), height: 30, rx: 3 }, svg);
+    if (fast > 0 && w(fast) > 90) H.el("text", { "class": "d-label", x: X0 + 8, y: 44 }, svg, "fast memory " + H.fmt(fast, 1) + " GB");
+    if (slow > 0 && w(slow) > 90) H.el("text", { "class": "d-label", x: X0 + w(fast) + 8, y: 44 }, svg, "system RAM " + H.fmt(slow, 1) + " GB");
+    H.el("text", { "class": "d-label", x: X0, y: 82 }, svg, "estimated decode speed");
+    var maxTps = 120, bar = Math.min(tps, maxTps) / maxTps * (X1 - X0);
+    H.el("rect", { "class": "d-fill", x: X0, y: 90, width: X1 - X0, height: 22, rx: 3 }, svg);
+    if (fits) H.el("rect", { "class": tps >= 20 ? "d-good" : "d-signal", x: X0, y: 90, width: Math.max(2, bar), height: 22, rx: 3 }, svg);
+    H.el("text", { "class": "d-mono", x: X0 + 8, y: 106 }, svg, fits ? H.fmt(tps, 1) + " tok/s" : "does not fit in memory");
+    H.el("text", { "class": "d-label", x: X1, y: 130, "text-anchor": "end" }, svg, "scale 0–120 tok/s · ~20 tok/s feels fluent");
+    $("local-readout").textContent = fits ? ("time per token ≈ " + H.fmt(t * 1000) + " ms of memory reads → about " + H.fmt(tps, 1) + " tok/s at 70% efficiency") : "Too big for this machine: choose a smaller model or a lower-bit quant.";
+  }
+  ["local-model", "local-quant", "local-dev", "local-ram"].forEach(function (id) { $(id).addEventListener("input", draw); $(id).addEventListener("change", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

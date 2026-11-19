@@ -1,0 +1,1466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data skills · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="data">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Data skills</h1>
+    <p class="lede">Models are only as good as the data they learn from, retrieve from and get evaluated on. This area covers how to query data, clean it, move it reliably, store it efficiently, label it consistently and keep every version reproducible.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Data work is a pipeline. Raw data arrives from apps, logs and documents, gets moved and stored, cleaned and explored, labeled and checked, sometimes extended with synthetic examples, and finally frozen as a versioned dataset that training, evals and RAG can depend on. SQL is the tool you use to look at it at every stage.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 260" role="img" aria-label="Sources flow through pipelines into storage, then cleaning and EDA, then labeling and quality checks, then synthetic data and versioning, ending in training, evaluation and RAG; SQL queries data at every stage.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="20" width="150" height="48" rx="8"/>
+              <text class="d-text" x="95" y="41" text-anchor="middle">Sources</text>
+              <text class="d-label" x="95" y="57" text-anchor="middle">apps · logs · docs</text>
+              <line class="d-line" x1="170" y1="44" x2="208" y2="44" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="210" y="20" width="150" height="48" rx="8"/>
+              <text class="d-title" x="285" y="49" text-anchor="middle">Pipelines &amp; ETL</text>
+              <line class="d-line" x1="360" y1="44" x2="398" y2="44" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="400" y="20" width="150" height="48" rx="8"/>
+              <text class="d-title" x="475" y="41" text-anchor="middle">Storage</text>
+              <text class="d-label" x="475" y="57" text-anchor="middle">files &amp; formats</text>
+              <line class="d-line" x1="550" y1="44" x2="588" y2="44" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="590" y="20" width="150" height="48" rx="8"/>
+              <text class="d-title" x="665" y="49" text-anchor="middle">Clean &amp; EDA</text>
+              <line class="d-line" x1="665" y1="68" x2="665" y2="128" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="590" y="130" width="150" height="48" rx="8"/>
+              <text class="d-title" x="665" y="159" text-anchor="middle">Label &amp; QA</text>
+              <line class="d-line" x1="590" y1="154" x2="552" y2="154" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="400" y="130" width="150" height="48" rx="8"/>
+              <text class="d-title" x="475" y="151" text-anchor="middle">Synthetic +</text>
+              <text class="d-title" x="475" y="168" text-anchor="middle">versioning</text>
+              <line class="d-line" x1="400" y1="154" x2="362" y2="154" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="381" y="146" text-anchor="middle">v1.3</text>
+              <rect class="d-good" x="210" y="130" width="150" height="48" rx="8"/>
+              <text class="d-title" x="285" y="151" text-anchor="middle">Train · eval</text>
+              <text class="d-label" x="285" y="168" text-anchor="middle">fine-tune, RAG index</text>
+              <rect class="d-signal" x="20" y="212" width="720" height="32" rx="8"/>
+              <text class="d-title" x="380" y="233" text-anchor="middle">SQL: inspect, join and aggregate at every stage</text>
+              <line class="d-line d-dash" x1="475" y1="178" x2="475" y2="212"/>
+              <line class="d-line d-dash" x1="665" y1="178" x2="665" y2="212"/>
+              <line class="d-line d-dash" x1="285" y1="178" x2="285" y2="212"/>
+              <line class="d-line d-dash" x1="95" y1="68" x2="95" y2="212"/>
+            </svg>
+          </div>
+          <figcaption>The data lifecycle as a loop of stages. Each subtopic below covers one box; SQL runs underneath all of them.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="sql">
+        <header class="topic-head">
+          <p class="eyebrow">02.1 · The universal data language</p>
+          <h2>SQL</h2>
+        </header>
+
+        <p class="lead">SQL lets you describe the answer you want ("revenue per user for the last 30 days") and lets the database work out how to compute it. It has outlived every data fashion since the 1970s, and today it also queries Parquet files, data lakes and vector tables.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Building an eval set, pulling fine-tuning examples from logs, measuring cost per user, filtering RAG results by metadata: each is a SQL query. Postgres with pgvector and DuckDB on Parquet are everyday AI tools.</p>
+        </div>
+
+        <h3>The order a query really runs in</h3>
+        <p>You write <code>SELECT</code> first, but the database evaluates it near the end. Knowing the logical order explains most confusing errors, such as why <code>WHERE</code> cannot use a column alias or an aggregate.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="Logical query order: FROM and JOIN with 1 million rows, WHERE leaves 200 thousand, GROUP BY makes 5 thousand groups, HAVING keeps 800, SELECT computes columns, ORDER BY sorts and LIMIT returns 10.">
+              <defs>
+                <marker id="sql-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <rect class="d-accent" x="10" y="20" width="80" height="34" rx="6"/><text class="d-mono" x="50" y="42" text-anchor="middle">FROM</text>
+              <rect class="d-box" x="100" y="20" width="80" height="34" rx="6"/><text class="d-mono" x="140" y="42" text-anchor="middle">WHERE</text>
+              <rect class="d-box" x="190" y="20" width="80" height="34" rx="6"/><text class="d-mono" x="230" y="42" text-anchor="middle">GROUP BY</text>
+              <rect class="d-box" x="280" y="20" width="80" height="34" rx="6"/><text class="d-mono" x="320" y="42" text-anchor="middle">HAVING</text>
+              <rect class="d-signal" x="370" y="20" width="80" height="34" rx="6"/><text class="d-mono" x="410" y="42" text-anchor="middle">SELECT</text>
+              <rect class="d-box" x="460" y="20" width="80" height="34" rx="6"/><text class="d-mono" x="500" y="42" text-anchor="middle">ORDER BY</text>
+              <rect class="d-box" x="550" y="20" width="80" height="34" rx="6"/><text class="d-mono" x="590" y="42" text-anchor="middle">LIMIT</text>
+              <text class="d-label" x="50" y="70" text-anchor="middle">+ JOIN</text>
+              <text class="d-label" x="140" y="70" text-anchor="middle">filter rows</text>
+              <text class="d-label" x="230" y="70" text-anchor="middle">make groups</text>
+              <text class="d-label" x="320" y="70" text-anchor="middle">filter groups</text>
+              <text class="d-label" x="410" y="70" text-anchor="middle">columns, windows</text>
+              <text class="d-label" x="500" y="70" text-anchor="middle">sort</text>
+              <text class="d-label" x="590" y="70" text-anchor="middle">cut</text>
+              <line class="d-line" x1="10" y1="176" x2="630" y2="176"/>
+              <rect class="d-accent" x="25" y="86" width="50" height="90"/>
+              <rect class="d-accent" x="115" y="108" width="50" height="68"/>
+              <rect class="d-accent" x="205" y="132" width="50" height="44"/>
+              <rect class="d-accent" x="295" y="146" width="50" height="30"/>
+              <rect class="d-accent" x="385" y="146" width="50" height="30"/>
+              <rect class="d-accent" x="475" y="146" width="50" height="30"/>
+              <rect class="d-good" x="565" y="166" width="50" height="10"/>
+              <text class="d-mono" x="50" y="194" text-anchor="middle">1M</text>
+              <text class="d-mono" x="140" y="194" text-anchor="middle">200K</text>
+              <text class="d-mono" x="230" y="194" text-anchor="middle">5K</text>
+              <text class="d-mono" x="320" y="194" text-anchor="middle">800</text>
+              <text class="d-mono" x="410" y="194" text-anchor="middle">800</text>
+              <text class="d-mono" x="500" y="194" text-anchor="middle">800</text>
+              <text class="d-mono" x="590" y="194" text-anchor="middle">10</text>
+            </svg>
+          </div>
+          <figcaption>Logical evaluation order, with row counts for a typical query (bar heights on a log scale). Filter early with WHERE; HAVING filters groups after aggregation.</figcaption>
+        </figure>
+
+        <h3>Joins</h3>
+        <p>A <strong>join</strong> pairs rows from two tables where a condition holds, usually matching keys. The join type decides what happens to rows with no partner.</p>
+
+        <div class="widget" id="join-demo">
+          <div class="widget-head">
+            <span class="widget-title">JOIN visualizer</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="join-type">Join type <select id="join-type">
+              <option value="inner" selected>INNER JOIN</option>
+              <option value="left">LEFT JOIN</option>
+              <option value="right">RIGHT JOIN</option>
+              <option value="full">FULL OUTER JOIN</option>
+              <option value="anti">LEFT ANTI (no orders)</option>
+            </select></label>
+          </div>
+          <svg id="join-plot" viewBox="0 0 600 400" role="img" aria-label="Users and orders tables with lines linking matching user ids, and the result table of the selected join below."></svg>
+          <p class="readout" id="join-readout"></p>
+        </div>
+        <p>Notice that Ana appears twice in every join that keeps her: one row per matching order. Joins multiply rows, which is the usual cause of inflated sums. Order 104 points to user 5, who does not exist, so only RIGHT and FULL joins keep it.</p>
+
+        <h3>Window functions and NULL</h3>
+        <p>A <strong>window function</strong> computes across related rows without collapsing them, unlike <code>GROUP BY</code>. Ranking within each user is the classic use: keep each user's latest event, or number the turns of a conversation.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Orders partitioned by user and numbered by date descending; rows with row number 1, the latest order per user, are kept.">
+              <text class="d-label" x="20" y="20">ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY created_at DESC) AS rn</text>
+              <rect class="d-fill" x="20" y="32" width="420" height="24"/>
+              <text class="d-mono" x="30" y="49">user_id</text><text class="d-mono" x="130" y="49">order</text><text class="d-mono" x="230" y="49">created_at</text><text class="d-mono" x="380" y="49">rn</text>
+              <rect class="d-good" x="20" y="58" width="420" height="24"/>
+              <text class="d-mono" x="30" y="75">1</text><text class="d-mono" x="130" y="75">102</text><text class="d-mono" x="230" y="75">2026-03-09</text><text class="d-mono" x="380" y="75">1</text>
+              <rect class="d-box" x="20" y="82" width="420" height="24"/>
+              <text class="d-mono" x="30" y="99">1</text><text class="d-mono" x="130" y="99">101</text><text class="d-mono" x="230" y="99">2026-02-14</text><text class="d-mono" x="380" y="99">2</text>
+              <rect class="d-good" x="20" y="112" width="420" height="24"/>
+              <text class="d-mono" x="30" y="129">3</text><text class="d-mono" x="130" y="129">107</text><text class="d-mono" x="230" y="129">2026-04-01</text><text class="d-mono" x="380" y="129">1</text>
+              <rect class="d-box" x="20" y="136" width="420" height="24"/>
+              <text class="d-mono" x="30" y="153">3</text><text class="d-mono" x="130" y="153">105</text><text class="d-mono" x="230" y="153">2026-03-20</text><text class="d-mono" x="380" y="153">2</text>
+              <rect class="d-box" x="20" y="160" width="420" height="24"/>
+              <text class="d-mono" x="30" y="177">3</text><text class="d-mono" x="130" y="177">103</text><text class="d-mono" x="230" y="177">2026-01-05</text><text class="d-mono" x="380" y="177">3</text>
+              <path class="d-line" d="M450 58 h10 v48 h-10 M450 112 h10 v72 h-10"/>
+              <text class="d-label" x="470" y="86">partition: user 1</text>
+              <text class="d-label" x="470" y="152">partition: user 3</text>
+              <text class="d-text d-text-good" x="20" y="204">WHERE rn = 1 keeps the green rows: the latest order per user</text>
+            </svg>
+          </div>
+          <figcaption>Each partition is numbered independently. Every row survives, so you can filter on the rank in an outer query.</figcaption>
+        </figure>
+
+        <p><code>NULL</code> means unknown, so <code>NULL = NULL</code> is not true. Test with <code>IS NULL</code>, and remember <code>COUNT(col)</code> skips NULLs while <code>COUNT(*)</code> does not.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Latest conversation per user with total spend, last 30 days (Postgres)</span>
+WITH ranked AS (
+  SELECT c.*,
+         ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY created_at DESC) AS rn
+  FROM conversations c
+  WHERE created_at &gt;= now() - interval '30 days'
+),
+spend AS (
+  SELECT user_id, SUM(cost_usd) AS total_cost, COUNT(*) AS n_calls
+  FROM llm_calls
+  GROUP BY user_id
+  HAVING COUNT(*) &gt;= 5
+)
+SELECT r.user_id, r.id AS last_conversation, s.total_cost, s.n_calls
+FROM ranked r
+LEFT JOIN spend s ON s.user_id = r.user_id
+WHERE r.rn = 1
+ORDER BY s.total_cost DESC NULLS LAST
+LIMIT 20;</code></pre>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>Add an index on columns you filter and join on, and read the plan with <code>EXPLAIN ANALYZE</code> before guessing why a query is slow. For local analytics on CSV or Parquet, DuckDB runs the same SQL with no server.</p>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Logical order: FROM/JOIN, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT.</li>
+            <li>INNER keeps matches; LEFT keeps every left row; FULL keeps everything; anti-joins find rows with no match.</li>
+            <li>Joins on non-unique keys multiply rows; check counts before and after.</li>
+            <li>Window functions rank and accumulate without collapsing rows.</li>
+            <li>NULL is unknown: use IS NULL, and know which aggregates skip it.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Summing after a one-to-many join and double counting.</li>
+            <li>Filtering a LEFT JOIN's right table in <code>WHERE</code>, which silently turns it into an INNER JOIN; put that condition in <code>ON</code>.</li>
+            <li>Writing <code>col = NULL</code> instead of <code>col IS NULL</code>.</li>
+            <li>Building SQL with string formatting from user input instead of parameters (SQL injection).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="sql-1"><span>Predict the row count of INNER, LEFT and FULL joins on two small tables before running them.</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-2"><span>Write a query that keeps the latest row per user with <code>ROW_NUMBER()</code>.</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-3"><span>Explain why an aggregate cannot appear in <code>WHERE</code> and rewrite it with <code>HAVING</code>.</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-4"><span>Use <code>EXPLAIN ANALYZE</code> to show that an index changed a query plan.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://www.postgresql.org/docs/current/tutorial.html">PostgreSQL tutorial</a></li>
+          <li><span class="kind">Docs</span><a href="https://duckdb.org/docs/">DuckDB documentation</a></li>
+          <li><span class="kind">Practice</span><a href="https://sqlbolt.com/">SQLBolt interactive lessons</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="data-wrangling">
+        <header class="topic-head">
+          <p class="eyebrow">02.2 · Look before you model</p>
+          <h2>Data cleaning &amp; EDA</h2>
+        </header>
+
+        <p class="lead">Real data is messy: missing values, impossible values, duplicates, mixed units, mangled text. Exploratory data analysis (<strong>EDA</strong>) means looking at the data systematically before trusting it. Cleaning means deciding, on purpose and in code, what to do about each problem you find.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>A fine-tuning set with 5% duplicated or garbled examples, or a RAG corpus full of boilerplate pages, quietly caps quality. An hour of EDA often beats a week of model tuning.</p>
+        </div>
+
+        <h3>An EDA routine</h3>
+        <p>Run the same checks on every new dataset, in the same order, and write down what you find. Most surprises appear in the first three steps.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 170" role="img" aria-label="Six EDA steps in order: shape and types, missing values, distributions, duplicates, relationships and leakage, then write findings.">
+              <defs>
+                <marker id="data-wrangling-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <rect class="d-accent" x="10" y="30" width="92" height="60" rx="8"/><text class="d-title" x="56" y="56" text-anchor="middle">1 Shape</text><text class="d-label" x="56" y="74" text-anchor="middle">rows, dtypes</text>
+              <rect class="d-accent" x="116" y="30" width="92" height="60" rx="8"/><text class="d-title" x="162" y="56" text-anchor="middle">2 Missing</text><text class="d-label" x="162" y="74" text-anchor="middle">% per column</text>
+              <rect class="d-accent" x="222" y="30" width="92" height="60" rx="8"/><text class="d-title" x="268" y="56" text-anchor="middle">3 Distrib.</text><text class="d-label" x="268" y="74" text-anchor="middle">ranges, outliers</text>
+              <rect class="d-accent" x="328" y="30" width="92" height="60" rx="8"/><text class="d-title" x="374" y="56" text-anchor="middle">4 Dupes</text><text class="d-label" x="374" y="74" text-anchor="middle">exact + near</text>
+              <rect class="d-accent" x="434" y="30" width="92" height="60" rx="8"/><text class="d-title" x="480" y="56" text-anchor="middle">5 Relations</text><text class="d-label" x="480" y="74" text-anchor="middle">leakage, drift</text>
+              <rect class="d-good" x="540" y="30" width="92" height="60" rx="8"/><text class="d-title" x="586" y="56" text-anchor="middle">6 Write</text><text class="d-label" x="586" y="74" text-anchor="middle">findings, fixes</text>
+              <line class="d-line" x1="102" y1="60" x2="114" y2="60" marker-end="url(#data-wrangling-arrow)"/>
+              <line class="d-line" x1="208" y1="60" x2="220" y2="60" marker-end="url(#data-wrangling-arrow)"/>
+              <line class="d-line" x1="314" y1="60" x2="326" y2="60" marker-end="url(#data-wrangling-arrow)"/>
+              <line class="d-line" x1="420" y1="60" x2="432" y2="60" marker-end="url(#data-wrangling-arrow)"/>
+              <line class="d-line" x1="526" y1="60" x2="538" y2="60" marker-end="url(#data-wrangling-arrow)"/>
+              <text class="d-mono" x="56" y="118" text-anchor="middle">df.info()</text>
+              <text class="d-mono" x="162" y="118" text-anchor="middle">isna().mean()</text>
+              <text class="d-mono" x="268" y="118" text-anchor="middle">describe()</text>
+              <text class="d-mono" x="374" y="118" text-anchor="middle">duplicated()</text>
+              <text class="d-mono" x="480" y="118" text-anchor="middle">corr(), groupby</text>
+              <text class="d-mono" x="586" y="118" text-anchor="middle">README</text>
+              <text class="d-label" x="320" y="154" text-anchor="middle">pandas calls for each step; text data adds length histograms, language mix and encoding checks</text>
+            </svg>
+          </div>
+          <figcaption>A repeatable EDA pass. Step 5 includes the most expensive bug in ML: a feature or document that leaks the answer.</figcaption>
+        </figure>
+
+        <h3>Outliers and missing values</h3>
+        <p>A box plot summarizes a column with its quartiles. The <strong>interquartile range</strong> (IQR) is Q3 − Q1; points beyond 1.5 × IQR from the box are flagged as outliers. They may be errors, or the most important rows you have.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 170" role="img" aria-label="Box plot of prompt lengths: box from Q1 to Q3 with the median inside, whiskers to the fences at 1.5 IQR, and two outlier points far to the right.">
+              <line class="d-line" x1="20" y1="130" x2="620" y2="130"/>
+              <text class="d-label" x="20" y="150">0</text><text class="d-label" x="200" y="150" text-anchor="middle">500</text><text class="d-label" x="380" y="150" text-anchor="middle">1,000</text><text class="d-label" x="560" y="150" text-anchor="middle">1,500 tokens</text>
+              <line class="d-line" x1="70" y1="70" x2="110" y2="70"/>
+              <line class="d-line" x1="70" y1="58" x2="70" y2="82"/>
+              <rect class="d-accent" x="110" y="50" width="90" height="40"/>
+              <rect class="d-signal" x="146.5" y="50" width="3" height="40"/>
+              <line class="d-line" x1="200" y1="70" x2="290" y2="70"/>
+              <line class="d-line" x1="290" y1="58" x2="290" y2="82"/>
+              <line class="d-line d-dash" x1="335" y1="30" x2="335" y2="125"/>
+              <circle class="d-dot-signal" cx="470" cy="70" r="6"/><circle class="d-dot-signal" cx="590" cy="70" r="6"/>
+              <text class="d-label" x="110" y="40" text-anchor="middle">Q1</text>
+              <text class="d-label" x="148" y="40" text-anchor="middle">median</text>
+              <text class="d-label" x="200" y="40" text-anchor="middle">Q3</text>
+              <text class="d-label" x="155" y="110" text-anchor="middle">IQR = Q3 − Q1</text>
+              <text class="d-label" x="340" y="24">upper fence = Q3 + 1.5 × IQR</text>
+              <text class="d-label" x="530" y="100" text-anchor="middle">outliers: real or error?</text>
+            </svg>
+          </div>
+          <figcaption>Everything beyond the dashed fence is flagged. Look at those rows before deciding to keep, clip or drop them.</figcaption>
+        </figure>
+
+        <div class="widget" id="clean-demo">
+          <div class="widget-head">
+            <span class="widget-title">Cleaning choices change your statistics</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="clean-missing">Missing values <select id="clean-missing">
+              <option value="drop" selected>Drop rows</option>
+              <option value="mean">Fill with mean</option>
+              <option value="median">Fill with median</option>
+            </select></label>
+            <label for="clean-outlier">Outliers <select id="clean-outlier">
+              <option value="keep" selected>Keep</option>
+              <option value="clip">Clip to IQR fences</option>
+              <option value="drop">Drop beyond fences</option>
+            </select></label>
+            <label for="clean-sentinel"><input type="checkbox" id="clean-sentinel"> Treat −1 as missing</label>
+          </div>
+          <svg id="clean-plot" viewBox="0 0 600 216" role="img" aria-label="Strip plot of 28 prompt lengths before and after cleaning, with mean and median markers."></svg>
+          <p class="readout" id="clean-readout"></p>
+        </div>
+        <p>The raw column has four missing values, a sentinel −1 written by a buggy logger and two huge pasted documents. Watch the mean jump around with each choice while the median barely moves. Mean imputation also shrinks the spread, because every filled value sits exactly at the center.</p>
+        <p>Ask why a value is missing. Missing completely at random is harmless to drop. If missingness depends on the value itself (long prompts timing out before logging, say), dropping biases everything downstream, so add an "is_missing" flag column.</p>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+import numpy as np
+
+df = pd.read_parquet("prompts.parquet")
+print(df.shape, df.dtypes, df.isna().mean().sort_values(ascending=False).head(), sep="\n")
+
+df["n_tokens"] = df["n_tokens"].replace(-1, np.nan)        <span class="c"># sentinel to real missing</span>
+df["n_tokens_missing"] = df["n_tokens"].isna()            <span class="c"># keep the signal</span>
+q1, q3 = df["n_tokens"].quantile([0.25, 0.75])
+iqr = q3 - q1
+df["n_tokens"] = df["n_tokens"].clip(upper=q3 + 1.5 * iqr).fillna(df["n_tokens"].median())
+
+df["text"] = df["text"].str.normalize("NFKC").str.strip()  <span class="c"># unicode + whitespace</span>
+before = len(df)
+df = df.drop_duplicates(subset="text")
+print(f"removed {before - len(df)} exact duplicates")</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Run a fixed EDA routine: shape, missingness, distributions, duplicates, relationships, notes.</li>
+            <li>The median and IQR resist outliers; the mean and standard deviation do not.</li>
+            <li>Every cleaning choice changes downstream numbers, so make it explicit in code.</li>
+            <li>Missingness can carry signal; keep a flag when you impute.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Computing imputation values or clipping thresholds on the full dataset before the train/test split (leakage).</li>
+            <li>Treating sentinel values like −1, 0 or "N/A" strings as real data.</li>
+            <li>Deleting outliers that are actually the rare cases your model most needs to handle.</li>
+            <li>Cleaning by hand in a spreadsheet, so nobody can reproduce the dataset.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="data-wrangling-1"><span>Run the six-step EDA routine on a new CSV and write a half-page findings note.</span></label></li>
+          <li><label><input type="checkbox" data-key="data-wrangling-2"><span>Compute IQR fences by hand for ten numbers and flag the outliers.</span></label></li>
+          <li><label><input type="checkbox" data-key="data-wrangling-3"><span>Explain when mean imputation is acceptable and when it biases results.</span></label></li>
+          <li><label><input type="checkbox" data-key="data-wrangling-4"><span>Write a cleaning function that is fit on train data and applied unchanged to test data.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/user_guide/index.html">pandas user guide</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.pola.rs/">Polars user guide</a></li>
+          <li><span class="kind">Book</span><a href="https://wesmckinney.com/book/">Python for Data Analysis, 3rd edition (McKinney, free online)</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="pipelines">
+        <header class="topic-head">
+          <p class="eyebrow">02.3 · Moving data reliably</p>
+          <h2>Pipelines &amp; ETL</h2>
+        </header>
+
+        <p class="lead">A pipeline is a scheduled program that moves data from where it is created to where it is useful, transforming it on the way. One-off scripts break quietly. Good pipelines are idempotent (safe to rerun), observable and recoverable, so a failure at 3 a.m. costs a retry, not a week of corrupted data.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>A RAG system is only as fresh as its ingestion pipeline. Eval sets, fine-tuning data and usage analytics are all pipeline outputs, and a retry that double-inserts records will silently skew every metric built on them.</p>
+        </div>
+
+        <h3>A pipeline is a DAG of tasks</h3>
+        <p>Each task does one step and declares its inputs. An orchestrator (Airflow, Dagster, Prefect) runs them in dependency order on a schedule, retries failures and lets you <strong>backfill</strong>: rerun past dates after a fix.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="A document ingestion DAG: a daily schedule triggers extract from storage and the database, then parse, chunk, a validation gate, embed with retries, and an upsert into the vector index.">
+              <defs>
+                <marker id="pipelines-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+                <marker id="pipelines-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <rect class="d-box" x="10" y="10" width="120" height="30" rx="15"/><text class="d-label" x="70" y="30" text-anchor="middle">daily 02:00 UTC</text>
+              <line class="d-line d-dash" x1="70" y1="40" x2="70" y2="60" marker-end="url(#pipelines-arrow-g)"/>
+              <rect class="d-box" x="10" y="62" width="120" height="40" rx="8"/><text class="d-text" x="70" y="87" text-anchor="middle">extract: S3</text>
+              <rect class="d-box" x="10" y="130" width="120" height="40" rx="8"/><text class="d-text" x="70" y="155" text-anchor="middle">extract: DB</text>
+              <rect class="d-accent" x="170" y="96" width="90" height="40" rx="8"/><text class="d-text" x="215" y="121" text-anchor="middle">parse</text>
+              <rect class="d-accent" x="290" y="96" width="90" height="40" rx="8"/><text class="d-text" x="335" y="121" text-anchor="middle">chunk</text>
+              <rect class="d-signal" x="400" y="96" width="70" height="40" rx="8"/><text class="d-text" x="435" y="114" text-anchor="middle">check</text><text class="d-label" x="435" y="129" text-anchor="middle">schema</text>
+              <rect class="d-accent" x="490" y="96" width="60" height="40" rx="8"/><text class="d-text" x="520" y="121" text-anchor="middle">embed</text>
+              <rect class="d-good" x="570" y="96" width="62" height="40" rx="8"/><text class="d-text" x="601" y="114" text-anchor="middle">upsert</text><text class="d-label" x="601" y="129" text-anchor="middle">index</text>
+              <line class="d-line-accent" x1="130" y1="82" x2="168" y2="110" marker-end="url(#pipelines-arrow)"/>
+              <line class="d-line-accent" x1="130" y1="150" x2="168" y2="122" marker-end="url(#pipelines-arrow)"/>
+              <line class="d-line-accent" x1="260" y1="116" x2="288" y2="116" marker-end="url(#pipelines-arrow)"/>
+              <line class="d-line-accent" x1="380" y1="116" x2="398" y2="116" marker-end="url(#pipelines-arrow)"/>
+              <line class="d-line-accent" x1="470" y1="116" x2="488" y2="116" marker-end="url(#pipelines-arrow)"/>
+              <line class="d-line-accent" x1="550" y1="116" x2="568" y2="116" marker-end="url(#pipelines-arrow)"/>
+              <path class="d-line d-dash" d="M505 96 C505 60 535 60 535 94" marker-end="url(#pipelines-arrow-g)"/>
+              <text class="d-label" x="520" y="56" text-anchor="middle">retry ×3</text>
+              <text class="d-label" x="435" y="160" text-anchor="middle">bad rows to</text>
+              <text class="d-label" x="435" y="174" text-anchor="middle">quarantine</text>
+              <line class="d-line d-dash" x1="435" y1="136" x2="435" y2="146"/>
+              <text class="d-label" x="320" y="208" text-anchor="middle">each task is idempotent, logged and keyed by run date, so any day can be rerun safely</text>
+            </svg>
+          </div>
+          <figcaption>A RAG ingestion pipeline. The validation gate stops bad data before the expensive embed step, and retries absorb transient API errors.</figcaption>
+        </figure>
+
+        <h3>ETL or ELT</h3>
+        <p><strong>ETL</strong> transforms data before loading it into the warehouse. <strong>ELT</strong> loads raw data first and transforms it inside the warehouse with SQL (often with dbt). Cheap storage made ELT the default for analytics: you keep the raw copy and can redo transforms later.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 170" role="img" aria-label="Top: ETL extracts, transforms on a separate server, then loads only clean data. Bottom: ELT extracts, loads raw data into the warehouse, and transforms there with SQL, keeping the raw copy.">
+              <defs>
+                <marker id="pipelines-etl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+              </defs>
+              <text class="d-title" x="10" y="44">ETL</text>
+              <rect class="d-box" x="60" y="24" width="110" height="34" rx="6"/><text class="d-text" x="115" y="46" text-anchor="middle">Extract</text>
+              <rect class="d-signal" x="230" y="24" width="140" height="34" rx="6"/><text class="d-text" x="300" y="46" text-anchor="middle">Transform (Python)</text>
+              <rect class="d-good" x="430" y="24" width="200" height="34" rx="6"/><text class="d-text" x="530" y="46" text-anchor="middle">Load: clean tables only</text>
+              <line class="d-line-accent" x1="170" y1="41" x2="228" y2="41" marker-end="url(#pipelines-etl-arrow)"/>
+              <line class="d-line-accent" x1="370" y1="41" x2="428" y2="41" marker-end="url(#pipelines-etl-arrow)"/>
+              <text class="d-title" x="10" y="124">ELT</text>
+              <rect class="d-box" x="60" y="104" width="110" height="34" rx="6"/><text class="d-text" x="115" y="126" text-anchor="middle">Extract</text>
+              <rect class="d-good" x="230" y="96" width="400" height="56" rx="8"/>
+              <rect class="d-box" x="246" y="108" width="140" height="32" rx="6"/><text class="d-text" x="316" y="129" text-anchor="middle">raw tables</text>
+              <rect class="d-accent" x="460" y="108" width="156" height="32" rx="6"/><text class="d-text" x="538" y="129" text-anchor="middle">modeled tables</text>
+              <line class="d-line-accent" x1="170" y1="121" x2="244" y2="121" marker-end="url(#pipelines-etl-arrow)"/>
+              <line class="d-line-accent" x1="386" y1="124" x2="458" y2="124" marker-end="url(#pipelines-etl-arrow)"/>
+              <text class="d-label" x="422" y="116" text-anchor="middle">SQL</text>
+              <text class="d-label" x="430" y="166" text-anchor="middle">inside the warehouse: raw copy kept, transforms rerunnable</text>
+            </svg>
+          </div>
+          <figcaption>Same three letters, different order. ELT keeps raw data, so a bug in a transform is fixed by rerunning SQL, not by re-extracting from the source.</figcaption>
+        </figure>
+
+        <h3>Idempotency: safe to run twice</h3>
+        <p>Retries and backfills mean every task will eventually run more than once on the same input. An <strong>idempotent</strong> task leaves the same result however many times it runs. Plain appends are not idempotent; upserts by a key, or overwriting a whole date partition, are.</p>
+
+        <div class="widget" id="idem-demo">
+          <div class="widget-head">
+            <span class="widget-title">Retry a daily load</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="idem-mode">Write mode <select id="idem-mode">
+              <option value="append" selected>INSERT (append)</option>
+              <option value="upsert">UPSERT by order_id</option>
+              <option value="overwrite">Overwrite date partition</option>
+            </select></label>
+            <button class="btn primary" type="button" id="idem-run">Run load again</button>
+            <button class="btn" type="button" id="idem-reset">Reset</button>
+            <label for="idem-runs">Runs <output id="idem-runs">3</output></label>
+          </div>
+          <svg id="idem-plot" viewBox="0 0 600 230" role="img" aria-label="The target table after each run: one bar of stacked rows per order id; duplicate rows are orange."></svg>
+          <p class="readout" id="idem-readout"></p>
+        </div>
+        <p>Each run loads the same five orders for one day; order 103's amount is corrected in later runs. Append piles up duplicates and keeps the stale amount. Upsert and partition overwrite keep exactly five rows with the latest values.</p>
+
+        <pre class="code" data-lang="python"><code>import sqlite3
+
+con = sqlite3.connect("warehouse.db")
+con.execute("""CREATE TABLE IF NOT EXISTS orders (
+    order_id INTEGER PRIMARY KEY, day TEXT, amount REAL)""")
+
+def load(day: str, rows: list[tuple[int, float]]) -&gt; None:
+    with con:                                           <span class="c"># one transaction: all or nothing</span>
+        con.executemany(
+            """INSERT INTO orders (order_id, day, amount) VALUES (?, ?, ?)
+               ON CONFLICT(order_id) DO UPDATE SET amount = excluded.amount""",
+            [(oid, day, amt) for oid, amt in rows])
+
+batch = [(101, 30.0), (102, 12.0), (103, 45.0)]
+load("2026-11-16", batch)
+load("2026-11-16", batch)                               <span class="c"># retry: still 3 rows</span>
+print(con.execute("SELECT COUNT(*) FROM orders").fetchone())   <span class="c"># (3,)</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Pipelines are DAGs of small tasks run by an orchestrator on a schedule.</li>
+            <li>Make every task idempotent: upsert by key or overwrite a partition, inside a transaction.</li>
+            <li>Validate data between steps and quarantine bad rows instead of failing silently.</li>
+            <li>ELT keeps raw data so transforms can be fixed and rerun; backfills replay history.</li>
+            <li>Batch is simpler; use streaming (Kafka and friends) only when minutes of delay are too slow.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Plain INSERTs in a task that retries, doubling rows on every failure.</li>
+            <li>Using "now" inside a task instead of the run's logical date, so backfills load today's data for every past day.</li>
+            <li>No alerting: the pipeline fails for a week and the RAG index goes stale unnoticed.</li>
+            <li>Re-embedding the entire corpus daily instead of only new or changed documents (track a content hash).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="pipelines-1"><span>Draw the DAG of a document-ingestion pipeline and mark which steps are expensive.</span></label></li>
+          <li><label><input type="checkbox" data-key="pipelines-2"><span>Rewrite an append-only load as an idempotent upsert and prove it with a double run.</span></label></li>
+          <li><label><input type="checkbox" data-key="pipelines-3"><span>Explain ETL vs ELT and when you would pick each.</span></label></li>
+          <li><label><input type="checkbox" data-key="pipelines-4"><span>Backfill a week of data by passing the run date as a parameter.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://airflow.apache.org/docs/">Apache Airflow documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.dagster.io/">Dagster documentation</a></li>
+          <li><span class="kind">Book</span><a href="https://dataintensive.net/">Designing Data-Intensive Applications (Kleppmann)</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="formats">
+        <header class="topic-head">
+          <p class="eyebrow">02.4 · How bytes sit on disk</p>
+          <h2>File formats &amp; storage</h2>
+        </header>
+
+        <p class="lead">The same table can be a 40 GB CSV that takes minutes to scan or a 9 GB Parquet file that answers the same question in seconds. The difference is layout: whether values are stored row by row or column by column, whether they are compressed, and whether the file carries statistics that let a reader skip what it does not need.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Training corpora, eval logs and embedding tables are large. Picking Parquet over CSV, JSONL for streaming records and safetensors over pickle for weights saves money, time and, in the last case, a security hole.</p>
+        </div>
+
+        <h3>Row-oriented vs column-oriented</h3>
+        <p>Row formats (CSV, JSONL, most OLTP databases) store each record together: great for writing and reading whole records. Columnar formats (Parquet, Arrow) store each column together: an analytic query that needs 3 of 50 columns reads only those 3, and similar values next to each other compress well.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="A table with columns id, user, prompt and tokens laid out on disk two ways. Row layout interleaves all columns, so averaging tokens reads all twelve cells. Column layout stores tokens contiguously, so the query reads three cells.">
+              <text class="d-label" x="20" y="22">TABLE</text>
+              <rect class="d-box" x="20" y="32" width="50" height="26"/><rect class="d-accent" x="70" y="32" width="50" height="26"/><rect class="d-good" x="120" y="32" width="70" height="26"/><rect class="d-signal" x="190" y="32" width="56" height="26"/>
+              <text class="d-mono" x="45" y="50" text-anchor="middle">id</text><text class="d-mono" x="95" y="50" text-anchor="middle">user</text><text class="d-mono" x="155" y="50" text-anchor="middle">prompt</text><text class="d-mono" x="218" y="50" text-anchor="middle">tokens</text>
+              <rect class="d-box" x="20" y="58" width="50" height="24"/><rect class="d-accent" x="70" y="58" width="50" height="24"/><rect class="d-good" x="120" y="58" width="70" height="24"/><rect class="d-signal" x="190" y="58" width="56" height="24"/>
+              <rect class="d-box" x="20" y="82" width="50" height="24"/><rect class="d-accent" x="70" y="82" width="50" height="24"/><rect class="d-good" x="120" y="82" width="70" height="24"/><rect class="d-signal" x="190" y="82" width="56" height="24"/>
+              <rect class="d-box" x="20" y="106" width="50" height="24"/><rect class="d-accent" x="70" y="106" width="50" height="24"/><rect class="d-good" x="120" y="106" width="70" height="24"/><rect class="d-signal" x="190" y="106" width="56" height="24"/>
+              <text class="d-mono" x="45" y="75" text-anchor="middle">1</text><text class="d-mono" x="45" y="99" text-anchor="middle">2</text><text class="d-mono" x="45" y="123" text-anchor="middle">3</text>
+              <text class="d-mono" x="218" y="75" text-anchor="middle">12</text><text class="d-mono" x="218" y="99" text-anchor="middle">40</text><text class="d-mono" x="218" y="123" text-anchor="middle">7</text>
+              <text class="d-mono" x="133" y="160" text-anchor="middle">SELECT AVG(tokens)</text>
+
+              <text class="d-label" x="290" y="22">ROW LAYOUT ON DISK</text>
+              <rect class="d-box" x="290" y="32" width="28" height="26"/><rect class="d-accent" x="318" y="32" width="28" height="26"/><rect class="d-good" x="346" y="32" width="28" height="26"/><rect class="d-signal" x="374" y="32" width="28" height="26"/>
+              <rect class="d-box" x="402" y="32" width="28" height="26"/><rect class="d-accent" x="430" y="32" width="28" height="26"/><rect class="d-good" x="458" y="32" width="28" height="26"/><rect class="d-signal" x="486" y="32" width="28" height="26"/>
+              <rect class="d-box" x="514" y="32" width="28" height="26"/><rect class="d-accent" x="542" y="32" width="28" height="26"/><rect class="d-good" x="570" y="32" width="28" height="26"/><rect class="d-signal" x="598" y="32" width="28" height="26"/>
+              <line class="d-line-signal" x1="290" y1="70" x2="626" y2="70"/>
+              <text class="d-label" x="458" y="88" text-anchor="middle">must read all 12 cells to find the 3 tokens values</text>
+
+              <text class="d-label" x="290" y="122">COLUMN LAYOUT ON DISK</text>
+              <rect class="d-box" x="290" y="132" width="28" height="26"/><rect class="d-box" x="318" y="132" width="28" height="26"/><rect class="d-box" x="346" y="132" width="28" height="26"/>
+              <rect class="d-accent" x="374" y="132" width="28" height="26"/><rect class="d-accent" x="402" y="132" width="28" height="26"/><rect class="d-accent" x="430" y="132" width="28" height="26"/>
+              <rect class="d-good" x="458" y="132" width="28" height="26"/><rect class="d-good" x="486" y="132" width="28" height="26"/><rect class="d-good" x="514" y="132" width="28" height="26"/>
+              <rect class="d-signal" x="542" y="132" width="28" height="26"/><rect class="d-signal" x="570" y="132" width="28" height="26"/><rect class="d-signal" x="598" y="132" width="28" height="26"/>
+              <line class="d-line-signal" x1="542" y1="170" x2="626" y2="170"/>
+              <text class="d-label" x="458" y="190" text-anchor="middle">reads only the tokens block: 3 of 12 cells</text>
+            </svg>
+          </div>
+          <figcaption>The orange bars show what the query must read. With 50 columns instead of 4, the columnar file reads about 2% of the bytes.</figcaption>
+        </figure>
+
+        <h3>Inside a Parquet file</h3>
+        <p>A Parquet file is split into <strong>row groups</strong> (often around 128 MB), each holding one compressed chunk per column. The footer stores the schema plus min and max values per chunk, so readers skip whole row groups that cannot match a filter: <strong>predicate pushdown</strong>.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="A Parquet file with three row groups, each holding column chunks for id, day, text and tokens, and a footer with min and max statistics. For a filter on day after June, row group 1 is skipped using footer stats, and only the tokens chunks of row groups 2 and 3 are read.">
+              <defs>
+                <marker id="formats-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+              </defs>
+              <rect class="d-box" x="10" y="10" width="420" height="200" rx="10"/>
+              <text class="d-label" x="22" y="28">events.parquet</text>
+              <rect class="d-fill" x="22" y="38" width="396" height="40" rx="6"/>
+              <text class="d-label" x="30" y="62">RG 1</text>
+              <rect class="d-box" x="70" y="44" width="70" height="28" rx="4" opacity="0.45"/><rect class="d-box" x="146" y="44" width="70" height="28" rx="4" opacity="0.45"/><rect class="d-box" x="222" y="44" width="110" height="28" rx="4" opacity="0.45"/><rect class="d-box" x="338" y="44" width="72" height="28" rx="4" opacity="0.45"/>
+              <text class="d-mono d-text-signal" x="240" y="63">skipped</text>
+              <rect class="d-fill" x="22" y="84" width="396" height="40" rx="6"/>
+              <text class="d-label" x="30" y="108">RG 2</text>
+              <rect class="d-box" x="70" y="90" width="70" height="28" rx="4"/><rect class="d-box" x="146" y="90" width="70" height="28" rx="4"/><rect class="d-box" x="222" y="90" width="110" height="28" rx="4"/><rect class="d-signal" x="338" y="90" width="72" height="28" rx="4"/>
+              <rect class="d-fill" x="22" y="130" width="396" height="40" rx="6"/>
+              <text class="d-label" x="30" y="154">RG 3</text>
+              <rect class="d-box" x="70" y="136" width="70" height="28" rx="4"/><rect class="d-box" x="146" y="136" width="70" height="28" rx="4"/><rect class="d-box" x="222" y="136" width="110" height="28" rx="4"/><rect class="d-signal" x="338" y="136" width="72" height="28" rx="4"/>
+              <text class="d-mono" x="105" y="109" text-anchor="middle">id</text><text class="d-mono" x="181" y="109" text-anchor="middle">day</text><text class="d-mono" x="277" y="109" text-anchor="middle">text</text><text class="d-mono" x="374" y="109" text-anchor="middle">tokens</text>
+              <text class="d-mono" x="105" y="155" text-anchor="middle">id</text><text class="d-mono" x="181" y="155" text-anchor="middle">day</text><text class="d-mono" x="277" y="155" text-anchor="middle">text</text><text class="d-mono" x="374" y="155" text-anchor="middle">tokens</text>
+              <rect class="d-accent" x="22" y="176" width="396" height="28" rx="6"/>
+              <text class="d-mono" x="220" y="195" text-anchor="middle">footer: schema · per-chunk min/max</text>
+              <rect class="d-box" x="460" y="20" width="170" height="74" rx="8"/>
+              <text class="d-mono" x="472" y="42">SELECT SUM(tokens)</text>
+              <text class="d-mono" x="472" y="60">WHERE day &gt;=</text>
+              <text class="d-mono" x="472" y="78">  '2026-06-01'</text>
+              <path class="d-line-accent" d="M480 94 L480 190 L420 190" marker-end="url(#formats-arrow)"/>
+              <text class="d-label" x="488" y="122">1. read footer</text>
+              <text class="d-label" x="488" y="140">2. RG 1 max day is</text>
+              <text class="d-label" x="488" y="154">2026-04-30: skip it</text>
+              <text class="d-label" x="488" y="172">3. read 2 chunks</text>
+            </svg>
+          </div>
+          <figcaption>Footer statistics let the reader skip a row group without touching it, and column chunks let it read only <code>tokens</code>. Two tricks multiply.</figcaption>
+        </figure>
+
+        <div class="widget" id="scan-demo">
+          <div class="widget-head">
+            <span class="widget-title">Bytes read: row file vs Parquet</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="scan-cols">Columns in table <input type="range" id="scan-cols" min="4" max="200" step="1" value="50"><output id="scan-cols-out">50</output></label>
+            <label for="scan-used">Columns the query uses <input type="range" id="scan-used" min="1" max="20" step="1" value="3"><output id="scan-used-out">3</output></label>
+            <label for="scan-keep">Row groups matching filter <input type="range" id="scan-keep" min="5" max="100" step="5" value="100"><output id="scan-keep-out">100%</output></label>
+            <label for="scan-rows">Rows <select id="scan-rows">
+              <option value="1000000">1 million</option>
+              <option value="100000000" selected>100 million</option>
+              <option value="1000000000">1 billion</option>
+            </select></label>
+          </div>
+          <svg id="scan-plot" viewBox="0 0 600 250" role="img" aria-label="Two grids of row groups by columns: the row file reads every cell, the Parquet file reads only used columns in matching row groups; bars compare bytes read."></svg>
+          <p class="readout" id="scan-readout"></p>
+        </div>
+        <p>The demo assumes 8 bytes per value, 3× compression for Parquet and a 1 GB/s disk. Lower the matching row groups (as a date filter on sorted data would) and the two savings multiply.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Format</th><th>Layout</th><th>Best for</th><th>Watch out</th></tr></thead>
+            <tbody>
+              <tr><td>CSV</td><td>Row, text</td><td>Small exchanges, spreadsheets</td><td>No types, quoting bugs, slow</td></tr>
+              <tr><td>JSONL</td><td>Row, text</td><td>Chat logs, fine-tuning and eval records, streaming</td><td>Large; schema drift</td></tr>
+              <tr><td>Parquet</td><td>Columnar, compressed</td><td>Analytics, training corpora, lakes</td><td>Slow for single-row updates</td></tr>
+              <tr><td>Arrow</td><td>Columnar, in memory</td><td>Zero-copy hand-off between pandas, Polars, DuckDB</td><td>Not an archival format</td></tr>
+              <tr><td>safetensors</td><td>Raw tensors + header</td><td>Model weights</td><td>Prefer over pickle, which can run code on load</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>At larger scale, files live in object storage, and table formats such as Delta Lake and Apache Iceberg add transactions, schema evolution and time travel on top of Parquet files.</p>
+
+        <pre class="code" data-lang="python"><code>import pyarrow.parquet as pq
+import duckdb
+
+<span class="c"># read 2 columns, and only row groups whose stats can match the filter</span>
+table = pq.read_table("events.parquet", columns=["day", "tokens"],
+                      filters=[("day", "&gt;=", "2026-06-01")])
+
+<span class="c"># the same question in SQL, over a whole folder of Parquet files</span>
+print(duckdb.sql("""
+    SELECT day, SUM(tokens) AS tokens
+    FROM 'events/*.parquet'
+    WHERE day &gt;= '2026-06-01'
+    GROUP BY day ORDER BY day
+""").df())</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Row layouts suit whole-record reads and writes; columnar layouts suit analytics.</li>
+            <li>Parquet = row groups of compressed column chunks plus footer statistics.</li>
+            <li>Column pruning and predicate pushdown multiply: read fewer columns from fewer row groups.</li>
+            <li>JSONL for records and streams, Parquet for tables, safetensors for weights.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Storing large analytic datasets as CSV and paying for every full scan.</li>
+            <li>Writing thousands of tiny Parquet files; each has overhead, so compact them.</li>
+            <li>Loading untrusted <code>.pkl</code> or <code>.pt</code> files, which can execute arbitrary code.</li>
+            <li>Letting pandas guess types from CSV, turning ids into floats and dates into strings.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="formats-1"><span>Convert a CSV to Parquet and compare file size and query time with DuckDB.</span></label></li>
+          <li><label><input type="checkbox" data-key="formats-2"><span>Explain row groups, column chunks and footer statistics with a sketch.</span></label></li>
+          <li><label><input type="checkbox" data-key="formats-3"><span>Estimate bytes read for a query on a 100-column table using 4 columns.</span></label></li>
+          <li><label><input type="checkbox" data-key="formats-4"><span>Explain why safetensors is safer than pickle for sharing weights.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://parquet.apache.org/docs/">Apache Parquet documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://arrow.apache.org/docs/">Apache Arrow documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/safetensors/index">safetensors documentation</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="labeling">
+        <header class="topic-head">
+          <p class="eyebrow">02.5 · Ground truth you can trust</p>
+          <h2>Labeling &amp; data quality</h2>
+        </header>
+
+        <p class="lead">A label is a human (or model) judgment written down: this ticket is "billing", this answer is "correct", this reply is "unsafe". Labels become ground truth for training and evaluation, so if two careful people would disagree about them, your metric measures noise. Good labeling is mostly about writing clear guidelines and measuring agreement.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Every eval set and fine-tuning set you build needs labels. When you use an LLM as an annotator or judge, you validate it the same way: by measuring how well it agrees with careful humans.</p>
+        </div>
+
+        <h3>The labeling loop</h3>
+        <p>Never jump straight to labeling 10,000 items. Pilot a small batch with two or more annotators, measure where they disagree, fix the guidelines, then scale with ongoing audits.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="A loop: write guidelines, pilot 100 items with two annotators, measure agreement, adjudicate disagreements and refine guidelines, then scale up with gold questions and audits; disagreements feed back into the guidelines.">
+              <defs>
+                <marker id="labeling-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+              </defs>
+              <rect class="d-accent" x="10" y="60" width="100" height="56" rx="8"/><text class="d-title" x="60" y="84" text-anchor="middle">Guidelines</text><text class="d-label" x="60" y="102" text-anchor="middle">defs + examples</text>
+              <rect class="d-accent" x="140" y="60" width="100" height="56" rx="8"/><text class="d-title" x="190" y="84" text-anchor="middle">Pilot</text><text class="d-label" x="190" y="102" text-anchor="middle">100 items × 2</text>
+              <rect class="d-signal" x="270" y="60" width="100" height="56" rx="8"/><text class="d-title" x="320" y="84" text-anchor="middle">Agreement</text><text class="d-label" x="320" y="102" text-anchor="middle">κ, confusion</text>
+              <rect class="d-accent" x="400" y="60" width="100" height="56" rx="8"/><text class="d-title" x="450" y="84" text-anchor="middle">Adjudicate</text><text class="d-label" x="450" y="102" text-anchor="middle">fix the rules</text>
+              <rect class="d-good" x="530" y="60" width="100" height="56" rx="8"/><text class="d-title" x="580" y="84" text-anchor="middle">Scale</text><text class="d-label" x="580" y="102" text-anchor="middle">gold Qs, audits</text>
+              <line class="d-line-accent" x1="110" y1="88" x2="138" y2="88" marker-end="url(#labeling-arrow)"/>
+              <line class="d-line-accent" x1="240" y1="88" x2="268" y2="88" marker-end="url(#labeling-arrow)"/>
+              <line class="d-line-accent" x1="370" y1="88" x2="398" y2="88" marker-end="url(#labeling-arrow)"/>
+              <line class="d-line-accent" x1="500" y1="88" x2="528" y2="88" marker-end="url(#labeling-arrow)"/>
+              <path class="d-line-accent" d="M450 116 Q450 170 255 170 Q60 170 60 120" marker-end="url(#labeling-arrow)"/>
+              <text class="d-label" x="255" y="192" text-anchor="middle">κ below target: rewrite the unclear rules and re-pilot</text>
+              <path class="d-line d-dash" d="M580 60 Q580 20 320 20 Q300 20 300 56"/>
+              <text class="d-label" x="410" y="46" text-anchor="middle">audits keep measuring drift while scaling</text>
+            </svg>
+          </div>
+          <figcaption>Disagreement is information. Most of it traces back to an ambiguous guideline, which you fix once instead of letting every annotator guess.</figcaption>
+        </figure>
+
+        <h3>Measuring agreement</h3>
+        <p>Raw percent agreement flatters you when one label dominates: two annotators who both always say "safe" agree 95% of the time on data that is 95% safe. <strong>Cohen's kappa</strong> subtracts the agreement you would expect by chance from each annotator's label rates.</p>
+
+        <div class="formula">
+          \[ \kappa = \frac{p_o - p_e}{1 - p_e} \qquad p_e = \sum_{k} p_{A,k}\, p_{B,k} \]
+          <span class="formula-note">\(p_o\) is observed agreement; \(p_e\) is chance agreement from each annotator's label rates. Example: 100 items, both "yes" 45, both "no" 40, split 15. \(p_o = 0.85\); A says yes 55%, B 50%, so \(p_e = 0.55 \cdot 0.5 + 0.45 \cdot 0.5 = 0.50\) and \(\kappa = 0.70\).</span>
+        </div>
+
+        <div class="widget" id="kappa-demo">
+          <div class="widget-head">
+            <span class="widget-title">Agreement calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="kappa-yy">Both yes <input type="number" id="kappa-yy" min="0" max="999" value="45"></label>
+            <label for="kappa-yn">A yes, B no <input type="number" id="kappa-yn" min="0" max="999" value="10"></label>
+            <label for="kappa-ny">A no, B yes <input type="number" id="kappa-ny" min="0" max="999" value="5"></label>
+            <label for="kappa-nn">Both no <input type="number" id="kappa-nn" min="0" max="999" value="40"></label>
+          </div>
+          <div class="widget-controls">
+            <button class="btn" type="button" data-kappa-preset="45,10,5,40">Balanced</button>
+            <button class="btn" type="button" data-kappa-preset="1,3,2,94">Rare positive class</button>
+            <button class="btn" type="button" data-kappa-preset="25,25,25,25">Coin flips</button>
+          </div>
+          <svg id="kappa-plot" viewBox="0 0 600 240" role="img" aria-label="A 2 by 2 agreement table shaded by count, bars comparing observed and chance agreement, and kappa placed on a scale from poor to almost perfect."></svg>
+          <p class="readout" id="kappa-readout"></p>
+        </div>
+        <p>Try "Rare positive class": 95% raw agreement, yet kappa is only about 0.26 because the annotators barely agree on the rare positives that matter. For three or more annotators or missing labels, use Fleiss' kappa or Krippendorff's alpha.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 120" role="img" aria-label="Kappa scale from below 0 to 1 with bands slight, fair, moderate, substantial and almost perfect; the example 0.70 sits in substantial.">
+              <rect class="d-signal" x="20" y="40" width="100" height="30"/>
+              <rect class="d-box" x="120" y="40" width="100" height="30"/>
+              <rect class="d-box" x="220" y="40" width="100" height="30"/>
+              <rect class="d-accent" x="320" y="40" width="100" height="30"/>
+              <rect class="d-accent" x="420" y="40" width="100" height="30"/>
+              <rect class="d-good" x="520" y="40" width="100" height="30"/>
+              <text class="d-label" x="70" y="60" text-anchor="middle">&lt; 0 poor</text>
+              <text class="d-label" x="170" y="60" text-anchor="middle">slight</text>
+              <text class="d-label" x="270" y="60" text-anchor="middle">fair</text>
+              <text class="d-label" x="370" y="60" text-anchor="middle">moderate</text>
+              <text class="d-label" x="470" y="60" text-anchor="middle">substantial</text>
+              <text class="d-label" x="570" y="60" text-anchor="middle">almost perfect</text>
+              <text class="d-mono" x="120" y="88" text-anchor="middle">0</text><text class="d-mono" x="220" y="88" text-anchor="middle">0.2</text><text class="d-mono" x="320" y="88" text-anchor="middle">0.4</text><text class="d-mono" x="420" y="88" text-anchor="middle">0.6</text><text class="d-mono" x="520" y="88" text-anchor="middle">0.8</text><text class="d-mono" x="620" y="88" text-anchor="middle">1</text>
+              <path class="d-head-accent" d="M470 36 L462 22 L478 22 Z"/>
+              <text class="d-mono d-text-accent" x="470" y="16" text-anchor="middle">0.70</text>
+              <text class="d-label" x="320" y="112" text-anchor="middle">common reading of kappa (Landis &amp; Koch); for eval labels aim for 0.7 or higher</text>
+            </svg>
+          </div>
+          <figcaption>Bands are conventions, not laws. A low kappa says your task definition is unclear before it says your annotators are careless.</figcaption>
+        </figure>
+
+        <h3>Scaling with models</h3>
+        <p>LLMs can pre-label or fully label many tasks. Treat the model as one more annotator: label a gold set with humans, measure model-human kappa, and route low-confidence or disagreeing items to people. <strong>Active learning</strong> sends humans the items the model is least sure about, which buys the most improvement per label.</p>
+
+        <pre class="code" data-lang="python"><code>from sklearn.metrics import cohen_kappa_score, confusion_matrix
+
+human = ["bug", "billing", "bug", "other", "billing", "bug", "other", "bug"]
+llm   = ["bug", "billing", "other", "other", "billing", "bug", "bug", "bug"]
+
+print(cohen_kappa_score(human, llm))       <span class="c"># chance-corrected agreement, about 0.6 here</span>
+print(confusion_matrix(human, llm, labels=["bug", "billing", "other"]))
+
+disagree = [i for i, (h, m) in enumerate(zip(human, llm)) if h != m]
+print("send to adjudication:", disagree)    <span class="c"># [2, 6]</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Guidelines with definitions, edge cases and examples are the main quality lever.</li>
+            <li>Pilot with two or more annotators and measure agreement before scaling.</li>
+            <li>Kappa corrects for chance; raw agreement is misleading on imbalanced labels.</li>
+            <li>Treat LLM labelers as annotators: validate against a human gold set.</li>
+            <li>Gold questions and periodic audits catch drift during large labeling jobs.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Single-annotator labels with no agreement check, then trusting a 1-point eval difference.</li>
+            <li>Reporting percent agreement on a 95/5 class split.</li>
+            <li>Letting the engineer who built the system label its eval set alone.</li>
+            <li>Changing guidelines midway without relabeling the earlier items.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="labeling-1"><span>Compute Cohen's kappa by hand from a 2×2 agreement table.</span></label></li>
+          <li><label><input type="checkbox" data-key="labeling-2"><span>Write a one-page labeling guideline with three edge-case examples.</span></label></li>
+          <li><label><input type="checkbox" data-key="labeling-3"><span>Explain why 95% agreement can mean poor labels.</span></label></li>
+          <li><label><input type="checkbox" data-key="labeling-4"><span>Validate an LLM labeler against 100 human-labeled items and decide whether to trust it.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn: model evaluation (includes Cohen's kappa)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1911.00068">Confident Learning: Estimating Uncertainty in Dataset Labels (Northcutt et al.)</a></li>
+          <li><span class="kind">Docs</span><a href="https://labelstud.io/guide/">Label Studio documentation</a></li>
+        </ul>
+      </section>
+
+
+      <section class="topic" id="synthetic-data">
+        <header class="topic-head">
+          <p class="eyebrow">02.6 · Make more data, and never lose track of it</p>
+          <h2>Synthetic data &amp; versioning</h2>
+        </header>
+
+        <p class="lead">When real data is scarce, private or missing the rare cases you care about, you can generate it, usually with an LLM prompted from seed examples. Generation is the easy half. The hard half is filtering out the junk, removing near-duplicates and recording exactly which version of the data trained or evaluated which model.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Synthetic examples bootstrap eval sets, cover edge cases and feed distillation. Versioning answers the question every regression raises: "what changed?" Without dataset hashes you cannot reproduce a result or roll back.</p>
+        </div>
+
+        <h3>A generate-then-filter pipeline</h3>
+        <p>Seed the generator with real examples, a taxonomy of topics and varied personas, so outputs cover the space instead of repeating one style. Then filter hard: most of what an LLM generates is valid but redundant.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Seeds of 50 real examples, a topic taxonomy and personas feed a generator LLM that produces 10,000 candidates; schema validation keeps 9,200, deduplication 5,400, a quality judge or execution check 3,100; a human spot check of 200 approves dataset v1.3.">
+              <defs>
+                <marker id="synthetic-data-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+              </defs>
+              <rect class="d-box" x="10" y="30" width="100" height="26" rx="6"/><text class="d-label" x="60" y="47" text-anchor="middle">50 real examples</text>
+              <rect class="d-box" x="10" y="64" width="100" height="26" rx="6"/><text class="d-label" x="60" y="81" text-anchor="middle">topic taxonomy</text>
+              <rect class="d-box" x="10" y="98" width="100" height="26" rx="6"/><text class="d-label" x="60" y="115" text-anchor="middle">personas</text>
+              <line class="d-line-accent" x1="110" y1="77" x2="136" y2="77" marker-end="url(#synthetic-data-arrow)"/>
+              <rect class="d-accent" x="138" y="52" width="80" height="50" rx="8"/><text class="d-title" x="178" y="74" text-anchor="middle">LLM</text><text class="d-label" x="178" y="91" text-anchor="middle">generate</text>
+              <line class="d-line-accent" x1="218" y1="77" x2="244" y2="77" marker-end="url(#synthetic-data-arrow)"/>
+              <rect class="d-accent" x="246" y="22" width="80" height="110" rx="4"/>
+              <rect class="d-accent" x="340" y="27" width="80" height="100" rx="4"/>
+              <rect class="d-accent" x="434" y="45" width="80" height="64" rx="4"/>
+              <rect class="d-good" x="528" y="58" width="80" height="38" rx="4"/>
+              <text class="d-mono" x="286" y="80" text-anchor="middle">10,000</text>
+              <text class="d-mono" x="380" y="80" text-anchor="middle">9,200</text>
+              <text class="d-mono" x="474" y="80" text-anchor="middle">5,400</text>
+              <text class="d-mono" x="568" y="82" text-anchor="middle">3,100</text>
+              <line class="d-line-accent" x1="326" y1="77" x2="338" y2="77" marker-end="url(#synthetic-data-arrow)"/>
+              <line class="d-line-accent" x1="420" y1="77" x2="432" y2="77" marker-end="url(#synthetic-data-arrow)"/>
+              <line class="d-line-accent" x1="514" y1="77" x2="526" y2="77" marker-end="url(#synthetic-data-arrow)"/>
+              <text class="d-label" x="286" y="150" text-anchor="middle">raw</text>
+              <text class="d-label" x="380" y="150" text-anchor="middle">schema valid</text>
+              <text class="d-label" x="474" y="150" text-anchor="middle">deduplicated</text>
+              <text class="d-label" x="568" y="150" text-anchor="middle">verified</text>
+              <line class="d-line-accent" x1="600" y1="96" x2="600" y2="174" marker-end="url(#synthetic-data-arrow)"/>
+              <rect class="d-signal" x="380" y="176" width="150" height="34" rx="6"/><text class="d-text" x="455" y="198" text-anchor="middle">human spot check 200</text>
+              <rect class="d-good" x="540" y="176" width="90" height="34" rx="6"/><text class="d-title" x="585" y="198" text-anchor="middle">v1.3</text>
+              <line class="d-line" x1="530" y1="193" x2="540" y2="193"/>
+            </svg>
+          </div>
+          <figcaption>A typical funnel: about a third of generated candidates survive. Deduplication usually removes the most, because generators repeat themselves.</figcaption>
+        </figure>
+
+        <p>Verification beats judgment when you can get it: run generated code against tests, check generated SQL against a database, or confirm a math answer. Where you cannot, an LLM judge with a clear rubric filters the obvious failures. Keep synthetic and real examples labeled separately and evaluate on real data, or the model learns the generator's quirks.</p>
+
+        <h3>Near-duplicate detection</h3>
+        <p>Exact hashes miss paraphrases that differ by a word. Near-duplicate detection compares sets of <strong>shingles</strong> (overlapping runs of k words) using <strong>Jaccard similarity</strong>: shared shingles divided by total distinct shingles. MinHash estimates it fast enough for millions of documents.</p>
+
+        <div class="widget" id="dedup-demo">
+          <div class="widget-head">
+            <span class="widget-title">Shingle overlap and Jaccard similarity</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="dedup-a">Text A <input type="text" id="dedup-a" size="38" value="How do I reset my account password on the mobile app?"></label>
+            <label for="dedup-b">Text B <input type="text" id="dedup-b" size="38" value="How can I reset my account password in the mobile app?"></label>
+          </div>
+          <div class="widget-controls">
+            <label for="dedup-k">Shingle size k <input type="range" id="dedup-k" min="1" max="4" step="1" value="2"><output id="dedup-k-out">2</output></label>
+            <label for="dedup-t">Duplicate threshold <input type="range" id="dedup-t" min="0.1" max="0.9" step="0.05" value="0.4"><output id="dedup-t-out">0.40</output></label>
+          </div>
+          <svg id="dedup-plot" viewBox="0 0 600 230" role="img" aria-label="Shingles of text A and text B as chips; shared shingles are highlighted, and a bar shows the Jaccard similarity against the threshold."></svg>
+          <p class="readout" id="dedup-readout"></p>
+        </div>
+        <p>With k = 1 almost any two questions on the same topic look similar. Larger k demands longer exact runs, so paraphrases drop below the threshold. Real pipelines typically use 3 to 5 word shingles or character n-grams.</p>
+
+        <h3>Version data like code</h3>
+        <p>Git cannot hold 50 GB of data, so tools like DVC commit a small pointer file containing a content hash, while the bytes go to object storage. Every training run records the dataset hash, so "which data trained model 7?" has an exact answer.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Git commits v1.2 and v1.3 each contain a small pointer file with a hash; the hashes point to content-addressed blobs in object storage; a training run records the v1.3 hash and links to model 7.">
+              <defs>
+                <marker id="synthetic-data-v-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+                <marker id="synthetic-data-v-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+              </defs>
+              <text class="d-label" x="20" y="20">GIT (small files)</text>
+              <circle class="d-dot-muted" cx="40" cy="60" r="8"/><circle class="d-dot" cx="170" cy="60" r="8"/>
+              <line class="d-line" x1="48" y1="60" x2="160" y2="60" marker-end="url(#synthetic-data-v-arrow-g)"/>
+              <text class="d-mono" x="40" y="88" text-anchor="middle">v1.2</text><text class="d-mono" x="170" y="88" text-anchor="middle">v1.3</text>
+              <rect class="d-box" x="10" y="100" width="70" height="40" rx="4"/><text class="d-mono" x="45" y="118" text-anchor="middle">.dvc</text><text class="d-label" x="45" y="133" text-anchor="middle">md5 9f2c…</text>
+              <rect class="d-box" x="135" y="100" width="70" height="40" rx="4"/><text class="d-mono" x="170" y="118" text-anchor="middle">.dvc</text><text class="d-label" x="170" y="133" text-anchor="middle">md5 a71e…</text>
+              <text class="d-label" x="440" y="20" text-anchor="middle">OBJECT STORAGE (big files, by hash)</text>
+              <rect class="d-fill" x="300" y="30" width="280" height="130" rx="10"/>
+              <rect class="d-box" x="320" y="50" width="110" height="36" rx="6"/><text class="d-mono" x="375" y="73" text-anchor="middle">9f2c… 48 GB</text>
+              <rect class="d-accent" x="450" y="50" width="110" height="36" rx="6"/><text class="d-mono" x="505" y="73" text-anchor="middle">a71e… 51 GB</text>
+              <line class="d-line d-dash" x1="80" y1="120" x2="318" y2="72" marker-end="url(#synthetic-data-v-arrow-g)"/>
+              <path class="d-line-accent" d="M205 120 Q420 130 470 88" marker-end="url(#synthetic-data-v-arrow)"/>
+              <text class="d-label" x="440" y="152" text-anchor="middle">only changed files become new blobs</text>
+              <rect class="d-good" x="300" y="170" width="200" height="34" rx="6"/><text class="d-text" x="400" y="192" text-anchor="middle">train run: data=a71e…</text>
+              <line class="d-line-accent" x1="500" y1="187" x2="558" y2="187" marker-end="url(#synthetic-data-v-arrow)"/>
+              <rect class="d-accent" x="560" y="170" width="70" height="34" rx="6"/><text class="d-text" x="595" y="192" text-anchor="middle">model 7</text>
+              <line class="d-line d-dash" x1="170" y1="140" x2="298" y2="187" marker-end="url(#synthetic-data-v-arrow-g)"/>
+            </svg>
+          </div>
+          <figcaption>Git versions the pointers; storage holds the bytes; the training run records the hash. Checking out v1.2 and running <code>dvc pull</code> restores the exact old data.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="bash"><code>dvc init
+dvc remote add -d storage s3://my-bucket/dvc      <span class="c"># where the bytes live</span>
+dvc add data/train.jsonl                         <span class="c"># writes data/train.jsonl.dvc (hash pointer)</span>
+git add data/train.jsonl.dvc data/.gitignore
+git commit -m "train data v1.3: +3,100 synthetic, deduped"
+git tag data-v1.3
+dvc push                                         <span class="c"># upload the data to the remote</span>
+
+git checkout data-v1.2 &amp;&amp; dvc checkout           <span class="c"># time travel to the old dataset</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Seed generation with real examples, a taxonomy and personas to get diversity.</li>
+            <li>Filter in stages: schema validation, deduplication, then verification or an LLM judge, then a human spot check.</li>
+            <li>Jaccard similarity on shingles (via MinHash at scale) catches near-duplicates that hashes miss.</li>
+            <li>Evaluate on real data; keep synthetic examples tagged.</li>
+            <li>Version datasets by content hash and record the hash with every training run.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Generating eval and training data with the same prompts, so the model is tested on its own style.</li>
+            <li>Skipping dedup and over-weighting whatever the generator likes to repeat.</li>
+            <li>Ignoring the model provider's terms on using outputs to train other models.</li>
+            <li>Overwriting <code>data/latest.jsonl</code> in place, making past results impossible to reproduce.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="synthetic-data-1"><span>Generate 500 synthetic examples from 20 seeds and report how many survive each filter.</span></label></li>
+          <li><label><input type="checkbox" data-key="synthetic-data-2"><span>Compute Jaccard similarity on 2-word shingles for two sentences by hand.</span></label></li>
+          <li><label><input type="checkbox" data-key="synthetic-data-3"><span>Put a dataset under DVC, change it, and restore the previous version.</span></label></li>
+          <li><label><input type="checkbox" data-key="synthetic-data-4"><span>Log the dataset hash alongside a training run and trace a model back to its data.</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://dvc.org/doc">DVC documentation</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2212.10560">Self-Instruct: Aligning Language Models with Self-Generated Instructions</a></li>
+          <li><span class="kind">Docs</span><a href="https://ekzhu.com/datasketch/">datasketch (MinHash and LSH)</a></li>
+        </ul>
+      </section>
+
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>EDA report on a public dataset</h4><p>Load a public dataset of support tickets or reviews into DuckDB, run the six-step EDA routine and write a one-page findings note. Convert it from CSV to Parquet and record the size and query-time difference.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Idempotent ingestion pipeline</h4><p>Build a daily pipeline that pulls documents from a folder or API, cleans and chunks them and upserts them into Postgres, keyed by content hash. Prove it is idempotent by running every day twice, and add a validation step that quarantines bad rows.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Versioned eval set with synthetic hard cases</h4><p>Label 200 real examples with two annotators, report kappa and fix the guidelines. Add 500 filtered, deduplicated synthetic edge cases, version the whole set with DVC and use it to compare two prompts with confidence intervals.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Write joins, aggregations and window functions without double counting.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Profile and clean a new dataset with documented, reproducible choices.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Build a pipeline that can be retried and backfilled without corrupting data.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Choose a file format and layout and estimate the bytes a query will read.</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Run a labeling project with measured agreement and a versioned final dataset.</span></label></li>
+        </ul>
+      </div>
+
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widgets for Data skills. Every widget builds SVG with the d-* classes, so it follows the theme automatically. */
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function fmt(v, d) { return Number(v).toFixed(d); }
+
+  /* ---------- 1. SQL JOIN visualizer ---------- */
+  (function () {
+    var svg = document.getElementById("join-plot");
+    if (!svg) return;
+    var sel = document.getElementById("join-type"), readout = document.getElementById("join-readout");
+    var users = [{ id: 1, name: "Ana" }, { id: 2, name: "Ben" }, { id: 3, name: "Chen" }, { id: 4, name: "Dee" }];
+    var orders = [{ oid: 101, uid: 1, amt: 30 }, { oid: 102, uid: 1, amt: 12 }, { oid: 103, uid: 3, amt: 50 }, { oid: 104, uid: 5, amt: 8 }];
+    var SQL = {
+      inner: "FROM users u INNER JOIN orders o ON o.user_id = u.id",
+      left: "FROM users u LEFT JOIN orders o ON o.user_id = u.id",
+      right: "FROM users u RIGHT JOIN orders o ON o.user_id = u.id",
+      full: "FROM users u FULL OUTER JOIN orders o ON o.user_id = u.id",
+      anti: "FROM users u LEFT JOIN orders o ON o.user_id = u.id WHERE o.order_id IS NULL"
+    };
+    function hasOrder(u) { return orders.some(function (o) { return o.uid === u.id; }); }
+    function hasUser(o) { return users.some(function (u) { return u.id === o.uid; }); }
+    function result(t) {
+      var rows = [];
+      if (t === "right") {
+        orders.forEach(function (o) {
+          var u = users.filter(function (x) { return x.id === o.uid; })[0];
+          rows.push([u ? u.id : null, u ? u.name : null, o.oid, o.amt]);
+        });
+        return rows;
+      }
+      users.forEach(function (u) {
+        var os = orders.filter(function (o) { return o.uid === u.id; });
+        if (t === "anti") { if (!os.length) rows.push([u.id, u.name, null, null]); return; }
+        os.forEach(function (o) { rows.push([u.id, u.name, o.oid, o.amt]); });
+        if (!os.length && (t === "left" || t === "full")) rows.push([u.id, u.name, null, null]);
+      });
+      if (t === "full") orders.forEach(function (o) { if (!hasUser(o)) rows.push([null, null, o.oid, o.amt]); });
+      return rows;
+    }
+    function table(x, y, w, cols, rows, states) {
+      var cw = w / cols.length;
+      mk("rect", { x: x, y: y, width: w, height: 24, "class": "d-fill" }, svg);
+      cols.forEach(function (c, i) { mk("text", { x: x + i * cw + 8, y: y + 16, "class": "d-label" }, svg, c); });
+      rows.forEach(function (r, j) {
+        var yy = y + 24 + j * 26, st = states ? states[j] : "in";
+        var cls = st === "match" ? "d-good" : st === "orphan" ? "d-signal" : st === "out" ? "d-box" : "d-box";
+        var rect = mk("rect", { x: x, y: yy, width: w, height: 26, "class": cls }, svg);
+        if (st === "out") rect.setAttribute("opacity", "0.35");
+        r.forEach(function (v, i) {
+          var t = mk("text", { x: x + i * cw + 8, y: yy + 17, "class": v === null ? "d-label d-text-signal" : "d-mono" }, svg, v === null ? "NULL" : String(v));
+          if (st === "out") t.setAttribute("opacity", "0.4");
+        });
+      });
+    }
+    function draw() {
+      var t = sel.value;
+      clear(svg);
+      var keepUnmatchedUser = t === "left" || t === "full" || t === "anti";
+      var keepUnmatchedOrder = t === "right" || t === "full";
+      var uStates = users.map(function (u) {
+        if (t === "anti") return hasOrder(u) ? "out" : "orphan";
+        return hasOrder(u) ? "match" : (keepUnmatchedUser ? "orphan" : "out");
+      });
+      var oStates = orders.map(function (o) {
+        if (t === "anti") return "out";
+        return hasUser(o) ? "match" : (keepUnmatchedOrder ? "orphan" : "out");
+      });
+      mk("text", { x: 20, y: 16, "class": "d-title" }, svg, "users");
+      mk("text", { x: 340, y: 16, "class": "d-title" }, svg, "orders");
+      table(20, 24, 200, ["id", "name"], users.map(function (u) { return [u.id, u.name]; }), uStates);
+      table(340, 24, 240, ["order_id", "user_id", "amount"], orders.map(function (o) { return [o.oid, o.uid, o.amt]; }), oStates);
+      users.forEach(function (u, i) {
+        orders.forEach(function (o, j) {
+          if (o.uid !== u.id) return;
+          mk("line", { x1: 220, y1: 24 + 24 + i * 26 + 13, x2: 340, y2: 24 + 24 + j * 26 + 13, "class": t === "anti" ? "d-line d-dash" : "d-line-accent" }, svg);
+        });
+      });
+      var rows = result(t);
+      mk("text", { x: 20, y: 186, "class": "d-title" }, svg, "result: " + rows.length + " row" + (rows.length === 1 ? "" : "s"));
+      table(20, 196, 560, ["u.id", "u.name", "o.order_id", "o.amount"], rows, rows.map(function (r) { return r[0] === null || r[2] === null ? "orphan" : "match"; }));
+      readout.textContent = "SELECT u.id, u.name, o.order_id, o.amount " + SQL[t] + "  →  " + rows.length + " rows  ·  green = matched pair, orange = kept without a partner (NULLs)";
+    }
+    sel.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- 2. Cleaning: missing values and outliers ---------- */
+  (function () {
+    var svg = document.getElementById("clean-plot");
+    if (!svg) return;
+    var mSel = document.getElementById("clean-missing"), oSel = document.getElementById("clean-outlier"), sChk = document.getElementById("clean-sentinel");
+    var readout = document.getElementById("clean-readout");
+    var RAW = [120, 180, 95, 210, 260, 150, 300, 175, 140, 230, 190, 85, 165, 275, 205, 130, 245, 160, -1, 110, 2400, 3100, 220, 185, null, null, null, null];
+    function quantile(sorted, q) {
+      var pos = (sorted.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos);
+      return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+    }
+    function stats(vals) {
+      var n = vals.length; if (!n) return { n: 0, mean: 0, median: 0, sd: 0 };
+      var s = vals.slice().sort(function (a, b) { return a - b; });
+      var mean = vals.reduce(function (a, b) { return a + b; }, 0) / n;
+      var sd = Math.sqrt(vals.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / Math.max(1, n - 1));
+      return { n: n, mean: mean, median: quantile(s, 0.5), sd: sd };
+    }
+    function sx(v) { return v <= 500 ? 70 + (v + 50) / 550 * 360 : 430 + (v - 500) / 2700 * 150; }
+    function draw() {
+      var data = RAW.map(function (v) { return (sChk.checked && v === -1) ? null : v; });
+      var obs = data.filter(function (v) { return v !== null; }).sort(function (a, b) { return a - b; });
+      var q1 = quantile(obs, 0.25), q3 = quantile(obs, 0.75), iqr = q3 - q1, lo = q1 - 1.5 * iqr, hi = q3 + 1.5 * iqr;
+      var pts = data.map(function (v) {
+        if (v === null) return { v: null, kind: "missing" };
+        if (v < lo || v > hi) {
+          if (oSel.value === "clip") return { v: Math.max(lo, Math.min(hi, v)), kind: "clipped", orig: v };
+          if (oSel.value === "drop") return { v: null, kind: "dropped", orig: v };
+        }
+        return { v: v, kind: "ok" };
+      });
+      var kept = pts.filter(function (p) { return p.kind === "ok" || p.kind === "clipped"; }).map(function (p) { return p.v; });
+      var fill = mSel.value === "mean" ? stats(kept).mean : mSel.value === "median" ? stats(kept).median : null;
+      var cleaned = kept.slice(), nImp = 0;
+      if (fill !== null) pts.forEach(function (p) { if (p.kind === "missing") { cleaned.push(fill); nImp++; } });
+      clear(svg);
+      mk("line", { x1: 70, y1: 190, x2: 580, y2: 190, "class": "d-line" }, svg);
+      [0, 250, 500, 1500, 3000].forEach(function (t) {
+        mk("line", { x1: sx(t), y1: 190, x2: sx(t), y2: 195, "class": "d-line" }, svg);
+        mk("text", { x: sx(t), y: 208, "class": "d-label", "text-anchor": "middle" }, svg, String(t));
+      });
+      mk("path", { d: "M426 186 l4 8 M432 186 l4 8", "class": "d-line" }, svg);
+      mk("text", { x: 590, y: 12, "class": "d-label", "text-anchor": "end" }, svg, "tokens (axis compressed above 500)");
+      mk("rect", { x: sx(lo), y: 20, width: Math.max(0, sx(Math.min(hi, 3200)) - sx(lo)), height: 160, "class": "d-fill" }, svg);
+      mk("text", { x: sx(hi) + 4, y: 32, "class": "d-label" }, svg, "fence " + Math.round(hi));
+      function row(y, label, vals, extras) {
+        mk("text", { x: 4, y: y - 14, "class": "d-label" }, svg, label);
+        vals.forEach(function (p, i) {
+          var jitter = ((i * 37) % 9 - 4) * 2.2;
+          if (p.cx === undefined) return;
+          mk("circle", { cx: p.cx.toFixed(1), cy: (y + jitter).toFixed(1), r: 4.5, "class": p.cls }, svg);
+        });
+        var st = stats(extras);
+        mk("line", { x1: sx(st.mean), y1: y - 20, x2: sx(st.mean), y2: y + 20, "class": "d-line-signal" }, svg);
+        mk("line", { x1: sx(st.median), y1: y - 20, x2: sx(st.median), y2: y + 20, "class": "d-line-accent" }, svg);
+        return st;
+      }
+      var rawPts = data.map(function (v) { return v === null ? { cx: 40, cls: "d-dot-muted" } : { cx: sx(v), cls: "d-dot" }; });
+      mk("text", { x: 40, y: 84, "class": "d-label", "text-anchor": "middle" }, svg, "NaN");
+      var rawSt = row(60, "raw", rawPts, obs);
+      var cPts = [];
+      pts.forEach(function (p) {
+        if (p.kind === "ok") cPts.push({ cx: sx(p.v), cls: "d-dot" });
+        else if (p.kind === "clipped") cPts.push({ cx: sx(p.v), cls: "d-dot-signal" });
+        else if (p.kind === "missing" && fill !== null) cPts.push({ cx: sx(fill), cls: "d-dot-good" });
+      });
+      var cSt = row(140, "clean", cPts, cleaned);
+      mk("text", { x: 70, y: 106, "class": "d-label d-text-signal" }, svg, "| mean");
+      mk("text", { x: 120, y: 106, "class": "d-label d-text-accent" }, svg, "| median");
+      mk("text", { x: 185, y: 106, "class": "d-label d-text-good" }, svg, "● imputed");
+      mk("text", { x: 255, y: 106, "class": "d-label d-text-signal" }, svg, "● clipped");
+      readout.textContent = "raw (observed): n=" + rawSt.n + " mean=" + fmt(rawSt.mean, 0) + " median=" + fmt(rawSt.median, 0) + " sd=" + fmt(rawSt.sd, 0) +
+        "  →  clean: n=" + cSt.n + " mean=" + fmt(cSt.mean, 0) + " median=" + fmt(cSt.median, 0) + " sd=" + fmt(cSt.sd, 0) +
+        (nImp ? "  ·  " + nImp + " values imputed" : "") + "  ·  IQR fences [" + Math.round(lo) + ", " + Math.round(hi) + "]";
+    }
+    [mSel, oSel, sChk].forEach(function (el) { el.addEventListener("change", draw); });
+    draw();
+  })();
+
+  /* ---------- 3. Pipelines: retrying a load with different write modes ---------- */
+  (function () {
+    var svg = document.getElementById("idem-plot");
+    if (!svg) return;
+    var mode = document.getElementById("idem-mode"), runBtn = document.getElementById("idem-run"), resetBtn = document.getElementById("idem-reset");
+    var runsOut = document.getElementById("idem-runs"), readout = document.getElementById("idem-readout");
+    var runs = 3, MAX = 6, IDS = [101, 102, 103, 104, 105], BASE = { 101: 30, 102: 12, 103: 40, 104: 8, 105: 25 };
+    function batch(r) { return IDS.map(function (id) { return { id: id, amt: id === 103 ? 40 + 5 * (r - 1) : BASE[id] }; }); }
+    function simulate() {
+      var table = [];
+      for (var r = 1; r <= runs; r++) {
+        var b = batch(r);
+        if (mode.value === "append") table = table.concat(b);
+        else if (mode.value === "overwrite") table = b.slice();
+        else b.forEach(function (row) {
+          var hit = table.filter(function (t) { return t.id === row.id; })[0];
+          if (hit) hit.amt = row.amt; else table.push({ id: row.id, amt: row.amt });
+        });
+      }
+      return table;
+    }
+    function draw() {
+      runsOut.textContent = runs;
+      var table = simulate();
+      clear(svg);
+      var colW = 100, base = 190;
+      IDS.forEach(function (id, i) {
+        var x = 30 + i * 110;
+        var rows = table.filter(function (t) { return t.id === id; });
+        rows.forEach(function (row, j) {
+          var y = base - (j + 1) * 26;
+          mk("rect", { x: x, y: y, width: colW, height: 24, rx: 4, "class": j === 0 ? "d-good" : "d-signal" }, svg);
+          mk("text", { x: x + colW / 2, y: y + 16, "class": "d-mono", "text-anchor": "middle" }, svg, "$" + row.amt);
+        });
+        mk("text", { x: x + colW / 2, y: base + 18, "class": "d-mono", "text-anchor": "middle" }, svg, String(id));
+      });
+      mk("line", { x1: 20, y1: base + 2, x2: 580, y2: base + 2, "class": "d-line" }, svg);
+      mk("text", { x: 300, y: 226, "class": "d-label", "text-anchor": "middle" }, svg, "order_id (one stacked box per row in the target table)");
+      var latest = batch(runs), truth = latest.reduce(function (a, b) { return a + b.amt; }, 0);
+      var sum = table.reduce(function (a, b) { return a + b.amt; }, 0);
+      var dups = table.length - IDS.length;
+      readout.textContent = runs + " run" + (runs > 1 ? "s" : "") + "  ·  " + table.length + " rows (" + dups + " duplicates)  ·  SUM(amount) = $" + sum + " vs true $" + truth + (sum === truth ? "  ·  correct" : "  ·  wrong");
+    }
+    runBtn.addEventListener("click", function () { if (runs < MAX) runs++; draw(); });
+    resetBtn.addEventListener("click", function () { runs = 1; draw(); });
+    mode.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- 4. Formats: bytes scanned, row file vs Parquet ---------- */
+  (function () {
+    var svg = document.getElementById("scan-plot");
+    if (!svg) return;
+    var colsIn = document.getElementById("scan-cols"), usedIn = document.getElementById("scan-used"), keepIn = document.getElementById("scan-keep"), rowsSel = document.getElementById("scan-rows");
+    var colsO = document.getElementById("scan-cols-out"), usedO = document.getElementById("scan-used-out"), keepO = document.getElementById("scan-keep-out");
+    var readout = document.getElementById("scan-readout");
+    function bytes(b) {
+      var u = ["B", "KB", "MB", "GB", "TB"], i = 0;
+      while (b >= 1000 && i < u.length - 1) { b /= 1000; i++; }
+      return fmt(b, b < 10 ? 1 : 0) + " " + u[i];
+    }
+    function secs(s) { return s < 1 ? fmt(s * 1000, 0) + " ms" : s < 120 ? fmt(s, 1) + " s" : fmt(s / 60, 1) + " min"; }
+    function grid(x0, title, C, usedShown, keepRG, isRow) {
+      var shown = Math.min(C, 30), cw = 265 / shown, rh = 14, RG = 10;
+      mk("text", { x: x0, y: 18, "class": "d-title" }, svg, title);
+      for (var g = 0; g < RG; g++) {
+        for (var c = 0; c < shown; c++) {
+          var read = isRow || (c < usedShown && g >= RG - keepRG);
+          var r = mk("rect", { x: (x0 + c * cw).toFixed(1), y: 28 + g * rh, width: Math.max(1, cw - 1).toFixed(1), height: rh - 2, "class": read ? "d-signal" : "d-box" }, svg);
+          if (!read) r.setAttribute("opacity", "0.35");
+        }
+      }
+      mk("text", { x: x0, y: 28 + RG * rh + 14, "class": "d-label" }, svg, isRow ? "every byte of every row" : usedShown + " col" + (usedShown > 1 ? "s" : "") + " × " + keepRG + " of 10 row groups");
+    }
+    function draw() {
+      var C = +colsIn.value, used = Math.min(+usedIn.value, C), keep = +keepIn.value, N = +rowsSel.value;
+      colsO.textContent = C; usedO.textContent = used; keepO.textContent = keep + "%";
+      var rowB = N * C * 8, pqB = N * used * 8 / 3 * keep / 100;
+      clear(svg);
+      var shown = Math.min(C, 30), usedShown = Math.max(1, Math.round(used / C * shown)), keepRG = Math.max(1, Math.round(keep / 10));
+      grid(20, "Row file (CSV/JSONL)", C, usedShown, 10, true);
+      grid(315, "Parquet", C, usedShown, keepRG, false);
+      var maxW = 420;
+      mk("text", { x: 20, y: 214, "class": "d-label" }, svg, "row file");
+      mk("rect", { x: 100, y: 204, width: maxW, height: 12, rx: 3, "class": "d-signal" }, svg);
+      mk("text", { x: 20, y: 236, "class": "d-label" }, svg, "Parquet");
+      mk("rect", { x: 100, y: 226, width: Math.max(2, maxW * pqB / rowB).toFixed(1), height: 12, rx: 3, "class": "d-good" }, svg);
+      mk("text", { x: 526, y: 214, "class": "d-mono" }, svg, bytes(rowB));
+      mk("text", { x: Math.min(526, 106 + maxW * pqB / rowB), y: 236, "class": "d-mono" }, svg, bytes(pqB));
+      readout.textContent = "Row file scans " + bytes(rowB) + " (" + secs(rowB / 1e9) + " at 1 GB/s)  ·  Parquet reads " + bytes(pqB) + " (" + secs(pqB / 1e9) + ")  ·  " + fmt(rowB / pqB, 0) + "× fewer bytes";
+    }
+    [colsIn, usedIn, keepIn].forEach(function (el) { el.addEventListener("input", draw); });
+    rowsSel.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- 5. Labeling: Cohen's kappa ---------- */
+  (function () {
+    var svg = document.getElementById("kappa-plot");
+    if (!svg) return;
+    var ids = ["yy", "yn", "ny", "nn"], inp = {};
+    ids.forEach(function (k) { inp[k] = document.getElementById("kappa-" + k); });
+    var readout = document.getElementById("kappa-readout");
+    function band(k) {
+      if (k < 0) return "poor (worse than chance)";
+      if (k <= 0.2) return "slight"; if (k <= 0.4) return "fair"; if (k <= 0.6) return "moderate";
+      if (k <= 0.8) return "substantial"; return "almost perfect";
+    }
+    function draw() {
+      var v = {};
+      ids.forEach(function (k) { v[k] = Math.max(0, Math.floor(+inp[k].value || 0)); });
+      var n = v.yy + v.yn + v.ny + v.nn;
+      clear(svg);
+      if (!n) { readout.textContent = "Enter at least one item."; return; }
+      var po = (v.yy + v.nn) / n, aY = (v.yy + v.yn) / n, bY = (v.yy + v.ny) / n;
+      var pe = aY * bY + (1 - aY) * (1 - bY), kappa = pe < 1 ? (po - pe) / (1 - pe) : 1;
+      var max = Math.max(v.yy, v.yn, v.ny, v.nn) || 1;
+      mk("text", { x: 100, y: 22, "class": "d-label", "text-anchor": "middle" }, svg, "B yes");
+      mk("text", { x: 180, y: 22, "class": "d-label", "text-anchor": "middle" }, svg, "B no");
+      mk("text", { x: 52, y: 74, "class": "d-label", "text-anchor": "end" }, svg, "A yes");
+      mk("text", { x: 52, y: 154, "class": "d-label", "text-anchor": "end" }, svg, "A no");
+      [["yy", 60, 30, true], ["yn", 140, 30, false], ["ny", 60, 110, false], ["nn", 140, 110, true]].forEach(function (c) {
+        mk("rect", { x: c[1], y: c[2], width: 80, height: 80, "class": "d-box" }, svg);
+        mk("rect", { x: c[1], y: c[2], width: 80, height: 80, "class": c[3] ? "d-accent" : "d-signal", "fill-opacity": (0.15 + 0.85 * v[c[0]] / max).toFixed(2), "stroke-opacity": "0.6" }, svg);
+        mk("text", { x: c[1] + 40, y: c[2] + 46, "class": "d-title", "text-anchor": "middle" }, svg, String(v[c[0]]));
+      });
+      mk("text", { x: 140, y: 212, "class": "d-label", "text-anchor": "middle" }, svg, "diagonal = agreement");
+      var bx = 270, bw = 260;
+      function bar(y, label, val, cls) {
+        mk("text", { x: bx, y: y - 6, "class": "d-label" }, svg, label);
+        mk("rect", { x: bx, y: y, width: bw, height: 14, rx: 3, "class": "d-box" }, svg);
+        mk("rect", { x: bx, y: y, width: Math.max(0, bw * val).toFixed(1), height: 14, rx: 3, "class": cls }, svg);
+        mk("text", { x: bx + bw + 8, y: y + 12, "class": "d-mono" }, svg, fmt(val, 2));
+      }
+      bar(44, "observed agreement p_o", po, "d-accent");
+      bar(90, "chance agreement p_e", pe, "d-signal");
+      mk("text", { x: bx, y: 140, "class": "d-label" }, svg, "kappa on the 0 to 1 scale");
+      var stops = [0, 0.2, 0.4, 0.6, 0.8, 1];
+      for (var i = 0; i < 5; i++) mk("rect", { x: bx + stops[i] * bw, y: 148, width: bw / 5, height: 16, "class": i >= 3 ? "d-good" : "d-box" }, svg);
+      stops.forEach(function (s) { mk("text", { x: bx + s * bw, y: 180, "class": "d-label", "text-anchor": "middle" }, svg, String(s)); });
+      var kx = bx + Math.max(0, Math.min(1, kappa)) * bw;
+      mk("path", { d: "M" + kx + " 146 l-7 -12 h14 z", "class": "d-head-accent" }, svg);
+      mk("text", { x: kx, y: 204, "class": "d-mono d-text-accent", "text-anchor": "middle" }, svg, "κ = " + fmt(kappa, 2));
+      readout.textContent = "n = " + n + "  ·  p_o = " + fmt(po, 3) + "  ·  p_e = " + fmt(aY, 2) + "×" + fmt(bY, 2) + " + " + fmt(1 - aY, 2) + "×" + fmt(1 - bY, 2) + " = " + fmt(pe, 3) + "  ·  κ = " + fmt(kappa, 3) + " (" + band(kappa) + ")";
+    }
+    ids.forEach(function (k) { inp[k].addEventListener("input", draw); });
+    document.querySelectorAll("[data-kappa-preset]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var p = b.getAttribute("data-kappa-preset").split(",");
+        ids.forEach(function (k, i) { inp[k].value = p[i]; });
+        draw();
+      });
+    });
+    draw();
+  })();
+
+  /* ---------- 6. Synthetic data: shingles and Jaccard ---------- */
+  (function () {
+    var svg = document.getElementById("dedup-plot");
+    if (!svg) return;
+    var aIn = document.getElementById("dedup-a"), bIn = document.getElementById("dedup-b");
+    var kIn = document.getElementById("dedup-k"), tIn = document.getElementById("dedup-t");
+    var kO = document.getElementById("dedup-k-out"), tO = document.getElementById("dedup-t-out");
+    var readout = document.getElementById("dedup-readout");
+    function shingles(text, k) {
+      var w = text.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
+      var out = [], seen = {};
+      for (var i = 0; i + k <= w.length; i++) {
+        var s = w.slice(i, i + k).join(" ");
+        if (!seen[s]) { seen[s] = 1; out.push(s); }
+      }
+      if (!out.length && w.length) out.push(w.join(" "));
+      return out;
+    }
+    function chips(list, other, y0, label) {
+      mk("text", { x: 10, y: y0 + 13, "class": "d-label" }, svg, label);
+      var x = 30, y = y0, maxY = y0 + 2 * 24;
+      for (var i = 0; i < list.length; i++) {
+        var w = list[i].length * 7.2 + 14;
+        if (x + w > 590) { x = 30; y += 24; }
+        if (y > maxY) { mk("text", { x: x, y: y - 24 + 14, "class": "d-label" }, svg, "…"); break; }
+        var shared = other.indexOf(list[i]) >= 0;
+        mk("rect", { x: x, y: y, width: w, height: 19, rx: 9, "class": shared ? "d-good" : "d-box" }, svg);
+        mk("text", { x: x + 7, y: y + 14, "class": "d-mono" }, svg, list[i]);
+        x += w + 6;
+      }
+    }
+    function draw() {
+      var k = +kIn.value, th = +tIn.value;
+      kO.textContent = k; tO.textContent = fmt(th, 2);
+      var A = shingles(aIn.value, k), B = shingles(bIn.value, k);
+      var inter = A.filter(function (s) { return B.indexOf(s) >= 0; }).length;
+      var uni = A.length + B.length - inter, J = uni ? inter / uni : 0;
+      clear(svg);
+      chips(A, B, 6, "A");
+      chips(B, A, 86, "B");
+      var bx = 30, bw = 480, y = 180;
+      mk("text", { x: bx, y: y - 8, "class": "d-label" }, svg, "Jaccard = |A ∩ B| / |A ∪ B| = " + inter + " / " + uni);
+      mk("rect", { x: bx, y: y, width: bw, height: 16, rx: 4, "class": "d-box" }, svg);
+      mk("rect", { x: bx, y: y, width: (bw * J).toFixed(1), height: 16, rx: 4, "class": J >= th ? "d-signal" : "d-accent" }, svg);
+      mk("line", { x1: bx + bw * th, y1: y - 4, x2: bx + bw * th, y2: y + 22, "class": "d-line" }, svg);
+      mk("text", { x: bx + bw * th, y: y + 36, "class": "d-label", "text-anchor": "middle" }, svg, "threshold");
+      mk("text", { x: bx + bw + 10, y: y + 13, "class": "d-mono" }, svg, fmt(J, 2));
+      readout.textContent = A.length + " and " + B.length + " shingles of " + k + " word" + (k > 1 ? "s" : "") + ", " + inter + " shared (green)  ·  Jaccard " + fmt(J, 2) + (J >= th ? "  ≥ " : "  < ") + fmt(th, 2) + "  →  " + (J >= th ? "near-duplicate: keep one" : "distinct: keep both");
+    }
+    [aIn, bIn, kIn, tIn].forEach(function (el) { el.addEventListener("input", draw); });
+    draw();
+  })();
+})();
+</script>
+</body>
+</html>

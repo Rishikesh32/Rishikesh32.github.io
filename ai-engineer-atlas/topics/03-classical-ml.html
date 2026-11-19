@@ -1,0 +1,1729 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Classical machine learning · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="classical-ml">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Classical machine learning</h1>
+    <p class="lede">Classical machine learning is the toolkit of linear models, decision trees, clustering and, above all, careful evaluation. It still powers most prediction on tabular data, and its habits (clean splits, honest metrics, a healthy fear of leakage) are the same habits that keep LLM systems honest.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every classical ML project runs the same loop. You turn raw records into a feature matrix, fit a model (a supervised one when you have labels, an unsupervised one when you only want structure), measure it on data the model never saw, and then diagnose the gap between training and validation performance. The diagnosis sends you back to the features or the model's capacity. The six lessons below follow that loop, and the evaluation and leakage lessons matter just as much when the "model" is an LLM prompt.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 250" role="img" aria-label="The classical ML loop: raw data becomes features, features feed supervised, tree or unsupervised models, outputs are evaluated, the train-validation gap is diagnosed, and the diagnosis loops back to features and capacity.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="97" width="100" height="56" rx="8"/>
+              <text class="d-title" x="60" y="121" text-anchor="middle">Raw data</text>
+              <text class="d-label" x="60" y="139" text-anchor="middle">tables, logs</text>
+              <line class="d-line" x1="110" y1="125" x2="158" y2="125" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="134" y="116" text-anchor="middle">clean</text>
+              <rect class="d-box" x="160" y="97" width="120" height="56" rx="8"/>
+              <text class="d-title" x="220" y="121" text-anchor="middle">Features</text>
+              <text class="d-label" x="220" y="139" text-anchor="middle">06 · encode, scale</text>
+              <line class="d-line" x1="280" y1="125" x2="338" y2="52" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="280" y1="125" x2="338" y2="125" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="280" y1="125" x2="338" y2="198" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="300" y="116" text-anchor="middle">X, y</text>
+              <rect class="d-accent" x="340" y="30" width="170" height="44" rx="8"/>
+              <text class="d-title" x="425" y="57" text-anchor="middle">Supervised · 01</text>
+              <rect class="d-accent" x="340" y="103" width="170" height="44" rx="8"/>
+              <text class="d-title" x="425" y="130" text-anchor="middle">Trees &amp; boosting · 02</text>
+              <rect class="d-box" x="340" y="176" width="170" height="44" rx="8"/>
+              <text class="d-title" x="425" y="203" text-anchor="middle">Unsupervised · 03</text>
+              <line class="d-line" x1="510" y1="52" x2="568" y2="112" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="510" y1="125" x2="568" y2="125" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="510" y1="198" x2="568" y2="138" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="545" y="70" text-anchor="middle">predict</text>
+              <rect class="d-good" x="570" y="97" width="90" height="56" rx="8"/>
+              <text class="d-title" x="615" y="121" text-anchor="middle">Evaluate</text>
+              <text class="d-label" x="615" y="139" text-anchor="middle">04 · metrics</text>
+              <line class="d-line" x1="660" y1="125" x2="688" y2="125" marker-end="url(#ov-arrow)"/>
+              <rect class="d-signal" x="690" y="97" width="82" height="56" rx="8"/>
+              <text class="d-title" x="731" y="121" text-anchor="middle">Diagnose</text>
+              <text class="d-label" x="731" y="139" text-anchor="middle">05 · gap?</text>
+              <path class="d-line-signal d-dash" d="M731 153 V238 H220 V155" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="560" y="232" text-anchor="middle">fix features, capacity or leakage, then re-tune</text>
+            </svg>
+          </div>
+          <figcaption>The classical ML loop. Features (lesson 06) feed a model (01 to 03), evaluation (04) produces numbers, and the bias–variance diagnosis (05) decides what to change next.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="supervised">
+        <header class="topic-head">
+          <p class="eyebrow">03.1 · Learning from labels</p>
+          <h2>Supervised learning</h2>
+        </header>
+
+        <p class="lead">Supervised learning fits a function to examples that already carry the answer: "square metres, postcode → price" or "email text → spam or not". A numeric target makes the task <strong>regression</strong>; a category makes it <strong>classification</strong>. Training nudges the parameters until predictions match the labels.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Fraud scores, ticket routing and "should a cheap or an expensive LLM answer this?" classifiers are supervised models. Logistic regression on embeddings is often the fastest strong text-classification baseline, and its vocabulary (loss, regularization, logits, probabilities) is the vocabulary of deep learning.</p>
+        </div>
+
+        <h3>Loss plus penalty</h3>
+        <p>You have a matrix \(X\) (\(n\) rows, \(d\) features) and targets \(y\). Training picks the parameters that minimize the average <strong>loss</strong> (how wrong one prediction is) plus a penalty for complexity. Every model on this site, LLMs included, is trained this way.</p>
+
+        <div class="formula">
+          \[ \hat{\theta} = \arg\min_{\theta} \; \frac{1}{n}\sum_{i=1}^{n} L\big(f(x_i;\theta),\, y_i\big) \; + \; \lambda\, R(\theta) \]
+          <span class="formula-note">\(L\): squared error for regression, log loss for classification. \(R\): a regularizer such as \(\lVert\theta\rVert_2^2\) (ridge) or \(\lVert\theta\rVert_1\) (lasso, which drives many weights to exactly zero).</span>
+        </div>
+
+        <p>Linear regression predicts \(\hat{y} = w \cdot x + b\). Each weight reads directly: with \(w_{\text{sqm}} = 3{,}100\), one extra square metre adds about 3,100 to the price, holding other features fixed.</p>
+
+        <h3>Logistic regression: a line plus a sigmoid</h3>
+        <p>For yes/no targets, compute the same linear score \(z = w \cdot x + b\) (the <strong>logit</strong>) and squash it with \(\sigma(z) = 1/(1+e^{-z})\) into a probability. The model says "class 1" when \(z &gt; 0\), so the decision boundary is the line \(w \cdot x + b = 0\), with \(w\) pointing perpendicular to it.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 245" role="img" aria-label="Left: a 2-D scatter of two classes split by the line w dot x plus b equals zero, with the weight vector w drawn perpendicular to the line. Right: the sigmoid curve that turns the score z into a probability, crossing 0.5 at z equals 0.">
+              <defs>
+                <marker id="supervised-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="supervised-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="20" width="280" height="210" rx="6"/>
+              <text class="d-label d-text-accent" x="290" y="38" text-anchor="end">z &gt; 0 → class 1</text>
+              <text class="d-label d-text-signal" x="30" y="222">z &lt; 0 → class 0</text>
+              <circle class="d-dot" cx="150" cy="60" r="5"/><circle class="d-dot" cx="200" cy="80" r="5"/>
+              <circle class="d-dot" cx="240" cy="110" r="5"/><circle class="d-dot" cx="260" cy="62" r="5"/>
+              <circle class="d-dot" cx="190" cy="44" r="5"/><circle class="d-dot" cx="120" cy="48" r="5"/>
+              <circle class="d-dot" cx="210" cy="190" r="5"/>
+              <text class="d-label" x="222" y="194">error</text>
+              <circle class="d-dot-signal" cx="70" cy="140" r="5"/><circle class="d-dot-signal" cx="100" cy="180" r="5"/>
+              <circle class="d-dot-signal" cx="150" cy="200" r="5"/><circle class="d-dot-signal" cx="60" cy="190" r="5"/>
+              <circle class="d-dot-signal" cx="130" cy="160" r="5"/><circle class="d-dot-signal" cx="180" cy="208" r="5"/>
+              <line class="d-line" x1="40" y1="60" x2="280" y2="200"/>
+              <text class="d-mono" x="44" y="80">w·x + b = 0</text>
+              <line class="d-line-accent" x1="160" y1="130" x2="190" y2="79" marker-end="url(#supervised-arrow)"/>
+              <text class="d-mono d-text-accent" x="166" y="104">w</text>
+              <line class="d-line" x1="305" y1="125" x2="352" y2="125" marker-end="url(#supervised-arrow-g)"/>
+              <text class="d-label" x="328" y="116" text-anchor="middle">score z</text>
+              <line class="d-grid" x1="360" y1="30" x2="620" y2="30"/>
+              <line class="d-line" x1="360" y1="210" x2="620" y2="210"/>
+              <line class="d-line" x1="490" y1="30" x2="490" y2="210"/>
+              <line class="d-line d-dash" x1="360" y1="120" x2="620" y2="120"/>
+              <path class="d-line-accent" d="M360,209.6 L403.3,206.8 L425,201.5 L446.7,188.6 L468.3,161.6 L490,120 L511.7,78.4 L533.3,51.4 L555,38.5 L576.7,33.2 L620,30.4"/>
+              <circle class="d-dot-good" cx="522.5" cy="62.8" r="5"/>
+              <text class="d-label" x="530" y="80">z = 1.5, p = 0.82</text>
+              <text class="d-label" x="484" y="124" text-anchor="end">0.5</text>
+              <text class="d-label" x="484" y="40" text-anchor="end">1</text>
+              <text class="d-label" x="484" y="206" text-anchor="end">0</text>
+              <text class="d-mono" x="496" y="24">p = σ(z)</text>
+              <text class="d-label" x="620" y="228" text-anchor="end">z = w·x + b</text>
+              <text class="d-label" x="364" y="228">−6</text>
+              <text class="d-label" x="604" y="228" text-anchor="end">+6</text>
+            </svg>
+          </div>
+          <figcaption>Worked example: \(w = (2, -1)\), \(b = 0.5\), \(x = (1, 1)\) gives \(z = 1.5\) and \(p = \sigma(1.5) \approx 0.82\). The score measures signed distance from the boundary; the sigmoid turns it into a probability.</figcaption>
+        </figure>
+
+        <div class="widget" id="sup-demo">
+          <div class="widget-head">
+            <span class="widget-title">Logistic regression decision boundary</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="sup-w1">w₁ <input type="range" id="sup-w1" min="-4" max="4" step="0.1" value="1"><output id="sup-w1-out">1.0</output></label>
+            <label for="sup-w2">w₂ <input type="range" id="sup-w2" min="-4" max="4" step="0.1" value="-0.5"><output id="sup-w2-out">-0.5</output></label>
+            <label for="sup-b">b <input type="range" id="sup-b" min="-4" max="4" step="0.1" value="0.5"><output id="sup-b-out">0.5</output></label>
+            <button class="btn primary" type="button" id="sup-fit">Fit by gradient descent</button>
+            <button class="btn" type="button" id="sup-reset">Reset</button>
+          </div>
+          <svg id="sup-plot" viewBox="0 0 580 320" role="img" aria-label="Two clusters of points with a shaded probability field and a straight decision boundary controlled by the sliders."></svg>
+          <p class="readout" id="sup-readout"></p>
+        </div>
+        <p>\(w_1, w_2\) rotate the boundary and \(b\) slides it. Press <em>Fit</em> and watch the weights keep growing after the classes are separated: the shading sharpens as the model grows more confident. That is why logistic regression is trained with an L2 penalty.</p>
+
+        <p>Training minimizes <strong>log loss</strong> (binary cross-entropy), which punishes confident mistakes far more than hesitant ones:</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Log loss as a function of predicted probability. For a true label 1 the loss minus log p shoots up as p approaches 0; at p equals 0.01 it is 4.6, at 0.6 it is 0.51.">
+              <line class="d-grid" x1="60" y1="20" x2="600" y2="20"/>
+              <line class="d-grid" x1="60" y1="88" x2="600" y2="88"/>
+              <line class="d-grid" x1="60" y1="156" x2="600" y2="156"/>
+              <line class="d-line" x1="60" y1="190" x2="600" y2="190"/>
+              <line class="d-line" x1="60" y1="20" x2="60" y2="190"/>
+              <text class="d-label" x="52" y="194" text-anchor="end">0</text>
+              <text class="d-label" x="52" y="160" text-anchor="end">1</text>
+              <text class="d-label" x="52" y="92" text-anchor="end">3</text>
+              <text class="d-label" x="52" y="24" text-anchor="end">5</text>
+              <text class="d-label" x="60" y="208" text-anchor="middle">0</text>
+              <text class="d-label" x="330" y="208" text-anchor="middle">0.5</text>
+              <text class="d-label" x="600" y="208" text-anchor="middle">1</text>
+              <text class="d-label" x="330" y="224" text-anchor="middle">predicted probability of class 1</text>
+              <text class="d-label" x="16" y="110" transform="rotate(-90 16 110)" text-anchor="middle">loss</text>
+              <path class="d-line-accent" d="M65.4,33.4 L70.8,57 L87,88.1 L114,111.7 L168,135.3 L222,149.1 L276,158.9 L330,166.4 L384,172.6 L438,177.9 L492,182.4 L546,186.4 L600,190"/>
+              <path class="d-line-signal d-dash" d="M594.6,33.4 L589.2,57 L573,88.1 L546,111.7 L492,135.3 L438,149.1 L384,158.9 L330,166.4 L276,172.6 L222,177.9 L168,182.4 L114,186.4 L60,190"/>
+              <circle class="d-dot" cx="65.4" cy="33.4" r="5"/>
+              <text class="d-label" x="76" y="36">p = 0.01 → loss 4.6</text>
+              <circle class="d-dot" cx="384" cy="172.6" r="5"/>
+              <text class="d-label" x="384" y="164" text-anchor="middle">0.6 → 0.51</text>
+              <circle class="d-dot" cx="502.8" cy="183.2" r="5"/>
+              <text class="d-label" x="502" y="174" text-anchor="middle">0.82 → 0.20</text>
+              <text class="d-label d-text-accent" x="150" y="100">true label 1: −ln p</text>
+              <text class="d-label d-text-signal" x="560" y="72" text-anchor="end">true label 0: −ln(1 − p)</text>
+            </svg>
+          </div>
+          <figcaption>Log loss \(-[y\ln p + (1-y)\ln(1-p)]\). For a true positive, predicting 0.01 costs about nine times as much as predicting 0.6.</figcaption>
+        </figure>
+
+        <h3>The rest of the toolbox</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>How it predicts</th><th>Good at</th><th>Watch out for</th></tr></thead>
+            <tbody>
+              <tr><td>Linear / logistic</td><td>Weighted sum (then sigmoid)</td><td>Fast, interpretable, embeddings</td><td>Needs scaling; misses curves</td></tr>
+              <tr><td>k-nearest neighbours</td><td>Vote of the k closest rows</td><td>No training; similarity search</td><td>Slow predictions; high dimensions</td></tr>
+              <tr><td>SVM</td><td>Maximum-margin boundary, optional kernel</td><td>Small and medium data</td><td>Kernels scale badly with rows</td></tr>
+              <tr><td>Naive Bayes</td><td>Bayes' rule, independent features</td><td>Fast text baselines</td><td>Poorly calibrated probabilities</td></tr>
+              <tr><td>Tree ensembles</td><td>Many if/else trees combined</td><td>Tabular data</td><td>See 03.2</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import log_loss, accuracy_score
+
+X, y = load_breast_cancer(return_X_y=True)          <span class="c"># 569 rows, 30 numeric features</span>
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, stratify=y, random_state=0)
+
+<span class="c"># C is the INVERSE regularization strength: smaller C = stronger L2 penalty</span>
+clf = make_pipeline(StandardScaler(), LogisticRegression(C=1.0, max_iter=1000))
+clf.fit(X_tr, y_tr)
+
+p = clf.predict_proba(X_te)[:, 1]                   <span class="c"># probability of class 1</span>
+print("accuracy", accuracy_score(y_te, p &gt; 0.5), " log loss", log_loss(y_te, p))
+print("weights", clf[-1].coef_[0][:5])              <span class="c"># one weight per scaled feature</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Supervised learning minimizes an average loss on labelled examples plus a regularization penalty.</li>
+            <li>Logistic regression is a linear score passed through a sigmoid; its decision boundary is the hyperplane \(w\cdot x + b = 0\).</li>
+            <li>The length of \(w\) sets confidence; its direction sets the boundary.</li>
+            <li>Ridge shrinks weights, lasso zeroes them out.</li>
+            <li>A linear model on good features or embeddings is the baseline every fancier model must beat.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Skipping feature scaling before a regularized linear model.</li>
+            <li>Reading coefficients as causal effects, or comparing raw coefficients across different units.</li>
+            <li>Using linear regression for a 0/1 target and getting "probabilities" outside [0, 1].</li>
+            <li>Ignoring the convergence warning: the model never finished fitting.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="supervised-1"><span>Compute a logistic-regression probability and its log loss by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="supervised-2"><span>Sketch the decision boundary for given \(w\) and \(b\) and say which side is class 1</span></label></li>
+          <li><label><input type="checkbox" data-key="supervised-3"><span>Explain the difference between ridge and lasso and when to pick each</span></label></li>
+          <li><label><input type="checkbox" data-key="supervised-4"><span>Train a scaled logistic-regression pipeline in scikit-learn</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning (free PDF, Python edition)</a></li>
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/linear_model.html">scikit-learn: Linear models</a></li>
+          <li><span class="kind">Course</span><a href="https://developers.google.com/machine-learning/crash-course">Google Machine Learning Crash Course</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="trees-ensembles">
+        <header class="topic-head">
+          <p class="eyebrow">03.2 · The tabular workhorse</p>
+          <h2>Trees &amp; gradient boosting</h2>
+        </header>
+
+        <p class="lead">A decision tree is a flowchart of yes/no questions learned from data. Each question cuts the feature space with an axis-aligned line, and each leaf predicts the average label of the rows that land in it. One tree is unstable; hundreds of them, averaged or added in sequence, are the most reliable models for spreadsheet-shaped data.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Gradient-boosted trees (XGBoost, LightGBM, CatBoost) still beat deep networks on most medium-sized tabular problems and train in seconds. Churn scores, cost predictors and "escalate to a human?" classifiers usually start here.</p>
+        </div>
+
+        <h3>How a tree splits</h3>
+        <p>At each node the algorithm tries every feature and threshold and keeps the split that makes the children purest. For classification the usual measure is <strong>Gini impurity</strong>, the chance that two random rows from the node disagree; for regression it is the variance of the targets.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="A depth-two decision tree on debt ratio and years employed, and the matching partition of the feature plane into three axis-aligned rectangles.">
+              <defs>
+                <marker id="trees-ensembles-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="90" y="20" width="160" height="36" rx="6"/>
+              <text class="d-text" x="170" y="43" text-anchor="middle">debt ratio &lt; 0.4 ?</text>
+              <line class="d-line" x1="150" y1="56" x2="92" y2="103" marker-end="url(#trees-ensembles-arrow)"/>
+              <text class="d-label" x="108" y="78">yes</text>
+              <line class="d-line" x1="190" y1="56" x2="253" y2="103" marker-end="url(#trees-ensembles-arrow)"/>
+              <text class="d-label" x="228" y="78">no</text>
+              <rect class="d-box" x="20" y="105" width="140" height="36" rx="6"/>
+              <text class="d-text" x="90" y="128" text-anchor="middle">years &lt; 2 ?</text>
+              <rect class="d-signal" x="200" y="105" width="110" height="36" rx="6"/>
+              <text class="d-text" x="255" y="128" text-anchor="middle">default 85%</text>
+              <line class="d-line" x1="70" y1="141" x2="57" y2="188" marker-end="url(#trees-ensembles-arrow)"/>
+              <text class="d-label" x="40" y="168">yes</text>
+              <line class="d-line" x1="110" y1="141" x2="158" y2="188" marker-end="url(#trees-ensembles-arrow)"/>
+              <text class="d-label" x="142" y="164">no</text>
+              <rect class="d-signal" x="10" y="190" width="94" height="36" rx="6"/>
+              <text class="d-text" x="57" y="213" text-anchor="middle">default 70%</text>
+              <rect class="d-good" x="114" y="190" width="94" height="36" rx="6"/>
+              <text class="d-text" x="161" y="213" text-anchor="middle">repaid 95%</text>
+              <rect class="d-good" x="370" y="30" width="100" height="152"/>
+              <rect class="d-signal" x="370" y="182" width="100" height="38"/>
+              <rect class="d-signal" x="470" y="30" width="150" height="190"/>
+              <text class="d-text" x="420" y="110" text-anchor="middle">repaid 95%</text>
+              <text class="d-label" x="420" y="205" text-anchor="middle">default 70%</text>
+              <text class="d-text" x="545" y="128" text-anchor="middle">default 85%</text>
+              <text class="d-mono" x="470" y="236" text-anchor="middle">0.4</text>
+              <text class="d-mono" x="364" y="186" text-anchor="end">2</text>
+              <text class="d-label" x="620" y="236" text-anchor="end">debt ratio →</text>
+              <text class="d-label" x="370" y="22">years employed ↑</text>
+            </svg>
+          </div>
+          <figcaption>The same model drawn twice. Every internal node of the tree (left) is one axis-aligned cut in feature space (right), and every leaf is one rectangle with its own prediction.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \text{Gini}(S) = 1 - \sum_{k} p_k^2, \qquad \text{gain} = \text{Gini}(S) - \tfrac{|S_L|}{|S|}\text{Gini}(S_L) - \tfrac{|S_R|}{|S|}\text{Gini}(S_R) \]
+          <span class="formula-note">A node with 5 defaults and 5 repaid has Gini 0.5. Splitting it into (4, 1) and (1, 4) gives children with Gini \(1 - 0.8^2 - 0.2^2 = 0.32\), so the gain is 0.18.</span>
+        </div>
+
+        <p>Trees ignore feature scale and capture interactions for free, but predictions are a staircase: a tree cannot extrapolate beyond the targets it saw.</p>
+
+        <h3>Forests average, boosting adds</h3>
+        <p>A <strong>random forest</strong> trains hundreds of deep trees, each on a bootstrap sample (rows drawn with replacement) and with a random subset of features per split, then averages them. Averaging decorrelated trees cuts variance. <strong>Gradient boosting</strong> instead adds small trees one at a time, each fitted to the current residuals (more generally, the negative gradient of the loss), and shrinks each by a learning rate \(\nu\): \(F_m = F_{m-1} + \nu\, h_m\).</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Boosting on one house with a true price of 300k: the prediction starts at the mean of 250 and each new tree closes part of the remaining residual, reaching 270, 284 and 291.5.">
+              <defs>
+                <marker id="trees-ensembles-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <line class="d-line-signal d-dash" x1="30" y1="40" x2="610" y2="40"/>
+              <text class="d-label d-text-signal" x="610" y="32" text-anchor="end">true price 300k</text>
+              <line class="d-line" x1="30" y1="180" x2="610" y2="180"/>
+              <rect class="d-fill" x="50" y="110" width="70" height="70"/>
+              <rect class="d-accent" x="190" y="82" width="70" height="98"/>
+              <rect class="d-accent" x="330" y="62.4" width="70" height="117.6"/>
+              <rect class="d-accent" x="470" y="51.9" width="70" height="128.1"/>
+              <text class="d-text" x="85" y="130" text-anchor="middle">250</text>
+              <text class="d-text" x="225" y="102" text-anchor="middle">270</text>
+              <text class="d-text" x="365" y="82" text-anchor="middle">284</text>
+              <text class="d-text" x="505" y="72" text-anchor="middle">291.5</text>
+              <line class="d-line-signal" x1="85" y1="108" x2="85" y2="42"/>
+              <text class="d-label d-text-signal" x="92" y="80">r = 50</text>
+              <line class="d-line-signal" x1="225" y1="80" x2="225" y2="42"/>
+              <text class="d-label d-text-signal" x="232" y="66">r = 30</text>
+              <line class="d-line-signal" x1="365" y1="60" x2="365" y2="42"/>
+              <text class="d-label d-text-signal" x="372" y="55">r = 16</text>
+              <text class="d-label d-text-signal" x="546" y="52">r = 8.5</text>
+              <line class="d-line-accent" x1="124" y1="150" x2="186" y2="150" marker-end="url(#trees-ensembles-arrow2)"/>
+              <text class="d-label" x="155" y="142" text-anchor="middle">+0.5 × 40</text>
+              <line class="d-line-accent" x1="264" y1="150" x2="326" y2="150" marker-end="url(#trees-ensembles-arrow2)"/>
+              <text class="d-label" x="295" y="142" text-anchor="middle">+0.5 × 28</text>
+              <line class="d-line-accent" x1="404" y1="150" x2="466" y2="150" marker-end="url(#trees-ensembles-arrow2)"/>
+              <text class="d-label" x="435" y="142" text-anchor="middle">+0.5 × 15</text>
+              <text class="d-mono" x="85" y="198" text-anchor="middle">F₀ = mean</text>
+              <text class="d-mono" x="225" y="198" text-anchor="middle">F₁</text>
+              <text class="d-mono" x="365" y="198" text-anchor="middle">F₂</text>
+              <text class="d-mono" x="505" y="198" text-anchor="middle">F₃</text>
+            </svg>
+          </div>
+          <figcaption>Gradient boosting on a single row with learning rate 0.5. Each tree predicts the current residual (40, then 28, then 15), only half of it is added, and the prediction creeps towards the target. The bar axis starts at 200k.</figcaption>
+        </figure>
+
+        <div class="widget" id="gb-demo">
+          <div class="widget-head">
+            <span class="widget-title">Gradient boosting with stumps</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="gb-m">Trees <input type="range" id="gb-m" min="0" max="200" step="1" value="10"><output id="gb-m-out">10</output></label>
+            <label for="gb-lr">Learning rate <input type="range" id="gb-lr" min="0.05" max="1" step="0.05" value="0.3"><output id="gb-lr-out">0.30</output></label>
+          </div>
+          <svg id="gb-plot" viewBox="0 0 600 300" role="img" aria-label="Noisy 1-D data with the boosted model's step-shaped prediction, the newest tree's contribution and train and validation error."></svg>
+          <p class="readout" id="gb-readout"></p>
+        </div>
+        <p>Each tree is a <strong>stump</strong> (one split). At 0 trees the model is the mean; the dashed line is the model one tree earlier. At learning rate 1.0 the fit starts chasing noise within a few dozen trees, which is why real projects use \(\nu\) of 0.01 to 0.1 and early stopping.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Bias / variance</th><th>Tuning effort</th><th>Typical use</th></tr></thead>
+            <tbody>
+              <tr><td>Single tree</td><td>Low bias, high variance</td><td>Low</td><td>Explainable rule sets</td></tr>
+              <tr><td>Random forest</td><td>Variance cut by averaging</td><td>Low; defaults are good</td><td>Robust baseline, out-of-bag estimate</td></tr>
+              <tr><td>Gradient boosting</td><td>Bias cut step by step</td><td>Medium; must early-stop</td><td>Best tabular accuracy, ranking</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegressor
+from sklearn.metrics import mean_absolute_error
+
+X, y = fetch_california_housing(return_X_y=True)       <span class="c"># 20,640 rows, 8 features</span>
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=0)
+
+rf = RandomForestRegressor(n_estimators=300, n_jobs=-1, oob_score=True, random_state=0).fit(X_tr, y_tr)
+print("RF  OOB R^2", round(rf.oob_score_, 3), " MAE", mean_absolute_error(y_te, rf.predict(X_te)))
+
+gbm = HistGradientBoostingRegressor(
+    learning_rate=0.05, max_iter=2000, max_leaf_nodes=31,
+    early_stopping=True, validation_fraction=0.1, n_iter_no_change=50,  <span class="c"># picks the tree count</span>
+    random_state=0).fit(X_tr, y_tr)
+print("GBM trees", gbm.n_iter_, " MAE", mean_absolute_error(y_te, gbm.predict(X_te)))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Trees split greedily on the feature and threshold that most increase purity.</li>
+            <li>Random forests reduce variance by averaging decorrelated trees.</li>
+            <li>Gradient boosting reduces bias by adding small trees fitted to residuals, scaled by a learning rate.</li>
+            <li>Trees need no scaling and handle interactions, but cannot extrapolate.</li>
+            <li>Choose the number of boosting rounds with early stopping on held-out data.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Training thousands of boosting rounds with no early stopping.</li>
+            <li>Using trees to forecast values outside the training range.</li>
+            <li>Trusting impurity-based feature importance; prefer permutation importance or SHAP on validation data.</li>
+            <li>Tuning learning rate and tree count separately; they are coupled.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="trees-ensembles-1"><span>Compute the Gini gain of a candidate split by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="trees-ensembles-2"><span>Explain why bagging reduces variance and boosting reduces bias</span></label></li>
+          <li><label><input type="checkbox" data-key="trees-ensembles-3"><span>Walk through three boosting rounds on one example with a given learning rate</span></label></li>
+          <li><label><input type="checkbox" data-key="trees-ensembles-4"><span>Train a boosted model with early stopping and report how many trees it kept</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1603.02754">XGBoost: A Scalable Tree Boosting System (Chen &amp; Guestrin, 2016)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2207.08815">Why do tree-based models still outperform deep learning on tabular data? (Grinsztajn et al., 2022)</a></li>
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/ensemble.html">scikit-learn: Ensembles</a></li>
+          <li><span class="kind">Docs</span><a href="https://lightgbm.readthedocs.io/">LightGBM documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="unsupervised">
+        <header class="topic-head">
+          <p class="eyebrow">03.3 · Structure without labels</p>
+          <h2>Unsupervised learning</h2>
+        </header>
+
+        <p class="lead">Unsupervised learning finds structure in data with no labels. Clustering groups similar rows ("these 4,000 tickets fall into about 12 themes"). Dimensionality reduction squeezes many columns into a few that keep most of the information. The algorithm never knows what a group means; naming it is your job.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Embeddings made this a daily tool. You cluster user queries to see what people really ask your assistant, deduplicate documents before indexing them for RAG, sample eval sets that cover every cluster, and notice drift when a new cluster of traffic appears.</p>
+        </div>
+
+        <h3>k-means: assign, update, repeat</h3>
+        <p>k-means represents each of \(k\) clusters by its centre (<strong>centroid</strong>) and minimizes the <strong>inertia</strong>, the total squared distance from points to their centroid. It alternates two steps that each lower the inertia, so it always converges, but only to a local minimum.</p>
+
+        <div class="formula">
+          \[ \min_{\mu_1,\dots,\mu_k} \sum_{i=1}^{n} \min_{j} \lVert x_i - \mu_j \rVert^2 \]
+          <span class="formula-note">Assign step: solve the inner \(\min_j\) with centroids fixed. Update step: set each \(\mu_j\) to the mean of its points.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 235" role="img" aria-label="Three panels of k-means with k equals 2: random initial centroids, points assigned to the nearer centroid with the boundary between them, and centroids moved to the mean of their points.">
+              <defs>
+                <marker id="unsupervised-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="110" y="20" text-anchor="middle">1 · initialize</text>
+              <text class="d-title" x="330" y="20" text-anchor="middle">2 · assign</text>
+              <text class="d-title" x="550" y="20" text-anchor="middle">3 · update</text>
+              <g transform="translate(10,30)">
+                <rect class="d-box" x="0" y="0" width="200" height="180" rx="6"/>
+                <circle class="d-dot-muted" cx="40" cy="50" r="4.5"/><circle class="d-dot-muted" cx="60" cy="45" r="4.5"/><circle class="d-dot-muted" cx="55" cy="70" r="4.5"/><circle class="d-dot-muted" cx="35" cy="75" r="4.5"/><circle class="d-dot-muted" cx="70" cy="65" r="4.5"/>
+                <circle class="d-dot-muted" cx="130" cy="120" r="4.5"/><circle class="d-dot-muted" cx="150" cy="115" r="4.5"/><circle class="d-dot-muted" cx="160" cy="140" r="4.5"/><circle class="d-dot-muted" cx="135" cy="145" r="4.5"/><circle class="d-dot-muted" cx="120" cy="135" r="4.5"/>
+                <rect class="d-accent" x="94" y="34" width="12" height="12"/>
+                <rect class="d-signal" x="74" y="114" width="12" height="12"/>
+                <text class="d-label" x="110" y="32">μ₁</text>
+                <text class="d-label" x="66" y="140">μ₂</text>
+              </g>
+              <g transform="translate(230,30)">
+                <rect class="d-box" x="0" y="0" width="200" height="180" rx="6"/>
+                <line class="d-line d-dash" x1="0" y1="57.5" x2="200" y2="107.5"/>
+                <circle class="d-dot" cx="40" cy="50" r="4.5"/><circle class="d-dot" cx="60" cy="45" r="4.5"/><circle class="d-dot" cx="55" cy="70" r="4.5"/><circle class="d-dot-signal" cx="35" cy="75" r="4.5"/><circle class="d-dot" cx="70" cy="65" r="4.5"/>
+                <circle class="d-dot-signal" cx="130" cy="120" r="4.5"/><circle class="d-dot-signal" cx="150" cy="115" r="4.5"/><circle class="d-dot-signal" cx="160" cy="140" r="4.5"/><circle class="d-dot-signal" cx="135" cy="145" r="4.5"/><circle class="d-dot-signal" cx="120" cy="135" r="4.5"/>
+                <rect class="d-accent" x="94" y="34" width="12" height="12"/>
+                <rect class="d-signal" x="74" y="114" width="12" height="12"/>
+                <text class="d-label" x="196" y="96" text-anchor="end">equidistant</text>
+                <text class="d-label" x="8" y="96">wrong side</text>
+              </g>
+              <g transform="translate(450,30)">
+                <rect class="d-box" x="0" y="0" width="200" height="180" rx="6"/>
+                <circle class="d-dot" cx="40" cy="50" r="4.5"/><circle class="d-dot" cx="60" cy="45" r="4.5"/><circle class="d-dot" cx="55" cy="70" r="4.5"/><circle class="d-dot-signal" cx="35" cy="75" r="4.5"/><circle class="d-dot" cx="70" cy="65" r="4.5"/>
+                <circle class="d-dot-signal" cx="130" cy="120" r="4.5"/><circle class="d-dot-signal" cx="150" cy="115" r="4.5"/><circle class="d-dot-signal" cx="160" cy="140" r="4.5"/><circle class="d-dot-signal" cx="135" cy="145" r="4.5"/><circle class="d-dot-signal" cx="120" cy="135" r="4.5"/>
+                <rect class="d-box d-dash" x="94" y="34" width="12" height="12"/>
+                <rect class="d-box d-dash" x="74" y="114" width="12" height="12"/>
+                <line class="d-line" x1="96" y1="44" x2="62" y2="56" marker-end="url(#unsupervised-arrow)"/>
+                <line class="d-line" x1="88" y1="121" x2="112" y2="121" marker-end="url(#unsupervised-arrow)"/>
+                <rect class="d-accent" x="50.25" y="51.5" width="12" height="12"/>
+                <rect class="d-signal" x="115.7" y="115.7" width="12" height="12"/>
+                <text class="d-label" x="8" y="170">means of each colour</text>
+              </g>
+              <text class="d-label" x="330" y="228" text-anchor="middle">the dashed line is the set of points equally far from both centroids</text>
+            </svg>
+          </div>
+          <figcaption>One k-means iteration with k = 2. After the update, the second centroid is still pulled left by the one mis-assigned point; the next assign step moves that point to the first cluster and the algorithm converges.</figcaption>
+        </figure>
+
+        <div class="widget" id="km-demo">
+          <div class="widget-head">
+            <span class="widget-title">k-means, one step at a time</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="km-k">k <input type="range" id="km-k" min="2" max="6" step="1" value="3"><output id="km-k-out">3</output></label>
+            <button class="btn primary" type="button" id="km-step">Step</button>
+            <button class="btn" type="button" id="km-run">Run to convergence</button>
+            <button class="btn" type="button" id="km-reinit">New random start</button>
+          </div>
+          <svg id="km-plot" viewBox="0 0 580 320" role="img" aria-label="Scatter of points in four blobs, coloured by their assigned centroid; centroids are squares that move when you press Step."></svg>
+          <p class="readout" id="km-readout"></p>
+        </div>
+        <p>Press <em>Step</em> and watch the phases alternate. Then try <em>New random start</em> with k = 4: some starts put two centroids in one blob and split another, ending with a worse inertia. <strong>k-means++</strong> initialization (spread the starting centroids apart) plus several restarts fixes this. Try k = 3 and 5 too; nothing in the algorithm tells you the data has four blobs.</p>
+
+        <h3>Choosing k, choosing an algorithm</h3>
+        <p>Inertia always falls as k grows, so look for the "elbow" where it flattens, or use the <strong>silhouette score</strong> (near 1 means tight, well-separated clusters). Then read samples from each cluster: useful beats optimal.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Algorithm</th><th>Idea</th><th>Needs k?</th><th>Use when</th></tr></thead>
+            <tbody>
+              <tr><td>k-means</td><td>Nearest centroid</td><td>Yes</td><td>Large data, round clusters</td></tr>
+              <tr><td>HDBSCAN</td><td>Dense regions; sparse points are noise</td><td>No</td><td>Odd shapes, outliers; popular for embeddings</td></tr>
+              <tr><td>Agglomerative</td><td>Merge closest clusters into a tree</td><td>Cut anywhere</td><td>You want a hierarchy</td></tr>
+              <tr><td>Gaussian mixture</td><td>Soft membership in Gaussians</td><td>Yes</td><td>Elliptical clusters, probabilities</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Dimensionality reduction</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="PCA on a tilted 2-D point cloud: PC1 points along the long axis and explains 82 percent of the variance, PC2 is perpendicular and explains 12 percent; points project onto PC1. A bar chart shows explained variance per component.">
+              <defs>
+                <marker id="unsupervised-pc1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="unsupervised-pc2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="20" width="310" height="190" rx="6"/>
+              <line class="d-line d-dash" x1="53.8" y1="190" x2="296.2" y2="50"/>
+              <line class="d-line d-dash" x1="133" y1="167.3" x2="123" y2="150"/>
+              <line class="d-line d-dash" x1="196.3" y1="86.9" x2="205.3" y2="102.5"/>
+              <line class="d-line d-dash" x1="266.3" y1="88.1" x2="257.3" y2="72.5"/>
+              <circle class="d-dot" cx="84.7" cy="183.7" r="4.5"/><circle class="d-dot" cx="98.2" cy="147" r="4.5"/>
+              <circle class="d-dot" cx="133" cy="167.3" r="4.5"/><circle class="d-dot" cx="136.4" cy="133.1" r="4.5"/>
+              <circle class="d-dot" cx="165.2" cy="143" r="4.5"/><circle class="d-dot" cx="169" cy="109.6" r="4.5"/>
+              <circle class="d-dot" cx="193" cy="121.2" r="4.5"/><circle class="d-dot" cx="196.3" cy="86.9" r="4.5"/>
+              <circle class="d-dot" cx="228.6" cy="102.9" r="4.5"/><circle class="d-dot" cx="237.5" cy="78.2" r="4.5"/>
+              <circle class="d-dot" cx="266.3" cy="88.1" r="4.5"/><circle class="d-dot" cx="269.6" cy="53.8" r="4.5"/>
+              <circle class="d-box" cx="123" cy="150" r="3"/><circle class="d-box" cx="205.3" cy="102.5" r="3"/><circle class="d-box" cx="257.3" cy="72.5" r="3"/>
+              <line class="d-line-accent" x1="175" y1="120" x2="252.9" y2="75" marker-end="url(#unsupervised-pc1)"/>
+              <line class="d-line-signal" x1="175" y1="120" x2="190" y2="146" marker-end="url(#unsupervised-pc2)"/>
+              <text class="d-label d-text-accent" x="262" y="44">PC1 · 82%</text>
+              <text class="d-label d-text-signal" x="198" y="162">PC2 · 12%</text>
+              <text class="d-label" x="30" y="38">feature 1 vs feature 2</text>
+              <text class="d-title" x="510" y="34" text-anchor="middle">variance explained</text>
+              <line class="d-line" x1="396" y1="190" x2="620" y2="190"/>
+              <rect class="d-accent" x="410" y="67" width="36" height="123"/>
+              <rect class="d-signal" x="462" y="172" width="36" height="18"/>
+              <rect class="d-fill" x="514" y="184" width="36" height="6"/>
+              <rect class="d-fill" x="566" y="187" width="36" height="3"/>
+              <text class="d-mono" x="428" y="61" text-anchor="middle">82%</text>
+              <text class="d-mono" x="480" y="166" text-anchor="middle">12%</text>
+              <text class="d-mono" x="532" y="178" text-anchor="middle">4%</text>
+              <text class="d-mono" x="584" y="181" text-anchor="middle">2%</text>
+              <text class="d-label" x="428" y="206" text-anchor="middle">PC1</text>
+              <text class="d-label" x="480" y="206" text-anchor="middle">PC2</text>
+              <text class="d-label" x="532" y="206" text-anchor="middle">PC3</text>
+              <text class="d-label" x="584" y="206" text-anchor="middle">PC4</text>
+            </svg>
+          </div>
+          <figcaption>PCA rotates the axes onto the directions of greatest spread. Keeping only PC1 drops each point onto the long axis (hollow dots) and keeps most of the information.</figcaption>
+        </figure>
+
+        <p><strong>PCA</strong> (principal component analysis) is linear and deterministic: centre the data, take its SVD, keep the top directions. Reducing 768-d sentence embeddings to 50 components typically keeps most of the variance and speeds up clustering. <strong>t-SNE</strong> and <strong>UMAP</strong> are nonlinear and built for 2-D pictures: they preserve neighbourhoods, but cluster sizes and distances between clusters on their plots mean little. Use them to look, never to measure.</p>
+
+        <pre class="code" data-lang="python"><code>from sklearn.datasets import make_blobs
+from sklearn.preprocessing import normalize
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+<span class="c"># stand-in for real sentence embeddings: 2,000 vectors of dimension 384</span>
+emb, _ = make_blobs(n_samples=2000, centers=6, n_features=384, random_state=0)
+emb = normalize(emb)                       <span class="c"># unit length: Euclidean distance tracks cosine</span>
+
+pca = PCA(n_components=50, random_state=0)
+Z = pca.fit_transform(emb)
+print("variance kept", pca.explained_variance_ratio_.sum())
+
+for k in range(2, 11):
+    km = KMeans(n_clusters=k, init="k-means++", n_init=10, random_state=0).fit(Z)
+    print(k, round(km.inertia_, 1), round(silhouette_score(Z, km.labels_), 3))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>k-means alternates assigning points to the nearest centroid and moving centroids to the mean; it finds a local minimum.</li>
+            <li>Use k-means++ and several restarts; choose k with silhouette, elbow and by reading clusters.</li>
+            <li>HDBSCAN finds odd-shaped clusters and labels outliers as noise without a preset k.</li>
+            <li>PCA is a trustworthy linear compression; t-SNE and UMAP are for looking at neighbourhoods.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Running k-means on unscaled features, so the biggest-unit column decides every cluster.</li>
+            <li>Reading distances between clusters on a t-SNE or UMAP plot as meaningful.</li>
+            <li>Choosing k by minimizing inertia, which always picks the largest k tried.</li>
+            <li>Treating cluster ids as stable across re-runs; they are arbitrary.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="unsupervised-1"><span>Run one assign and one update step of k-means by hand on six 2-D points</span></label></li>
+          <li><label><input type="checkbox" data-key="unsupervised-2"><span>Explain why k-means can converge to a poor solution and how k-means++ helps</span></label></li>
+          <li><label><input type="checkbox" data-key="unsupervised-3"><span>Choose between k-means, HDBSCAN and a Gaussian mixture for a described dataset</span></label></li>
+          <li><label><input type="checkbox" data-key="unsupervised-4"><span>Reduce embeddings with PCA, report variance kept, and cluster the result</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn: Clustering (with a visual comparison of algorithms)</a></li>
+          <li><span class="kind">Article</span><a href="https://distill.pub/2016/misread-tsne/">How to Use t-SNE Effectively (Distill)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1802.03426">UMAP: Uniform Manifold Approximation and Projection (McInnes et al., 2018)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="evaluation">
+        <header class="topic-head">
+          <p class="eyebrow">03.4 · Measuring honestly</p>
+          <h2>Model evaluation &amp; metrics</h2>
+        </header>
+
+        <p class="lead">A model is only as good as the evidence that it works on data it has not seen. Evaluation has two halves: the protocol (which rows you hold out, and how) and the metric (which number captures the mistakes you care about). A 95%-accurate spam filter can be useless; a fraud model with 2% precision can be worth millions.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>LLM evals, retrieval metrics, guardrail classifiers and A/B tests all reuse these ideas. If you can explain why accuracy misleads on imbalanced data, you can explain why "98% of outputs were safe" says nothing on its own.</p>
+        </div>
+
+        <h3>The protocol: hold out the right rows</h3>
+        <p>Training data fits parameters, validation data chooses models and hyperparameters, and the test set is opened once to report a number. <strong>k-fold cross-validation</strong> rotates the validation fold so every row is scored once by a model that never saw it.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 205" role="img" aria-label="Left: 5-fold cross-validation, where each of five rounds holds out a different fifth of the data for validation and the five scores are averaged. Right: time-based splits, where the validation block always comes after the training blocks.">
+              <defs>
+                <marker id="evaluation-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="170" y="20" text-anchor="middle">5-fold cross-validation</text>
+              <g>
+                <rect class="d-signal" x="30" y="34" width="52" height="22"/><rect class="d-accent" x="86" y="34" width="52" height="22"/><rect class="d-accent" x="142" y="34" width="52" height="22"/><rect class="d-accent" x="198" y="34" width="52" height="22"/><rect class="d-accent" x="254" y="34" width="52" height="22"/>
+                <rect class="d-accent" x="30" y="62" width="52" height="22"/><rect class="d-signal" x="86" y="62" width="52" height="22"/><rect class="d-accent" x="142" y="62" width="52" height="22"/><rect class="d-accent" x="198" y="62" width="52" height="22"/><rect class="d-accent" x="254" y="62" width="52" height="22"/>
+                <rect class="d-accent" x="30" y="90" width="52" height="22"/><rect class="d-accent" x="86" y="90" width="52" height="22"/><rect class="d-signal" x="142" y="90" width="52" height="22"/><rect class="d-accent" x="198" y="90" width="52" height="22"/><rect class="d-accent" x="254" y="90" width="52" height="22"/>
+                <rect class="d-accent" x="30" y="118" width="52" height="22"/><rect class="d-accent" x="86" y="118" width="52" height="22"/><rect class="d-accent" x="142" y="118" width="52" height="22"/><rect class="d-signal" x="198" y="118" width="52" height="22"/><rect class="d-accent" x="254" y="118" width="52" height="22"/>
+                <rect class="d-accent" x="30" y="146" width="52" height="22"/><rect class="d-accent" x="86" y="146" width="52" height="22"/><rect class="d-accent" x="142" y="146" width="52" height="22"/><rect class="d-accent" x="198" y="146" width="52" height="22"/><rect class="d-signal" x="254" y="146" width="52" height="22"/>
+              </g>
+              <text class="d-mono" x="316" y="50">s₁</text><text class="d-mono" x="316" y="78">s₂</text><text class="d-mono" x="316" y="106">s₃</text><text class="d-mono" x="316" y="134">s₄</text><text class="d-mono" x="316" y="162">s₅</text>
+              <text class="d-label" x="170" y="190" text-anchor="middle">report mean ± spread of s₁…s₅</text>
+              <text class="d-title" x="500" y="20" text-anchor="middle">time-based split</text>
+              <rect class="d-accent" x="380" y="34" width="44" height="22"/><rect class="d-accent" x="428" y="34" width="44" height="22"/><rect class="d-signal" x="476" y="34" width="44" height="22"/><rect class="d-fill" x="524" y="34" width="44" height="22"/><rect class="d-fill" x="572" y="34" width="44" height="22"/>
+              <rect class="d-accent" x="380" y="62" width="44" height="22"/><rect class="d-accent" x="428" y="62" width="44" height="22"/><rect class="d-accent" x="476" y="62" width="44" height="22"/><rect class="d-signal" x="524" y="62" width="44" height="22"/><rect class="d-fill" x="572" y="62" width="44" height="22"/>
+              <rect class="d-accent" x="380" y="90" width="44" height="22"/><rect class="d-accent" x="428" y="90" width="44" height="22"/><rect class="d-accent" x="476" y="90" width="44" height="22"/><rect class="d-accent" x="524" y="90" width="44" height="22"/><rect class="d-signal" x="572" y="90" width="44" height="22"/>
+              <line class="d-line" x1="380" y1="130" x2="616" y2="130" marker-end="url(#evaluation-arrow)"/>
+              <text class="d-label" x="498" y="146" text-anchor="middle">time →  validate only on the future</text>
+              <rect class="d-accent" x="400" y="172" width="16" height="12"/><text class="d-label" x="422" y="182">train</text>
+              <rect class="d-signal" x="470" y="172" width="16" height="12"/><text class="d-label" x="492" y="182">validate</text>
+              <rect class="d-fill" x="550" y="172" width="16" height="12"/><text class="d-label" x="572" y="182">unused</text>
+            </svg>
+          </div>
+          <figcaption>Match the split to how the model will be used. Use stratified folds for imbalanced classes, grouped folds when rows share a user or patient, and forward-in-time splits for anything that predicts the future.</figcaption>
+        </figure>
+
+        <h3>The confusion matrix and the threshold</h3>
+        <p>Every binary prediction is a true positive (TP), false positive (FP), false negative (FN) or true negative (TN). <strong>Precision</strong> asks how many flags were right; <strong>recall</strong> asks how many positives you caught.</p>
+
+        <div class="formula">
+          \[ \text{precision} = \frac{TP}{TP+FP}, \qquad \text{recall} = \frac{TP}{TP+FN}, \qquad F_1 = \frac{2\,\text{precision}\cdot\text{recall}}{\text{precision}+\text{recall}} \]
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 245" role="img" aria-label="Confusion matrix for 1,000 emails with 50 spam: TP 40, FN 10, FP 20, TN 930. Recall is read along the actual-positive row, precision down the predicted-positive column.">
+              <text class="d-label" x="20" y="24">1,000 emails, 50 of them spam</text>
+              <text class="d-label" x="240" y="42" text-anchor="middle">predicted spam</text>
+              <text class="d-label" x="360" y="42" text-anchor="middle">predicted ham</text>
+              <text class="d-label" x="170" y="89" text-anchor="end">actual spam</text>
+              <text class="d-label" x="170" y="159" text-anchor="end">actual ham</text>
+              <rect class="d-good" x="180" y="50" width="120" height="70"/>
+              <rect class="d-fill" x="300" y="50" width="120" height="70"/>
+              <rect class="d-fill" x="180" y="120" width="120" height="70"/>
+              <rect class="d-box" x="300" y="120" width="120" height="70"/>
+              <text class="d-title" x="240" y="82" text-anchor="middle">TP 40</text>
+              <text class="d-title" x="360" y="82" text-anchor="middle">FN 10</text>
+              <text class="d-title" x="240" y="152" text-anchor="middle">FP 20</text>
+              <text class="d-title" x="360" y="152" text-anchor="middle">TN 930</text>
+              <text class="d-label" x="360" y="100" text-anchor="middle">missed spam</text>
+              <text class="d-label" x="240" y="170" text-anchor="middle">false alarm</text>
+              <rect class="d-line-accent" x="175" y="46" width="250" height="78" rx="6"/>
+              <rect class="d-line-signal d-dash" x="176" y="47" width="128" height="147" rx="6"/>
+              <line class="d-line-accent" x1="425" y1="85" x2="440" y2="85"/>
+              <text class="d-label d-text-accent" x="446" y="80">recall = 40 / (40+10)</text>
+              <text class="d-label d-text-accent" x="446" y="96">= 0.80 (read the row)</text>
+              <line class="d-line-signal" x1="240" y1="194" x2="240" y2="206"/>
+              <text class="d-label d-text-signal" x="240" y="220" text-anchor="middle">precision = 40 / (40+20)</text>
+              <text class="d-label d-text-signal" x="240" y="236" text-anchor="middle">= 0.67 (read the column)</text>
+              <text class="d-label" x="446" y="160">accuracy = (40+930)/1000</text>
+              <text class="d-label" x="446" y="176">= 0.97, yet "never spam"</text>
+              <text class="d-label" x="446" y="192">already scores 0.95</text>
+            </svg>
+          </div>
+          <figcaption>Recall reads along the actual-positive row; precision reads down the predicted-positive column. On imbalanced data the huge TN cell inflates accuracy, so it hides how the model treats the class you care about.</figcaption>
+        </figure>
+
+        <p>A classifier outputs a score and you pick the <strong>threshold</strong>. Lowering it raises recall and lowers precision. The right setting comes from the cost of each mistake: a cancer screen wants recall, an auto-delete feature wants precision.</p>
+
+        <div class="widget" id="thr-demo">
+          <div class="widget-head">
+            <span class="widget-title">Threshold, confusion matrix and ROC</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="thr-t">Threshold <input type="range" id="thr-t" min="0" max="1" step="0.01" value="0.5"><output id="thr-t-out">0.50</output></label>
+          </div>
+          <svg id="thr-plot" viewBox="0 0 640 270" role="img" aria-label="Left: model scores for 40 positives and 60 negatives with a movable threshold line. Middle: the resulting confusion matrix. Right: the ROC curve with the current operating point."></svg>
+          <p class="readout" id="thr-readout"></p>
+        </div>
+        <p>Each threshold is one point on the <strong>ROC curve</strong> (recall against false positive rate). The area under it, <strong>ROC-AUC</strong>, is the chance a random positive outscores a random negative, and it does not move as you drag: it summarizes all thresholds. When positives are rare (fraud at 0.1%), prefer the precision–recall curve, and if you act on scores as probabilities, check <strong>calibration</strong>: items scored 0.8 should be positive about 80% of the time.</p>
+
+        <h3>Error bars</h3>
+        <p>With 200 test examples at 85% accuracy, the 95% interval is about ±5 points (\(1.96\sqrt{0.85\cdot 0.15/200} \approx 0.05\)). An "improvement" to 87% is noise. Bootstrap any metric for an interval, and always show a trivial baseline beside it.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Regression metric</th><th>Reads as</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>MAE</td><td>Typical error in target units</td><td>Robust to outliers</td></tr>
+              <tr><td>RMSE</td><td>Error that punishes big misses</td><td>Much larger than MAE means a few huge errors</td></tr>
+              <tr><td>MAPE</td><td>Percentage error</td><td>Explodes when targets are near zero</td></tr>
+              <tr><td>\(R^2\)</td><td>Share of variance explained vs predicting the mean</td><td>Can be negative on test data</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+from sklearn.model_selection import StratifiedKFold, cross_val_predict
+from sklearn.metrics import precision_recall_curve, roc_auc_score, average_precision_score
+
+<span class="c"># out-of-fold probabilities: every row scored by a model that never saw it</span>
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+p = cross_val_predict(clf, X, y, cv=cv, method="predict_proba")[:, 1]
+print("ROC-AUC", roc_auc_score(y, p), " PR-AUC", average_precision_score(y, p))
+
+<span class="c"># highest threshold that still gives recall &gt;= 0.90</span>
+prec, rec, thr = precision_recall_curve(y, p)        <span class="c"># len(thr) == len(prec) - 1</span>
+i = np.where(rec[:-1] &gt;= 0.90)[0][-1]
+print(f"threshold {thr[i]:.3f}  precision {prec[i]:.3f}  recall {rec[i]:.3f}")
+
+<span class="c"># bootstrap a 95% interval for ROC-AUC</span>
+rng = np.random.default_rng(0)
+idx = [rng.integers(0, len(y), len(y)) for _ in range(1000)]
+aucs = [roc_auc_score(y[j], p[j]) for j in idx if len(np.unique(y[j])) == 2]
+print("AUC 95% CI", np.percentile(aucs, [2.5, 97.5]))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Train fits, validation chooses, test reports once; split by group or time when rows are related or ordered.</li>
+            <li>Precision: how many flags were right. Recall: how many positives were caught. The threshold trades one for the other.</li>
+            <li>ROC-AUC measures ranking across all thresholds; PR-AUC is more informative when positives are rare.</li>
+            <li>If you act on probabilities, measure calibration.</li>
+            <li>Every score has an error bar; small test sets cannot separate small improvements.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reporting accuracy on imbalanced data without the majority-class baseline.</li>
+            <li>Tuning thresholds or hyperparameters on the test set, then reporting that test score.</li>
+            <li>Random K-fold on time-ordered or grouped data.</li>
+            <li>Declaring a winner from a one-point difference on a few hundred examples.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="evaluation-1"><span>Compute precision, recall, F1 and accuracy from a confusion matrix by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="evaluation-2"><span>Pick a threshold from stated costs of false positives and false negatives</span></label></li>
+          <li><label><input type="checkbox" data-key="evaluation-3"><span>Explain when PR-AUC is a better summary than ROC-AUC</span></label></li>
+          <li><label><input type="checkbox" data-key="evaluation-4"><span>Choose stratified, grouped or time-based cross-validation for a described dataset</span></label></li>
+          <li><label><input type="checkbox" data-key="evaluation-5"><span>Bootstrap a confidence interval for a metric</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn: Metrics and scoring</a></li>
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/cross_validation.html">scikit-learn: Cross-validation</a></li>
+          <li><span class="kind">Course</span><a href="https://developers.google.com/machine-learning/crash-course">Google ML Crash Course (classification and ROC units)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="bias-variance">
+        <header class="topic-head">
+          <p class="eyebrow">03.5 · Generalization</p>
+          <h2>Bias–variance, overfitting &amp; leakage</h2>
+        </header>
+
+        <p class="lead">A model can fail on new data in two opposite ways. It can be too simple to capture the pattern (<strong>underfitting</strong>, high bias), or so flexible that it memorizes noise in the training rows (<strong>overfitting</strong>, high variance). A third failure looks like success: <strong>leakage</strong>, where information the model will not have in production sneaks into training, and validation scores are too good to be true.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Reading the train–validation gap tells you whether to add data, add capacity or regularize. Leakage is the most common reason a model that "scored 0.97" fails in production, and its LLM-era cousin, benchmark contamination, is why public leaderboard numbers need a second look.</p>
+        </div>
+
+        <h3>Error has three parts</h3>
+        <div class="formula">
+          \[ \mathbb{E}\big[(y - \hat f(x))^2\big] = \underbrace{\big(\mathbb{E}[\hat f(x)] - f(x)\big)^2}_{\text{bias}^2} + \underbrace{\mathrm{Var}\big[\hat f(x)\big]}_{\text{variance}} + \underbrace{\sigma^2}_{\text{noise}} \]
+          <span class="formula-note">Expectation over different training sets. Bias: how far the average model is from the truth. Variance: how much the model changes when you retrain on another sample. Noise: the floor no model can beat.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="Training error falls steadily as model complexity grows, while validation error first falls then rises in a U shape. The left region is underfitting with both errors high; the right region is overfitting with a large gap.">
+              <line class="d-line" x1="60" y1="30" x2="60" y2="200"/>
+              <line class="d-line" x1="60" y1="200" x2="600" y2="200"/>
+              <text class="d-label" x="330" y="222" text-anchor="middle">model complexity (degree, depth, epochs) →</text>
+              <text class="d-label" x="20" y="115" transform="rotate(-90 20 115)" text-anchor="middle">error</text>
+              <rect class="d-fill" x="62" y="30" width="150" height="168"/>
+              <text class="d-label" x="137" y="24" text-anchor="middle">underfit · high bias</text>
+              <text class="d-label" x="500" y="24" text-anchor="middle">overfit · high variance</text>
+              <line class="d-line d-dash" x1="290" y1="30" x2="290" y2="200"/>
+              <text class="d-label d-text-good" x="296" y="44">best validation</text>
+              <path class="d-line-accent" d="M70,60 C200,150 350,185 590,195"/>
+              <path class="d-line-signal" d="M70,68 C180,160 300,160 360,148 S520,90 590,50"/>
+              <text class="d-label d-text-accent" x="430" y="178">training error</text>
+              <text class="d-label d-text-signal" x="412" y="124">validation error</text>
+              <line class="d-line" x1="566" y1="66" x2="566" y2="190"/>
+              <line class="d-line" x1="560" y1="66" x2="572" y2="66"/>
+              <line class="d-line" x1="560" y1="190" x2="572" y2="190"/>
+              <text class="d-label" x="578" y="132">gap</text>
+              <text class="d-label" x="70" y="104">both high,</text>
+              <text class="d-label" x="70" y="118">small gap</text>
+            </svg>
+          </div>
+          <figcaption>The classic picture. Training error keeps falling as capacity grows; validation error bottoms out and climbs once the model starts fitting noise. (Very large neural networks can show a second descent past this point, but the diagnosis below still applies.)</figcaption>
+        </figure>
+
+        <div class="widget" id="bv-demo">
+          <div class="widget-head">
+            <span class="widget-title">Polynomial degree: under- vs overfitting</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="bv-deg">Degree <input type="range" id="bv-deg" min="0" max="14" step="1" value="3"><output id="bv-deg-out">3</output></label>
+            <label for="bv-n">Training points <input type="range" id="bv-n" min="10" max="60" step="5" value="15"><output id="bv-n-out">15</output></label>
+            <button class="btn" type="button" id="bv-resample">New noise sample</button>
+          </div>
+          <svg id="bv-plot" viewBox="0 0 640 280" role="img" aria-label="Left: training and validation points from a noisy sine curve with the fitted polynomial. Right: training and validation error for every degree, with the current degree marked."></svg>
+          <p class="readout" id="bv-readout"></p>
+        </div>
+        <p>Degree 0 and 1 miss the curve: both errors are high. Around degree 3 to 5 validation error is lowest. Push towards 14 and the curve threads through every training point while validation error explodes. Now raise the number of training points: the same high degree overfits far less, because more data lowers variance.</p>
+
+        <h3>Diagnose, then act</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Symptom</th><th>Diagnosis</th><th>Try</th></tr></thead>
+            <tbody>
+              <tr><td>Train and validation error both high, close together</td><td>High bias</td><td>More capacity, better features, less regularization, train longer</td></tr>
+              <tr><td>Train error low, validation error much higher</td><td>High variance</td><td>More data, regularization (L1/L2, dropout), simpler model, early stopping</td></tr>
+              <tr><td>Validation score suspiciously high</td><td>Probably leakage</td><td>Audit features and the split before celebrating</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Leakage</h3>
+        <p><strong>Target leakage</strong> is a feature computed after the outcome, such as "account closed date" in a churn model. <strong>Split leakage</strong> puts the same user, patient or near-duplicate on both sides, or validates on the past. <strong>Preprocessing leakage</strong> fits scalers, imputers or feature selection on all rows before splitting:</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Leaky versus correct preprocessing. Leaky: scaler and feature selection are fit on all rows, then the data is split. Correct: the data is split first, the scaler is fit on training rows only, and the test rows are only transformed with training statistics.">
+              <defs>
+                <marker id="bias-variance-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-title d-text-signal" x="160" y="18" text-anchor="middle">leaky</text>
+              <rect class="d-fill" x="20" y="28" width="280" height="30" rx="6"/>
+              <text class="d-text" x="160" y="48" text-anchor="middle">all 10,000 rows</text>
+              <line class="d-line" x1="160" y1="58" x2="160" y2="76" marker-end="url(#bias-variance-arrow)"/>
+              <rect class="d-signal" x="20" y="78" width="280" height="34" rx="6"/>
+              <text class="d-text" x="160" y="100" text-anchor="middle">fit scaler + select features on ALL</text>
+              <line class="d-line" x1="110" y1="112" x2="85" y2="136" marker-end="url(#bias-variance-arrow)"/>
+              <line class="d-line" x1="210" y1="112" x2="235" y2="136" marker-end="url(#bias-variance-arrow)"/>
+              <rect class="d-accent" x="20" y="138" width="130" height="30" rx="6"/>
+              <text class="d-text" x="85" y="158" text-anchor="middle">train</text>
+              <rect class="d-box" x="170" y="138" width="130" height="30" rx="6"/>
+              <text class="d-text" x="235" y="158" text-anchor="middle">test</text>
+              <text class="d-label d-text-signal" x="160" y="194" text-anchor="middle">test rows already shaped the features</text>
+              <text class="d-title d-text-good" x="480" y="18" text-anchor="middle">correct</text>
+              <rect class="d-fill" x="340" y="28" width="280" height="30" rx="6"/>
+              <text class="d-text" x="480" y="48" text-anchor="middle">all 10,000 rows</text>
+              <line class="d-line" x1="430" y1="58" x2="405" y2="76" marker-end="url(#bias-variance-arrow)"/>
+              <line class="d-line" x1="530" y1="58" x2="555" y2="76" marker-end="url(#bias-variance-arrow)"/>
+              <rect class="d-accent" x="340" y="78" width="130" height="30" rx="6"/>
+              <text class="d-text" x="405" y="98" text-anchor="middle">train (split first)</text>
+              <rect class="d-box" x="490" y="78" width="130" height="30" rx="6"/>
+              <text class="d-text" x="555" y="98" text-anchor="middle">test</text>
+              <line class="d-line" x1="405" y1="108" x2="405" y2="132" marker-end="url(#bias-variance-arrow)"/>
+              <line class="d-line" x1="555" y1="108" x2="555" y2="132" marker-end="url(#bias-variance-arrow)"/>
+              <rect class="d-good" x="340" y="134" width="130" height="34" rx="6"/>
+              <text class="d-text" x="405" y="156" text-anchor="middle">fit on train</text>
+              <rect class="d-box" x="490" y="134" width="130" height="34" rx="6"/>
+              <text class="d-text" x="555" y="156" text-anchor="middle">transform only</text>
+              <line class="d-line" x1="470" y1="151" x2="488" y2="151" marker-end="url(#bias-variance-arrow)"/>
+              <text class="d-label" x="480" y="128" text-anchor="middle">stats</text>
+              <text class="d-label d-text-good" x="480" y="194" text-anchor="middle">test rows never touch fitting</text>
+            </svg>
+          </div>
+          <figcaption>Split first, then fit every preprocessing step on training rows only. A scikit-learn <code>Pipeline</code> inside cross-validation does this for you on every fold.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score, GroupKFold
+
+<span class="c"># LEAKY: selection sees every row, including future validation folds</span>
+X_sel = SelectKBest(f_classif, k=20).fit_transform(X, y)
+leaky = cross_val_score(LogisticRegression(max_iter=1000), X_sel, y, cv=5)
+
+<span class="c"># CORRECT: every step is refit inside each training fold; same user never on both sides</span>
+pipe = make_pipeline(StandardScaler(), SelectKBest(f_classif, k=20), LogisticRegression(max_iter=1000))
+honest = cross_val_score(pipe, X, y, cv=GroupKFold(n_splits=5), groups=user_id)
+print(leaky.mean(), honest.mean())       <span class="c"># on wide, noisy data the gap can be huge</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Expected error = bias² + variance + irreducible noise.</li>
+            <li>Both errors high: add capacity or features. Big train–validation gap: add data or regularize.</li>
+            <li>More data reduces variance; it does not fix bias.</li>
+            <li>Leakage makes validation scores lie; split first and fit preprocessing inside the training fold.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Fitting a scaler, imputer or feature selector on the full dataset before splitting.</li>
+            <li>Keeping features that are only known after the outcome happens.</li>
+            <li>Letting near-duplicate rows or the same user land in both train and test.</li>
+            <li>Adding more data to a model that underfits, and waiting for it to help.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="bias-variance-1"><span>Read a learning curve and say whether the model has high bias or high variance</span></label></li>
+          <li><label><input type="checkbox" data-key="bias-variance-2"><span>Name three kinds of leakage and give a real example of each</span></label></li>
+          <li><label><input type="checkbox" data-key="bias-variance-3"><span>Rewrite a leaky notebook so all preprocessing lives inside a Pipeline</span></label></li>
+          <li><label><input type="checkbox" data-key="bias-variance-4"><span>Explain why more data helps an overfit model but not an underfit one</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/common_pitfalls.html">scikit-learn: Common pitfalls and recommended practices</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1812.11118">Reconciling modern machine learning practice and the bias-variance trade-off (Belkin et al., 2018)</a></li>
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning (chapters 2 and 5)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="feature-engineering">
+        <header class="topic-head">
+          <p class="eyebrow">03.6 · Inputs and knobs</p>
+          <h2>Feature engineering &amp; tuning</h2>
+        </header>
+
+        <p class="lead">Models only see numbers. <strong>Feature engineering</strong> turns raw columns (cities, timestamps, free text, skewed amounts) into numbers that expose the pattern. <strong>Hyperparameter tuning</strong> then searches the settings you choose before training, such as tree depth or learning rate. On tabular problems, good features usually beat a fancier model.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Pretrained embeddings are now the default feature for text and images, but they sit next to ordinary columns (account age, plan, hour of day) that still need encoding. And every training job, from a GBDT to a LoRA fine-tune, has knobs you need to search efficiently without fooling yourself.</p>
+        </div>
+
+        <h3>One pipeline, one transform per column type</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 230" role="img" aria-label="A ColumnTransformer routes numeric columns through imputation and scaling, categorical columns through imputation and one-hot encoding, and text through TF-IDF or embeddings, then concatenates the results into 5,037 features for the model.">
+              <defs>
+                <marker id="feature-engineering-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-line d-dash" x="180" y="20" width="240" height="196" rx="8"/>
+              <text class="d-label" x="300" y="14" text-anchor="middle">ColumnTransformer (fit on train only)</text>
+              <rect class="d-fill" x="10" y="30" width="150" height="40" rx="6"/>
+              <text class="d-text" x="85" y="55" text-anchor="middle">age, income</text>
+              <rect class="d-fill" x="10" y="95" width="150" height="40" rx="6"/>
+              <text class="d-text" x="85" y="120" text-anchor="middle">city, plan</text>
+              <rect class="d-fill" x="10" y="160" width="150" height="40" rx="6"/>
+              <text class="d-text" x="85" y="185" text-anchor="middle">review text</text>
+              <line class="d-line" x1="160" y1="50" x2="188" y2="50" marker-end="url(#feature-engineering-arrow)"/>
+              <line class="d-line" x1="160" y1="115" x2="188" y2="115" marker-end="url(#feature-engineering-arrow)"/>
+              <line class="d-line" x1="160" y1="180" x2="188" y2="180" marker-end="url(#feature-engineering-arrow)"/>
+              <rect class="d-box" x="190" y="30" width="110" height="40" rx="6"/>
+              <text class="d-text" x="245" y="55" text-anchor="middle">impute median</text>
+              <rect class="d-accent" x="320" y="30" width="90" height="40" rx="6"/>
+              <text class="d-text" x="365" y="55" text-anchor="middle">scale</text>
+              <rect class="d-box" x="190" y="95" width="110" height="40" rx="6"/>
+              <text class="d-text" x="245" y="120" text-anchor="middle">fill "missing"</text>
+              <rect class="d-accent" x="320" y="95" width="90" height="40" rx="6"/>
+              <text class="d-text" x="365" y="120" text-anchor="middle">one-hot</text>
+              <rect class="d-accent" x="190" y="160" width="220" height="40" rx="6"/>
+              <text class="d-text" x="300" y="185" text-anchor="middle">TF-IDF or embedding</text>
+              <line class="d-line" x1="300" y1="50" x2="318" y2="50" marker-end="url(#feature-engineering-arrow)"/>
+              <line class="d-line" x1="300" y1="115" x2="318" y2="115" marker-end="url(#feature-engineering-arrow)"/>
+              <text class="d-label" x="365" y="84" text-anchor="middle">2 cols</text>
+              <text class="d-label" x="365" y="149" text-anchor="middle">35 cols</text>
+              <text class="d-label" x="300" y="212" text-anchor="middle">5,000 cols (sparse)</text>
+              <line class="d-line" x1="410" y1="50" x2="448" y2="105" marker-end="url(#feature-engineering-arrow)"/>
+              <line class="d-line" x1="410" y1="115" x2="448" y2="115" marker-end="url(#feature-engineering-arrow)"/>
+              <line class="d-line" x1="410" y1="180" x2="448" y2="125" marker-end="url(#feature-engineering-arrow)"/>
+              <rect class="d-box" x="450" y="95" width="70" height="40" rx="6"/>
+              <text class="d-text" x="485" y="120" text-anchor="middle">concat</text>
+              <line class="d-line" x1="520" y1="115" x2="548" y2="115" marker-end="url(#feature-engineering-arrow)"/>
+              <text class="d-label" x="590" y="86" text-anchor="middle">5,037 features</text>
+              <rect class="d-good" x="550" y="95" width="100" height="40" rx="6"/>
+              <text class="d-title" x="600" y="120" text-anchor="middle">model</text>
+            </svg>
+          </div>
+          <figcaption>Each column type gets its own preprocessing branch. Because the whole thing is one object, it is fitted on training folds only and shipped to production unchanged.</figcaption>
+        </figure>
+
+        <p>Linear models, k-NN and SVMs need scaled numbers; trees do not. Categories become one-hot columns, or for thousands of levels, <strong>target encoding</strong> (the mean label per category, computed out-of-fold to avoid leakage). Two transforms fix common shape problems:</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 225" role="img" aria-label="Left: a right-skewed income histogram becomes roughly bell-shaped after log1p. Right: hours on a clock face, where 23:00 and 00:00 are 23 apart as raw numbers but close together when encoded with sine and cosine.">
+              <defs>
+                <marker id="feature-engineering-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="160" y="22" text-anchor="middle">skewed → log</text>
+              <line class="d-line" x1="26" y1="180" x2="144" y2="180"/>
+              <rect class="d-signal" x="30" y="60" width="11" height="120"/><rect class="d-signal" x="42" y="110" width="11" height="70"/><rect class="d-signal" x="54" y="145" width="11" height="35"/><rect class="d-signal" x="66" y="162" width="11" height="18"/><rect class="d-signal" x="78" y="170" width="11" height="10"/><rect class="d-signal" x="90" y="174" width="11" height="6"/><rect class="d-signal" x="102" y="176" width="11" height="4"/><rect class="d-signal" x="114" y="177" width="11" height="3"/><rect class="d-signal" x="126" y="178" width="11" height="2"/>
+              <line class="d-line-accent" x1="146" y1="120" x2="166" y2="120" marker-end="url(#feature-engineering-arrow2)"/>
+              <text class="d-mono" x="156" y="110" text-anchor="middle">log1p</text>
+              <line class="d-line" x1="170" y1="180" x2="292" y2="180"/>
+              <rect class="d-good" x="172" y="170" width="12" height="10"/><rect class="d-good" x="185" y="155" width="12" height="25"/><rect class="d-good" x="198" y="130" width="12" height="50"/><rect class="d-good" x="211" y="100" width="12" height="80"/><rect class="d-good" x="224" y="85" width="12" height="95"/><rect class="d-good" x="237" y="100" width="12" height="80"/><rect class="d-good" x="250" y="130" width="12" height="50"/><rect class="d-good" x="263" y="155" width="12" height="25"/><rect class="d-good" x="276" y="170" width="12" height="10"/>
+              <text class="d-label" x="85" y="198" text-anchor="middle">income (raw)</text>
+              <text class="d-label" x="230" y="198" text-anchor="middle">log(1 + income)</text>
+              <text class="d-title" x="480" y="22" text-anchor="middle">cyclical time</text>
+              <circle class="d-box" cx="480" cy="110" r="70"/>
+              <text class="d-label" x="480" y="34" text-anchor="middle">0</text>
+              <text class="d-label" x="560" y="114">6</text>
+              <text class="d-label" x="480" y="194" text-anchor="middle">12</text>
+              <text class="d-label" x="400" y="114" text-anchor="end">18</text>
+              <line class="d-line-accent" x1="461.9" y1="42.4" x2="480" y2="40"/>
+              <circle class="d-dot" cx="480" cy="40" r="5"/>
+              <circle class="d-dot" cx="461.9" cy="42.4" r="5"/>
+              <text class="d-mono" x="490" y="56">00:00</text>
+              <text class="d-mono" x="452" y="56" text-anchor="end">23:00</text>
+              <text class="d-label" x="480" y="214" text-anchor="middle">raw gap 23 · (sin, cos) gap 0.26</text>
+            </svg>
+          </div>
+          <figcaption>Log transforms tame long-tailed amounts for linear models. Encoding hour \(h\) as \((\sin 2\pi h/24, \cos 2\pi h/24)\) puts 23:00 next to midnight.</figcaption>
+        </figure>
+
+        <h3>Tuning: search the knobs, not the test set</h3>
+        <p>Hyperparameters are chosen on validation folds, never on the test set. <strong>Grid search</strong> tries every combination; <strong>random search</strong> samples the space; Bayesian optimizers (Optuna's TPE, for example) use earlier trials to pick promising next ones. When only one or two knobs really matter, which is common, random search explores many more distinct values of them for the same budget.</p>
+
+        <div class="widget" id="hp-demo">
+          <div class="widget-head">
+            <span class="widget-title">Grid vs random search</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="hp-budget">Trials <input type="range" id="hp-budget" min="3" max="6" step="1" value="3"><output id="hp-budget-out">9</output></label>
+            <button class="btn" type="button" id="hp-reshuffle">New random draw</button>
+          </div>
+          <svg id="hp-plot" viewBox="0 0 640 300" role="img" aria-label="Two copies of a validation-score landscape where only the learning-rate axis matters. Left: a regular grid of trials. Right: the same number of random trials. Bars below each show which learning-rate values were tried."></svg>
+          <p class="readout" id="hp-readout"></p>
+        </div>
+        <p>The darker band is where validation score is high, and it depends almost only on the horizontal knob. A 3×3 grid tests just three distinct values of it and can miss the band entirely; nine random trials test nine values. That is the argument of Bergstra and Bengio (2012), and why random or Bayesian search is the default.</p>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+from scipy.stats import loguniform, randint
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.model_selection import RandomizedSearchCV
+
+pre = ColumnTransformer([
+    ("num", make_pipeline(SimpleImputer(strategy="median"), StandardScaler()), ["age", "income"]),
+    ("cat", make_pipeline(SimpleImputer(strategy="constant", fill_value="missing"),
+                          OneHotEncoder(handle_unknown="ignore", sparse_output=False)), ["city", "plan"]),
+])
+pipe = Pipeline([("pre", pre), ("gbm", HistGradientBoostingClassifier(random_state=0))])
+
+search = RandomizedSearchCV(pipe, n_iter=40, cv=5, scoring="average_precision", random_state=0,
+    param_distributions={
+        "gbm__learning_rate": loguniform(1e-2, 3e-1),   <span class="c"># sample on a log scale</span>
+        "gbm__max_leaf_nodes": randint(8, 64),
+        "gbm__min_samples_leaf": randint(10, 200),
+    })
+search.fit(df_train, y_train)                         <span class="c"># df_train: a pandas DataFrame</span>
+print(search.best_params_, search.best_score_)</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Put every transform in a pipeline so it is fitted on training folds only and reused unchanged in production.</li>
+            <li>Scale for linear and distance-based models; trees do not care.</li>
+            <li>One-hot for few categories, out-of-fold target encoding or embeddings for many.</li>
+            <li>Log-transform skewed amounts; sin/cos-encode cyclical values.</li>
+            <li>Prefer random or Bayesian search over grids, sample rates on a log scale, and keep the test set out of tuning.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Computing target encodings on the full training set, which leaks each row's own label.</li>
+            <li>Tuning on the test set, or reporting the cross-validation score of the best of 200 trials as an unbiased estimate.</li>
+            <li>Searching learning rates on a linear scale, wasting most trials on the largest values.</li>
+            <li>Forgetting <code>handle_unknown="ignore"</code> and crashing on a category first seen in production.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="feature-engineering-1"><span>Build a ColumnTransformer for numeric, categorical and text columns</span></label></li>
+          <li><label><input type="checkbox" data-key="feature-engineering-2"><span>Encode a cyclical feature with sine and cosine and explain why</span></label></li>
+          <li><label><input type="checkbox" data-key="feature-engineering-3"><span>Explain why random search beats grid search when few hyperparameters matter</span></label></li>
+          <li><label><input type="checkbox" data-key="feature-engineering-4"><span>Run a randomized search over a full pipeline with log-uniform learning rates</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/compose.html">scikit-learn: Pipelines and composite estimators</a></li>
+          <li><span class="kind">Paper</span><a href="https://www.jmlr.org/papers/v13/bergstra12a.html">Random Search for Hyper-Parameter Optimization (Bergstra &amp; Bengio, 2012)</a></li>
+          <li><span class="kind">Docs</span><a href="https://optuna.readthedocs.io/">Optuna documentation</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Churn baseline, done right</h4><p>Take a public customer-churn dataset and build logistic regression and gradient-boosting models inside scikit-learn pipelines. Report precision, recall and PR-AUC with stratified cross-validation, and pick a threshold from an explicit cost of false positives versus false negatives.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Leakage hunt</h4><p>Take a Kaggle-style tabular dataset with a time column. Build a deliberately leaky model (random split, target-derived feature, scaler fit on all rows), then fix each leak one at a time and log how much the "too good to be true" score drops at every step.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Embedding clustering for an eval set</h4><p>Embed a few thousand real user queries with a sentence-embedding model, reduce with PCA, cluster with k-means and HDBSCAN, and label each cluster by reading samples. Use the clusters to build a stratified evaluation set for an LLM feature and document the coverage gaps you found.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Train and compare a linear model and a gradient-boosted tree on a tabular problem with a reproducible pipeline</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Choose a metric and a decision threshold from the business cost of each error type, and defend the choice</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Read a learning curve and say whether to add data, add capacity or regularize</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Spot target leakage, preprocessing leakage and split leakage in someone else's notebook</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Cluster and visualize embeddings, and explain what t-SNE or UMAP plots can and cannot tell you</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 03. Shared helpers first, then one IIFE per widget. */
+var ATLAS03 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  /* small seeded PRNG so demos look the same on every load */
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) {
+    var u = 1 - r(), v = r();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  return { svg: svg, text: text, clear: clear, rng: rng, gauss: gauss };
+})();
+
+/* ---------- 03.1 logistic regression decision boundary ---------- */
+(function () {
+  if (!document.getElementById("sup-demo")) return;
+  var H = ATLAS03, S = H.svg;
+  var plot = document.getElementById("sup-plot");
+  var ids = ["w1", "w2", "b"], inputs = {}, outs = {};
+  ids.forEach(function (k) { inputs[k] = document.getElementById("sup-" + k); outs[k] = document.getElementById("sup-" + k + "-out"); });
+  var readout = document.getElementById("sup-readout");
+  var DEF = { w1: 1, w2: -0.5, b: 0.5 }, st = { w1: 1, w2: -0.5, b: 0.5 }, timer = null;
+  var r = H.rng(7), pts = [], i;
+  for (i = 0; i < 40; i++) pts.push({ x: 1.2 + 0.95 * H.gauss(r), y: 0.8 + 0.95 * H.gauss(r), c: 1 });
+  for (i = 0; i < 40; i++) pts.push({ x: -1.0 + 0.95 * H.gauss(r), y: -0.7 + 0.95 * H.gauss(r), c: 0 });
+  pts.forEach(function (p) { p.x = Math.max(-4.8, Math.min(4.8, p.x)); p.y = Math.max(-2.85, Math.min(2.85, p.y)); });
+  var X0 = -5, Y1 = 3, K = 50, OX = 40, OY = 10;
+  function px(x) { return OX + (x - X0) * K; }
+  function py(y) { return OY + (Y1 - y) * K; }
+  function sig(z) { return 1 / (1 + Math.exp(-z)); }
+  function prob(p) { return sig(st.w1 * p.x + st.w2 * p.y + st.b); }
+
+  function draw() {
+    H.clear(plot);
+    var defs = S("defs", {}, plot);
+    var cp = S("clipPath", { id: "sup-clip" }, defs);
+    S("rect", { x: OX, y: OY, width: 500, height: 300 }, cp);
+    var mk = S("marker", { id: "sup-demo-arrow", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+    S("path", { d: "M0,0 L10,5 L0,10 z", "class": "d-head-accent" }, mk);
+    var g = S("g", { "clip-path": "url(#sup-clip)" }, plot);
+    for (var cx = 0; cx < 25; cx++) {
+      for (var cy = 0; cy < 15; cy++) {
+        var x = X0 + (cx + 0.5) * 0.4, y = Y1 - (cy + 0.5) * 0.4;
+        var p = sig(st.w1 * x + st.w2 * y + st.b);
+        S("rect", { x: OX + cx * 20, y: OY + cy * 20, width: 20, height: 20,
+          "class": p > 0.5 ? "d-dot" : "d-dot-signal", "fill-opacity": (Math.abs(p - 0.5) * 0.5).toFixed(3) }, g);
+      }
+    }
+    S("line", { x1: px(0), y1: OY, x2: px(0), y2: OY + 300, "class": "d-grid" }, g);
+    S("line", { x1: OX, y1: py(0), x2: OX + 500, y2: py(0), "class": "d-grid" }, g);
+    var n2 = st.w1 * st.w1 + st.w2 * st.w2;
+    if (n2 > 1e-6) {
+      var n = Math.sqrt(n2), x0 = -st.b * st.w1 / n2, y0 = -st.b * st.w2 / n2, dx = -st.w2 / n, dy = st.w1 / n;
+      S("line", { x1: px(x0 - 20 * dx), y1: py(y0 - 20 * dy), x2: px(x0 + 20 * dx), y2: py(y0 + 20 * dy), "class": "d-line", "stroke-width": 2 }, g);
+      S("line", { x1: px(x0), y1: py(y0), x2: px(x0 + st.w1 / n), y2: py(y0 + st.w2 / n), "class": "d-line-accent", "marker-end": "url(#sup-demo-arrow)" }, g);
+      H.text(g, px(x0 + 1.15 * st.w1 / n), py(y0 + 1.15 * st.w2 / n) + 4, "w", "d-mono d-text-accent", "middle");
+    }
+    var loss = 0, correct = 0;
+    pts.forEach(function (q) {
+      var pr = Math.min(1 - 1e-9, Math.max(1e-9, prob(q)));
+      loss += q.c ? -Math.log(pr) : -Math.log(1 - pr);
+      var ok = (pr > 0.5) === (q.c === 1);
+      if (ok) correct++;
+      var c = S("circle", { cx: px(q.x), cy: py(q.y), r: 4.5, "class": q.c ? "d-dot" : "d-dot-signal" }, plot);
+      if (!ok) c.setAttribute("style", "stroke: var(--ink); stroke-width: 2");
+    });
+    S("rect", { x: OX, y: OY, width: 500, height: 300, "class": "d-grid" }, plot);
+    H.text(plot, OX + 494, OY + 16, "class 1", "d-label d-text-accent", "end");
+    H.text(plot, OX + 6, OY + 294, "class 0", "d-label d-text-signal");
+    ids.forEach(function (k) { outs[k].textContent = st[k].toFixed(1); });
+    readout.textContent = "accuracy " + (100 * correct / pts.length).toFixed(1) + "%  ·  mean log loss " + (loss / pts.length).toFixed(3) +
+      "  ·  |w| = " + Math.sqrt(n2).toFixed(2) + "  ·  outlined points are misclassified";
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  ids.forEach(function (k) {
+    inputs[k].addEventListener("input", function () { stop(); st[k] = parseFloat(inputs[k].value); draw(); });
+  });
+  document.getElementById("sup-fit").addEventListener("click", function () {
+    stop();
+    var frames = 0;
+    timer = setInterval(function () {
+      for (var s = 0; s < 5; s++) {
+        var g1 = 0, g2 = 0, gb = 0;
+        pts.forEach(function (q) { var e = prob(q) - q.c; g1 += e * q.x; g2 += e * q.y; gb += e; });
+        var m = pts.length, lam = 0.01, lr = 0.5;
+        st.w1 -= lr * (g1 / m + lam * st.w1); st.w2 -= lr * (g2 / m + lam * st.w2); st.b -= lr * gb / m;
+      }
+      ["w1", "w2", "b"].forEach(function (k) { st[k] = Math.max(-4, Math.min(4, st[k])); inputs[k].value = st[k]; });
+      draw();
+      if (++frames >= 60) stop();
+    }, 30);
+  });
+  document.getElementById("sup-reset").addEventListener("click", function () {
+    stop();
+    ids.forEach(function (k) { st[k] = DEF[k]; inputs[k].value = DEF[k]; });
+    draw();
+  });
+  draw();
+})();
+
+/* ---------- 03.2 gradient boosting with stumps ---------- */
+(function () {
+  if (!document.getElementById("gb-demo")) return;
+  var H = ATLAS03, S = H.svg;
+  var plot = document.getElementById("gb-plot"), mIn = document.getElementById("gb-m"), lrIn = document.getElementById("gb-lr");
+  var mOut = document.getElementById("gb-m-out"), lrOut = document.getElementById("gb-lr-out"), readout = document.getElementById("gb-readout");
+  var r = H.rng(21), tr = [], va = [], i, MAXT = 200;
+  function f(x) { return 1.5 * Math.sin(x) + 0.25 * x; }
+  for (i = 0; i < 50; i++) { var x = r() * 10; tr.push({ x: x, y: f(x) + 0.45 * H.gauss(r) }); }
+  for (i = 0; i < 50; i++) { var x2 = r() * 10; va.push({ x: x2, y: f(x2) + 0.45 * H.gauss(r) }); }
+  tr.sort(function (a, b) { return a.x - b.x; });
+  var base = tr.reduce(function (s, p) { return s + p.y; }, 0) / tr.length;
+  var stumps = [], trainMSE = [], valMSE = [];
+  function stumpAt(st, x) { return x < st.t ? st.l : st.r; }
+  function build(lr) {
+    stumps = []; trainMSE = []; valMSE = [];
+    var F = tr.map(function () { return base; }), Fv = va.map(function () { return base; });
+    function mse(arr, pred) { var s = 0; arr.forEach(function (p, j) { s += (p.y - pred[j]) * (p.y - pred[j]); }); return s / arr.length; }
+    trainMSE.push(mse(tr, F)); valMSE.push(mse(va, Fv));
+    for (var m = 0; m < MAXT; m++) {
+      var res = tr.map(function (p, j) { return p.y - F[j]; });
+      var total = res.reduce(function (s, v) { return s + v; }, 0), n = res.length, left = 0, best = null;
+      for (var k = 1; k < n; k++) {
+        left += res[k - 1];
+        var nl = k, nr = n - k, ml = left / nl, mr = (total - left) / nr;
+        var gain = nl * ml * ml + nr * mr * mr;      /* maximizing this minimizes SSE */
+        if (!best || gain > best.g) best = { g: gain, t: (tr[k - 1].x + tr[k].x) / 2, l: ml, r: mr };
+      }
+      stumps.push(best);
+      F = F.map(function (v, j) { return v + lr * stumpAt(best, tr[j].x); });
+      Fv = Fv.map(function (v, j) { return v + lr * stumpAt(best, va[j].x); });
+      trainMSE.push(mse(tr, F)); valMSE.push(mse(va, Fv));
+    }
+  }
+  function predict(x, m, lr) { var v = base; for (var k = 0; k < m; k++) v += lr * stumpAt(stumps[k], x); return v; }
+  var curLR = null;
+  var X = function (x) { return 40 + x * 54; }, Y = function (y) { return Math.max(12, Math.min(208, 205 - (y + 1.5) * 30)); };
+  function draw() {
+    var m = parseInt(mIn.value, 10), lr = parseFloat(lrIn.value);
+    if (lr !== curLR) { build(lr); curLR = lr; }
+    mOut.textContent = m; lrOut.textContent = lr.toFixed(2);
+    H.clear(plot);
+    S("rect", { x: 40, y: 10, width: 540, height: 200, "class": "d-grid" }, plot);
+    va.forEach(function (p) { S("circle", { cx: X(p.x), cy: Y(p.y), r: 2.5, "class": "d-dot-muted" }, plot); });
+    tr.forEach(function (p) { S("circle", { cx: X(p.x), cy: Y(p.y), r: 3.5, "class": "d-dot" }, plot); });
+    function curve(mm, cls) {
+      var d = "";
+      for (var k = 0; k <= 300; k++) { var x = k / 30; d += (k ? " L" : "M") + X(x).toFixed(1) + "," + Math.max(12, Math.min(208, Y(predict(x, mm, lr)))).toFixed(1); }
+      S("path", { d: d, "class": cls }, plot);
+    }
+    if (m > 0) curve(m - 1, "d-line d-dash");
+    curve(m, "d-line-signal");
+    H.text(plot, 46, 26, "• train   · validation   — model   - - one tree earlier", "d-label");
+    /* error chart */
+    var maxE = Math.max(trainMSE[0], valMSE[0]) * 1.05;
+    var EX = function (k) { return 40 + k * 2.7; }, EY = function (e) { return 290 - Math.min(1, e / maxE) * 58; };
+    S("line", { x1: 40, y1: 290, x2: 580, y2: 290, "class": "d-line" }, plot);
+    function line(arr, cls) {
+      var d = ""; arr.forEach(function (e, k) { d += (k ? " L" : "M") + EX(k).toFixed(1) + "," + EY(e).toFixed(1); });
+      S("path", { d: d, "class": cls }, plot);
+    }
+    line(trainMSE, "d-line-accent"); line(valMSE, "d-line-signal");
+    S("line", { x1: EX(m), y1: 228, x2: EX(m), y2: 290, "class": "d-line d-dash" }, plot);
+    H.text(plot, 576, 244, "error vs number of trees", "d-label", "end");
+    var bestK = 0; valMSE.forEach(function (e, k) { if (e < valMSE[bestK]) bestK = k; });
+    readout.textContent = "trees " + m + "  ·  train MSE " + trainMSE[m].toFixed(3) + "  ·  validation MSE " + valMSE[m].toFixed(3) +
+      "  ·  best validation at " + bestK + " trees (" + valMSE[bestK].toFixed(3) + ")";
+  }
+  mIn.addEventListener("input", draw); lrIn.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---------- 03.3 k-means stepper ---------- */
+(function () {
+  if (!document.getElementById("km-demo")) return;
+  var H = ATLAS03, S = H.svg;
+  var plot = document.getElementById("km-plot"), kIn = document.getElementById("km-k"), kOut = document.getElementById("km-k-out");
+  var readout = document.getElementById("km-readout");
+  var COLORS = ["var(--accent)", "var(--signal)", "var(--good)", "var(--t3)", "var(--t2)", "var(--ink-2)"];
+  var r = H.rng(5), pts = [], centers = [[-2.4, 1.4], [2.0, 1.8], [-1.6, -1.8], [2.4, -1.4]];
+  centers.forEach(function (c) {
+    for (var i = 0; i < 30; i++) pts.push({ x: Math.max(-4.8, Math.min(4.8, c[0] + 0.65 * H.gauss(r))), y: Math.max(-2.85, Math.min(2.85, c[1] + 0.65 * H.gauss(r))), a: -1 });
+  });
+  var X = function (x) { return 40 + (x + 5) * 50; }, Y = function (y) { return 10 + (3 - y) * 50; };
+  var seed = 1, cents = [], prev = null, phase = "assign", iter = 0, done = false, lastChanged = -1, timer = null;
+  function init() {
+    stop();
+    var rr = H.rng(seed * 97 + 3), k = parseInt(kIn.value, 10), used = {};
+    cents = [];
+    while (cents.length < k) {
+      var j = Math.floor(rr() * pts.length);
+      if (used[j]) continue; used[j] = true;
+      cents.push({ x: pts[j].x, y: pts[j].y });
+    }
+    pts.forEach(function (p) { p.a = -1; });
+    prev = null; phase = "assign"; iter = 0; done = false; lastChanged = -1;
+    kOut.textContent = k;
+    draw();
+  }
+  function inertia() {
+    var s = 0;
+    pts.forEach(function (p) { if (p.a >= 0) { var c = cents[p.a]; s += (p.x - c.x) * (p.x - c.x) + (p.y - c.y) * (p.y - c.y); } });
+    return s;
+  }
+  function step() {
+    if (done) return;
+    if (phase === "assign") {
+      var changed = 0;
+      pts.forEach(function (p) {
+        var best = 0, bd = Infinity;
+        cents.forEach(function (c, j) { var d = (p.x - c.x) * (p.x - c.x) + (p.y - c.y) * (p.y - c.y); if (d < bd) { bd = d; best = j; } });
+        if (p.a !== best) { changed++; p.a = best; }
+      });
+      lastChanged = changed; iter++;
+      if (changed === 0) done = true;
+      phase = "update";
+    } else {
+      prev = cents.map(function (c) { return { x: c.x, y: c.y }; });
+      cents = cents.map(function (c, j) {
+        var sx = 0, sy = 0, n = 0;
+        pts.forEach(function (p) { if (p.a === j) { sx += p.x; sy += p.y; n++; } });
+        return n ? { x: sx / n, y: sy / n } : c;
+      });
+      phase = "assign";
+    }
+    draw();
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  function draw() {
+    H.clear(plot);
+    S("rect", { x: 40, y: 10, width: 500, height: 300, "class": "d-grid" }, plot);
+    pts.forEach(function (p) {
+      var c = S("circle", { cx: X(p.x), cy: Y(p.y), r: 4.5, "class": "d-dot-muted" }, plot);
+      if (p.a >= 0) c.setAttribute("style", "fill: " + COLORS[p.a]);
+    });
+    cents.forEach(function (c, j) {
+      if (prev && phase === "assign") {
+        S("rect", { x: X(prev[j].x) - 6, y: Y(prev[j].y) - 6, width: 12, height: 12, "class": "d-box d-dash" }, plot);
+        S("line", { x1: X(prev[j].x), y1: Y(prev[j].y), x2: X(c.x), y2: Y(c.y), "class": "d-line" }, plot);
+      }
+      S("rect", { x: X(c.x) - 8, y: Y(c.y) - 8, width: 16, height: 16, style: "fill: " + COLORS[j] + "; stroke: var(--ink); stroke-width: 2" }, plot);
+    });
+    var msg;
+    if (done) msg = "converged after " + iter + " assign steps (no point changed cluster)";
+    else if (iter === 0) msg = "random start: centroids placed on random points. Next: assign";
+    else msg = phase === "update" ? "assigned (" + lastChanged + " points changed). Next: move centroids to means" : "centroids moved. Next: reassign points";
+    readout.textContent = "iteration " + iter + "  ·  " + msg + (iter ? "  ·  inertia " + inertia().toFixed(1) : "");
+  }
+  document.getElementById("km-step").addEventListener("click", function () { stop(); step(); });
+  document.getElementById("km-run").addEventListener("click", function () {
+    stop();
+    timer = setInterval(function () { if (done) { stop(); return; } step(); }, 220);
+  });
+  document.getElementById("km-reinit").addEventListener("click", function () { seed++; init(); });
+  kIn.addEventListener("input", init);
+  init();
+})();
+
+/* ---------- 03.4 threshold, confusion matrix, ROC ---------- */
+(function () {
+  if (!document.getElementById("thr-demo")) return;
+  var H = ATLAS03, S = H.svg;
+  var plot = document.getElementById("thr-plot"), tIn = document.getElementById("thr-t");
+  var tOut = document.getElementById("thr-t-out"), readout = document.getElementById("thr-readout");
+  var r = H.rng(11), items = [], i;
+  function clip(v) { return Math.max(0.01, Math.min(0.99, v)); }
+  for (i = 0; i < 40; i++) items.push({ s: clip(0.64 + 0.16 * H.gauss(r)), c: 1, j: r() });
+  for (i = 0; i < 60; i++) items.push({ s: clip(0.38 + 0.16 * H.gauss(r)), c: 0, j: r() });
+  var P = 40, N = 60;
+  function counts(t) {
+    var c = { tp: 0, fp: 0, fn: 0, tn: 0 };
+    items.forEach(function (it) {
+      var pred = it.s >= t;
+      if (it.c && pred) c.tp++; else if (it.c) c.fn++; else if (pred) c.fp++; else c.tn++;
+    });
+    return c;
+  }
+  /* full ROC curve from all distinct thresholds */
+  var ths = items.map(function (it) { return it.s; }).sort(function (a, b) { return b - a; });
+  var roc = [{ f: 0, t: 0 }];
+  ths.forEach(function (t) { var c = counts(t); roc.push({ f: c.fp / N, t: c.tp / P }); });
+  roc.push({ f: 1, t: 1 });
+  var auc = 0;
+  for (i = 1; i < roc.length; i++) auc += (roc[i].f - roc[i - 1].f) * (roc[i].t + roc[i - 1].t) / 2;
+  var SX = function (s) { return 30 + s * 210; };
+  var RX = function (f) { return 470 + f * 150; }, RY = function (t) { return 210 - t * 150; };
+  function draw() {
+    var t = parseFloat(tIn.value), c = counts(t);
+    tOut.textContent = t.toFixed(2);
+    H.clear(plot);
+    /* score strip */
+    H.text(plot, 135, 20, "model scores", "d-title", "middle");
+    H.text(plot, 30, 48, "positives (40)", "d-label d-text-accent");
+    H.text(plot, 30, 148, "negatives (60)", "d-label d-text-signal");
+    S("line", { x1: 30, y1: 236, x2: 240, y2: 236, "class": "d-line" }, plot);
+    [0, 0.5, 1].forEach(function (v) { H.text(plot, SX(v), 252, String(v), "d-label", "middle"); });
+    items.forEach(function (it) {
+      var y = (it.c ? 60 : 160) + it.j * 60;
+      S("circle", { cx: SX(it.s), cy: y, r: 4, "class": it.c ? "d-dot" : "d-dot-signal", "fill-opacity": it.s >= t ? 1 : 0.25 }, plot);
+    });
+    S("line", { x1: SX(t), y1: 30, x2: SX(t), y2: 236, "class": "d-line-accent" }, plot);
+    H.text(plot, Math.min(236, SX(t) + 4), 266, "flag if score ≥ " + t.toFixed(2), "d-label");
+    /* confusion matrix */
+    H.text(plot, 355, 20, "confusion matrix", "d-title", "middle");
+    H.text(plot, 320, 52, "pred +", "d-label", "middle"); H.text(plot, 390, 52, "pred −", "d-label", "middle");
+    H.text(plot, 282, 98, "actual +", "d-label", "end"); H.text(plot, 282, 158, "actual −", "d-label", "end");
+    var cells = [[285, 60, "TP", c.tp, "d-good"], [355, 60, "FN", c.fn, "d-fill"], [285, 120, "FP", c.fp, "d-fill"], [355, 120, "TN", c.tn, "d-box"]];
+    cells.forEach(function (q) {
+      S("rect", { x: q[0], y: q[1], width: 70, height: 60, "class": q[4] }, plot);
+      H.text(plot, q[0] + 35, q[1] + 26, q[2], "d-label", "middle");
+      H.text(plot, q[0] + 35, q[1] + 46, String(q[3]), "d-title", "middle");
+    });
+    var prec = c.tp + c.fp ? c.tp / (c.tp + c.fp) : 1, rec = c.tp / P, fpr = c.fp / N;
+    var f1 = prec + rec ? 2 * prec * rec / (prec + rec) : 0;
+    H.text(plot, 355, 206, "precision " + prec.toFixed(2), "d-mono", "middle");
+    H.text(plot, 355, 224, "recall " + rec.toFixed(2), "d-mono", "middle");
+    /* ROC */
+    H.text(plot, 545, 20, "ROC curve", "d-title", "middle");
+    S("rect", { x: 470, y: 60, width: 150, height: 150, "class": "d-grid" }, plot);
+    S("line", { x1: RX(0), y1: RY(0), x2: RX(1), y2: RY(1), "class": "d-line d-dash" }, plot);
+    var d = ""; roc.forEach(function (p, k) { d += (k ? " L" : "M") + RX(p.f).toFixed(1) + "," + RY(p.t).toFixed(1); });
+    S("path", { d: d, "class": "d-line-accent" }, plot);
+    S("circle", { cx: RX(fpr), cy: RY(rec), r: 6, "class": "d-dot-good", style: "stroke: var(--ink); stroke-width: 1.5" }, plot);
+    H.text(plot, 545, 232, "false positive rate", "d-label", "middle");
+    H.text(plot, 462, 136, "TPR", "d-label", "end");
+    H.text(plot, 612, 200, "AUC " + auc.toFixed(2), "d-label", "end");
+    readout.textContent = "precision " + prec.toFixed(2) + "  ·  recall " + rec.toFixed(2) + "  ·  F1 " + f1.toFixed(2) +
+      "  ·  FPR " + fpr.toFixed(2) + "  ·  accuracy " + ((c.tp + c.tn) / 100).toFixed(2) + "  ·  ROC-AUC " + auc.toFixed(3) + " (threshold-free)";
+  }
+  tIn.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---------- 03.5 polynomial degree: bias vs variance ---------- */
+(function () {
+  if (!document.getElementById("bv-demo")) return;
+  var H = ATLAS03, S = H.svg;
+  var plot = document.getElementById("bv-plot"), dIn = document.getElementById("bv-deg"), nIn = document.getElementById("bv-n");
+  var dOut = document.getElementById("bv-deg-out"), nOut = document.getElementById("bv-n-out"), readout = document.getElementById("bv-readout");
+  var SIG = 0.3, MAXD = 14, seed = 1, tr = [], va = [], fits = [];
+  function f(x) { return Math.sin(3 * x); }
+  function cheb(x, d) { var T = [1, x]; for (var k = 2; k <= d; k++) T.push(2 * x * T[k - 1] - T[k - 2]); return T.slice(0, d + 1); }
+  function solve(A, b) {
+    var n = b.length, M = A.map(function (row, i) { return row.concat([b[i]]); });
+    for (var c = 0; c < n; c++) {
+      var piv = c;
+      for (var rr = c + 1; rr < n; rr++) if (Math.abs(M[rr][c]) > Math.abs(M[piv][c])) piv = rr;
+      var tmp = M[c]; M[c] = M[piv]; M[piv] = tmp;
+      for (rr = c + 1; rr < n; rr++) {
+        var fct = M[rr][c] / M[c][c];
+        for (var k = c; k <= n; k++) M[rr][k] -= fct * M[c][k];
+      }
+    }
+    var x = new Array(n);
+    for (var i = n - 1; i >= 0; i--) { var s = M[i][n]; for (var j = i + 1; j < n; j++) s -= M[i][j] * x[j]; x[i] = s / M[i][i]; }
+    return x;
+  }
+  function fit(d) {
+    var p = d + 1, A = [], b = [], i, j;
+    for (i = 0; i < p; i++) { A.push(new Array(p).fill(0)); b.push(0); }
+    tr.forEach(function (pt) {
+      var T = cheb(pt.x, d);
+      for (i = 0; i < p; i++) { b[i] += T[i] * pt.y; for (j = 0; j < p; j++) A[i][j] += T[i] * T[j]; }
+    });
+    for (i = 0; i < p; i++) A[i][i] += 1e-6;   /* tiny ridge keeps the system solvable when points are few */
+    return solve(A, b);
+  }
+  function pred(c, x) { var T = cheb(x, c.length - 1), s = 0; for (var i = 0; i < c.length; i++) s += c[i] * T[i]; return s; }
+  function mse(arr, c) { var s = 0; arr.forEach(function (p) { var e = p.y - pred(c, p.x); s += e * e; }); return s / arr.length; }
+  function sample() {
+    var r = ATLAS03.rng(seed * 131 + 7), n = parseInt(nIn.value, 10), i;
+    tr = []; va = [];
+    for (i = 0; i < n; i++) { var x = -1 + 2 * r(); tr.push({ x: x, y: f(x) + SIG * ATLAS03.gauss(r) }); }
+    for (i = 0; i < 60; i++) { var x2 = -1 + 2 * r(); va.push({ x: x2, y: f(x2) + SIG * ATLAS03.gauss(r) }); }
+    fits = [];
+    for (var d = 0; d <= MAXD; d++) { var c = fit(d); fits.push({ c: c, tr: mse(tr, c), va: mse(va, c) }); }
+  }
+  var X = function (x) { return 30 + (x + 1) * 150; }, Y = function (y) { return 135 - y * 46; };
+  var DX = function (d) { return 390 + d * 16; }, LY = function (e) { var l = Math.log(Math.max(1e-3, e)) / Math.LN10; return 40 + (1 - (Math.min(2, Math.max(-3, l)) + 3) / 5) * 190; };
+  function draw() {
+    var d = parseInt(dIn.value, 10);
+    dOut.textContent = d; nOut.textContent = nIn.value;
+    H.clear(plot);
+    var defs = S("defs", {}, plot), cp = S("clipPath", { id: "bv-clip" }, defs);
+    S("rect", { x: 30, y: 20, width: 300, height: 230 }, cp);
+    S("rect", { x: 30, y: 20, width: 300, height: 230, "class": "d-grid" }, plot);
+    var g = S("g", { "clip-path": "url(#bv-clip)" }, plot), dd = "", k;
+    for (k = 0; k <= 200; k++) { var x = -1 + k / 100; dd += (k ? " L" : "M") + X(x).toFixed(1) + "," + Y(f(x)).toFixed(1); }
+    S("path", { d: dd, "class": "d-line d-dash" }, g);
+    va.forEach(function (p) { S("circle", { cx: X(p.x), cy: Y(p.y), r: 2.5, "class": "d-dot-muted" }, g); });
+    tr.forEach(function (p) { S("circle", { cx: X(p.x), cy: Y(p.y), r: 4, "class": "d-dot" }, g); });
+    dd = "";
+    for (k = 0; k <= 300; k++) { var x3 = -1 + k / 150, yv = Math.max(-10, Math.min(10, pred(fits[d].c, x3))); dd += (k ? " L" : "M") + X(x3).toFixed(1) + "," + Y(yv).toFixed(1); }
+    S("path", { d: dd, "class": "d-line-signal" }, g);
+    H.text(plot, 36, 268, "• train  · validation  - - true curve  — degree-" + d + " fit", "d-label");
+    /* error vs degree */
+    H.text(plot, 502, 16, "error vs degree (log scale)", "d-label", "middle");
+    S("rect", { x: 380, y: 30, width: 244, height: 210, "class": "d-grid" }, plot);
+    S("line", { x1: 380, y1: LY(SIG * SIG), x2: 624, y2: LY(SIG * SIG), "class": "d-line d-dash" }, plot);
+    H.text(plot, 620, LY(SIG * SIG) - 4, "noise floor", "d-label", "end");
+    ["tr", "va"].forEach(function (key) {
+      var p = ""; fits.forEach(function (ft, j) { p += (j ? " L" : "M") + DX(j) + "," + LY(ft[key]).toFixed(1); });
+      S("path", { d: p, "class": key === "tr" ? "d-line-accent" : "d-line-signal" }, plot);
+    });
+    S("line", { x1: DX(d), y1: 30, x2: DX(d), y2: 240, "class": "d-line" }, plot);
+    [0, 5, 10, 14].forEach(function (v) { H.text(plot, DX(v), 256, String(v), "d-label", "middle"); });
+    H.text(plot, 502, 272, "degree", "d-label", "middle");
+    H.text(plot, 388, 46, "train", "d-label d-text-accent"); H.text(plot, 430, 46, "validation", "d-label d-text-signal");
+    var best = 0; fits.forEach(function (ft, j) { if (ft.va < fits[best].va) best = j; });
+    var v = fits[d].va, verdict = "near the sweet spot";
+    if (d < best && v > 1.3 * fits[best].va) verdict = "underfitting (high bias)";
+    if (d > best && v > 1.3 * fits[best].va) verdict = "overfitting (high variance)";
+    readout.textContent = "degree " + d + "  ·  train MSE " + fits[d].tr.toFixed(3) + "  ·  validation MSE " + v.toFixed(3) +
+      "  ·  noise floor " + (SIG * SIG).toFixed(2) + "  ·  best degree here " + best + "  ·  " + verdict;
+  }
+  dIn.addEventListener("input", draw);
+  nIn.addEventListener("input", function () { sample(); draw(); });
+  document.getElementById("bv-resample").addEventListener("click", function () { seed++; sample(); draw(); });
+  sample(); draw();
+})();
+
+/* ---------- 03.6 grid vs random search ---------- */
+(function () {
+  if (!document.getElementById("hp-demo")) return;
+  var H = ATLAS03, S = H.svg;
+  var plot = document.getElementById("hp-plot"), bIn = document.getElementById("hp-budget");
+  var bOut = document.getElementById("hp-budget-out"), readout = document.getElementById("hp-readout");
+  var seed = 1;
+  function score(a, b) { return 0.55 + 0.38 * Math.exp(-Math.pow((a - 0.71) / 0.07, 2)) + 0.04 * b; }
+  function panel(ox, title, trials) {
+    H.text(plot, ox + 135, 18, title, "d-title", "middle");
+    for (var i = 0; i < 10; i++) {
+      for (var j = 0; j < 10; j++) {
+        var s = score((i + 0.5) / 10, 1 - (j + 0.5) / 10);
+        S("rect", { x: ox + i * 27, y: 30 + j * 20, width: 27, height: 20, "class": "d-dot", "fill-opacity": ((s - 0.55) / 0.42 * 0.6).toFixed(3) }, plot);
+      }
+    }
+    S("rect", { x: ox, y: 30, width: 270, height: 200, "class": "d-grid" }, plot);
+    var best = 0, distinct = {};
+    trials.forEach(function (t) {
+      var s = score(t[0], t[1]); if (s > best) best = s;
+      distinct[t[0].toFixed(3)] = true;
+      S("circle", { cx: ox + t[0] * 270, cy: 30 + (1 - t[1]) * 200, r: 5, "class": "d-dot-signal", style: "stroke: var(--surface); stroke-width: 1.5" }, plot);
+      S("line", { x1: ox + t[0] * 270, y1: 244, x2: ox + t[0] * 270, y2: 262, "class": "d-line-signal" }, plot);
+    });
+    S("line", { x1: ox, y1: 262, x2: ox + 270, y2: 262, "class": "d-line" }, plot);
+    H.text(plot, ox + 135, 280, "learning rate (matters) →", "d-label", "middle");
+    return { best: best, n: Object.keys(distinct).length };
+  }
+  function draw() {
+    var s = parseInt(bIn.value, 10), n = s * s, i, j, grid = [], rnd = [], r = H.rng(seed * 59 + 1);
+    bOut.textContent = n;
+    for (i = 0; i < s; i++) for (j = 0; j < s; j++) grid.push([(i + 0.5) / s, (j + 0.5) / s]);
+    for (i = 0; i < n; i++) rnd.push([r(), r()]);
+    H.clear(plot);
+    var g = panel(30, "grid search", grid), q = panel(340, "random search", rnd);
+    H.text(plot, 22, 130, "other knob", "d-label", "middle").setAttribute("transform", "rotate(-90 22 130)");
+    readout.textContent = "grid: " + g.n + " distinct learning rates, best score " + g.best.toFixed(3) +
+      "  ·  random: " + q.n + " distinct, best score " + q.best.toFixed(3) + "  ·  best possible ≈ 0.97";
+  }
+  bIn.addEventListener("input", draw);
+  document.getElementById("hp-reshuffle").addEventListener("click", function () { seed++; draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fine-tuning &amp; adaptation · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="fine-tuning">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Fine-tuning &amp; adaptation</h1>
+    <p class="lede">Fine-tuning changes a model's weights so it behaves the way your product needs, instead of asking nicely in every prompt. This area covers when that is worth it, how supervised fine-tuning, LoRA and preference tuning actually work, and how to run them on hardware you can afford.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Adapting a model is a pipeline with a decision at the front. First you decide whether the problem needs new weights at all (09.1). If it does, supervised fine-tuning teaches the format and behaviour by imitation (09.2), and preference tuning sharpens it by comparison or reward (09.4). LoRA and QLoRA are how you make either step cheap enough to run on one GPU (09.3). Distillation and synthetic data are where much of the training data comes from (09.5), and the Hugging Face tooling ties it together (09.6).</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 260" role="img" aria-label="Adaptation pipeline: decide whether to fine-tune, then supervised fine-tuning, then preference tuning, with LoRA adapters underneath and synthetic data feeding both stages">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="18" width="180" height="48" rx="8"/>
+              <text class="d-title" x="110" y="39" text-anchor="middle">Prompt / RAG first</text>
+              <text class="d-label" x="110" y="56" text-anchor="middle">09.1 no weight change</text>
+              <rect class="d-signal" x="300" y="18" width="250" height="48" rx="8"/>
+              <text class="d-title" x="425" y="39" text-anchor="middle">Teacher + synthetic data</text>
+              <text class="d-label" x="425" y="56" text-anchor="middle">09.5 distillation</text>
+              <rect class="d-box" x="20" y="108" width="140" height="52" rx="8"/>
+              <text class="d-title" x="90" y="131" text-anchor="middle">Task + eval set</text>
+              <text class="d-label" x="90" y="149" text-anchor="middle">base model</text>
+              <rect class="d-accent" x="220" y="108" width="140" height="52" rx="8"/>
+              <text class="d-title" x="290" y="131" text-anchor="middle">SFT</text>
+              <text class="d-label" x="290" y="149" text-anchor="middle">09.2 imitate examples</text>
+              <rect class="d-accent" x="420" y="108" width="150" height="52" rx="8"/>
+              <text class="d-title" x="495" y="131" text-anchor="middle">DPO / GRPO</text>
+              <text class="d-label" x="495" y="149" text-anchor="middle">09.4 compare or reward</text>
+              <rect class="d-good" x="630" y="108" width="115" height="52" rx="8"/>
+              <text class="d-title" x="687" y="131" text-anchor="middle">Ship</text>
+              <text class="d-label" x="687" y="149" text-anchor="middle">merged or adapter</text>
+              <line class="d-line d-dash" x1="90" y1="108" x2="90" y2="68" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="98" y="92">try first</text>
+              <line class="d-line-accent" x1="160" y1="134" x2="218" y2="134" marker-end="url(#ov-arrow-acc)"/>
+              <line class="d-line-accent" x1="360" y1="134" x2="418" y2="134" marker-end="url(#ov-arrow-acc)"/>
+              <line class="d-line-accent" x1="570" y1="134" x2="628" y2="134" marker-end="url(#ov-arrow-acc)"/>
+              <line class="d-line-signal" x1="360" y1="66" x2="300" y2="106" marker-end="url(#ov-arrow)"/>
+              <line class="d-line-signal" x1="490" y1="66" x2="495" y2="106" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="300" y="88" text-anchor="end">examples</text>
+              <text class="d-label" x="502" y="90">pairs</text>
+              <rect class="d-good" x="220" y="190" width="350" height="34" rx="8"/>
+              <text class="d-text" x="395" y="212" text-anchor="middle">09.3 LoRA / QLoRA: train small adapters, freeze the base</text>
+              <line class="d-line-accent" x1="290" y1="188" x2="290" y2="162" marker-end="url(#ov-arrow-acc)"/>
+              <line class="d-line-accent" x1="495" y1="188" x2="495" y2="162" marker-end="url(#ov-arrow-acc)"/>
+              <text class="d-label" x="380" y="250" text-anchor="middle">09.6 tooling: Transformers · PEFT · TRL · bitsandbytes · Accelerate</text>
+            </svg>
+          </div>
+          <figcaption>The adaptation pipeline: rule out prompting and RAG, then SFT and preference tuning, both made cheap by LoRA adapters and fed by teacher-generated data.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="when-to-finetune">
+        <header class="topic-head">
+          <p class="eyebrow">09.1 · The decision</p>
+          <h2>Prompt vs RAG vs fine-tune</h2>
+        </header>
+
+        <p class="lead">You have three levers for changing a model's output. The prompt changes what you tell it, retrieval (RAG) changes what it can see, and fine-tuning changes what it is. They fix different problems at very different costs, so the skill is matching the lever to the failure.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Teams lose weeks fine-tuning a model to "know" their docs and still get hallucinations, while others pay for huge prompts a small fine-tuned model could replace.</p>
+        </div>
+
+        <h3>Diagnose the failure first</h3>
+        <p>Pull 30 to 50 bad outputs and sort each one by what is actually wrong. The bucket with the most failures tells you which lever to pull.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Failure triage: a sample of failing outputs is sorted into four questions. Missing facts lead to RAG, wrong format or style leads to prompting then SFT, impossible tasks lead to a bigger model or RL, and costly but working tasks lead to distillation.">
+              <defs>
+                <marker id="when-to-finetune-tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="90" width="140" height="50" rx="8"/>
+              <text class="d-title" x="90" y="112" text-anchor="middle">30–50 failing</text>
+              <text class="d-label" x="90" y="129" text-anchor="middle">outputs, read by hand</text>
+              <rect class="d-box" x="210" y="15" width="230" height="40" rx="6"/>
+              <text class="d-text" x="325" y="40" text-anchor="middle">Missing or stale facts?</text>
+              <rect class="d-box" x="210" y="68" width="230" height="40" rx="6"/>
+              <text class="d-text" x="325" y="93" text-anchor="middle">Wrong format, tone or style?</text>
+              <rect class="d-box" x="210" y="121" width="230" height="40" rx="6"/>
+              <text class="d-text" x="325" y="146" text-anchor="middle">No prompt makes it work?</text>
+              <rect class="d-box" x="210" y="174" width="230" height="40" rx="6"/>
+              <text class="d-text" x="325" y="199" text-anchor="middle">Works, but too slow or costly?</text>
+              <line class="d-line" x1="160" y1="115" x2="208" y2="35" marker-end="url(#when-to-finetune-tri)"/>
+              <line class="d-line" x1="160" y1="115" x2="208" y2="88" marker-end="url(#when-to-finetune-tri)"/>
+              <line class="d-line" x1="160" y1="115" x2="208" y2="141" marker-end="url(#when-to-finetune-tri)"/>
+              <line class="d-line" x1="160" y1="115" x2="208" y2="194" marker-end="url(#when-to-finetune-tri)"/>
+              <rect class="d-accent" x="480" y="15" width="180" height="40" rx="6"/>
+              <text class="d-text" x="570" y="40" text-anchor="middle">RAG or tool call</text>
+              <rect class="d-good" x="480" y="68" width="180" height="40" rx="6"/>
+              <text class="d-text" x="570" y="93" text-anchor="middle">Prompt, then SFT</text>
+              <rect class="d-signal" x="480" y="121" width="180" height="40" rx="6"/>
+              <text class="d-text" x="570" y="146" text-anchor="middle">Bigger model or RL</text>
+              <rect class="d-good" x="480" y="174" width="180" height="40" rx="6"/>
+              <text class="d-text" x="570" y="199" text-anchor="middle">Distil to small model</text>
+              <line class="d-line" x1="440" y1="35" x2="478" y2="35" marker-end="url(#when-to-finetune-tri)"/>
+              <line class="d-line" x1="440" y1="88" x2="478" y2="88" marker-end="url(#when-to-finetune-tri)"/>
+              <line class="d-line" x1="440" y1="141" x2="478" y2="141" marker-end="url(#when-to-finetune-tri)"/>
+              <line class="d-line" x1="440" y1="194" x2="478" y2="194" marker-end="url(#when-to-finetune-tri)"/>
+            </svg>
+          </div>
+          <figcaption>Failure triage. Each bucket has a different first fix; fine-tuning is the answer for behaviour and cost problems, rarely for missing facts.</figcaption>
+        </figure>
+
+        <p>Fine-tuning is a poor way to add facts. RAG beat it for knowledge injection (Ovadia et al., 2023), training on unknown facts increases hallucination (Gekhman et al., 2024), and facts in weights cannot be cited or updated.</p>
+
+        <h3>Two separate axes</h3>
+        <p>Knowledge and behaviour are independent. RAG moves you along one axis, fine-tuning along the other, and many production systems use both.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 300" role="img" aria-label="Two-axis map: horizontal axis is how much new knowledge is needed, vertical axis is how much new behaviour is needed. Prompting sits low on both, RAG adds knowledge, fine-tuning adds behaviour, and both together combine RAG and fine-tuning.">
+              <defs>
+                <marker id="when-to-finetune-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="when-to-finetune-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <line class="d-line" x1="80" y1="260" x2="600" y2="260" marker-end="url(#when-to-finetune-arrow)"/>
+              <line class="d-line" x1="80" y1="260" x2="80" y2="20" marker-end="url(#when-to-finetune-arrow)"/>
+              <text class="d-label" x="600" y="284" text-anchor="end">needs new or changing knowledge →</text>
+              <text class="d-label" x="66" y="140" text-anchor="middle" transform="rotate(-90 66 140)">needs new behaviour / format →</text>
+              <line class="d-grid d-dash" x1="340" y1="30" x2="340" y2="258"/>
+              <line class="d-grid d-dash" x1="82" y1="145" x2="596" y2="145"/>
+              <rect class="d-box" x="110" y="170" width="200" height="70" rx="8"/>
+              <text class="d-title" x="210" y="198" text-anchor="middle">Prompting</text>
+              <text class="d-label" x="210" y="218" text-anchor="middle">instructions + few-shot</text>
+              <rect class="d-accent" x="370" y="170" width="200" height="70" rx="8"/>
+              <text class="d-title" x="470" y="198" text-anchor="middle">RAG / tools</text>
+              <text class="d-label" x="470" y="218" text-anchor="middle">put facts in context</text>
+              <rect class="d-good" x="110" y="45" width="200" height="70" rx="8"/>
+              <text class="d-title" x="210" y="73" text-anchor="middle">Fine-tune</text>
+              <text class="d-label" x="210" y="93" text-anchor="middle">teach style, format, skill</text>
+              <rect class="d-signal" x="370" y="45" width="200" height="70" rx="8"/>
+              <text class="d-title" x="470" y="73" text-anchor="middle">Fine-tune + RAG</text>
+              <text class="d-label" x="470" y="93" text-anchor="middle">format learned, facts fetched</text>
+              <line class="d-line-accent" x1="310" y1="205" x2="366" y2="205" marker-end="url(#when-to-finetune-arrow-acc)"/>
+              <line class="d-line-accent" x1="210" y1="168" x2="210" y2="119" marker-end="url(#when-to-finetune-arrow-acc)"/>
+              <text class="d-label" x="96" y="252">start here</text>
+            </svg>
+          </div>
+          <figcaption>Knowledge and behaviour are separate axes. RAG moves you right, fine-tuning moves you up, and many production systems end in the top-right corner using both.</figcaption>
+        </figure>
+
+        <h3>The cost ladder</h3>
+        <p>Each lever costs more to build and maintain than the one before. The easily forgotten cost: when a better base model ships, a prompt carries over in an afternoon, while a fine-tune must be redone.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Lever</th><th>Fixes</th><th>Data needed</th><th>Time to first result</th><th>Ongoing cost</th></tr></thead>
+            <tbody>
+              <tr><td>Prompting</td><td>Instructions, light format, few-shot behaviour</td><td>0–20 examples</td><td>Hours</td><td>Long prompts are paid on every call (caching helps)</td></tr>
+              <tr><td>RAG / tools</td><td>Missing, private or fast-changing facts; citations</td><td>A document corpus</td><td>Days</td><td>Index upkeep, retrieval latency, context tokens</td></tr>
+              <tr><td>SFT (usually LoRA)</td><td>Consistent format, style, domain behaviour, shorter prompts</td><td>Hundreds to tens of thousands of good examples</td><td>Days to weeks</td><td>Hosting, retraining on base-model upgrades</td></tr>
+              <tr><td>Preference / RL tuning</td><td>Quality judgements, verifiable skills, refusals</td><td>Preference pairs or a reward function</td><td>Weeks</td><td>As SFT, plus reward and data maintenance</td></tr>
+              <tr><td>Distillation</td><td>Cost and latency of a big model that already works</td><td>Thousands of teacher outputs</td><td>Weeks</td><td>Re-distil when the task drifts</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>A decision procedure</h3>
+        <ol>
+          <li>Build a 100–300 example eval set first (Area 10).</li>
+          <li>Max out prompting on the strongest model you can afford. This sets the ceiling.</li>
+          <li>Fix knowledge failures with retrieval.</li>
+          <li>Fine-tune for stable behaviour or format failures once you have a few hundred good examples.</li>
+          <li>Re-run the same eval, plus a general-abilities slice, on the result.</li>
+        </ol>
+        <p>Worked example: a 40-category ticket classifier with a 2,500-token prompt at 2 million tickets a month uses about 5 billion input tokens. A LoRA-tuned 3B model with a 150-token prompt matches it on one GPU.</p>
+
+        <div class="widget" id="when-to-finetune-demo">
+          <div class="widget-head">
+            <span class="widget-title">Which lever should you pull?</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="when-to-finetune-fail">Main failure
+              <select id="when-to-finetune-fail">
+                <option value="knowledge">Missing or outdated facts</option>
+                <option value="format" selected>Wrong format, tone or style</option>
+                <option value="behaviour">Inconsistent multi-step behaviour</option>
+                <option value="capability">Cannot do the task at all</option>
+                <option value="cost">Works, but too slow or expensive</option>
+              </select>
+            </label>
+            <label for="when-to-finetune-data">Good examples
+              <select id="when-to-finetune-data">
+                <option value="0">None yet</option>
+                <option value="1">Under 100</option>
+                <option value="2" selected>100 to 1,000</option>
+                <option value="3">Over 1,000</option>
+              </select>
+            </label>
+            <label for="when-to-finetune-change">Facts change
+              <select id="when-to-finetune-change">
+                <option value="rare">Rarely</option>
+                <option value="often" selected>Weekly or faster</option>
+              </select>
+            </label>
+            <label for="when-to-finetune-tried"><input type="checkbox" id="when-to-finetune-tried"> Strong prompt with examples already tried</label>
+          </div>
+          <svg id="when-to-finetune-plot" viewBox="0 0 600 170" role="img" aria-label="Bar chart scoring how well prompting, RAG, fine-tuning and distillation fit the chosen situation"></svg>
+          <p class="readout" id="when-to-finetune-readout"></p>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Classify failures first: knowledge, behaviour or format, capability, or cost.</li>
+            <li>RAG is for facts. Fine-tuning is for behaviour, format and style. They combine well.</li>
+            <li>Prompting on the strongest model sets the quality ceiling and is the baseline every fine-tune must beat.</li>
+            <li>Fine-tuning pays off at high volume, with stable tasks, and when it lets a smaller model replace a bigger one.</li>
+            <li>Every fine-tune carries a maintenance cost when the base model changes.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Fine-tuning on a document dump to make the model "know" your docs, then being surprised by confident hallucinations.</li>
+            <li>Starting a fine-tune before there is an eval set, so nobody can say whether it worked.</li>
+            <li>Comparing a fine-tuned model against a weak prompt instead of the best prompt you can write.</li>
+            <li>Ignoring the cost of retraining when the base model is upgraded or the label set changes.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="when-to-finetune-1"><span>Sort 20 real failure cases into knowledge, behaviour, capability and cost buckets</span></label></li>
+          <li><label><input type="checkbox" data-key="when-to-finetune-2"><span>Explain why fine-tuning on new facts can increase hallucination</span></label></li>
+          <li><label><input type="checkbox" data-key="when-to-finetune-3"><span>Estimate monthly token cost of a long-prompt solution versus a fine-tuned small model for a given volume</span></label></li>
+          <li><label><input type="checkbox" data-key="when-to-finetune-4"><span>Describe a system that uses fine-tuning for format and RAG for facts at the same time</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2312.05934">Fine-Tuning or Retrieval? Comparing Knowledge Injection in LLMs (Ovadia et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2405.05904">Does Fine-Tuning LLMs on New Knowledge Encourage Hallucinations? (Gekhman et al., 2024)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.11206">LIMA: Less Is More for Alignment (Zhou et al., 2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="sft">
+        <header class="topic-head">
+          <p class="eyebrow">09.2 · Learning by imitation</p>
+          <h2>Supervised fine-tuning</h2>
+        </header>
+
+        <p class="lead">Supervised fine-tuning (SFT) continues next-token training on curated conversations. Render each example with the model's chat template, and compute loss only on the tokens the model should learn to write.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>SFT is the first step of almost every custom fine-tune. Most SFT failures are formatting bugs: wrong template, missing end-of-turn token, unmasked prompts.</p>
+        </div>
+
+        <h3>Chat templates</h3>
+        <p>A chat model never sees a list of messages. The <strong>chat template</strong>, a Jinja rule stored with the tokenizer, renders them into one token stream with special tokens marking each turn. ChatML-style models see this:</p>
+
+        <pre class="code" data-lang="text"><code>&lt;|im_start|&gt;system
+You are a support assistant. Reply with one action.&lt;|im_end|&gt;
+&lt;|im_start|&gt;user
+My card was charged twice for order 1182.&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+Refund issued for the duplicate charge.&lt;|im_end|&gt;</code></pre>
+
+        <p>Other families use other tokens, so always call <code>tokenizer.apply_chat_template</code> and serve with the training template. Keep the end-of-turn token in the labels or the model never stops.</p>
+
+        <h3>Loss masking: learn the answer, not the question</h3>
+        <p>You want the model to learn assistant turns, not to predict user messages. So every non-assistant token gets label <code>-100</code>, the default <code>ignore_index</code> of PyTorch's cross-entropy. With \(A\) the assistant positions:</p>
+
+        <div class="formula">
+          \[ \mathcal{L}_{\text{SFT}}(\theta) = -\frac{1}{|A|}\sum_{t \in A} \log p_\theta\left(x_t \mid x_{\lt t}\right) \]
+          <span class="formula-note">The context \(x_{\lt t}\) still includes the system and user tokens, so the model conditions on them. They just never appear as prediction targets.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 690 220" role="img" aria-label="A rendered conversation as a row of tokens. System, user and assistant-header tokens get label -100 and contribute no loss; the assistant reply tokens and the end-of-turn token are the targets where cross-entropy is computed.">
+              <defs>
+                <marker id="sft-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="sft-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="28">input_ids</text>
+              <rect class="d-box" x="20" y="38" width="110" height="36" rx="6"/>
+              <text class="d-mono" x="75" y="61" text-anchor="middle">system …</text>
+              <rect class="d-box" x="136" y="38" width="120" height="36" rx="6"/>
+              <text class="d-mono" x="196" y="61" text-anchor="middle">user …</text>
+              <rect class="d-box" x="262" y="38" width="140" height="36" rx="6"/>
+              <text class="d-mono" x="332" y="61" text-anchor="middle">assistant hdr</text>
+              <rect class="d-accent" x="408" y="38" width="70" height="36" rx="6"/>
+              <text class="d-mono" x="443" y="61" text-anchor="middle">Refund</text>
+              <rect class="d-accent" x="484" y="38" width="70" height="36" rx="6"/>
+              <text class="d-mono" x="519" y="61" text-anchor="middle">issued</text>
+              <rect class="d-accent" x="560" y="38" width="36" height="36" rx="6"/>
+              <text class="d-mono" x="578" y="61" text-anchor="middle">…</text>
+              <rect class="d-accent" x="602" y="38" width="70" height="36" rx="6"/>
+              <text class="d-mono" x="637" y="61" text-anchor="middle">im_end</text>
+              <line class="d-line" x1="75" y1="76" x2="75" y2="108" marker-end="url(#sft-arrow)"/>
+              <line class="d-line" x1="196" y1="76" x2="196" y2="108" marker-end="url(#sft-arrow)"/>
+              <line class="d-line" x1="332" y1="76" x2="332" y2="108" marker-end="url(#sft-arrow)"/>
+              <line class="d-line-accent" x1="443" y1="76" x2="443" y2="108" marker-end="url(#sft-arrow-acc)"/>
+              <line class="d-line-accent" x1="519" y1="76" x2="519" y2="108" marker-end="url(#sft-arrow-acc)"/>
+              <line class="d-line-accent" x1="637" y1="76" x2="637" y2="108" marker-end="url(#sft-arrow-acc)"/>
+              <text class="d-label" x="20" y="104">labels</text>
+              <rect class="d-fill" x="20" y="112" width="382" height="34" rx="6"/>
+              <text class="d-mono" x="211" y="134" text-anchor="middle">-100  -100  -100 … -100</text>
+              <rect class="d-good" x="408" y="112" width="264" height="34" rx="6"/>
+              <text class="d-mono" x="540" y="134" text-anchor="middle">same ids as input</text>
+              <text class="d-text" x="211" y="176" text-anchor="middle">ignored by the loss</text>
+              <text class="d-label" x="211" y="194" text-anchor="middle">still used as context</text>
+              <text class="d-text d-text-good" x="540" y="176" text-anchor="middle">cross-entropy averaged here</text>
+              <text class="d-label" x="540" y="194" text-anchor="middle">includes the end-of-turn token</text>
+            </svg>
+          </div>
+          <figcaption>Loss masking: prompt tokens keep label -100 so they shape the context without being trained on. The model shifts labels by one position internally, so each target is the token after its context.</figcaption>
+        </figure>
+
+        <p>Masking matters most when prompts are long. Drag the sliders: with a 1,500-token retrieved context and a 60-token answer, an unmasked loss spends about 96% of its signal predicting the context.</p>
+
+        <div class="widget" id="sft-mask">
+          <div class="widget-head">
+            <span class="widget-title">Where does the training signal go?</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="sft-mask-p">Prompt tokens <input type="range" id="sft-mask-p" min="20" max="4000" step="10" value="1500"><output id="sft-mask-p-out">1500</output></label>
+            <label for="sft-mask-a">Answer tokens <input type="range" id="sft-mask-a" min="5" max="800" step="5" value="60"><output id="sft-mask-a-out">60</output></label>
+            <label for="sft-mask-on"><input type="checkbox" id="sft-mask-on" checked> Mask prompt (labels = -100)</label>
+          </div>
+          <svg id="sft-mask-plot" viewBox="0 0 600 150" role="img" aria-label="Token strip split into prompt and answer, shaded by which tokens count in the loss, with the share of the loss that teaches the answer"></svg>
+          <p class="readout" id="sft-mask-readout"></p>
+        </div>
+
+        <p>Writing the masking once by hand shows what libraries do for you:</p>
+
+        <pre class="code" data-lang="python"><code>from transformers import AutoTokenizer
+
+tok = AutoTokenizer.from_pretrained(<span class="s">"Qwen/Qwen2.5-0.5B-Instruct"</span>)
+
+def build_example(messages, max_len=2048):
+    <span class="c"># messages ends with the assistant turn we want to learn</span>
+    prompt_txt = tok.apply_chat_template(messages[:-1], add_generation_prompt=True, tokenize=False)
+    full_txt = tok.apply_chat_template(messages, tokenize=False)
+    <span class="c"># the template already contains special tokens, so don't add BOS/EOS again</span>
+    prompt_ids = tok(prompt_txt, add_special_tokens=False)[<span class="s">"input_ids"</span>]
+    full_ids = tok(full_txt, add_special_tokens=False)[<span class="s">"input_ids"</span>]
+    assert full_ids[:len(prompt_ids)] == prompt_ids, <span class="s">"template is not prefix-stable"</span>
+    labels = [-100] * len(prompt_ids) + full_ids[len(prompt_ids):]
+    return {<span class="s">"input_ids"</span>: full_ids[:max_len], <span class="s">"labels"</span>: labels[:max_len]}
+
+ex = build_example([
+    {<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"My card was charged twice for order 1182."</span>},
+    {<span class="s">"role"</span>: <span class="s">"assistant"</span>, <span class="s">"content"</span>: <span class="s">"Refund issued for the duplicate charge."</span>},
+])
+n_trained = sum(l != -100 for l in ex[<span class="s">"labels"</span>])
+print(len(ex[<span class="s">"input_ids"</span>]), <span class="s">"tokens,"</span>, n_trained, <span class="s">"trained on"</span>)</code></pre>
+
+        
+
+        <p><strong>Packing</strong> joins short examples into one sequence to avoid padding, resetting attention at boundaries. Set <code>max_length</code> near the 95th–99th percentile so long examples keep their answers.</p>
+
+        <h3>Data and hyperparameters</h3>
+        <p>Quality dominates: LIMA built a strong chat model from 1,000 curated examples. Keep eval and train sets free of near-duplicates.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Setting</th><th>Typical range</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Learning rate</td><td>1e-5 to 2e-5 (full) · 1e-4 to 2e-4 (LoRA)</td><td>Too high causes forgetting and loss spikes</td></tr>
+              <tr><td>Epochs</td><td>1 to 3</td><td>Small datasets tolerate more; watch eval loss</td></tr>
+              <tr><td>Effective batch</td><td>16 to 128 sequences</td><td>Per-device batch × gradient accumulation × GPUs</td></tr>
+              <tr><td>Schedule</td><td>Linear warmup ~3%, cosine decay</td><td>Warmup prevents early instability</td></tr>
+              <tr><td>Max length</td><td>95th–99th percentile of examples</td><td>Activation memory grows with it</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Rising validation loss means overfitting, but loss is not your eval: run the task eval on each checkpoint.</p>
+
+        <pre class="code" data-lang="python"><code><span class="c"># The same job with TRL. Prompt-completion datasets get completion-only loss by default.</span>
+<span class="c"># Argument names move between TRL versions, so check the docs for yours.</span>
+from datasets import load_dataset
+from trl import SFTConfig, SFTTrainer
+
+<span class="c"># each row: {"prompt": [{"role": "user", ...}], "completion": [{"role": "assistant", ...}]}</span>
+ds = load_dataset(<span class="s">"json"</span>, data_files={<span class="s">"train"</span>: <span class="s">"train.jsonl"</span>, <span class="s">"eval"</span>: <span class="s">"eval.jsonl"</span>})
+
+args = SFTConfig(
+    output_dir=<span class="s">"sft-support"</span>,
+    num_train_epochs=2,
+    learning_rate=2e-5,
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=8,      <span class="c"># effective batch 32 on one GPU</span>
+    lr_scheduler_type=<span class="s">"cosine"</span>,
+    warmup_ratio=0.03,
+    max_length=2048,
+    bf16=True,
+    gradient_checkpointing=True,
+    eval_strategy=<span class="s">"steps"</span>, eval_steps=100, save_steps=100,
+)
+trainer = SFTTrainer(model=<span class="s">"Qwen/Qwen2.5-0.5B-Instruct"</span>, args=args,
+                     train_dataset=ds[<span class="s">"train"</span>], eval_dataset=ds[<span class="s">"eval"</span>])
+trainer.train()</code></pre>
+
+        <h3>Catastrophic forgetting</h3>
+        <p><strong>Catastrophic forgetting</strong> is the loss of earlier abilities after training on a narrow distribution. Qi et al. (2023) showed that fine-tuning on as few as 100 benign examples can weaken an aligned model's refusals.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="Illustrative curves over three epochs: the target task score rises and plateaus, general ability falls steeply with full fine-tuning at a high learning rate, falls less with LoRA, and stays nearly flat when general replay data is mixed in.">
+              <line class="d-line" x1="70" y1="210" x2="420" y2="210"/>
+              <line class="d-line" x1="70" y1="210" x2="70" y2="20"/>
+              <line class="d-grid d-dash" x1="70" y1="60" x2="420" y2="60"/>
+              <line class="d-grid d-dash" x1="70" y1="110" x2="420" y2="110"/>
+              <line class="d-grid d-dash" x1="70" y1="160" x2="420" y2="160"/>
+              <text class="d-label" x="70" y="228" text-anchor="middle">0</text>
+              <text class="d-label" x="187" y="228" text-anchor="middle">1</text>
+              <text class="d-label" x="303" y="228" text-anchor="middle">2</text>
+              <text class="d-label" x="420" y="228" text-anchor="middle">3</text>
+              <text class="d-label" x="245" y="246" text-anchor="middle">epochs</text>
+              <text class="d-label" x="56" y="115" text-anchor="middle" transform="rotate(-90 56 115)">score</text>
+              <path class="d-line-accent" d="M70 170 C 130 90, 200 60, 420 52"/>
+              <path class="d-line-signal" d="M70 70 C 160 100, 260 150, 420 175"/>
+              <path class="d-line" d="M70 70 C 170 82, 280 100, 420 110"/>
+              <path class="d-line d-dash" d="M70 70 C 170 74, 280 77, 420 80"/>
+              <rect class="d-accent" x="445" y="40" width="14" height="4"/>
+              <text class="d-text" x="468" y="46">target task</text>
+              <rect class="d-signal" x="445" y="80" width="14" height="4"/>
+              <text class="d-text" x="468" y="86">general: full FT, high LR</text>
+              <line class="d-line" x1="445" y1="122" x2="459" y2="122"/>
+              <text class="d-text" x="468" y="126">general: LoRA</text>
+              <line class="d-line d-dash" x1="445" y1="162" x2="459" y2="162"/>
+              <text class="d-text" x="468" y="166">general: LoRA + replay</text>
+              <text class="d-label" x="445" y="200">illustrative shapes,</text>
+              <text class="d-label" x="445" y="215">not measured data</text>
+            </svg>
+          </div>
+          <figcaption>The task score climbs while general ability can quietly fall. LoRA, a lower learning rate and replay data each flatten the fall; only a before/after eval tells you which curve you are on.</figcaption>
+        </figure>
+
+        <p>Mitigations, cheapest first: LoRA (it "learns less and forgets less"), a lower learning rate and fewer epochs, 5–20% general replay data, and a before/after general-abilities eval.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>SFT uses the pretraining loss on curated conversations, rendered with the model's exact chat template.</li>
+            <li>Mask non-assistant tokens with label -100; keep the end-of-turn token as a target so the model learns to stop.</li>
+            <li>A few hundred to a few thousand clean, consistent examples usually beat a large noisy set.</li>
+            <li>Evaluate checkpoints on the task and on general abilities; loss alone does not tell you which checkpoint to ship.</li>
+            <li>Forgetting is real: prefer LoRA, low learning rates, few epochs and replay data.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Training with one chat template and serving with another, which quietly degrades every response.</li>
+            <li>Dropping the end-of-turn token from the labels, producing a model that never stops generating.</li>
+            <li>Right-truncating long examples so their answers vanish from the loss.</li>
+            <li>Training five epochs on 300 examples and shipping the checkpoint with the lowest training loss.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="sft-1"><span>Render a multi-turn conversation with <code>apply_chat_template</code> and point out every special token</span></label></li>
+          <li><label><input type="checkbox" data-key="sft-2"><span>Build input_ids and labels with assistant-only masking for a multi-turn example</span></label></li>
+          <li><label><input type="checkbox" data-key="sft-3"><span>Explain what packing is and why attention must be reset at example boundaries</span></label></li>
+          <li><label><input type="checkbox" data-key="sft-4"><span>Design a before/after eval that would detect catastrophic forgetting</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/transformers/chat_templating">Hugging Face: chat templates</a></li>
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/trl">TRL documentation (SFTTrainer)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2203.02155">Training language models to follow instructions with human feedback (Ouyang et al., 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2310.03693">Fine-tuning Aligned Language Models Compromises Safety (Qi et al., 2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="peft">
+        <header class="topic-head">
+          <p class="eyebrow">09.3 · Parameter-efficient fine-tuning</p>
+          <h2>LoRA &amp; QLoRA</h2>
+        </header>
+
+        <p class="lead">Full fine-tuning rewrites every weight: 16.8 million numbers for one 4096 × 4096 matrix. LoRA freezes it and learns the change as two thin matrices, about 131 thousand numbers. QLoRA also stores the frozen base in 4 bits.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Most custom fine-tunes use LoRA. Adapters are tens of megabytes, training memory drops several times, and one server can host many adapters on a shared base.</p>
+        </div>
+
+        <h3>The low-rank idea</h3>
+        <p>LoRA (Hu et al., 2021) assumes the fine-tuning update has low <strong>intrinsic rank</strong>: the useful change lives in a few directions, so \(\Delta W = BA\) with a small inner dimension \(r\), the rank.</p>
+
+        <div class="formula">
+          \[ h = W_0 x + \Delta W x = W_0 x + \frac{\alpha}{r}\, B A x, \qquad W_0 \in \mathbb{R}^{d \times k},\; B \in \mathbb{R}^{d \times r},\; A \in \mathbb{R}^{r \times k},\; r \ll \min(d,k) \]
+          <span class="formula-note">\(W_0\) is frozen. Only \(A\) and \(B\) receive gradients. \(\alpha\) (lora_alpha) is a constant that scales the update.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 270" role="img" aria-label="LoRA forward pass: the input x goes through the large frozen matrix W0 and, in parallel, through a thin trainable matrix A down to rank r and a thin matrix B back up to d; the low-rank path is scaled by alpha over r and added to the frozen output.">
+              <defs>
+                <marker id="peft-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="peft-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="112" width="90" height="40" rx="6"/>
+              <text class="d-title" x="65" y="131" text-anchor="middle">x</text>
+              <text class="d-label" x="65" y="146" text-anchor="middle">k = 4096</text>
+              <rect class="d-fill" x="200" y="20" width="160" height="112" rx="4"/>
+              <rect class="d-box" x="200" y="20" width="160" height="112" rx="4" fill="none"/>
+              <text class="d-title" x="280" y="70" text-anchor="middle">W0  (d × k)</text>
+              <text class="d-label" x="280" y="90" text-anchor="middle">frozen · 16.8M params</text>
+              <rect class="d-good" x="200" y="176" width="160" height="22" rx="3"/>
+              <text class="d-mono" x="280" y="191" text-anchor="middle">A  (r × k)</text>
+              <rect class="d-good" x="410" y="150" width="22" height="100" rx="3"/>
+              <text class="d-mono" x="442" y="204">B (d × r)</text>
+              <text class="d-label" x="442" y="222">starts at 0</text>
+              <text class="d-text d-text-good" x="280" y="226" text-anchor="middle">trainable: r(d + k)</text>
+              <text class="d-label" x="280" y="244" text-anchor="middle">= 131k at r = 16 (0.78%)</text>
+              <line class="d-line" x1="110" y1="132" x2="198" y2="78" marker-end="url(#peft-arrow)"/>
+              <line class="d-line-accent" x1="110" y1="132" x2="198" y2="187" marker-end="url(#peft-arrow-acc)"/>
+              <line class="d-line-accent" x1="360" y1="187" x2="408" y2="187" marker-end="url(#peft-arrow-acc)"/>
+              <text class="d-label" x="384" y="178" text-anchor="middle">r = 16</text>
+              <line class="d-line" x1="360" y1="76" x2="530" y2="120" marker-end="url(#peft-arrow)"/>
+              <line class="d-line-accent" x1="432" y1="170" x2="530" y2="140" marker-end="url(#peft-arrow-acc)"/>
+              <text class="d-label" x="490" y="170">× α / r</text>
+              <circle class="d-accent" cx="544" cy="130" r="14"/>
+              <text class="d-title" x="544" y="135" text-anchor="middle">+</text>
+              <line class="d-line" x1="558" y1="130" x2="582" y2="130" marker-end="url(#peft-arrow)"/>
+              <rect class="d-box" x="584" y="110" width="60" height="40" rx="6"/>
+              <text class="d-title" x="614" y="135" text-anchor="middle">h</text>
+            </svg>
+          </div>
+          <figcaption>LoRA adds a thin trainable path beside each frozen matrix. Because B starts at zero, the adapted model is exactly the base model at step 0 and drifts away only as training updates A and B.</figcaption>
+        </figure>
+
+        <p>\(B\) starts at zero, so training begins exactly at the base model. The \(\alpha / r\) scale keeps update size stable across ranks (use \(\alpha = r\) or \(2r\)). Afterwards, merge \(W_0 + \frac{\alpha}{r}BA\) for zero overhead or hot-swap adapters.</p>
+
+        <h3>Counting parameters</h3>
+        <p>Each adapted \(d \times k\) matrix adds \(r(d + k)\) parameters. For Llama 3 8B (hidden 4096, MLP 14336, k/v projecting to 1024 because of grouped-query attention) at \(r = 16\):</p>
+        <ul>
+          <li>q and o: \(16 \times (4096 + 4096) = 131{,}072\) each</li>
+          <li>k and v: \(16 \times (4096 + 1024) = 81{,}920\) each</li>
+          <li>gate, up and down: \(16 \times (4096 + 14336) = 294{,}912\) each</li>
+        </ul>
+        <p>That is 1.31M per layer and 41.9M over 32 layers: about 0.5% of the base, or an 84 MB bf16 adapter.</p>
+
+        <div class="widget" id="peft-calc">
+          <div class="widget-head">
+            <span class="widget-title">LoRA parameter and memory calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="peft-calc-preset">Model shape
+              <select id="peft-calc-preset">
+                <option value="1b">Llama 3.2 1B shape</option>
+                <option value="8b" selected>Llama 3 8B shape</option>
+                <option value="7b">Llama 2 7B shape (no GQA)</option>
+                <option value="70b">Llama 3 70B shape</option>
+              </select>
+            </label>
+            <label for="peft-calc-rank">Rank r <input type="range" id="peft-calc-rank" min="0" max="7" step="1" value="3"><output id="peft-calc-rank-out">16</output></label>
+          </div>
+          <div class="widget-controls">
+            <label for="peft-calc-d">Hidden <input type="number" id="peft-calc-d" value="4096" min="64" step="64" style="width:6.5em"></label>
+            <label for="peft-calc-ff">MLP <input type="number" id="peft-calc-ff" value="14336" min="64" step="64" style="width:6.5em"></label>
+            <label for="peft-calc-kv">KV dim <input type="number" id="peft-calc-kv" value="1024" min="64" step="64" style="width:6.5em"></label>
+            <label for="peft-calc-layers">Layers <input type="number" id="peft-calc-layers" value="32" min="1" step="1" style="width:5em"></label>
+          </div>
+          <div class="widget-controls" id="peft-calc-mods">
+            <label for="peft-calc-m-q"><input type="checkbox" id="peft-calc-m-q" checked> q</label>
+            <label for="peft-calc-m-k"><input type="checkbox" id="peft-calc-m-k" checked> k</label>
+            <label for="peft-calc-m-v"><input type="checkbox" id="peft-calc-m-v" checked> v</label>
+            <label for="peft-calc-m-o"><input type="checkbox" id="peft-calc-m-o" checked> o</label>
+            <label for="peft-calc-m-gate"><input type="checkbox" id="peft-calc-m-gate" checked> gate</label>
+            <label for="peft-calc-m-up"><input type="checkbox" id="peft-calc-m-up" checked> up</label>
+            <label for="peft-calc-m-down"><input type="checkbox" id="peft-calc-m-down" checked> down</label>
+          </div>
+          <svg id="peft-calc-plot" viewBox="0 0 600 200" role="img" aria-label="Bar chart of LoRA trainable parameters per target module and totals compared with the base model"></svg>
+          <p class="readout" id="peft-calc-readout"></p>
+        </div>
+
+        <p>Target choice matters more than rank. The original paper adapted only q and v; QLoRA found all linear layers were needed to match full fine-tuning, after which ranks 8 to 64 performed similarly.</p>
+
+        <h3>QLoRA: a frozen 4-bit base</h3>
+        <p>With LoRA the frozen base dominates memory. QLoRA (Dettmers et al., 2023) stores it as <strong>NF4</strong>, 4-bit levels at normal quantiles in blocks of 64, compresses the block scales (double quantisation) and pages optimiser state to CPU.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Memory for the frozen weights of an 8-billion-parameter model: 16 GB in bf16, 8 GB in int8, 4.5 GB in NF4 with fp32 block scales, and about 4.1 GB in NF4 with double quantisation.">
+              <text class="d-label" x="20" y="22">Frozen base weights, 8B parameters</text>
+              <text class="d-text" x="20" y="57">bf16 (16 bits)</text>
+              <rect class="d-signal" x="200" y="40" width="400" height="26" rx="4"/>
+              <text class="d-mono" x="590" y="58" text-anchor="end">16 GB</text>
+              <text class="d-text" x="20" y="99">int8 (8 bits)</text>
+              <rect class="d-box" x="200" y="82" width="200" height="26" rx="4"/>
+              <text class="d-mono" x="410" y="100">8 GB</text>
+              <text class="d-text" x="20" y="141">NF4 + fp32 scales</text>
+              <rect class="d-accent" x="200" y="124" width="112" height="26" rx="4"/>
+              <text class="d-mono" x="322" y="142">4.5 GB · 4.5 bits/param</text>
+              <text class="d-text" x="20" y="183">NF4 + double quant</text>
+              <rect class="d-good" x="200" y="166" width="103" height="26" rx="4"/>
+              <text class="d-mono" x="313" y="184">4.1 GB · 4.13 bits/param</text>
+            </svg>
+          </div>
+          <figcaption>Each block of 64 weights needs a scale. Stored in fp32 that costs 0.5 bits per weight; double quantisation cuts it to about 0.127 bits, saving roughly 0.37 GB per 8B parameters.</figcaption>
+        </figure>
+
+        <p>Blocks are dequantised to bf16 for each matmul, so QLoRA is slower per step. It tuned a 65B model on one 48 GB GPU at 16-bit quality.</p>
+
+        <pre class="code" data-lang="python"><code>import torch
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+
+bnb = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type=<span class="s">"nf4"</span>,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,   <span class="c"># matmuls run in bf16</span>
+)
+model = AutoModelForCausalLM.from_pretrained(<span class="s">"meta-llama/Llama-3.1-8B-Instruct"</span>,
+                                             quantization_config=bnb, device_map=<span class="s">"auto"</span>)
+model = prepare_model_for_kbit_training(model)   <span class="c"># enables grad checkpointing, casts norms</span>
+
+lora = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05,
+                  target_modules=<span class="s">"all-linear"</span>, task_type=<span class="s">"CAUSAL_LM"</span>)
+model = get_peft_model(model, lora)
+model.print_trainable_parameters()
+<span class="c"># trainable params: ~42M || all params: ~8B || trainable%: ~0.5</span></code></pre>
+
+        <h3>Choosing settings</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Knob</th><th>Good default</th><th>Raise or change when</th></tr></thead>
+            <tbody>
+              <tr><td>Target modules</td><td>all-linear</td><td>Memory is tight: drop MLP modules first</td></tr>
+              <tr><td>Rank r</td><td>16</td><td>Large behaviour shift or lots of data: 32–64</td></tr>
+              <tr><td>lora_alpha</td><td>2r (or r)</td><td>Keep the ratio fixed when you change r</td></tr>
+              <tr><td>Learning rate</td><td>1e-4 to 2e-4</td><td>About 10× higher than full fine-tuning</td></tr>
+              <tr><td>Dropout</td><td>0.05</td><td>Tiny datasets: 0.1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>PEFT also offers DoRA, rsLoRA and LoRA+. LoRA learns less than full fine-tuning on very different data, and forgets less.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>LoRA learns \(\Delta W = \frac{\alpha}{r}BA\) beside a frozen \(W_0\); each adapted matrix adds \(r(d+k)\) parameters.</li>
+            <li>B starts at zero, so training starts exactly at the base model.</li>
+            <li>The \(\alpha/r\) scale keeps update size stable across ranks; target modules matter more than rank.</li>
+            <li>QLoRA stores the base in NF4 with double quantisation and trains bf16 adapters, cutting base memory about 4×.</li>
+            <li>Adapters can be merged for zero overhead or hot-swapped to serve many fine-tunes on one base.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Using the full fine-tuning learning rate (2e-5) for LoRA and concluding that LoRA "doesn't learn".</li>
+            <li>Raising r without adjusting alpha consistently between experiments, so runs are not comparable.</li>
+            <li>Adapting only q and v and blaming LoRA for the quality gap.</li>
+            <li>Merging a QLoRA adapter into 4-bit weights, or shipping a merge without re-running evals.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="peft-1"><span>Compute LoRA trainable parameters by hand for a given model shape, rank and target set</span></label></li>
+          <li><label><input type="checkbox" data-key="peft-2"><span>Explain why B is initialised to zero and what α/r does when you change r</span></label></li>
+          <li><label><input type="checkbox" data-key="peft-3"><span>Describe NF4, double quantisation and paged optimisers in one sentence each</span></label></li>
+          <li><label><input type="checkbox" data-key="peft-4"><span>Merge an adapter into its base model and verify outputs match the unmerged version</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2106.09685">LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized LLMs (Dettmers et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2405.09673">LoRA Learns Less and Forgets Less (Biderman et al., 2024)</a></li>
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/peft">Hugging Face PEFT documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="preference">
+        <header class="topic-head">
+          <p class="eyebrow">09.4 · Learning from comparisons and rewards</p>
+          <h2>RLHF, DPO &amp; GRPO</h2>
+        </header>
+
+        <p class="lead">SFT teaches by showing a good answer. Preference tuning teaches by judging: "A is better than B" or "this answer passed the tests". That works when good answers are hard to write but easy to judge.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Every chat model was shaped by preference tuning. DPO fits user preference data; GRPO with verifiable rewards trains reasoning and checkable skills like SQL.</p>
+        </div>
+
+        <h3>RLHF: a reward model plus RL</h3>
+        <p>Humans pick the better of two responses. A <strong>reward model</strong> \(r_\phi\) learns those choices with the Bradley–Terry model, \(P(y_w \succ y_l) = \sigma(r_\phi(x,y_w) - r_\phi(x,y_l))\). Then PPO optimises the policy against it:</p>
+
+        <div class="formula">
+          \[ \max_{\pi_\theta}\; \mathbb{E}_{x \sim D,\, y \sim \pi_\theta(\cdot \mid x)}\big[r_\phi(x,y)\big] \;-\; \beta\, \mathbb{D}_{\mathrm{KL}}\big[\pi_\theta(y \mid x)\,\|\,\pi_{\text{ref}}(y \mid x)\big] \]
+          <span class="formula-note">The KL penalty, weighted by \(\beta\), stops the policy from drifting into strange text that the reward model happens to score highly (reward hacking).</span>
+        </div>
+
+        <p>PPO keeps four models in memory and samples inside the loop, so it is heavy. Push too hard and the policy exploits reward-model blind spots, such as length.</p>
+
+        <h3>DPO: the reward model hiding inside the policy</h3>
+        <p>DPO (Rafailov et al., 2023) notes that the KL-constrained optimum is \(\pi^* \propto \pi_{\text{ref}}\exp(r/\beta)\), so any policy implies a reward \(r = \beta \log \frac{\pi}{\pi_{\text{ref}}} + \beta\log Z(x)\). Plug that into Bradley–Terry and \(Z(x)\) cancels, leaving a classification loss on pairs:</p>
+
+        <div class="formula">
+          \[ \mathcal{L}_{\text{DPO}}(\theta) = -\,\mathbb{E}_{(x,\,y_w,\,y_l)}\left[\log \sigma\!\left(\beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} \;-\; \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)}\right)\right] \]
+          <span class="formula-note">\(y_w\) is the chosen response, \(y_l\) the rejected one. Each log-probability is the sum over the response's tokens. \(\pi_{\text{ref}}\) is a frozen copy of the starting (SFT) model.</span>
+        </div>
+
+        <p>The <strong>implicit reward</strong> \(\hat r(y) = \beta \log \frac{\pi_\theta(y\mid x)}{\pi_{\text{ref}}(y\mid x)}\) measures how far the policy raised a response. The loss is logistic on the margin \(\hat r(y_w) - \hat r(y_l)\), weighted by \(\sigma(-\text{margin})\), so solved pairs contribute little. \(\beta\) (0.05–0.5) ties the policy to the reference.</p>
+
+        <div class="widget" id="preference-dpo">
+          <div class="widget-head">
+            <span class="widget-title">DPO loss on one preference pair</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="preference-dpo-c">log π/π<sub>ref</sub> (chosen) <input type="range" id="preference-dpo-c" min="-6" max="6" step="0.1" value="0"><output id="preference-dpo-c-out">0.0</output></label>
+            <label for="preference-dpo-r">log π/π<sub>ref</sub> (rejected) <input type="range" id="preference-dpo-r" min="-6" max="6" step="0.1" value="0"><output id="preference-dpo-r-out">0.0</output></label>
+            <label for="preference-dpo-b">β <input type="range" id="preference-dpo-b" min="0.05" max="1" step="0.05" value="0.5"><output id="preference-dpo-b-out">0.50</output></label>
+          </div>
+          <svg id="preference-dpo-plot" viewBox="0 0 600 240" role="img" aria-label="Curve of DPO loss and gradient weight against the log-ratio margin, with the current pair marked"></svg>
+          <p class="readout" id="preference-dpo-readout"></p>
+        </div>
+
+        <p>Set both sliders negative with rejected lower: the loss falls while the chosen answer loses probability, so track both rewards. Variants: KTO (unpaired labels), ORPO and SimPO (no reference model).</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 300" role="img" aria-label="Three preference-tuning pipelines. RLHF trains a reward model from human pairs and then runs PPO with four models. DPO feeds preference pairs straight into a loss computed from the policy and a frozen reference. GRPO samples a group of answers per prompt, scores them with a verifier, and normalises scores within the group as advantages.">
+              <defs>
+                <marker id="preference-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="16" y="58">RLHF</text>
+              <rect class="d-box" x="80" y="30" width="130" height="46" rx="6"/>
+              <text class="d-text" x="145" y="51" text-anchor="middle">Human pairs</text>
+              <text class="d-label" x="145" y="67" text-anchor="middle">A better than B</text>
+              <rect class="d-box" x="250" y="30" width="130" height="46" rx="6"/>
+              <text class="d-text" x="315" y="51" text-anchor="middle">Reward model</text>
+              <text class="d-label" x="315" y="67" text-anchor="middle">Bradley–Terry</text>
+              <rect class="d-signal" x="420" y="30" width="260" height="46" rx="6"/>
+              <text class="d-text" x="550" y="51" text-anchor="middle">PPO: sample, score, update</text>
+              <text class="d-label" x="550" y="67" text-anchor="middle">policy + ref + reward + value models</text>
+              <line class="d-line-accent" x1="210" y1="53" x2="248" y2="53" marker-end="url(#preference-arrow)"/>
+              <line class="d-line-accent" x1="380" y1="53" x2="418" y2="53" marker-end="url(#preference-arrow)"/>
+              <text class="d-title" x="16" y="152">DPO</text>
+              <rect class="d-box" x="80" y="124" width="130" height="46" rx="6"/>
+              <text class="d-text" x="145" y="145" text-anchor="middle">Pairs</text>
+              <text class="d-label" x="145" y="161" text-anchor="middle">(x, chosen, rejected)</text>
+              <rect class="d-box" x="250" y="124" width="170" height="46" rx="6"/>
+              <text class="d-text" x="335" y="145" text-anchor="middle">Log-probs</text>
+              <text class="d-label" x="335" y="161" text-anchor="middle">policy and frozen ref</text>
+              <rect class="d-accent" x="460" y="124" width="220" height="46" rx="6"/>
+              <text class="d-text" x="570" y="145" text-anchor="middle">Logistic loss on margin</text>
+              <text class="d-label" x="570" y="161" text-anchor="middle">no reward model, no sampling</text>
+              <line class="d-line-accent" x1="210" y1="147" x2="248" y2="147" marker-end="url(#preference-arrow)"/>
+              <line class="d-line-accent" x1="420" y1="147" x2="458" y2="147" marker-end="url(#preference-arrow)"/>
+              <text class="d-title" x="16" y="246">GRPO</text>
+              <rect class="d-box" x="80" y="218" width="100" height="46" rx="6"/>
+              <text class="d-text" x="130" y="239" text-anchor="middle">Prompt</text>
+              <text class="d-label" x="130" y="255" text-anchor="middle">has an answer</text>
+              <rect class="d-box" x="215" y="218" width="120" height="46" rx="6"/>
+              <text class="d-text" x="275" y="239" text-anchor="middle">Sample G = 8</text>
+              <text class="d-label" x="275" y="255" text-anchor="middle">from the policy</text>
+              <rect class="d-box" x="370" y="218" width="130" height="46" rx="6"/>
+              <text class="d-text" x="435" y="239" text-anchor="middle">Verifier</text>
+              <text class="d-mono" x="435" y="256" text-anchor="middle">1 0 1 1 0 0 1 0</text>
+              <rect class="d-good" x="535" y="218" width="145" height="46" rx="6"/>
+              <text class="d-text" x="607" y="239" text-anchor="middle">Advantage</text>
+              <text class="d-label" x="607" y="255" text-anchor="middle">(r − mean) / std</text>
+              <line class="d-line-accent" x1="180" y1="241" x2="213" y2="241" marker-end="url(#preference-arrow)"/>
+              <line class="d-line-accent" x1="335" y1="241" x2="368" y2="241" marker-end="url(#preference-arrow)"/>
+              <line class="d-line-accent" x1="500" y1="241" x2="533" y2="241" marker-end="url(#preference-arrow)"/>
+              <path class="d-line d-dash" d="M607 266 L607 288 L275 288 L275 266" marker-end="url(#preference-arrow)"/>
+              <text class="d-label" x="441" y="284" text-anchor="middle">update policy, sample again</text>
+            </svg>
+          </div>
+          <figcaption>RLHF learns a reward model and then runs online RL; DPO turns pairs directly into a loss; GRPO samples a group per prompt and uses the group itself as the baseline, so no value network is needed.</figcaption>
+        </figure>
+
+        <h3>GRPO and reinforcement learning with verifiable rewards</h3>
+        <p>When a program can check the answer, use <strong>reinforcement learning with verifiable rewards</strong> (RLVR). GRPO (DeepSeekMath, DeepSeek-R1) samples \(G\) completions per prompt and scores each against its group:</p>
+
+        <div class="formula">
+          \[ \hat A_i = \frac{r_i - \operatorname{mean}(r_1,\dots,r_G)}{\operatorname{std}(r_1,\dots,r_G)} \]
+          <span class="formula-note">Completions better than their siblings get a positive advantage and become more likely; worse ones become less likely. The update uses a PPO-style clipped ratio, optionally with a KL penalty to the reference.</span>
+        </div>
+
+        <p>The group mean replaces PPO's value network. Prompts the model always or never solves give zero advantage, so aim for 20–80% solve rates. The model optimises exactly what the checker checks.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="Two GRPO groups of eight samples. In the mixed group, correct samples get advantage plus one and wrong samples minus one. In the group where every sample is correct, every advantage is zero, so the prompt gives no learning signal.">
+              <text class="d-title" x="60" y="22">Mixed group: mean 0.5, std 0.5</text>
+              <text class="d-title" x="400" y="22">All correct: mean 1, std 0</text>
+              <text class="d-label" x="20" y="52">reward</text>
+              <line class="d-line" x1="50" y1="130" x2="340" y2="130"/>
+              <line class="d-line" x1="390" y1="130" x2="670" y2="130"/>
+              <text class="d-label" x="20" y="134">0</text>
+              <text class="d-mono" x="70" y="52" text-anchor="middle">1</text>
+              <rect class="d-good" x="60" y="85" width="20" height="45" rx="2"/>
+              <text class="d-label" x="70" y="78" text-anchor="middle">+1</text>
+              <text class="d-mono" x="104" y="52" text-anchor="middle">0</text>
+              <rect class="d-signal" x="94" y="130" width="20" height="45" rx="2"/>
+              <text class="d-label" x="104" y="190" text-anchor="middle">−1</text>
+              <text class="d-mono" x="138" y="52" text-anchor="middle">1</text>
+              <rect class="d-good" x="128" y="85" width="20" height="45" rx="2"/>
+              <text class="d-label" x="138" y="78" text-anchor="middle">+1</text>
+              <text class="d-mono" x="172" y="52" text-anchor="middle">1</text>
+              <rect class="d-good" x="162" y="85" width="20" height="45" rx="2"/>
+              <text class="d-label" x="172" y="78" text-anchor="middle">+1</text>
+              <text class="d-mono" x="206" y="52" text-anchor="middle">0</text>
+              <rect class="d-signal" x="196" y="130" width="20" height="45" rx="2"/>
+              <text class="d-label" x="206" y="190" text-anchor="middle">−1</text>
+              <text class="d-mono" x="240" y="52" text-anchor="middle">0</text>
+              <rect class="d-signal" x="230" y="130" width="20" height="45" rx="2"/>
+              <text class="d-label" x="240" y="190" text-anchor="middle">−1</text>
+              <text class="d-mono" x="274" y="52" text-anchor="middle">1</text>
+              <rect class="d-good" x="264" y="85" width="20" height="45" rx="2"/>
+              <text class="d-label" x="274" y="78" text-anchor="middle">+1</text>
+              <text class="d-mono" x="308" y="52" text-anchor="middle">0</text>
+              <rect class="d-signal" x="298" y="130" width="20" height="45" rx="2"/>
+              <text class="d-label" x="308" y="190" text-anchor="middle">−1</text>
+              <text class="d-mono" x="410" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="400" y="128" width="20" height="4" rx="1"/>
+              <text class="d-mono" x="444" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="434" y="128" width="20" height="4" rx="1"/>
+              <text class="d-mono" x="478" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="468" y="128" width="20" height="4" rx="1"/>
+              <text class="d-mono" x="512" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="502" y="128" width="20" height="4" rx="1"/>
+              <text class="d-mono" x="546" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="536" y="128" width="20" height="4" rx="1"/>
+              <text class="d-mono" x="580" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="570" y="128" width="20" height="4" rx="1"/>
+              <text class="d-mono" x="614" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="604" y="128" width="20" height="4" rx="1"/>
+              <text class="d-mono" x="648" y="52" text-anchor="middle">1</text>
+              <rect class="d-dot-muted" x="638" y="128" width="20" height="4" rx="1"/>
+              <text class="d-text d-text-good" x="195" y="222" text-anchor="middle">correct samples pushed up, wrong ones down</text>
+              <text class="d-text d-text-signal" x="530" y="170" text-anchor="middle">advantage 0 for all</text>
+              <text class="d-label" x="530" y="188" text-anchor="middle">no gradient from this prompt</text>
+            </svg>
+          </div>
+          <figcaption>GRPO advantages for two prompts with binary rewards. Learning comes only from prompts where the model sometimes succeeds and sometimes fails.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># DPO with TRL: rows need "prompt", "chosen", "rejected" (strings or chat messages)</span>
+from datasets import load_dataset
+from trl import DPOConfig, DPOTrainer, GRPOConfig, GRPOTrainer
+
+pairs = load_dataset(<span class="s">"json"</span>, data_files=<span class="s">"pairs.jsonl"</span>, split=<span class="s">"train"</span>)
+dpo = DPOTrainer(
+    model=<span class="s">"sft-support/checkpoint-best"</span>,      <span class="c"># start from your SFT model</span>
+    args=DPOConfig(output_dir=<span class="s">"dpo-out"</span>, beta=0.1, learning_rate=5e-7,
+                   per_device_train_batch_size=4, gradient_accumulation_steps=8, bf16=True),
+    train_dataset=pairs,                        <span class="c"># reference model = frozen copy by default</span>
+)
+dpo.train()
+
+<span class="c"># GRPO with a verifiable reward. Extra dataset columns (here "answer") arrive as kwargs.</span>
+def exact_answer(completions, answer, **kwargs):
+    return [1.0 if c.strip().split()[-1:] == [str(a)] else 0.0
+            for c, a in zip(completions, answer)]
+
+maths = load_dataset(<span class="s">"json"</span>, data_files=<span class="s">"maths.jsonl"</span>, split=<span class="s">"train"</span>)  <span class="c"># "prompt", "answer"</span>
+grpo = GRPOTrainer(
+    model=<span class="s">"Qwen/Qwen2.5-1.5B-Instruct"</span>,
+    reward_funcs=exact_answer,
+    args=GRPOConfig(output_dir=<span class="s">"grpo-out"</span>, num_generations=8,
+                    max_completion_length=512, learning_rate=1e-6, bf16=True),
+    train_dataset=maths,
+)
+grpo.train()</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Method</th><th>Data</th><th>Models in memory</th><th>Best for</th></tr></thead>
+            <tbody>
+              <tr><td>PPO-based RLHF</td><td>Human pairs → reward model</td><td>4 (policy, ref, reward, value)</td><td>Frontier labs with large rater pools</td></tr>
+              <tr><td>DPO and variants</td><td>Chosen/rejected pairs</td><td>2 (policy, frozen ref)</td><td>Style, helpfulness, user preference data</td></tr>
+              <tr><td>KTO</td><td>Unpaired good/bad labels</td><td>2</td><td>Thumbs-up/down logs</td></tr>
+              <tr><td>GRPO / RLVR</td><td>Prompts + a checker</td><td>1–2 (policy, optional ref)</td><td>Maths, code, SQL, extraction, reasoning</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Preference tuning learns from judgements that are easier to give than ideal answers are to write.</li>
+            <li>RLHF = Bradley–Terry reward model + PPO with a KL penalty to a reference model.</li>
+            <li>DPO's implicit reward is \(\beta\) times the policy/reference log-ratio; its loss is a logistic loss on the chosen-minus-rejected margin.</li>
+            <li>GRPO replaces the value network with a group-mean baseline and pairs naturally with verifiable rewards.</li>
+            <li>Whatever the reward measures, the model will optimise, including its loopholes.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Running DPO directly on a base model without SFT first; it needs a reasonable starting policy.</li>
+            <li>Using a learning rate suited to SFT; DPO typically needs one 10 to 100 times smaller.</li>
+            <li>Training GRPO on prompts that are always solved or never solved, which yield zero advantage.</li>
+            <li>Preference data where the chosen answer is systematically longer, which teaches verbosity.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="preference-1"><span>Write the DPO loss from memory and explain each term</span></label></li>
+          <li><label><input type="checkbox" data-key="preference-2"><span>Compute the DPO loss for a pair given four log-probabilities and β</span></label></li>
+          <li><label><input type="checkbox" data-key="preference-3"><span>Explain why GRPO does not need a value network, and when a prompt gives no signal</span></label></li>
+          <li><label><input type="checkbox" data-key="preference-4"><span>Design a reward function for a SQL task and list two ways it could be hacked</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.18290">Direct Preference Optimization (Rafailov et al., 2023)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2402.03300">DeepSeekMath, which introduced GRPO (Shao et al., 2024)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1 (DeepSeek-AI, 2025)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2402.01306">KTO: Model Alignment as Prospect Theoretic Optimization (Ethayarajh et al., 2024)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="distillation">
+        <header class="topic-head">
+          <p class="eyebrow">09.5 · Big model teaches small model</p>
+          <h2>Distillation &amp; synthetic data</h2>
+        </header>
+
+        <p class="lead">Distillation trains a small student to imitate a large teacher, using the teacher's probability distributions or generated text as training data, to keep most of the quality at a fraction of the cost.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Many small open models are trained partly on synthetic data from bigger ones, and distillation is the standard way to cut cost once a large-model prototype works.</p>
+        </div>
+
+        <h3>Logit distillation</h3>
+        <p>A teacher's full distribution carries more information than the correct answer alone. If the teacher gives "Paris" 0.90 and "Lyon" 0.04, the student learns that Lyon is a plausible wrong answer. Hinton et al. (2015) called this "dark knowledge".</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 300" role="img" aria-label="Logit distillation: the same input goes to a frozen teacher and a trainable student. Both produce softened distributions at temperature T. A KL term pulls the student's distribution toward the teacher's, a cross-entropy term uses the hard label, and gradients flow only into the student.">
+              <defs>
+                <marker id="distillation-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="distillation-arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="110" width="110" height="50" rx="8"/>
+              <text class="d-title" x="75" y="132" text-anchor="middle">Input</text>
+              <text class="d-label" x="75" y="149" text-anchor="middle">same tokens</text>
+              <rect class="d-box" x="180" y="25" width="150" height="50" rx="8"/>
+              <text class="d-title" x="255" y="47" text-anchor="middle">Teacher</text>
+              <text class="d-label" x="255" y="64" text-anchor="middle">large, frozen</text>
+              <rect class="d-accent" x="180" y="195" width="150" height="50" rx="8"/>
+              <text class="d-title" x="255" y="217" text-anchor="middle">Student</text>
+              <text class="d-label" x="255" y="234" text-anchor="middle">small, trainable</text>
+              <line class="d-line-accent" x1="130" y1="135" x2="178" y2="55" marker-end="url(#distillation-arrow)"/>
+              <line class="d-line-accent" x1="130" y1="135" x2="178" y2="215" marker-end="url(#distillation-arrow)"/>
+              <line class="d-line-accent" x1="330" y1="50" x2="362" y2="50" marker-end="url(#distillation-arrow)"/>
+              <line class="d-line-accent" x1="330" y1="220" x2="362" y2="220" marker-end="url(#distillation-arrow)"/>
+              <rect class="d-dot-muted" x="372" y="34" width="12" height="36"/>
+              <rect class="d-dot-muted" x="388" y="56" width="12" height="14"/>
+              <rect class="d-dot-muted" x="404" y="60" width="12" height="10"/>
+              <rect class="d-dot-muted" x="420" y="63" width="12" height="7"/>
+              <rect class="d-dot-muted" x="436" y="65" width="12" height="5"/>
+              <text class="d-label" x="410" y="88" text-anchor="middle">p_teacher at T</text>
+              <rect class="d-dot" x="372" y="212" width="12" height="28"/>
+              <rect class="d-dot" x="388" y="224" width="12" height="16"/>
+              <rect class="d-dot" x="404" y="228" width="12" height="12"/>
+              <rect class="d-dot" x="420" y="232" width="12" height="8"/>
+              <rect class="d-dot" x="436" y="234" width="12" height="6"/>
+              <text class="d-label" x="410" y="258" text-anchor="middle">p_student at T</text>
+              <rect class="d-good" x="510" y="40" width="170" height="50" rx="8"/>
+              <text class="d-title" x="595" y="62" text-anchor="middle">KL(teacher ‖ student)</text>
+              <text class="d-label" x="595" y="79" text-anchor="middle">soft targets, × T²</text>
+              <rect class="d-box" x="510" y="180" width="170" height="50" rx="8"/>
+              <text class="d-title" x="595" y="202" text-anchor="middle">Cross-entropy</text>
+              <text class="d-label" x="595" y="219" text-anchor="middle">hard label "Paris"</text>
+              <line class="d-line-accent" x1="452" y1="55" x2="508" y2="62" marker-end="url(#distillation-arrow)"/>
+              <line class="d-line-accent" x1="452" y1="215" x2="508" y2="80" marker-end="url(#distillation-arrow)"/>
+              <line class="d-line-accent" x1="452" y1="225" x2="508" y2="208" marker-end="url(#distillation-arrow)"/>
+              <path class="d-line-accent d-dash" d="M595 232 L595 280 L255 280 L255 248" marker-end="url(#distillation-arrow-acc)"/>
+              <text class="d-text d-text-accent" x="425" y="274" text-anchor="middle">gradients update the student only</text>
+            </svg>
+          </div>
+          <figcaption>Logit distillation compares whole distributions at every token position. It needs the teacher's logits and a shared tokenizer, so it works with open-weight teachers.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \mathcal{L}_{\text{KD}} = \lambda\, T^2\, \mathrm{KL}\!\left(\mathrm{softmax}(z_t/T)\,\|\,\mathrm{softmax}(z_s/T)\right) + (1-\lambda)\,\mathrm{CE}\!\left(y,\ \mathrm{softmax}(z_s)\right) \]
+          <span class="formula-note">\(z_t, z_s\) are teacher and student logits. Temperature \(T \gt 1\) softens both distributions so small probabilities matter; the \(T^2\) factor keeps gradient size comparable as \(T\) changes.</span>
+        </div>
+
+        <div class="widget" id="distillation-temp">
+          <div class="widget-head">
+            <span class="widget-title">Temperature reveals the dark knowledge</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="distillation-temp-t">Temperature T <input type="range" id="distillation-temp-t" min="0.5" max="8" step="0.5" value="2"><output id="distillation-temp-t-out">2.0</output></label>
+          </div>
+          <svg id="distillation-temp-plot" viewBox="0 0 600 230" role="img" aria-label="Teacher's next-token distribution after 'The capital of France is', softened by temperature, compared with the one-hot hard label"></svg>
+          <p class="readout" id="distillation-temp-readout"></p>
+        </div>
+
+        <h3>Sequence-level distillation and synthetic data</h3>
+        <p>With only API access, distil through text: generate responses and run SFT on them, as the distilled DeepSeek-R1 models did with about 800k R1 samples. Check the teacher's terms of service first.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="Synthetic data funnel: 20,000 generated prompts and responses shrink to 12,000 after a verifier, 9,500 after deduplication, and 9,300 after removing overlap with eval sets, then are mixed with real data for training.">
+              <defs>
+                <marker id="distillation-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="120" height="170" rx="8"/>
+              <text class="d-title" x="80" y="100" text-anchor="middle">Generate</text>
+              <text class="d-label" x="80" y="118" text-anchor="middle">seeds × personas</text>
+              <text class="d-label" x="80" y="134" text-anchor="middle">× difficulty</text>
+              <text class="d-mono" x="80" y="190" text-anchor="middle">20,000</text>
+              <rect class="d-accent" x="180" y="55" width="120" height="120" rx="8"/>
+              <text class="d-title" x="240" y="100" text-anchor="middle">Verify</text>
+              <text class="d-label" x="240" y="118" text-anchor="middle">tests, judge, rubric</text>
+              <text class="d-mono" x="240" y="165" text-anchor="middle">12,000</text>
+              <rect class="d-accent" x="340" y="70" width="120" height="95" rx="8"/>
+              <text class="d-title" x="400" y="105" text-anchor="middle">Dedup</text>
+              <text class="d-label" x="400" y="123" text-anchor="middle">exact + near-dup</text>
+              <text class="d-mono" x="400" y="155" text-anchor="middle">9,500</text>
+              <rect class="d-signal" x="500" y="78" width="80" height="80" rx="8"/>
+              <text class="d-title" x="540" y="108" text-anchor="middle">Decon</text>
+              <text class="d-label" x="540" y="124" text-anchor="middle">vs eval set</text>
+              <text class="d-mono" x="540" y="148" text-anchor="middle">9,300</text>
+              <rect class="d-good" x="610" y="85" width="75" height="66" rx="8"/>
+              <text class="d-title" x="647" y="112" text-anchor="middle">Train</text>
+              <text class="d-label" x="647" y="130" text-anchor="middle">+ real data</text>
+              <line class="d-line-accent" x1="140" y1="115" x2="178" y2="115" marker-end="url(#distillation-arrow2)"/>
+              <line class="d-line-accent" x1="300" y1="115" x2="338" y2="115" marker-end="url(#distillation-arrow2)"/>
+              <line class="d-line-accent" x1="460" y1="118" x2="498" y2="118" marker-end="url(#distillation-arrow2)"/>
+              <line class="d-line-accent" x1="580" y1="118" x2="608" y2="118" marker-end="url(#distillation-arrow2)"/>
+              <text class="d-label" x="350" y="222" text-anchor="middle">example counts are illustrative; losing 40–60% to filters is normal</text>
+            </svg>
+          </div>
+          <figcaption>A synthetic data pipeline is mostly filtering. Generation is cheap; verification, deduplication and decontamination decide the quality.</figcaption>
+        </figure>
+
+        <p>Diversity is the hard part: seed from real logs or a taxonomy, vary personas and difficulty, and keep only verified outputs (<strong>rejection sampling</strong>). Keep real data in the mix to avoid model collapse (Shumailov et al., 2023).</p>
+
+        <pre class="code" data-lang="python"><code>import torch.nn.functional as F
+
+def kd_loss(student_logits, teacher_logits, labels, T=2.0, lam=0.5):
+    <span class="c"># logits: (N, vocab) for N unmasked token positions; labels: (N,)</span>
+    soft = F.kl_div(F.log_softmax(student_logits / T, dim=-1),
+                    F.log_softmax(teacher_logits / T, dim=-1),
+                    log_target=True, reduction=<span class="s">"batchmean"</span>) * T * T
+    hard = F.cross_entropy(student_logits, labels)
+    return lam * soft + (1 - lam) * hard
+
+<span class="c"># Sequence-level: rejection-sample teacher outputs, keep verified, unique ones</span>
+import hashlib
+
+def build_dataset(prompts, call_teacher, verify, n=4):
+    seen, rows = set(), []
+    for p in prompts:
+        for out in (call_teacher(p) for _ in range(n)):   <span class="c"># call_teacher: your LLM API call</span>
+            key = hashlib.sha256(out.strip().lower().encode()).hexdigest()
+            if key not in seen and verify(p, out):
+                seen.add(key)
+                rows.append({<span class="s">"prompt"</span>: p, <span class="s">"completion"</span>: out})
+                break                                      <span class="c"># first verified sample per prompt</span>
+    return rows</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Logit distillation matches the teacher's softened distribution with a KL loss scaled by \(T^2\).</li>
+            <li>Sequence-level distillation is SFT on teacher-generated text and works through an API.</li>
+            <li>Synthetic data quality comes from filtering: verifiers, rejection sampling, dedup and decontamination.</li>
+            <li>Keep real data in the mix to avoid collapsing diversity.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Generating thousands of near-identical examples from one prompt template.</li>
+            <li>Skipping decontamination, so the eval set leaks into training and scores look inflated.</li>
+            <li>Using a teacher whose terms of service forbid training on its outputs.</li>
+            <li>Distilling a teacher that has never been evaluated on your task, copying its errors at scale.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="distillation-1"><span>Compute softmax(z/T) for a 4-token logit vector at T = 1 and T = 4</span></label></li>
+          <li><label><input type="checkbox" data-key="distillation-2"><span>Explain why the KD loss multiplies the KL term by T²</span></label></li>
+          <li><label><input type="checkbox" data-key="distillation-3"><span>Build a generate, verify, dedup and decontaminate pipeline for one task</span></label></li>
+          <li><label><input type="checkbox" data-key="distillation-4"><span>Name two causes of low diversity in synthetic data and a fix for each</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1503.02531">Distilling the Knowledge in a Neural Network (Hinton et al., 2015)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2212.10560">Self-Instruct (Wang et al., 2022)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/2305.17493">The Curse of Recursion: model collapse (Shumailov et al., 2023)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="tooling">
+        <header class="topic-head">
+          <p class="eyebrow">09.6 · From script to trained model</p>
+          <h2>Fine-tuning tooling</h2>
+        </header>
+
+        <p class="lead">Open-model fine-tuning runs on a layered Hugging Face stack: Transformers loads, PEFT adapts, bitsandbytes quantises, TRL trains and Accelerate scales out. Knowing the layers lets you debug a run instead of copying notebooks.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Most fine-tuning time goes into environment problems, out-of-memory errors and silent formatting bugs. Knowing the stack and doing the memory maths before you rent a GPU turns a week of trial and error into an afternoon.</p>
+        </div>
+
+        <h3>The stack</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 280" role="img" aria-label="Layered fine-tuning stack: PyTorch on the GPU at the bottom, then Transformers and Datasets, then PEFT and bitsandbytes, then TRL trainers, then wrapper tools such as Axolotl and Unsloth. Accelerate, DeepSpeed and FSDP run alongside for multi-GPU training.">
+              <rect class="d-box" x="20" y="20" width="540" height="40" rx="6"/>
+              <text class="d-text" x="290" y="45" text-anchor="middle">Wrappers: Axolotl · Unsloth · LLaMA-Factory · torchtune</text>
+              <rect class="d-accent" x="20" y="70" width="540" height="40" rx="6"/>
+              <text class="d-text" x="290" y="95" text-anchor="middle">TRL: SFTTrainer · DPOTrainer · GRPOTrainer · RewardTrainer</text>
+              <rect class="d-good" x="20" y="120" width="265" height="40" rx="6"/>
+              <text class="d-text" x="152" y="145" text-anchor="middle">PEFT: LoraConfig, get_peft_model</text>
+              <rect class="d-good" x="295" y="120" width="265" height="40" rx="6"/>
+              <text class="d-text" x="427" y="145" text-anchor="middle">bitsandbytes: 4/8-bit, 8-bit Adam</text>
+              <rect class="d-box" x="20" y="170" width="540" height="40" rx="6"/>
+              <text class="d-text" x="290" y="195" text-anchor="middle">Transformers + Datasets: models, tokenizers, chat templates</text>
+              <rect class="d-fill" x="20" y="220" width="540" height="40" rx="6"/>
+              <text class="d-text" x="290" y="245" text-anchor="middle">PyTorch + CUDA on the GPU</text>
+              <rect class="d-signal" x="580" y="70" width="100" height="190" rx="6"/>
+              <text class="d-title" x="630" y="140" text-anchor="middle">Scale out</text>
+              <text class="d-label" x="630" y="162" text-anchor="middle">Accelerate</text>
+              <text class="d-label" x="630" y="180" text-anchor="middle">DeepSpeed</text>
+              <text class="d-label" x="630" y="198" text-anchor="middle">FSDP</text>
+              <text class="d-label" x="630" y="45" text-anchor="middle">multi-GPU</text>
+            </svg>
+          </div>
+          <figcaption>Each layer builds on the one below. Wrappers save boilerplate, but an error message almost always comes from one of the lower layers.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Library</th><th>Job</th><th>APIs you will use</th></tr></thead>
+            <tbody>
+              <tr><td>Transformers</td><td>Load models and tokenizers</td><td><code>AutoModelForCausalLM</code>, <code>AutoTokenizer</code>, <code>apply_chat_template</code></td></tr>
+              <tr><td>PEFT</td><td>LoRA and other adapters</td><td><code>LoraConfig</code>, <code>get_peft_model</code>, <code>merge_and_unload</code></td></tr>
+              <tr><td>bitsandbytes</td><td>Quantised weights and optimisers</td><td><code>BitsAndBytesConfig</code>, <code>optim="paged_adamw_8bit"</code></td></tr>
+              <tr><td>TRL</td><td>Training loops for SFT, DPO, GRPO</td><td><code>SFTTrainer</code>, <code>DPOTrainer</code>, <code>GRPOTrainer</code></td></tr>
+              <tr><td>Accelerate / DeepSpeed / FSDP</td><td>Shard states across GPUs</td><td><code>accelerate launch</code>, ZeRO stage 2/3 configs</td></tr>
+              <tr><td>vLLM</td><td>Serve base + LoRA adapters</td><td><code>enable_lora</code>, per-request adapters</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Managed fine-tuning APIs from model providers and clouds hide all of this: upload JSONL, get a model ID. You trade control (hyperparameters, data inspection, weight access) for convenience.</p>
+
+        <h3>Will it fit?</h3>
+        <p>Full fine-tuning with mixed-precision Adam costs about 16 bytes per parameter before activations: an 8B model needs about 128 GB. LoRA keeps the base frozen at 2 bytes per parameter, and QLoRA drops that to about 0.5.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 200" role="img" aria-label="Bytes per base parameter. Full fine-tuning: 2 for bf16 weights, 2 for gradients, 4 for fp32 master weights, 4 and 4 for Adam moments, 16 in total. LoRA: about 2 bytes for frozen weights plus a sliver for adapters. QLoRA: about 0.52 bytes plus the adapter sliver.">
+              <text class="d-label" x="20" y="20">bytes per base parameter</text>
+              <text class="d-text" x="20" y="57">Full FT</text>
+              <rect class="d-signal" x="100" y="38" width="72" height="30"/>
+              <text class="d-label" x="136" y="57" text-anchor="middle">weights 2</text>
+              <rect class="d-signal" x="172" y="38" width="72" height="30"/>
+              <text class="d-label" x="208" y="57" text-anchor="middle">grads 2</text>
+              <rect class="d-box" x="244" y="38" width="144" height="30"/>
+              <text class="d-label" x="316" y="57" text-anchor="middle">fp32 master 4</text>
+              <rect class="d-accent" x="388" y="38" width="144" height="30"/>
+              <text class="d-label" x="460" y="57" text-anchor="middle">Adam m 4</text>
+              <rect class="d-accent" x="532" y="38" width="144" height="30"/>
+              <text class="d-label" x="604" y="57" text-anchor="middle">Adam v 4</text>
+              <text class="d-text" x="20" y="107">LoRA</text>
+              <rect class="d-box" x="100" y="88" width="72" height="30"/>
+              <text class="d-label" x="136" y="107" text-anchor="middle">frozen 2</text>
+              <rect class="d-good" x="172" y="88" width="3" height="30"/>
+              <text class="d-label" x="184" y="107">+ adapters (≈0.5% × 16 = 0.08)</text>
+              <text class="d-text" x="20" y="157">QLoRA</text>
+              <rect class="d-good" x="100" y="138" width="19" height="30"/>
+              <rect class="d-good" x="119" y="138" width="3" height="30"/>
+              <text class="d-label" x="132" y="157">NF4 ≈ 0.52 + adapters</text>
+              <text class="d-mono" x="676" y="190" text-anchor="end">8B model: 128 GB · ~17 GB · ~5 GB, plus activations</text>
+            </svg>
+          </div>
+          <figcaption>Where the 16 bytes go. LoRA removes gradients and optimiser state for 99.5% of the weights; QLoRA also shrinks the frozen copy.</figcaption>
+        </figure>
+
+        <p>Activations scale with tokens per micro-batch. Gradient checkpointing trades about 30% more compute for far less memory. Don't forget the logits: 4,096 tokens × 128k vocabulary in fp32 is about 2 GB.</p>
+
+        <div class="widget" id="tooling-mem">
+          <div class="widget-head">
+            <span class="widget-title">Full fine-tune vs LoRA vs QLoRA: GPU memory</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="tooling-mem-model">Model
+              <select id="tooling-mem-model">
+                <option value="1">1B (Llama 3.2 1B shape)</option>
+                <option value="3">3B (Llama 3.2 3B shape)</option>
+                <option value="8" selected>8B (Llama 3 8B shape)</option>
+                <option value="13">13B (Llama 2 13B shape)</option>
+                <option value="70">70B (Llama 3 70B shape)</option>
+              </select>
+            </label>
+            <label for="tooling-mem-tok">Tokens per micro-batch <input type="range" id="tooling-mem-tok" min="9" max="15" step="1" value="12"><output id="tooling-mem-tok-out">4096</output></label>
+          </div>
+          <svg id="tooling-mem-plot" viewBox="0 0 600 230" role="img" aria-label="Stacked bars of estimated GPU memory for full fine-tuning, LoRA and QLoRA, with reference lines at 24, 48 and 80 GB"></svg>
+          <p class="readout" id="tooling-mem-readout"></p>
+        </div>
+
+        <h3>An end-to-end QLoRA run</h3>
+        <pre class="code" data-lang="python"><code>import torch
+from datasets import load_dataset
+from peft import LoraConfig, AutoPeftModelForCausalLM
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+from trl import SFTConfig, SFTTrainer
+
+base = <span class="s">"meta-llama/Llama-3.1-8B-Instruct"</span>
+bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type=<span class="s">"nf4"</span>,
+                         bnb_4bit_use_double_quant=True, bnb_4bit_compute_dtype=torch.bfloat16)
+model = AutoModelForCausalLM.from_pretrained(base, quantization_config=bnb, device_map=<span class="s">"auto"</span>)
+
+trainer = SFTTrainer(
+    model=model,
+    train_dataset=load_dataset(<span class="s">"json"</span>, data_files=<span class="s">"train.jsonl"</span>, split=<span class="s">"train"</span>),
+    peft_config=LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05,
+                           target_modules=<span class="s">"all-linear"</span>, task_type=<span class="s">"CAUSAL_LM"</span>),
+    args=SFTConfig(output_dir=<span class="s">"qlora-out"</span>, learning_rate=2e-4, num_train_epochs=2,
+                   per_device_train_batch_size=2, gradient_accumulation_steps=16,
+                   gradient_checkpointing=True, optim=<span class="s">"paged_adamw_8bit"</span>,
+                   bf16=True, max_length=2048, report_to=<span class="s">"none"</span>),
+)
+trainer.train()
+trainer.save_model(<span class="s">"qlora-out/adapter"</span>)          <span class="c"># saves only the adapter (~tens of MB)</span>
+
+<span class="c"># Merge into a bf16 copy of the base for serving (older versions: torch_dtype=)</span>
+merged = AutoPeftModelForCausalLM.from_pretrained(<span class="s">"qlora-out/adapter"</span>, dtype=torch.bfloat16)
+merged = merged.merge_and_unload()
+merged.save_pretrained(<span class="s">"qlora-out/merged"</span>)</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Transformers loads, PEFT adapts, bitsandbytes quantises, TRL trains, Accelerate scales out.</li>
+            <li>Full fine-tuning costs about 16 bytes per parameter; LoRA about 2; QLoRA about 0.5, plus activations.</li>
+            <li>Gradient checkpointing and smaller micro-batches with gradient accumulation are the first fixes for out-of-memory.</li>
+            <li>Save adapters during training; merge into a bf16 base only for serving, then re-evaluate.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Renting a GPU before doing the memory maths, then fighting out-of-memory errors for a day.</li>
+            <li>Forgetting the logits tensor when estimating memory for large-vocabulary models.</li>
+            <li>Mixing library versions from different tutorials; pin versions per project.</li>
+            <li>Serving the merged model with a different chat template or generation config than training used.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="tooling-1"><span>Explain what each of Transformers, PEFT, bitsandbytes, TRL and Accelerate does in a training run</span></label></li>
+          <li><label><input type="checkbox" data-key="tooling-2"><span>Estimate GPU memory for full, LoRA and QLoRA fine-tuning of a 13B model</span></label></li>
+          <li><label><input type="checkbox" data-key="tooling-3"><span>Run a QLoRA SFT job end to end and merge the adapter</span></label></li>
+          <li><label><input type="checkbox" data-key="tooling-4"><span>List three ways to fix an out-of-memory error without buying a bigger GPU</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/transformers">Hugging Face Transformers documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://huggingface.co/docs/bitsandbytes">bitsandbytes documentation</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/unslothai/unsloth">Unsloth on GitHub</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/axolotl-ai-cloud/axolotl">Axolotl on GitHub</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Fine-tune a JSON extractor</h4><p>Take 500 support emails, label the fields you need, and LoRA-tune a 1B–3B instruct model to emit a fixed JSON schema. Compare schema validity and field accuracy against a few-shot prompt on the same model.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Distil and preference-tune</h4><p>Use a strong model to generate and verify 5,000 examples for a task, QLoRA-tune an 8B model on them, then run DPO on pairs sampled from your SFT model and ranked by a judge. Report task and general-ability evals at each stage.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>GRPO with a verifier</h4><p>Pick a checkable task such as text-to-SQL against a small database. Train a small model with GRPO using execution-match rewards, track the pass rate curve, and document one reward hack you found and fixed.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Argue, with an eval and a cost estimate, whether a problem needs prompting, RAG or fine-tuning</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Prepare chat-templated, loss-masked SFT data and catch formatting bugs before training</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Configure LoRA or QLoRA and predict its trainable parameters and GPU memory</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Explain and run DPO and GRPO, and say which fits a given data source</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Build a filtered synthetic data pipeline and show the fine-tuned model did not forget general skills</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  function el(parent, tag, attrs, text) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) n.setAttribute(k, attrs[k]);
+    if (text !== undefined) n.textContent = text;
+    parent.appendChild(n);
+    return n;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function $(id) { return document.getElementById(id); }
+  function big(n) {
+    if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + "k";
+    return String(Math.round(n));
+  }
+  function gb(bytes) { var g = bytes / 1e9; return g >= 100 ? g.toFixed(0) + " GB" : g >= 10 ? g.toFixed(1) + " GB" : g.toFixed(2) + " GB"; }
+
+  /* 09.1 decision helper */
+  (function () {
+    if (!$("when-to-finetune-demo")) return;
+    var fail = $("when-to-finetune-fail"), data = $("when-to-finetune-data"), change = $("when-to-finetune-change"),
+        tried = $("when-to-finetune-tried"), svg = $("when-to-finetune-plot"), out = $("when-to-finetune-readout");
+    var base = {
+      knowledge: { prompt: 4, rag: 9, ft: 1, distil: 0 },
+      format: { prompt: 7, rag: 1, ft: 6, distil: 1 },
+      behaviour: { prompt: 6, rag: 1, ft: 7, distil: 1 },
+      capability: { prompt: 3, rag: 1, ft: 4, distil: 0 },
+      cost: { prompt: 3, rag: 1, ft: 6, distil: 8 }
+    };
+    var names = { prompt: "Better prompt", rag: "RAG / tools", ft: "Fine-tune (SFT/RL)", distil: "Distil to small model" };
+    var advice = {
+      prompt: "Start with the prompt: clear instructions, a schema and a few examples on the strongest model. It sets the baseline any fine-tune must beat.",
+      rag: "This is a knowledge problem. Retrieve the facts at query time; fine-tuning would bake in facts you cannot cite or update.",
+      ft: "A fine-tune fits: the failure is stable behaviour or format and you have examples. Use LoRA SFT, and consider RL with a verifier for capability gaps.",
+      distil: "Keep the big model as a teacher, generate and verify outputs, and fine-tune a small model to cut cost and latency."
+    };
+    function draw() {
+      var s = {}, b = base[fail.value], d = +data.value;
+      for (var k in b) s[k] = b[k];
+      s.ft += [-4, -2, 0, 2][d];
+      s.distil += d === 0 ? -1 : 0;
+      if (change.value === "often") { s.rag += 1; s.ft -= 1; }
+      if (tried.checked) s.prompt -= 3; else s.prompt += 3;
+      var keys = ["prompt", "rag", "ft", "distil"], best = keys[0];
+      keys.forEach(function (k) { s[k] = Math.max(0, Math.min(10, s[k])); if (s[k] > s[best]) best = k; });
+      clear(svg);
+      keys.forEach(function (k, i) {
+        var y = 14 + i * 38;
+        el(svg, "text", { x: 0, y: y + 18, "class": "d-text" }, names[k]);
+        el(svg, "rect", { x: 170, y: y, width: 380, height: 26, rx: 4, "class": "d-fill" });
+        el(svg, "rect", { x: 170, y: y, width: Math.max(2, s[k] * 38), height: 26, rx: 4, "class": k === best ? "d-accent" : "d-box" });
+        el(svg, "text", { x: 560, y: y + 18, "class": "d-mono" }, s[k] + "/10");
+      });
+      var note = "";
+      if (fail.value === "capability") note = " For true capability gaps, try a stronger model first.";
+      if (d === 0 && best !== "rag") note += " You have no examples yet: collect 100+ real failures and fixes before training anything.";
+      out.textContent = "Best fit: " + names[best] + ". " + advice[best] + note;
+    }
+    [fail, data, change, tried].forEach(function (c) { c.addEventListener("change", draw); });
+    draw();
+  })();
+
+  /* 09.2 loss-masking signal */
+  (function () {
+    if (!$("sft-mask")) return;
+    var p = $("sft-mask-p"), a = $("sft-mask-a"), m = $("sft-mask-on"), svg = $("sft-mask-plot"), out = $("sft-mask-readout");
+    function draw() {
+      var P = +p.value, A = +a.value, masked = m.checked;
+      $("sft-mask-p-out").textContent = P; $("sft-mask-a-out").textContent = A;
+      var W = 560, wp = Math.max(2, W * P / (P + A)), wa = W - wp;
+      clear(svg);
+      el(svg, "text", { x: 20, y: 18, "class": "d-label" }, "token sequence (width proportional to token count)");
+      el(svg, "rect", { x: 20, y: 26, width: wp, height: 30, "class": masked ? "d-fill" : "d-signal" });
+      el(svg, "rect", { x: 20 + wp, y: 26, width: Math.max(2, wa), height: 30, "class": "d-good" });
+      if (wp > 120) el(svg, "text", { x: 20 + wp / 2, y: 46, "text-anchor": "middle", "class": "d-text" }, masked ? "prompt: labels -100" : "prompt: in the loss");
+      el(svg, "text", { x: 580, y: 72, "text-anchor": "end", "class": "d-label" }, "answer: " + A + " tokens");
+      var share = masked ? 1 : A / (P + A);
+      el(svg, "text", { x: 20, y: 98, "class": "d-label" }, "share of the loss that teaches the answer");
+      el(svg, "rect", { x: 20, y: 106, width: W, height: 26, "class": "d-signal" });
+      el(svg, "rect", { x: 20, y: 106, width: Math.max(2, W * share), height: 26, "class": "d-good" });
+      el(svg, "text", { x: 26, y: 124, "class": "d-mono" }, (share * 100).toFixed(1) + "% answer");
+      if (share < 0.85) el(svg, "text", { x: 574, y: 124, "text-anchor": "end", "class": "d-mono" }, ((1 - share) * 100).toFixed(1) + "% prompt");
+      out.textContent = masked
+        ? "Loss averages over " + A + " answer tokens. All gradient signal teaches the reply; the " + P + " prompt tokens are context only."
+        : "Loss averages over " + (P + A) + " tokens and only " + (share * 100).toFixed(1) + "% of it teaches the reply. The rest trains the model to predict prompts.";
+    }
+    [p, a, m].forEach(function (c) { c.addEventListener("input", draw); c.addEventListener("change", draw); });
+    draw();
+  })();
+
+  /* 09.3 LoRA parameter calculator */
+  (function () {
+    if (!$("peft-calc")) return;
+    var presets = {
+      "1b": { d: 2048, ff: 8192, kv: 512, L: 16, emb: 128256 * 2048 },
+      "8b": { d: 4096, ff: 14336, kv: 1024, L: 32, emb: 2 * 128256 * 4096 },
+      "7b": { d: 4096, ff: 11008, kv: 4096, L: 32, emb: 2 * 32000 * 4096 },
+      "70b": { d: 8192, ff: 28672, kv: 1024, L: 80, emb: 2 * 128256 * 8192 }
+    };
+    var ranks = [2, 4, 8, 16, 32, 64, 128, 256], emb = presets["8b"].emb;
+    var preset = $("peft-calc-preset"), rank = $("peft-calc-rank"), D = $("peft-calc-d"), FF = $("peft-calc-ff"),
+        KV = $("peft-calc-kv"), LL = $("peft-calc-layers"), svg = $("peft-calc-plot"), out = $("peft-calc-readout");
+    var mods = ["q", "k", "v", "o", "gate", "up", "down"];
+    function shapes(d, ff, kv) {
+      return { q: [d, d], k: [d, kv], v: [d, kv], o: [d, d], gate: [d, ff], up: [d, ff], down: [ff, d] };
+    }
+    function draw() {
+      var r = ranks[+rank.value], d = Math.max(1, +D.value), ff = Math.max(1, +FF.value), kv = Math.max(1, +KV.value), L = Math.max(1, +LL.value);
+      $("peft-calc-rank-out").textContent = r;
+      var sh = shapes(d, ff, kv), rows = [], total = 0, baseP = emb, maxv = 1;
+      mods.forEach(function (mname) {
+        var s = sh[mname], full = s[0] * s[1] * L, lora = r * (s[0] + s[1]) * L, on = $("peft-calc-m-" + mname).checked;
+        baseP += full;
+        rows.push({ n: mname, full: full, lora: on ? lora : 0, on: on });
+        if (on) { total += lora; maxv = Math.max(maxv, lora); }
+      });
+      clear(svg);
+      el(svg, "text", { x: 0, y: 12, "class": "d-label" }, "LoRA params per module type (all " + L + " layers)");
+      rows.forEach(function (row, i) {
+        var y = 22 + i * 24;
+        el(svg, "text", { x: 0, y: y + 15, "class": "d-mono" }, row.n);
+        el(svg, "rect", { x: 50, y: y, width: 420, height: 18, rx: 3, "class": "d-fill" });
+        if (row.on) el(svg, "rect", { x: 50, y: y, width: Math.max(2, 420 * row.lora / maxv), height: 18, rx: 3, "class": "d-good" });
+        el(svg, "text", { x: 480, y: y + 14, "class": "d-label" }, row.on ? big(row.lora) : "frozen");
+      });
+      var pct = 100 * total / baseP;
+      out.textContent = "Trainable: " + big(total) + " (" + pct.toFixed(2) + "% of ~" + big(baseP) + ") · adapter file (bf16): " + gb(total * 2) +
+        " · adapter training state (~16 B/param): " + gb(total * 16) + " · frozen base: " + gb(baseP * 2) + " bf16 or ~" + gb(baseP * 0.52) + " NF4";
+    }
+    preset.addEventListener("change", function () {
+      var p = presets[preset.value];
+      D.value = p.d; FF.value = p.ff; KV.value = p.kv; LL.value = p.L; emb = p.emb;
+      draw();
+    });
+    [rank, D, FF, KV, LL].forEach(function (c) { c.addEventListener("input", draw); });
+    mods.forEach(function (mname) { $("peft-calc-m-" + mname).addEventListener("change", draw); });
+    draw();
+  })();
+
+  /* 09.4 DPO pair visualiser */
+  (function () {
+    if (!$("preference-dpo")) return;
+    var c = $("preference-dpo-c"), r = $("preference-dpo-r"), b = $("preference-dpo-b"), svg = $("preference-dpo-plot"), out = $("preference-dpo-readout");
+    function softplus(x) { return x > 30 ? x : Math.log(1 + Math.exp(x)); }
+    function sig(x) { return 1 / (1 + Math.exp(-x)); }
+    var X0 = 50, X1 = 560, Y0 = 200, Y1 = 20, MMIN = -12, MMAX = 12;
+    function draw() {
+      var lc = +c.value, lr = +r.value, beta = +b.value, m = lc - lr;
+      $("preference-dpo-c-out").textContent = lc.toFixed(1);
+      $("preference-dpo-r-out").textContent = lr.toFixed(1);
+      $("preference-dpo-b-out").textContent = beta.toFixed(2);
+      var ymax = Math.max(1.5, softplus(beta * -MMIN)) * 1.05;
+      function sx(v) { return X0 + (v - MMIN) / (MMAX - MMIN) * (X1 - X0); }
+      function sy(v) { return Y0 - v / ymax * (Y0 - Y1); }
+      function sy2(v) { return Y0 - v * (Y0 - Y1); }
+      clear(svg);
+      el(svg, "line", { x1: X0, y1: Y0, x2: X1, y2: Y0, "class": "d-line" });
+      el(svg, "line", { x1: X0, y1: Y0, x2: X0, y2: Y1, "class": "d-line" });
+      el(svg, "line", { x1: sx(0), y1: Y0, x2: sx(0), y2: Y1, "class": "d-grid d-dash" });
+      [-12, -6, 0, 6, 12].forEach(function (t) { el(svg, "text", { x: sx(t), y: Y0 + 16, "text-anchor": "middle", "class": "d-label" }, t); });
+      el(svg, "text", { x: (X0 + X1) / 2, y: Y0 + 34, "text-anchor": "middle", "class": "d-label" }, "margin = log-ratio(chosen) − log-ratio(rejected)");
+      el(svg, "text", { x: X0 - 6, y: sy(0) + 4, "text-anchor": "end", "class": "d-label" }, "0");
+      el(svg, "text", { x: X0 - 6, y: sy(ymax / 1.05) + 4, "text-anchor": "end", "class": "d-label" }, (ymax / 1.05).toFixed(1));
+      var d1 = "", d2 = "";
+      for (var i = 0; i <= 120; i++) {
+        var v = MMIN + (MMAX - MMIN) * i / 120;
+        d1 += (i ? "L" : "M") + sx(v).toFixed(1) + " " + sy(softplus(-beta * v)).toFixed(1);
+        d2 += (i ? "L" : "M") + sx(v).toFixed(1) + " " + sy2(sig(-beta * v)).toFixed(1);
+      }
+      el(svg, "path", { d: d1, "class": "d-line-accent" });
+      el(svg, "path", { d: d2, "class": "d-line-signal d-dash" });
+      var loss = softplus(-beta * m), gw = sig(-beta * m);
+      var mx = Math.max(MMIN, Math.min(MMAX, m));
+      el(svg, "circle", { cx: sx(mx), cy: sy(loss), r: 6, "class": "d-dot" });
+      el(svg, "circle", { cx: sx(mx), cy: sy2(gw), r: 5, "class": "d-dot-signal" });
+      el(svg, "rect", { x: 380, y: 22, width: 12, height: 3, "class": "d-accent" });
+      el(svg, "text", { x: 398, y: 28, "class": "d-label" }, "loss −log σ(β·margin)");
+      el(svg, "rect", { x: 380, y: 40, width: 12, height: 3, "class": "d-signal" });
+      el(svg, "text", { x: 398, y: 46, "class": "d-label" }, "gradient weight σ(−β·margin)");
+      var msg = "implicit rewards: chosen " + (beta * lc).toFixed(2) + ", rejected " + (beta * lr).toFixed(2) +
+        " · margin " + m.toFixed(1) + " · loss " + loss.toFixed(3) + " · gradient weight " + gw.toFixed(2);
+      if (lc < 0 && m > 0) msg += " · note: the chosen answer is now LESS likely than under the reference, yet the loss is low.";
+      if (m < 0) msg += " · the policy prefers the rejected answer, so this pair gets a strong push.";
+      out.textContent = msg;
+    }
+    [c, r, b].forEach(function (x) { x.addEventListener("input", draw); });
+    draw();
+  })();
+
+  /* 09.5 distillation temperature */
+  (function () {
+    if (!$("distillation-temp")) return;
+    var t = $("distillation-temp-t"), svg = $("distillation-temp-plot"), out = $("distillation-temp-readout");
+    var toks = ["Paris", "Lyon", "a", "the", "Marseille", "located"], z = [9.0, 5.8, 5.2, 4.6, 4.4, 3.0];
+    function soft(T) {
+      var mx = Math.max.apply(null, z), e = z.map(function (v) { return Math.exp((v - mx) / T); }), s = e.reduce(function (a, b) { return a + b; }, 0);
+      return e.map(function (v) { return v / s; });
+    }
+    function H(p) { return -p.reduce(function (a, v) { return a + (v > 0 ? v * Math.log2(v) : 0); }, 0); }
+    function draw() {
+      var T = +t.value; $("distillation-temp-t-out").textContent = T.toFixed(1);
+      var p1 = soft(1), pT = soft(T);
+      clear(svg);
+      var X0 = 40, Y0 = 180, Hh = 150, gw = 90;
+      el(svg, "line", { x1: X0, y1: Y0, x2: 580, y2: Y0, "class": "d-line" });
+      el(svg, "text", { x: 0, y: 14, "class": "d-label" }, "next token after “The capital of France is”");
+      toks.forEach(function (tok, i) {
+        var x = X0 + 10 + i * gw;
+        el(svg, "rect", { x: x, y: Y0 - p1[i] * Hh, width: 18, height: Math.max(1, p1[i] * Hh), "class": "d-dot-muted" });
+        el(svg, "rect", { x: x + 22, y: Y0 - pT[i] * Hh, width: 18, height: Math.max(1, pT[i] * Hh), "class": "d-dot" });
+        el(svg, "text", { x: x + 31, y: Y0 - pT[i] * Hh - 6, "text-anchor": "middle", "class": "d-label" }, pT[i].toFixed(2));
+        el(svg, "text", { x: x + 20, y: Y0 + 18, "text-anchor": "middle", "class": "d-mono" }, tok);
+      });
+      el(svg, "rect", { x: 360, y: 24, width: 12, height: 10, "class": "d-dot-muted" });
+      el(svg, "text", { x: 378, y: 33, "class": "d-label" }, "teacher at T = 1");
+      el(svg, "rect", { x: 470, y: 24, width: 12, height: 10, "class": "d-dot" });
+      el(svg, "text", { x: 488, y: 33, "class": "d-label" }, "teacher at T = " + T.toFixed(1));
+      el(svg, "text", { x: 300, y: 220, "text-anchor": "middle", "class": "d-label" }, "hard label: Paris = 1, everything else 0 (no information about the alternatives)");
+      out.textContent = "Probability on non-top tokens: " + ((1 - p1[0]) * 100).toFixed(1) + "% at T=1 vs " + ((1 - pT[0]) * 100).toFixed(1) +
+        "% at T=" + T.toFixed(1) + " · entropy " + H(p1).toFixed(2) + " → " + H(pT).toFixed(2) + " bits (max " + Math.log2(toks.length).toFixed(2) + ")";
+    }
+    t.addEventListener("input", draw);
+    draw();
+  })();
+
+  /* 09.6 GPU memory: full vs LoRA vs QLoRA */
+  (function () {
+    if (!$("tooling-mem")) return;
+    var models = {
+      "1": { P: 1.24e9, d: 2048, L: 16, V: 128256 },
+      "3": { P: 3.21e9, d: 3072, L: 28, V: 128256 },
+      "8": { P: 8.03e9, d: 4096, L: 32, V: 128256 },
+      "13": { P: 13.0e9, d: 5120, L: 40, V: 32000 },
+      "70": { P: 70.6e9, d: 8192, L: 80, V: 128256 }
+    };
+    var sel = $("tooling-mem-model"), tok = $("tooling-mem-tok"), svg = $("tooling-mem-plot"), out = $("tooling-mem-readout");
+    function draw() {
+      var m = models[sel.value], T = Math.pow(2, +tok.value);
+      $("tooling-mem-tok-out").textContent = T;
+      var act = T * m.d * (2 * m.L + 34) + T * m.V * 4 + 1e9;   // checkpointed activations + fp32 logits + ~1 GB runtime
+      var tr = 0.005 * m.P * 16;
+      var rows = [
+        { n: "Full FT", w: 2 * m.P, o: 14 * m.P, a: act },
+        { n: "LoRA", w: 2 * m.P, o: tr, a: act },
+        { n: "QLoRA", w: 0.52 * m.P, o: tr, a: act }
+      ];
+      rows.forEach(function (r) { r.t = r.w + r.o + r.a; });
+      var axis = Math.min(rows[0].t, 200e9);
+      axis = Math.max(axis, 90e9);
+      var X0 = 80, W = 470;
+      function sx(v) { return X0 + Math.min(v, axis) / axis * W; }
+      clear(svg);
+      [24, 48, 80].forEach(function (g) {
+        if (g * 1e9 <= axis) {
+          el(svg, "line", { x1: sx(g * 1e9), y1: 14, x2: sx(g * 1e9), y2: 186, "class": "d-grid d-dash" });
+          el(svg, "text", { x: sx(g * 1e9), y: 10, "text-anchor": "middle", "class": "d-label" }, g + " GB");
+        }
+      });
+      rows.forEach(function (r, i) {
+        var y = 26 + i * 54, x = X0;
+        el(svg, "text", { x: 0, y: y + 22, "class": "d-text" }, r.n);
+        [["w", "d-box"], ["o", "d-signal"], ["a", "d-accent"]].forEach(function (seg) {
+          var w = sx(Math.min(r[seg[0]], axis)) - X0;
+          var x2 = Math.min(x + w, X0 + W);
+          if (x2 > x) el(svg, "rect", { x: x, y: y, width: Math.max(1.5, x2 - x), height: 32, "class": seg[1] });
+          x = x2;
+        });
+        var label = "total ≈ " + gb(r.t) + (r.t > axis ? " (bar cut at axis end)" : "");
+        el(svg, "text", { x: X0, y: y + 46, "class": "d-mono" }, label);
+      });
+      var lx = 80;
+      [["weights", "d-box"], ["grads + optimiser", "d-signal"], ["activations + logits", "d-accent"]].forEach(function (lg) {
+        el(svg, "rect", { x: lx, y: 200, width: 12, height: 12, "class": lg[1] });
+        el(svg, "text", { x: lx + 18, y: 210, "class": "d-label" }, lg[0]);
+        lx += 160;
+      });
+      function fits(v) { return v <= 24e9 ? "a 24 GB card" : v <= 48e9 ? "a 48 GB card" : v <= 80e9 ? "one 80 GB GPU" : "multiple GPUs (shard with FSDP/ZeRO)"; }
+      out.textContent = "Rough estimate with gradient checkpointing, ~0.5% trainable for LoRA. Full FT needs " + fits(rows[0].t) +
+        "; LoRA fits " + fits(rows[1].t) + "; QLoRA fits " + fits(rows[2].t) + ".";
+    }
+    sel.addEventListener("change", draw);
+    tok.addEventListener("input", draw);
+    draw();
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1579 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Production &amp; LLMOps · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="production">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Production &amp; LLMOps</h1>
+    <p class="lede">A demo works once; a product works every day for users you never meet. This area covers how to ship AI changes safely, see what every request did, notice when quality, inputs or costs drift, and run the infrastructure underneath. LLMOps is ordinary operations discipline plus one twist: failures are usually wrong answers, not crashes.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Production work is a loop. You run experiments and track them, register the winner, pass it through an eval gate in CI, roll it out gradually, and then watch it through traces and monitors. What you see in production (regressions, drift, new kinds of questions) becomes the next round of eval data and experiments. Kubernetes, queues and caches carry the whole loop.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 250" role="img" aria-label="The LLMOps loop: experiments feed a registry, CI eval gates, and canary deployment; live traffic produces traces and monitoring signals that feed back into experiments, all running on Kubernetes, queues and caches.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="150" height="50" rx="8"/>
+              <text class="d-title" x="95" y="52" text-anchor="middle">Experiments</text>
+              <text class="d-label" x="95" y="70" text-anchor="middle">12.5 tracking</text>
+              <rect class="d-box" x="210" y="30" width="150" height="50" rx="8"/>
+              <text class="d-title" x="285" y="52" text-anchor="middle">Registry</text>
+              <text class="d-label" x="285" y="70" text-anchor="middle">12.7 versions</text>
+              <rect class="d-accent" x="400" y="30" width="150" height="50" rx="8"/>
+              <text class="d-title" x="475" y="52" text-anchor="middle">CI eval gate</text>
+              <text class="d-label" x="475" y="70" text-anchor="middle">12.2 CI/CD</text>
+              <rect class="d-accent" x="590" y="30" width="150" height="50" rx="8"/>
+              <text class="d-title" x="665" y="52" text-anchor="middle">Canary deploy</text>
+              <text class="d-label" x="665" y="70" text-anchor="middle">12.1 deployment</text>
+              <line class="d-line-accent" x1="170" y1="55" x2="208" y2="55" marker-end="url(#ov-arrow)"/>
+              <line class="d-line-accent" x1="360" y1="55" x2="398" y2="55" marker-end="url(#ov-arrow)"/>
+              <line class="d-line-accent" x1="550" y1="55" x2="588" y2="55" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="189" y="22" text-anchor="middle">winner</text>
+              <text class="d-label" x="379" y="22" text-anchor="middle">candidate</text>
+              <text class="d-label" x="569" y="22" text-anchor="middle">passes</text>
+              <line class="d-line-accent" x1="665" y1="80" x2="665" y2="128" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="672" y="108">live traffic</text>
+              <rect class="d-good" x="590" y="130" width="150" height="50" rx="8"/>
+              <text class="d-title" x="665" y="152" text-anchor="middle">Traces</text>
+              <text class="d-label" x="665" y="170" text-anchor="middle">12.3 observability</text>
+              <rect class="d-good" x="400" y="130" width="150" height="50" rx="8"/>
+              <text class="d-title" x="475" y="152" text-anchor="middle">Monitors</text>
+              <text class="d-label" x="475" y="170" text-anchor="middle">12.4 quality·drift·cost</text>
+              <line class="d-line-accent" x1="590" y1="155" x2="552" y2="155" marker-end="url(#ov-arrow)"/>
+              <path class="d-line-signal" d="M400 155 L95 155 L95 82" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="250" y="147" text-anchor="middle">regressions, new eval cases</text>
+              <rect class="d-fill" x="210" y="204" width="530" height="34" rx="8"/>
+              <text class="d-text" x="475" y="226" text-anchor="middle">Kubernetes · queues · caches (12.6) under everything</text>
+            </svg>
+          </div>
+          <figcaption>The LLMOps loop. Every arrow is a hand-off you will automate: a tracked run becomes a registered version, passes a gate, ships gradually, and production signals feed the next iteration.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="deployment">
+        <header class="topic-head">
+          <p class="eyebrow">12.1 · Ship changes without breaking users</p>
+          <h2>Deployment</h2>
+        </header>
+
+        <p class="lead">Deploying an AI feature means putting a new combination of model, prompt, parameters and retrieval setup in front of real users. The risky part is that a bad release rarely crashes. It answers a little worse, refuses more often or costs twice as much, so you need versioning that makes every change explicit and rollouts that expose few users until the evidence is in.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>You will change prompts weekly and models a few times a year. Each change can shift behavior across thousands of conversations. Canary and shadow deploys, plus instant rollback, are what let you move fast without gambling with every user at once.</p>
+        </div>
+
+        <h3>What a release is</h3>
+        <p>Treat the whole bundle as one versioned release. A prompt edit is a deploy, just like a code change.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="An annotated release manifest listing model snapshot, prompt version, parameters, retriever index, tools and guardrail policy, with notes on pinning and versioning each.">
+              <defs>
+                <marker id="deployment-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="16" width="340" height="196" rx="8"/>
+              <text class="d-title" x="36" y="40">release support-bot · r42</text>
+              <line class="d-grid" x1="36" y1="50" x2="344" y2="50"/>
+              <text class="d-mono" x="36" y="74">model:     llama-3.1-70b · fp8</text>
+              <text class="d-mono" x="36" y="98">prompt:    answer-support@v14</text>
+              <text class="d-mono" x="36" y="122">params:    temp 0.2 · max 800</text>
+              <text class="d-mono" x="36" y="146">retriever: index 2026-11-01 · k=8</text>
+              <text class="d-mono" x="36" y="170">tools:     tools.json@v3</text>
+              <text class="d-mono" x="36" y="194">guardrail: policy v5</text>
+              <line class="d-line" x1="440" y1="70" x2="362" y2="70" marker-end="url(#deployment-arrow)"/>
+              <text class="d-label" x="446" y="66">pin exact weights or dated API</text>
+              <text class="d-label" x="446" y="80">snapshots, never a moving alias</text>
+              <line class="d-line" x1="440" y1="98" x2="362" y2="96" marker-end="url(#deployment-arrow)"/>
+              <text class="d-label" x="446" y="102">prompts live in git or a prompt registry</text>
+              <line class="d-line" x1="440" y1="146" x2="362" y2="144" marker-end="url(#deployment-arrow)"/>
+              <text class="d-label" x="446" y="142">index and embedding model</text>
+              <text class="d-label" x="446" y="156">change together</text>
+              <rect class="d-signal" x="440" y="182" width="220" height="30" rx="6"/>
+              <text class="d-text" x="550" y="202" text-anchor="middle">change any line = new release</text>
+            </svg>
+          </div>
+          <figcaption>A release manifest. Logging the release id on every request lets you tie any trace, metric or complaint back to exactly what produced it.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Fetch the prompt version labelled "production" from Langfuse's prompt management</span>
+from langfuse import Langfuse
+
+langfuse = Langfuse()                      <span class="c"># reads LANGFUSE_* keys from the environment</span>
+prompt = langfuse.get_prompt("answer-support", label="production")
+text = prompt.compile(question="Where is my refund?")
+<span class="c"># Roll back by moving the "production" label to the previous version: no code deploy needed.</span></code></pre>
+
+        <h3>Rollout strategies</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 690 210" role="img" aria-label="Four rollout patterns: blue/green switches all traffic at once, canary sends a small share to the new version, shadow mirrors traffic to the new version and discards its answers, A/B splits users to measure outcomes.">
+              <defs>
+                <marker id="deployment-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <g>
+                <text class="d-title" x="90" y="20" text-anchor="middle">Blue / green</text>
+                <circle class="d-box" cx="90" cy="56" r="18"/><text class="d-label" x="90" y="60" text-anchor="middle">router</text>
+                <line class="d-line d-dash" x1="80" y1="72" x2="50" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <line class="d-line-accent" x1="100" y1="72" x2="130" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <text class="d-label" x="44" y="98" text-anchor="middle">0%</text><text class="d-label" x="138" y="98" text-anchor="middle">100%</text>
+                <rect class="d-box" x="18" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="50" y="137" text-anchor="middle">v1</text>
+                <rect class="d-accent" x="98" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="130" y="137" text-anchor="middle">v2</text>
+                <text class="d-label" x="90" y="176" text-anchor="middle">switch all at once;</text>
+                <text class="d-label" x="90" y="192" text-anchor="middle">flip back to roll back</text>
+              </g>
+              <g>
+                <text class="d-title" x="260" y="20" text-anchor="middle">Canary</text>
+                <circle class="d-box" cx="260" cy="56" r="18"/><text class="d-label" x="260" y="60" text-anchor="middle">router</text>
+                <line class="d-line" x1="250" y1="72" x2="220" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <line class="d-line-accent" x1="270" y1="72" x2="300" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <text class="d-label" x="214" y="98" text-anchor="middle">95%</text><text class="d-label" x="306" y="98" text-anchor="middle">5%</text>
+                <rect class="d-box" x="188" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="220" y="137" text-anchor="middle">v1</text>
+                <rect class="d-accent" x="268" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="300" y="137" text-anchor="middle">v2</text>
+                <text class="d-label" x="260" y="176" text-anchor="middle">ramp 5 → 25 → 100%,</text>
+                <text class="d-label" x="260" y="192" text-anchor="middle">auto-rollback on alarms</text>
+              </g>
+              <g>
+                <text class="d-title" x="430" y="20" text-anchor="middle">Shadow</text>
+                <circle class="d-box" cx="430" cy="56" r="18"/><text class="d-label" x="430" y="60" text-anchor="middle">router</text>
+                <line class="d-line" x1="420" y1="72" x2="390" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <line class="d-line-signal d-dash" x1="440" y1="72" x2="470" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <text class="d-label" x="384" y="98" text-anchor="middle">100%</text><text class="d-label" x="482" y="98" text-anchor="middle">copy</text>
+                <rect class="d-box" x="358" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="390" y="137" text-anchor="middle">v1</text>
+                <rect class="d-signal" x="438" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="470" y="137" text-anchor="middle">v2</text>
+                <text class="d-label" x="430" y="176" text-anchor="middle">v2 answers are logged,</text>
+                <text class="d-label" x="430" y="192" text-anchor="middle">never shown to users</text>
+              </g>
+              <g>
+                <text class="d-title" x="600" y="20" text-anchor="middle">A/B test</text>
+                <circle class="d-box" cx="600" cy="56" r="18"/><text class="d-label" x="600" y="60" text-anchor="middle">router</text>
+                <line class="d-line" x1="590" y1="72" x2="560" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <line class="d-line-accent" x1="610" y1="72" x2="640" y2="116" marker-end="url(#deployment-arrow2)"/>
+                <text class="d-label" x="554" y="98" text-anchor="middle">50%</text><text class="d-label" x="648" y="98" text-anchor="middle">50%</text>
+                <rect class="d-box" x="528" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="560" y="137" text-anchor="middle">v1</text>
+                <rect class="d-accent" x="608" y="118" width="64" height="30" rx="5"/><text class="d-mono" x="640" y="137" text-anchor="middle">v2</text>
+                <text class="d-label" x="600" y="176" text-anchor="middle">split by user, compare</text>
+                <text class="d-label" x="600" y="192" text-anchor="middle">business outcomes</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Shadow first to catch errors, latency and cost with zero user risk; canary to limit exposure; A/B when you need to measure user impact rather than just safety.</figcaption>
+        </figure>
+
+        <p>A canary only protects you if something watches it: compare the canary's error rate (or judge score, refusal rate, cost) against the stable version, and roll back automatically when it crosses a threshold. The catch is sample size: at 5% traffic, a minute of data may hold only a handful of canary requests.</p>
+
+        <div class="widget" id="deployment-demo">
+          <div class="widget-head">
+            <span class="widget-title">Canary rollout simulator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="deployment-err">Canary true error rate <input type="range" id="deployment-err" min="0" max="10" step="0.5" value="4"><output id="deployment-err-out">4.0%</output></label>
+            <label for="deployment-thr">Rollback if canary exceeds baseline by <input type="range" id="deployment-thr" min="0.5" max="5" step="0.5" value="2"><output id="deployment-thr-out">2.0 pp</output></label>
+            <label for="deployment-rpm">Requests / min <input type="range" id="deployment-rpm" min="50" max="1000" step="50" value="200"><output id="deployment-rpm-out">200</output></label>
+            <button class="btn" type="button" id="deployment-run">Run again</button>
+          </div>
+          <svg id="deployment-plot" viewBox="0 0 600 240" role="img" aria-label="Over 40 minutes, canary traffic steps from 5 to 25 to 50 to 100 percent unless observed canary errors cross the rollback threshold."></svg>
+          <p class="readout" id="deployment-readout"></p>
+        </div>
+        <p>Baseline error rate is 1%. The monitor checks a 5-minute window and waits for at least 100 canary requests before deciding, so a bad canary still reaches some users before it is caught.</p>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A release = model snapshot + prompt version + parameters + retrieval config + tools + guardrails.</li>
+            <li>Version prompts and pin model snapshots so every request is traceable to an exact release.</li>
+            <li>Shadow deploys test safely, canaries limit blast radius, A/B tests measure user impact.</li>
+            <li>Automated rollback needs a metric, a threshold and enough samples to decide.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Editing a production prompt in a dashboard with no version history or review.</li>
+            <li>Calling a provider's floating model alias and getting silently upgraded.</li>
+            <li>Watching only HTTP errors on a canary while answer quality quietly drops.</li>
+            <li>Shadowing traffic into tools with side effects (sending emails, issuing refunds).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="deployment-1"><span>Write a release manifest for an AI feature you know and list what would trigger a new version</span></label></li>
+          <li><label><input type="checkbox" data-key="deployment-2"><span>Choose between shadow, canary and A/B for three different changes and justify each</span></label></li>
+          <li><label><input type="checkbox" data-key="deployment-3"><span>Estimate how many minutes a 5% canary needs to collect 500 requests at your traffic level</span></label></li>
+          <li><label><input type="checkbox" data-key="deployment-4"><span>Roll back a prompt change without redeploying code</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://sre.google/books/">Google SRE books (canarying and release engineering)</a></li>
+          <li><span class="kind">Docs</span><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Kubernetes Deployments (rolling updates and rollbacks)</a></li>
+          <li><span class="kind">Docs</span><a href="https://langfuse.com/docs">Langfuse documentation (prompt management)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="cicd">
+        <header class="topic-head">
+          <p class="eyebrow">12.2 · Evals as tests</p>
+          <h2>CI/CD for AI</h2>
+        </header>
+
+        <p class="lead">Classic CI runs unit tests: same input, same output, pass or fail. A prompt tweak can pass every unit test and still make answers worse. CI for AI adds an <strong>eval gate</strong>: run the system on a fixed set of cases, score the outputs, and block the merge if quality falls below a floor or regresses against the current baseline.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Without a gate, every prompt or model change is a guess checked by eyeballing five examples. With one, regressions show up on the pull request with a score diff, before users see them.</p>
+        </div>
+
+        <h3>The pipeline</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 690 190" role="img" aria-label="A pull request runs unit tests, then a smoke eval, then a gate; passing builds an image and deploys to staging and canary, failing blocks the merge and posts a score diff. A nightly job runs the full suite.">
+              <defs>
+                <marker id="cicd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="40" width="110" height="46" rx="8"/>
+              <text class="d-text" x="65" y="60" text-anchor="middle">Pull request</text>
+              <text class="d-label" x="65" y="76" text-anchor="middle">code · prompt · model</text>
+              <rect class="d-box" x="140" y="40" width="100" height="46" rx="8"/>
+              <text class="d-text" x="190" y="60" text-anchor="middle">Unit tests</text>
+              <text class="d-label" x="190" y="76" text-anchor="middle">lint · schemas</text>
+              <rect class="d-accent" x="260" y="40" width="110" height="46" rx="8"/>
+              <text class="d-text" x="315" y="60" text-anchor="middle">Smoke eval</text>
+              <text class="d-label" x="315" y="76" text-anchor="middle">50–200 cases</text>
+              <polygon class="d-signal" points="420,33 450,63 420,93 390,63"/>
+              <text class="d-text" x="420" y="68" text-anchor="middle">gate</text>
+              <rect class="d-box" x="480" y="40" width="90" height="46" rx="8"/>
+              <text class="d-text" x="525" y="60" text-anchor="middle">Build</text>
+              <text class="d-label" x="525" y="76" text-anchor="middle">image · tag</text>
+              <rect class="d-good" x="590" y="40" width="90" height="46" rx="8"/>
+              <text class="d-text" x="635" y="60" text-anchor="middle">Staging</text>
+              <text class="d-label" x="635" y="76" text-anchor="middle">→ canary</text>
+              <line class="d-line-accent" x1="120" y1="63" x2="138" y2="63" marker-end="url(#cicd-arrow)"/>
+              <line class="d-line-accent" x1="240" y1="63" x2="258" y2="63" marker-end="url(#cicd-arrow)"/>
+              <line class="d-line-accent" x1="370" y1="63" x2="388" y2="63" marker-end="url(#cicd-arrow)"/>
+              <line class="d-line-accent" x1="450" y1="63" x2="478" y2="63" marker-end="url(#cicd-arrow)"/>
+              <line class="d-line-accent" x1="570" y1="63" x2="588" y2="63" marker-end="url(#cicd-arrow)"/>
+              <text class="d-label" x="464" y="54" text-anchor="middle">pass</text>
+              <line class="d-line-signal" x1="420" y1="93" x2="420" y2="128" marker-end="url(#cicd-arrow)"/>
+              <text class="d-label" x="428" y="114">fail</text>
+              <rect class="d-signal" x="345" y="130" width="150" height="44" rx="8"/>
+              <text class="d-text" x="420" y="149" text-anchor="middle">Block merge</text>
+              <text class="d-label" x="420" y="165" text-anchor="middle">post score diff on PR</text>
+              <rect class="d-box d-dash" x="10" y="130" width="300" height="44" rx="8"/>
+              <text class="d-text" x="160" y="149" text-anchor="middle">Nightly / pre-release</text>
+              <text class="d-label" x="160" y="165" text-anchor="middle">full suite (1,000+ cases) · load test · red-team</text>
+            </svg>
+          </div>
+          <figcaption>A cheap smoke eval runs on every pull request; the expensive full suite runs nightly and before releases. Any change to prompts, models or the retrieval index triggers the eval, not just code changes.</figcaption>
+        </figure>
+
+        <p>A good gate has two checks: an absolute floor ("pass rate at least 75%") and a non-regression check against the baseline from the main branch, with a tolerance for noise. Cache model responses keyed on prompt and inputs so unchanged cases cost nothing on re-runs.</p>
+
+        <pre class="code" data-lang="python"><code><span class="c"># tests/test_eval_gate.py, run by pytest in CI</span>
+import json, pathlib
+from app import answer            <span class="c"># the system under test</span>
+from evals import judge           <span class="c"># returns 1 if the answer is acceptable, else 0</span>
+
+CASES = [json.loads(l) for l in pathlib.Path("evals/smoke.jsonl").read_text().splitlines()]
+BASELINE = json.loads(pathlib.Path("evals/baseline.json").read_text())["pass_rate"]
+
+def test_eval_gate():
+    scores = [judge(c["input"], answer(c["input"]), c["reference"]) for c in CASES]
+    rate = sum(scores) / len(scores)
+    assert rate &gt;= 0.75, f"below floor: {rate:.1%}"
+    assert rate &gt;= BASELINE - 0.03, f"regression: {rate:.1%} vs baseline {BASELINE:.1%}"</code></pre>
+
+        <pre class="code" data-lang="yaml"><code><span class="c"># .github/workflows/eval-gate.yml</span>
+name: eval-gate
+on:
+  pull_request:
+    paths: ["src/**", "prompts/**", "evals/**"]
+jobs:
+  smoke-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+      - run: pytest tests/test_eval_gate.py
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}</code></pre>
+
+        <h3>Noise: the gate's real enemy</h3>
+        <p>A pass rate measured on 100 cases has a standard error of about 4 points. A small gate cannot tell a real 3-point regression from luck. Bigger suites, paired comparisons on the same cases, and per-category breakdowns all help.</p>
+
+        <div class="widget" id="cicd-demo">
+          <div class="widget-head">
+            <span class="widget-title">Will the gate catch it?</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="cicd-n">Eval cases <input type="range" id="cicd-n" min="0" max="20" step="1" value="7"><output id="cicd-n-out">100</output></label>
+            <label for="cicd-delta">True change <input type="range" id="cicd-delta" min="-8" max="8" step="0.5" value="-3"><output id="cicd-delta-out">−3.0 pp</output></label>
+            <label for="cicd-tol">Tolerance <input type="range" id="cicd-tol" min="0" max="5" step="0.5" value="2"><output id="cicd-tol-out">2.0 pp</output></label>
+          </div>
+          <svg id="cicd-plot" viewBox="0 0 600 220" role="img" aria-label="Bell curve of the measured score difference between candidate and baseline; the area left of the gate line is blocked, the area right of it passes."></svg>
+          <p class="readout" id="cicd-readout"></p>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Per-category wins and losses of a candidate against the baseline: overall net gain of two points, but the refunds category loses six cases.">
+              <text class="d-title" x="20" y="22">Candidate vs baseline, case by case (200 cases)</text>
+              <text class="d-label d-text-signal" x="322" y="44" text-anchor="end">← worse</text>
+              <text class="d-label d-text-good" x="338" y="44">better →</text>
+              <line class="d-line" x1="330" y1="50" x2="330" y2="190"/>
+              <text class="d-text" x="200" y="73" text-anchor="end">billing</text>
+              <rect class="d-signal" x="300" y="56" width="30" height="24" rx="3"/><rect class="d-good" x="330" y="56" width="90" height="24" rx="3"/>
+              <text class="d-mono" x="428" y="73">+4</text>
+              <text class="d-text" x="200" y="107" text-anchor="end">refunds</text>
+              <rect class="d-signal" x="225" y="90" width="105" height="24" rx="3"/><rect class="d-good" x="330" y="90" width="15" height="24" rx="3"/>
+              <text class="d-mono d-text-signal" x="353" y="107">−6</text>
+              <text class="d-text" x="200" y="141" text-anchor="end">shipping</text>
+              <rect class="d-signal" x="315" y="124" width="15" height="24" rx="3"/><rect class="d-good" x="330" y="124" width="75" height="24" rx="3"/>
+              <text class="d-mono" x="413" y="141">+4</text>
+              <text class="d-text" x="200" y="175" text-anchor="end">account</text>
+              <rect class="d-signal" x="300" y="158" width="30" height="24" rx="3"/><rect class="d-good" x="330" y="158" width="60" height="24" rx="3"/>
+              <text class="d-mono" x="398" y="175">+2</text>
+              <rect class="d-box" x="470" y="80" width="160" height="76" rx="8"/>
+              <text class="d-text" x="550" y="104" text-anchor="middle">net +4 cases</text>
+              <text class="d-label" x="550" y="122" text-anchor="middle">(+2 pp overall)</text>
+              <text class="d-label d-text-signal" x="550" y="142" text-anchor="middle">but refunds broke</text>
+            </svg>
+          </div>
+          <figcaption>An aggregate score can hide a category-level regression. Report wins and losses per case and per category on every pull request, not just one number.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>An eval gate turns quality into a merge check: absolute floor plus non-regression against baseline.</li>
+            <li>Trigger evals on prompt, model, index and config changes, not only on code.</li>
+            <li>Small smoke suites on every PR, large suites nightly and before release.</li>
+            <li>Eval scores are noisy; size suites and tolerances so the gate catches the regressions you care about.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Setting a tolerance tighter than the noise, so the gate flakes and people learn to ignore it.</li>
+            <li>Updating the baseline automatically on every merge, letting small regressions accumulate.</li>
+            <li>Assuming temperature 0 makes outputs fully deterministic across runs and providers.</li>
+            <li>Letting eval cases leak into prompts as few-shot examples, inflating the score.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="cicd-1"><span>Add a pytest eval gate with a floor and a baseline comparison to a small project</span></label></li>
+          <li><label><input type="checkbox" data-key="cicd-2"><span>Compute the standard error of a pass rate measured on 200 cases at 85%</span></label></li>
+          <li><label><input type="checkbox" data-key="cicd-3"><span>Configure CI so prompt-only changes trigger the eval workflow</span></label></li>
+          <li><label><input type="checkbox" data-key="cicd-4"><span>Produce a per-category win/loss report comparing two prompt versions</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.github.com/en/actions">GitHub Actions documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.pytest.org/">pytest documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="observability">
+        <header class="topic-head">
+          <p class="eyebrow">12.3 · See inside every request</p>
+          <h2>Observability &amp; tracing</h2>
+        </header>
+
+        <p class="lead">One user question can trigger a guardrail check, an embedding, two searches, a reranker, two model calls and a tool call. When the answer is slow or wrong, you need to see each of those steps. A <strong>trace</strong> records one request as a tree of timed <strong>spans</strong>, each carrying attributes such as the model, token counts and prompt version.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Traces are how you debug "the bot said something weird yesterday", find which step makes p95 latency bad, attribute cost to features, and collect real examples for eval sets. Logging only the final answer leaves you guessing.</p>
+        </div>
+
+        <h3>Anatomy of a trace</h3>
+        <p>Each span has a trace id shared by the whole request, its own span id, a parent, start and end times, and attributes. OpenTelemetry (OTel) is the vendor-neutral standard, and its GenAI semantic conventions define attribute names like <code>gen_ai.request.model</code> and <code>gen_ai.usage.input_tokens</code> (still evolving, so check the current spec).</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 236" role="img" aria-label="An annotated LLM span showing identity fields, timing, GenAI attributes for model and token usage, a custom prompt-version attribute and a first-token event.">
+              <defs>
+                <marker id="observability-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="10" width="380" height="216" rx="8"/>
+              <text class="d-title" x="36" y="34">span: llm.chat</text>
+              <text class="d-mono" x="36" y="58">trace_id 4bf92f35…  parent rag.request</text>
+              <text class="d-mono" x="36" y="80">start +1,020 ms   end +2,640 ms</text>
+              <line class="d-grid" x1="36" y1="92" x2="384" y2="92"/>
+              <text class="d-mono" x="36" y="114">gen_ai.request.model   llama-3.1-70b</text>
+              <text class="d-mono" x="36" y="136">gen_ai.usage.input_tokens   1830</text>
+              <text class="d-mono" x="36" y="158">gen_ai.usage.output_tokens   212</text>
+              <text class="d-mono" x="36" y="180">app.prompt_version   v14</text>
+              <text class="d-mono" x="36" y="208">event first_token @ +410 ms</text>
+              <line class="d-line" x1="440" y1="58" x2="402" y2="58" marker-end="url(#observability-arrow)"/>
+              <text class="d-label" x="446" y="54">identity and nesting:</text>
+              <text class="d-label" x="446" y="68">builds the tree</text>
+              <line class="d-line" x1="440" y1="126" x2="402" y2="126" marker-end="url(#observability-arrow)"/>
+              <text class="d-label" x="446" y="122">GenAI conventions: model,</text>
+              <text class="d-label" x="446" y="136">tokens, hence cost</text>
+              <line class="d-line" x1="440" y1="178" x2="402" y2="178" marker-end="url(#observability-arrow)"/>
+              <text class="d-label" x="446" y="174">your attributes: release,</text>
+              <text class="d-label" x="446" y="188">prompt, user tier, feature</text>
+              <line class="d-line" x1="440" y1="206" x2="402" y2="206" marker-end="url(#observability-arrow)"/>
+              <text class="d-label" x="446" y="210">events: moments inside a span</text>
+            </svg>
+          </div>
+          <figcaption>One span from an LLM call. Token counts plus the model name give you cost per request; the prompt version ties behavior to a release.</figcaption>
+        </figure>
+
+        <div class="widget" id="observability-demo">
+          <div class="widget-head">
+            <span class="widget-title">Trace waterfall of a RAG + tool request</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="observability-rerank"><input type="checkbox" id="observability-rerank" checked> Reranker</label>
+            <label for="observability-tool"><input type="checkbox" id="observability-tool" checked> Tool call</label>
+            <label for="observability-par"><input type="checkbox" id="observability-par"> Parallel search</label>
+            <label for="observability-cache"><input type="checkbox" id="observability-cache"> Semantic cache hit</label>
+          </div>
+          <svg id="observability-plot" viewBox="0 0 600 300" role="img" aria-label="Waterfall of spans with their start times and durations; toggles change which spans run and the total latency."></svg>
+          <p class="readout" id="observability-readout"></p>
+        </div>
+        <p>Read a waterfall for the <em>critical path</em>: the chain of spans that sets total latency. Model calls usually dominate, and a tool call adds a whole second model round trip. Running independent searches in parallel shortens the path for free.</p>
+
+        <h3>Across services</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="A trace id propagates from the browser through the API gateway and RAG service to the vector database and the LLM server in the traceparent header; every service exports spans to an OpenTelemetry collector.">
+              <defs>
+                <marker id="observability-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="60" width="100" height="40" rx="8"/><text class="d-text" x="60" y="85" text-anchor="middle">Browser</text>
+              <rect class="d-box" x="150" y="60" width="120" height="40" rx="8"/><text class="d-text" x="210" y="85" text-anchor="middle">API gateway</text>
+              <rect class="d-accent" x="310" y="60" width="130" height="40" rx="8"/><text class="d-text" x="375" y="85" text-anchor="middle">RAG service</text>
+              <rect class="d-box" x="500" y="14" width="160" height="40" rx="8"/><text class="d-text" x="580" y="39" text-anchor="middle">Vector DB</text>
+              <rect class="d-box" x="500" y="106" width="160" height="40" rx="8"/><text class="d-text" x="580" y="131" text-anchor="middle">LLM server</text>
+              <line class="d-line-accent" x1="110" y1="80" x2="148" y2="80" marker-end="url(#observability-arrow2)"/>
+              <line class="d-line-accent" x1="270" y1="80" x2="308" y2="80" marker-end="url(#observability-arrow2)"/>
+              <line class="d-line-accent" x1="440" y1="72" x2="498" y2="40" marker-end="url(#observability-arrow2)"/>
+              <line class="d-line-accent" x1="440" y1="88" x2="498" y2="120" marker-end="url(#observability-arrow2)"/>
+              <text class="d-label" x="290" y="124" text-anchor="middle">every hop carries the same trace_id</text>
+              <text class="d-mono" x="290" y="142" text-anchor="middle">traceparent: 00-4bf92f…-01</text>
+              <line class="d-line d-dash" x1="210" y1="100" x2="210" y2="176" marker-end="url(#observability-arrow2)"/>
+              <line class="d-line d-dash" x1="375" y1="100" x2="375" y2="176" marker-end="url(#observability-arrow2)"/>
+              <line class="d-line d-dash" x1="580" y1="146" x2="580" y2="176" marker-end="url(#observability-arrow2)"/>
+              <rect class="d-good" x="150" y="178" width="510" height="40" rx="8"/>
+              <text class="d-text" x="405" y="203" text-anchor="middle">OTel collector → Langfuse · LangSmith · Jaeger · Grafana Tempo …</text>
+            </svg>
+          </div>
+          <figcaption>Context propagation stitches spans from separate services into one trace; the collector forwards them to whichever backend you use.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Manual OpenTelemetry spans around the steps of a RAG request</span>
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+
+provider = TracerProvider()
+provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))  <span class="c"># swap for an OTLP exporter</span>
+trace.set_tracer_provider(provider)
+tracer = trace.get_tracer("rag-service")
+
+def handle(question):
+    with tracer.start_as_current_span("rag.request") as root:
+        root.set_attribute("app.release", "r42")
+        with tracer.start_as_current_span("retrieve") as s:
+            docs = search(question)
+            s.set_attribute("retrieval.num_docs", len(docs))
+        with tracer.start_as_current_span("llm.chat") as s:
+            s.set_attribute("gen_ai.request.model", MODEL)
+            resp = call_llm(question, docs)
+            s.set_attribute("gen_ai.usage.input_tokens", resp.usage.prompt_tokens)
+            s.set_attribute("gen_ai.usage.output_tokens", resp.usage.completion_tokens)
+        return resp</code></pre>
+
+        <div class="grid-3">
+          <div class="card"><h4>Langfuse</h4><p>Open-source, self-hostable LLM tracing with prompt management, datasets and evals; accepts OTel data.</p></div>
+          <div class="card"><h4>LangSmith</h4><p>LangChain's hosted platform for traces, datasets and evals; works with or without LangChain via its SDK.</p></div>
+          <div class="card"><h4>OTel + any backend</h4><p>Instrument once with OpenTelemetry, send to Jaeger, Grafana Tempo, Datadog or an LLM-specific tool.</p></div>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A trace is a tree of timed spans sharing one trace id; attributes make it searchable.</li>
+            <li>Record model, tokens, prompt version and release on every LLM span.</li>
+            <li>The critical path, not the sum of spans, sets latency; parallelize independent steps.</li>
+            <li>OpenTelemetry keeps instrumentation portable across backends.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Storing full prompts and outputs with personal data and no redaction or retention policy.</li>
+            <li>Tracing only the LLM call, so retrieval and tool latency stay invisible.</li>
+            <li>Losing the trace id at a queue or thread boundary, which splits one request into orphan traces.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="observability-1"><span>Instrument a small RAG app with spans for retrieval, model call and tools</span></label></li>
+          <li><label><input type="checkbox" data-key="observability-2"><span>Find the critical path in a waterfall and propose one change that shortens it</span></label></li>
+          <li><label><input type="checkbox" data-key="observability-3"><span>Compute per-request cost from span token attributes and a price table</span></label></li>
+          <li><label><input type="checkbox" data-key="observability-4"><span>Explain how a trace id crosses from one service to another</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://opentelemetry.io/docs/">OpenTelemetry documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://langfuse.com/docs">Langfuse documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.smith.langchain.com/">LangSmith documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="monitoring">
+        <header class="topic-head">
+          <p class="eyebrow">12.4 · Notice before users complain</p>
+          <h2>Monitoring quality, drift &amp; cost</h2>
+        </header>
+
+        <p class="lead">Traces show single requests; monitors watch aggregates over time and alert when something moves. AI systems need four kinds: operational health, answer quality, <strong>drift</strong> in what users send, and cost. The model can be unchanged and still get worse, because the questions changed.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Quality problems in AI systems are silent. A dashboard of latency and errors stays green while a new product launch floods the bot with questions it was never evaluated on, or a prompt change quietly doubles token spend.</p>
+        </div>
+
+        <h3>Four things to watch</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="Four monitoring panels: p95 latency spikes, sampled judge score declines, input drift crosses a threshold, and cost per thousand requests steps up.">
+              <rect class="d-box" x="10" y="10" width="158" height="200" rx="8"/>
+              <rect class="d-box" x="178" y="10" width="158" height="200" rx="8"/>
+              <rect class="d-box" x="346" y="10" width="158" height="200" rx="8"/>
+              <rect class="d-box" x="514" y="10" width="158" height="200" rx="8"/>
+              <text class="d-title" x="22" y="34">Operational</text>
+              <text class="d-title" x="190" y="34">Quality</text>
+              <text class="d-title" x="358" y="34">Drift</text>
+              <text class="d-title" x="526" y="34">Cost</text>
+              <text class="d-label" x="22" y="52">p95 latency</text>
+              <text class="d-label" x="190" y="52">judge score, 1% sample</text>
+              <text class="d-label" x="358" y="52">input PSI vs last month</text>
+              <text class="d-label" x="526" y="52">$ per 1k requests</text>
+              <path class="d-line-accent" d="M22 120 L41 118 L60 121 L79 119 L98 117 L117 80 L136 78 L155 116"/>
+              <path class="d-line-accent" d="M190 80 L209 82 L228 81 L247 85 L266 92 L285 98 L304 104 L323 110"/>
+              <line class="d-line-signal d-dash" x1="358" y1="100" x2="492" y2="100"/>
+              <text class="d-label d-text-signal" x="492" y="94" text-anchor="end">0.25</text>
+              <path class="d-line-accent" d="M358 132 L377 130 L396 128 L415 120 L434 110 L453 96 L472 84 L491 72"/>
+              <path class="d-line-accent" d="M526 120 L545 121 L564 119 L583 120 L602 90 L621 89 L640 90 L659 88"/>
+              <circle class="d-dot-signal" cx="117" cy="80" r="4"/>
+              <circle class="d-dot-signal" cx="323" cy="110" r="4"/>
+              <circle class="d-dot-signal" cx="491" cy="72" r="4"/>
+              <circle class="d-dot-signal" cx="602" cy="90" r="4"/>
+              <text class="d-label d-text-signal" x="22" y="146">alert: p95 &gt; 4 s</text>
+              <text class="d-label d-text-signal" x="190" y="146">slow slide after r42</text>
+              <text class="d-label d-text-signal" x="358" y="146">new topic cluster</text>
+              <text class="d-label d-text-signal" x="526" y="146">tool doubled tokens</text>
+              <text class="d-label" x="22" y="178">errors · rate limits</text>
+              <text class="d-label" x="22" y="194">TTFT · timeouts</text>
+              <text class="d-label" x="190" y="178">thumbs · refusals</text>
+              <text class="d-label" x="190" y="194">format failures</text>
+              <text class="d-label" x="358" y="178">prompt length · topics</text>
+              <text class="d-label" x="358" y="194">language · embeddings</text>
+              <text class="d-label" x="526" y="178">tokens per request</text>
+              <text class="d-label" x="526" y="194">per feature · customer</text>
+            </svg>
+          </div>
+          <figcaption>Each panel needs its own signal. Quality comes from sampled LLM-judge scores, user feedback and proxies like refusal rate; cost comes from token counts on traces.</figcaption>
+        </figure>
+
+        <h3>Measuring drift with PSI</h3>
+        <p>Drift compares a <em>reference</em> distribution (say, last month's prompt lengths) with the <em>current</em> one. Bin both, then add up how much each bin's share changed. The <strong>population stability index</strong> (PSI) is the standard score, and it equals the KL divergence measured in both directions.</p>
+
+        <div class="formula">
+          \[ \text{PSI} = \sum_{i} (a_i - e_i)\,\ln\frac{a_i}{e_i} = \mathrm{KL}(a\,\|\,e) + \mathrm{KL}(e\,\|\,a), \qquad \mathrm{KL}(p\,\|\,q) = \sum_i p_i \ln\frac{p_i}{q_i} \]
+          <span class="formula-note">\(e_i\) = share of reference data in bin \(i\), \(a_i\) = share of current data. Add a small epsilon to empty bins so the log stays finite.</span>
+        </div>
+
+        <div class="widget" id="monitoring-demo">
+          <div class="widget-head">
+            <span class="widget-title">Drift detector</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="monitoring-shift">Mean shift <input type="range" id="monitoring-shift" min="0" max="2" step="0.05" value="0.4"><output id="monitoring-shift-out">0.40σ</output></label>
+            <label for="monitoring-spread">Spread × <input type="range" id="monitoring-spread" min="0.5" max="2" step="0.05" value="1"><output id="monitoring-spread-out">1.00</output></label>
+            <label for="monitoring-n">Current sample size <input type="range" id="monitoring-n" min="0" max="4" step="1" value="2"><output id="monitoring-n-out">1,000</output></label>
+            <button class="btn" type="button" id="monitoring-resample">Resample</button>
+          </div>
+          <svg id="monitoring-plot" viewBox="0 0 600 230" role="img" aria-label="Reference and current histograms over ten bins with each bin's PSI contribution and the total PSI."></svg>
+          <p class="readout" id="monitoring-readout"></p>
+        </div>
+        <p>Set the shift to zero and the sample size to 50: PSI is still above zero from noise alone. Small windows need higher thresholds or longer windows.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 110" role="img" aria-label="PSI rule of thumb: below 0.1 stable, 0.1 to 0.25 moderate shift worth a look, above 0.25 significant shift that should alert.">
+              <rect class="d-good" x="20" y="30" width="150" height="34" rx="4"/>
+              <rect class="d-accent" x="170" y="30" width="210" height="34"/>
+              <rect class="d-signal" x="380" y="30" width="240" height="34" rx="4"/>
+              <text class="d-text" x="95" y="52" text-anchor="middle">stable</text>
+              <text class="d-text" x="275" y="52" text-anchor="middle">moderate: investigate</text>
+              <text class="d-text" x="500" y="52" text-anchor="middle">significant: alert</text>
+              <text class="d-mono" x="20" y="84" text-anchor="middle">0</text>
+              <text class="d-mono" x="170" y="84" text-anchor="middle">0.10</text>
+              <text class="d-mono" x="380" y="84" text-anchor="middle">0.25</text>
+              <text class="d-label" x="20" y="20">common PSI thresholds (a convention from credit scoring, not a law)</text>
+              <text class="d-label" x="620" y="102" text-anchor="end">tune on your own history of known-good periods</text>
+            </svg>
+          </div>
+          <figcaption>Rules of thumb for PSI. For text inputs, compute drift on derived features: length, language, topic cluster shares or embedding-distance to the reference set.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+def psi(reference, current, bins=10, eps=1e-4):
+    edges = np.quantile(reference, np.linspace(0, 1, bins + 1))   <span class="c"># equal-mass bins on the reference</span>
+    edges[0], edges[-1] = -np.inf, np.inf
+    e = np.histogram(reference, edges)[0] / len(reference)
+    a = np.histogram(current, edges)[0] / len(current)
+    e, a = np.clip(e, eps, None), np.clip(a, eps, None)
+    return float(np.sum((a - e) * np.log(a / e)))
+
+ref = np.random.lognormal(5.0, 0.6, 50_000)    <span class="c"># last month's prompt lengths (tokens)</span>
+cur = np.random.lognormal(5.3, 0.6, 5_000)     <span class="c"># this week: longer prompts</span>
+print(round(psi(ref, cur), 3))                  <span class="c"># about 0.25: significant shift</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Monitor four families: operational, quality, drift and cost; each needs its own signal.</li>
+            <li>Quality monitoring = LLM-judge scores on a traffic sample + user feedback + proxies like refusal rate.</li>
+            <li>PSI sums per-bin share changes weighted by their log ratio; it is symmetric KL.</li>
+            <li>Small samples produce non-zero PSI from noise; set thresholds and windows accordingly.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Alerting on every PSI blip from tiny hourly windows until the team mutes the alert.</li>
+            <li>Monitoring averages only; p95 latency and the worst customer's cost matter more.</li>
+            <li>Running the judge on 100% of traffic and paying more for monitoring than for serving.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="monitoring-1"><span>Compute PSI by hand for two 4-bin histograms</span></label></li>
+          <li><label><input type="checkbox" data-key="monitoring-2"><span>Design a quality monitor that samples traffic, runs a judge and alerts on a drop</span></label></li>
+          <li><label><input type="checkbox" data-key="monitoring-3"><span>Build a cost dashboard broken down by feature from trace token counts</span></label></li>
+          <li><label><input type="checkbox" data-key="monitoring-4"><span>Explain the difference between input drift and concept drift with an example</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://sre.google/books/">Google SRE books (monitoring and alerting chapters)</a></li>
+          <li><span class="kind">Docs</span><a href="https://opentelemetry.io/docs/">OpenTelemetry documentation (metrics)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="experiment-tracking">
+        <header class="topic-head">
+          <p class="eyebrow">12.5 · Remember every attempt</p>
+          <h2>Experiment tracking</h2>
+        </header>
+
+        <p class="lead">You will try dozens of variants: chunk sizes, prompts, models, rerankers. An experiment tracker records each attempt as a <strong>run</strong> with its exact inputs and its results, so "which setup gave 85% last Tuesday?" has an answer and the winner can be reproduced.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Without tracking, results live in notebooks and memory, and the best configuration is lost the day someone changes a default. With it, you compare runs side by side and promote one to the registry with full lineage.</p>
+        </div>
+
+        <h3>What a run records</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="A run takes a code commit, a data and eval-set version and a config as inputs, and produces metrics, artifacts and traces; runs are compared and the best is registered.">
+              <defs>
+                <marker id="experiment-tracking-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="18">inputs (params)</text>
+              <rect class="d-box" x="20" y="26" width="160" height="40" rx="6"/><text class="d-mono" x="100" y="51" text-anchor="middle">git commit a1f3c9</text>
+              <rect class="d-box" x="20" y="86" width="160" height="40" rx="6"/><text class="d-mono" x="100" y="111" text-anchor="middle">eval set v7 · 400</text>
+              <rect class="d-box" x="20" y="146" width="160" height="56" rx="6"/><text class="d-mono" x="100" y="168" text-anchor="middle">model · prompt v14</text><text class="d-mono" x="100" y="188" text-anchor="middle">chunk 512 · k=8</text>
+              <line class="d-line-accent" x1="180" y1="46" x2="258" y2="100" marker-end="url(#experiment-tracking-arrow)"/>
+              <line class="d-line-accent" x1="180" y1="106" x2="258" y2="110" marker-end="url(#experiment-tracking-arrow)"/>
+              <line class="d-line-accent" x1="180" y1="174" x2="258" y2="122" marker-end="url(#experiment-tracking-arrow)"/>
+              <rect class="d-accent" x="260" y="84" width="120" height="52" rx="8"/>
+              <text class="d-title" x="320" y="108" text-anchor="middle">run #128</text>
+              <text class="d-label" x="320" y="125" text-anchor="middle">timestamped</text>
+              <line class="d-line-accent" x1="380" y1="100" x2="438" y2="48" marker-end="url(#experiment-tracking-arrow)"/>
+              <line class="d-line-accent" x1="380" y1="110" x2="438" y2="110" marker-end="url(#experiment-tracking-arrow)"/>
+              <line class="d-line-accent" x1="380" y1="120" x2="438" y2="172" marker-end="url(#experiment-tracking-arrow)"/>
+              <text class="d-label" x="440" y="18">outputs</text>
+              <rect class="d-good" x="440" y="26" width="120" height="40" rx="6"/><text class="d-mono" x="500" y="51" text-anchor="middle">metrics</text>
+              <rect class="d-good" x="440" y="90" width="120" height="40" rx="6"/><text class="d-mono" x="500" y="115" text-anchor="middle">artifacts</text>
+              <rect class="d-good" x="440" y="152" width="120" height="40" rx="6"/><text class="d-mono" x="500" y="177" text-anchor="middle">traces · outputs</text>
+              <line class="d-line" x1="560" y1="110" x2="588" y2="110" marker-end="url(#experiment-tracking-arrow)"/>
+              <rect class="d-signal" x="590" y="80" width="80" height="60" rx="8"/>
+              <text class="d-text" x="630" y="106" text-anchor="middle">compare</text>
+              <text class="d-text" x="630" y="124" text-anchor="middle">→ register</text>
+            </svg>
+          </div>
+          <figcaption>A run ties exact inputs (code, data, config) to outputs. Log the eval set version too: scores on different eval sets are not comparable.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import mlflow
+
+mlflow.set_experiment("support-bot-rag")
+with mlflow.start_run(run_name="70b-chunk512-rerank"):
+    mlflow.log_params({"model": "llama-3.1-70b", "prompt_version": "v14",
+                       "chunk_size": 512, "top_k": 8, "eval_set": "v7"})
+    results = run_eval()                          <span class="c"># your eval harness</span>
+    mlflow.log_metrics({"answer_quality": results.quality,
+                        "cost_per_1k_usd": results.cost, "p95_latency_s": results.p95})
+    mlflow.log_artifact("eval_outputs.jsonl")    <span class="c"># every answer, for later inspection</span>
+
+<span class="c"># Weights &amp; Biases equivalent:</span>
+<span class="c">#   run = wandb.init(project="support-bot", config={...}); run.log({...}); run.finish()</span></code></pre>
+
+        <h3>Choosing a winner</h3>
+        <p>Rarely does one run win on everything. Plot quality against cost (or latency) and keep only the <strong>Pareto front</strong>: runs that no other run beats on both axes. Your budget then picks a point on that front.</p>
+
+        <div class="widget" id="experiment-tracking-demo">
+          <div class="widget-head">
+            <span class="widget-title">Pick a run from the Pareto front</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="experiment-tracking-budget">Cost budget ($ / 1k requests) <input type="range" id="experiment-tracking-budget" min="0.5" max="7" step="0.1" value="2.5"><output id="experiment-tracking-budget-out">2.5</output></label>
+            <label for="experiment-tracking-lat"><input type="checkbox" id="experiment-tracking-lat"> Also require p95 ≤ 2.5 s</label>
+          </div>
+          <svg id="experiment-tracking-plot" viewBox="0 0 600 260" role="img" aria-label="Scatter of runs by cost and quality with the Pareto front highlighted and the best run within budget circled."></svg>
+          <p class="readout" id="experiment-tracking-readout"></p>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 200" role="img" aria-label="Small multiples comparing four runs on quality, cost and p95 latency: the most accurate run is also the most expensive and slowest.">
+              <text class="d-title" x="20" y="22">Quality (%)</text>
+              <text class="d-title" x="250" y="22">Cost ($ / 1k req)</text>
+              <text class="d-title" x="480" y="22">p95 latency (s)</text>
+              <line class="d-line" x1="20" y1="160" x2="200" y2="160"/>
+              <line class="d-line" x1="250" y1="160" x2="430" y2="160"/>
+              <line class="d-line" x1="480" y1="160" x2="660" y2="160"/>
+              <rect class="d-fill" x="30" y="66" width="32" height="94"/><rect class="d-fill" x="72" y="58" width="32" height="102"/><rect class="d-accent" x="114" y="54" width="32" height="106"/><rect class="d-fill" x="156" y="53" width="32" height="107"/>
+              <text class="d-mono" x="46" y="60" text-anchor="middle">76</text><text class="d-mono" x="88" y="52" text-anchor="middle">82</text><text class="d-mono" x="130" y="48" text-anchor="middle">85</text><text class="d-mono" x="172" y="47" text-anchor="middle">86</text>
+              <rect class="d-fill" x="260" y="146" width="32" height="14"/><rect class="d-fill" x="302" y="110" width="32" height="50"/><rect class="d-accent" x="344" y="103" width="32" height="57"/><rect class="d-fill" x="386" y="60" width="32" height="100"/>
+              <text class="d-mono" x="276" y="140" text-anchor="middle">0.6</text><text class="d-mono" x="318" y="104" text-anchor="middle">2.1</text><text class="d-mono" x="360" y="97" text-anchor="middle">2.4</text><text class="d-mono" x="402" y="54" text-anchor="middle">4.2</text>
+              <rect class="d-fill" x="490" y="110" width="32" height="50"/><rect class="d-fill" x="532" y="73" width="32" height="87"/><rect class="d-accent" x="574" y="60" width="32" height="100"/><rect class="d-fill" x="616" y="63" width="32" height="97"/>
+              <text class="d-mono" x="506" y="104" text-anchor="middle">1.5</text><text class="d-mono" x="548" y="67" text-anchor="middle">2.6</text><text class="d-mono" x="590" y="54" text-anchor="middle">3.0</text><text class="d-mono" x="632" y="57" text-anchor="middle">2.9</text>
+              <text class="d-label" x="20" y="182">runs left to right: B · C · D · F (D highlighted)</text>
+              <text class="d-label" x="660" y="182" text-anchor="end">same eval set v7, 400 cases</text>
+            </svg>
+          </div>
+          <figcaption>Small multiples make trade-offs visible: run D gains 3 points of quality over C for 15% more cost and 0.4 s more latency.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tool</th><th>Strength</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>MLflow</td><td>Open source, self-hostable tracking server, model registry, LLM tracing and evaluation</td><td>Common default in Databricks and self-hosted stacks</td></tr>
+              <tr><td>Weights &amp; Biases</td><td>Polished hosted dashboards, sweeps, artifacts; Weave for LLM apps</td><td>Popular for training and fine-tuning work</td></tr>
+              <tr><td>Langfuse / LangSmith</td><td>Datasets and experiments over LLM traces and prompts</td><td>Good fit when the "model" is a prompt + pipeline</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A run = exact inputs (commit, data and eval-set versions, config) + outputs (metrics, artifacts, outputs).</li>
+            <li>Only compare runs evaluated on the same eval set version.</li>
+            <li>Choose from the Pareto front of quality vs cost or latency, then apply your budget.</li>
+            <li>Log raw outputs as artifacts so you can inspect failures, not just averages.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Logging metrics but not the prompt version or data version that produced them.</li>
+            <li>Picking the top run by one metric and discovering it triples latency.</li>
+            <li>Comparing runs across eval sets that changed in between.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="experiment-tracking-1"><span>Log a RAG experiment sweep (chunk size × top-k) to MLflow or W&amp;B</span></label></li>
+          <li><label><input type="checkbox" data-key="experiment-tracking-2"><span>Identify the Pareto front in a table of runs by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="experiment-tracking-3"><span>Reproduce a past run exactly from its logged parameters</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://mlflow.org/docs/latest/index.html">MLflow documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.wandb.ai/">Weights &amp; Biases documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="infra">
+        <header class="topic-head">
+          <p class="eyebrow">12.6 · The plumbing</p>
+          <h2>Kubernetes, queues &amp; caching</h2>
+        </header>
+
+        <p class="lead">Three pieces of infrastructure carry most AI products. <strong>Kubernetes</strong> runs and scales the containers, including GPU model servers. <strong>Queues</strong> absorb slow or bursty work so users are not stuck on an open HTTP connection. <strong>Caches</strong> skip the model entirely when an answer is already known.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>GPU pods take minutes to start, model calls take seconds, and identical questions arrive all day. Autoscaling on the right metric, async jobs for long tasks and a cache in front of the model often matter more for cost and latency than any prompt tweak.</p>
+        </div>
+
+        <h3>A model server on Kubernetes</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="Traffic enters through an ingress and a service that load-balances across GPU pods running vLLM; an autoscaler watches queue depth and adds a pod, which loads weights from a model cache.">
+              <defs>
+                <marker id="infra-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="100" width="70" height="40" rx="8"/><text class="d-text" x="45" y="125" text-anchor="middle">Users</text>
+              <line class="d-line-accent" x1="80" y1="120" x2="98" y2="120" marker-end="url(#infra-arrow)"/>
+              <rect class="d-box" x="100" y="100" width="90" height="40" rx="8"/><text class="d-text" x="145" y="125" text-anchor="middle">Ingress</text>
+              <line class="d-line-accent" x1="190" y1="120" x2="208" y2="120" marker-end="url(#infra-arrow)"/>
+              <rect class="d-box" x="210" y="96" width="92" height="48" rx="8"/><text class="d-text" x="256" y="116" text-anchor="middle">Service</text><text class="d-label" x="256" y="134" text-anchor="middle">load-balance</text>
+              <rect class="d-box d-dash" x="320" y="16" width="232" height="214" rx="10"/>
+              <text class="d-label" x="336" y="34">GPU node pool</text>
+              <rect class="d-accent" x="340" y="44" width="192" height="44" rx="6"/><text class="d-text" x="436" y="71" text-anchor="middle">pod 1 · vLLM · 1 GPU</text>
+              <rect class="d-accent" x="340" y="104" width="192" height="44" rx="6"/><text class="d-text" x="436" y="131" text-anchor="middle">pod 2 · vLLM · 1 GPU</text>
+              <rect class="d-fill" x="340" y="164" width="192" height="44" rx="6"/><text class="d-text" x="436" y="184" text-anchor="middle">pod 3 · starting</text><text class="d-label" x="436" y="200" text-anchor="middle">loading weights…</text>
+              <line class="d-line-accent" x1="302" y1="112" x2="338" y2="70" marker-end="url(#infra-arrow)"/>
+              <line class="d-line-accent" x1="302" y1="122" x2="338" y2="126" marker-end="url(#infra-arrow)"/>
+              <rect class="d-signal" x="570" y="30" width="100" height="62" rx="8"/><text class="d-text" x="620" y="54" text-anchor="middle">Autoscaler</text><text class="d-label" x="620" y="72" text-anchor="middle">HPA / KEDA</text>
+              <line class="d-line d-dash" x1="532" y1="66" x2="568" y2="62" marker-end="url(#infra-arrow)"/>
+              <text class="d-label" x="620" y="108" text-anchor="middle">queue depth,</text>
+              <text class="d-label" x="620" y="122" text-anchor="middle">KV usage ↑</text>
+              <line class="d-line" x1="600" y1="128" x2="534" y2="176" marker-end="url(#infra-arrow)"/>
+              <text class="d-label" x="560" y="146" text-anchor="end">add pod</text>
+              <rect class="d-box" x="570" y="176" width="100" height="50" rx="8"/><text class="d-text" x="620" y="198" text-anchor="middle">Model cache</text><text class="d-label" x="620" y="214" text-anchor="middle">object store/PVC</text>
+              <line class="d-line-accent" x1="570" y1="196" x2="534" y2="192" marker-end="url(#infra-arrow)"/>
+            </svg>
+          </div>
+          <figcaption>Scale GPU pods on queue depth or running requests, not CPU. New pods need minutes to pull and load weights, so keep a warm minimum and a readiness probe that waits for the model.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="yaml"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: llm-server }
+  template:
+    metadata:
+      labels: { app: llm-server }
+    spec:
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:v0.x.y        <span class="c"># pin an exact release tag</span>
+          args: ["--model", "Qwen/Qwen2.5-7B-Instruct", "--max-model-len", "16384"]
+          ports: [{ containerPort: 8000 }]
+          resources:
+            limits: { nvidia.com/gpu: 1 }        <span class="c"># exposed by the NVIDIA device plugin</span>
+          readinessProbe:
+            httpGet: { path: /health, port: 8000 }
+            initialDelaySeconds: 60</code></pre>
+
+        <h3>Async jobs with a queue</h3>
+        <p>Anything slower than a few seconds (document processing, agents, batch evals) should not hold an HTTP request open. Return a job id immediately and let workers pull from a queue. Delivery is usually at-least-once, so workers must be idempotent.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="Client posts a job and gets 202 with a job id; the job waits in a queue; workers process it with retries, sending repeated failures to a dead-letter queue; results go to a store the client polls.">
+              <defs>
+                <marker id="infra-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="80" width="80" height="44" rx="8"/><text class="d-text" x="50" y="106" text-anchor="middle">Client</text>
+              <line class="d-line-accent" x1="90" y1="94" x2="128" y2="94" marker-end="url(#infra-arrow2)"/>
+              <text class="d-label" x="110" y="86" text-anchor="middle">① POST</text>
+              <rect class="d-box" x="130" y="80" width="100" height="44" rx="8"/><text class="d-text" x="180" y="106" text-anchor="middle">API</text>
+              <line class="d-line" x1="130" y1="114" x2="92" y2="114" marker-end="url(#infra-arrow2)"/>
+              <text class="d-label" x="110" y="140" text-anchor="middle">202 + job_id</text>
+              <line class="d-line-accent" x1="230" y1="102" x2="268" y2="102" marker-end="url(#infra-arrow2)"/>
+              <rect class="d-box" x="270" y="82" width="120" height="40" rx="6"/>
+              <rect class="d-accent" x="280" y="90" width="20" height="24" rx="2"/><rect class="d-accent" x="306" y="90" width="20" height="24" rx="2"/><rect class="d-accent" x="332" y="90" width="20" height="24" rx="2"/><rect class="d-fill" x="358" y="90" width="20" height="24" rx="2"/>
+              <text class="d-label" x="330" y="76" text-anchor="middle">② queue</text>
+              <line class="d-line-accent" x1="390" y1="102" x2="428" y2="102" marker-end="url(#infra-arrow2)"/>
+              <rect class="d-good" x="430" y="72" width="110" height="60" rx="8"/><text class="d-text" x="485" y="98" text-anchor="middle">③ workers</text><text class="d-label" x="485" y="116" text-anchor="middle">idempotent</text>
+              <line class="d-line-signal" x1="485" y1="132" x2="485" y2="164" marker-end="url(#infra-arrow2)"/>
+              <text class="d-label d-text-signal" x="493" y="152">fails 3×</text>
+              <rect class="d-signal" x="430" y="166" width="110" height="34" rx="8"/><text class="d-text" x="485" y="188" text-anchor="middle">dead-letter queue</text>
+              <line class="d-line-accent" x1="540" y1="102" x2="568" y2="102" marker-end="url(#infra-arrow2)"/>
+              <rect class="d-box" x="570" y="80" width="100" height="44" rx="8"/><text class="d-text" x="620" y="100" text-anchor="middle">④ results</text><text class="d-label" x="620" y="116" text-anchor="middle">store</text>
+              <path class="d-line" d="M620 80 L620 30 L50 30 L50 78" marker-end="url(#infra-arrow2)"/>
+              <text class="d-label" x="335" y="24" text-anchor="middle">⑤ client polls GET /jobs/{id} or receives a webhook</text>
+            </svg>
+          </div>
+          <figcaption>Retries with exponential backoff handle transient failures such as rate limits; jobs that keep failing land in a dead-letter queue for inspection instead of retrying forever.</figcaption>
+        </figure>
+
+        <h3>Caching model answers</h3>
+        <p>An <strong>exact cache</strong> keys on a hash of model, prompt version, parameters and normalized input. A <strong>semantic cache</strong> embeds the question and reuses an answer when a past question is similar enough. It hits far more often, and sometimes returns the answer to a subtly different question. Provider prompt caching is a third layer: it reuses the KV cache of a shared prefix and still runs the model.</p>
+
+        <div class="widget" id="infra-demo">
+          <div class="widget-head">
+            <span class="widget-title">Cache hit rate vs cost and latency</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="infra-hit">Hit rate <input type="range" id="infra-hit" min="0" max="80" step="1" value="30"><output id="infra-hit-out">30%</output></label>
+            <label for="infra-req">Requests / day <input type="range" id="infra-req" min="3" max="6" step="0.25" value="5"><output id="infra-req-out">100,000</output></label>
+            <label for="infra-cost">LLM cost per call <input type="range" id="infra-cost" min="0.1" max="5" step="0.1" value="1"><output id="infra-cost-out">1.0¢</output></label>
+            <label for="infra-false">Wrong hits <input type="range" id="infra-false" min="0" max="10" step="0.5" value="2"><output id="infra-false-out">2.0% of hits</output></label>
+          </div>
+          <svg id="infra-plot" viewBox="0 0 600 230" role="img" aria-label="Daily cost and mean latency fall as cache hit rate rises; the marker shows the current hit rate."></svg>
+          <p class="readout" id="infra-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+class SemanticCache:
+    def __init__(self, embed, threshold=0.95):
+        self.embed, self.threshold = embed, threshold    <span class="c"># embed() returns a unit-norm vector</span>
+        self.keys, self.values = [], []
+
+    def get(self, question, version):
+        if not self.keys:
+            return None
+        q = self.embed(question)
+        sims = np.array(self.keys) @ q                   <span class="c"># cosine similarity</span>
+        i = int(sims.argmax())
+        hit = sims[i] &gt;= self.threshold and self.values[i][0] == version
+        return self.values[i][1] if hit else None
+
+    def put(self, question, version, answer):
+        self.keys.append(self.embed(question))
+        self.values.append((version, answer))           <span class="c"># version = release id; new release, no stale hits</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Kubernetes runs model servers as GPU pods; scale on queue depth or running requests and plan for slow cold starts.</li>
+            <li>Queues decouple slow work from requests: 202 + job id, idempotent workers, retries with backoff, a dead-letter queue.</li>
+            <li>Exact caches are safe, semantic caches hit more but can return wrong answers; tune the threshold on real data.</li>
+            <li>Include the release version in cache keys so a new prompt or model never serves stale answers.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Autoscaling GPU pods on CPU utilization, which barely moves when the GPU is saturated.</li>
+            <li>Scaling to zero for a latency-sensitive service and paying a multi-minute cold start on the first request.</li>
+            <li>Semantic-caching personalized or time-sensitive answers ("my order status").</li>
+            <li>Non-idempotent workers that charge a card twice when a job is redelivered.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="infra-1"><span>Write a Deployment manifest that requests one GPU and waits for the model before taking traffic</span></label></li>
+          <li><label><input type="checkbox" data-key="infra-2"><span>Convert a slow synchronous endpoint into a submit/poll job API with a queue</span></label></li>
+          <li><label><input type="checkbox" data-key="infra-3"><span>Estimate daily savings and wrong-answer risk for a semantic cache at a given hit rate</span></label></li>
+          <li><label><input type="checkbox" data-key="infra-4"><span>Explain the difference between exact, semantic and provider prompt caching</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://kubernetes.io/docs/home/">Kubernetes documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://keda.sh/">KEDA: event-driven autoscaling for Kubernetes</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="registries">
+        <header class="topic-head">
+          <p class="eyebrow">12.7 · Versioned models and features</p>
+          <h2>Model registries &amp; feature stores</h2>
+        </header>
+
+        <p class="lead">A <strong>model registry</strong> is the catalog of every model version you might serve, with its lineage and a movable label for "the one in production". A <strong>feature store</strong> does the same for model inputs: one definition of each feature, computed the same way for training and for live predictions.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Fine-tuned adapters, classifiers, rerankers and embedding models all need versioning, promotion and rollback. Personalization and ranking features need to match exactly between training and serving, or models that looked great offline fail live.</p>
+        </div>
+
+        <h3>Registry: versions and aliases</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Runs are registered as versions v1 to v4 of a model; the champion alias points to v3 and is loaded by serving, the challenger alias points to v4 and is loaded by a shadow evaluation.">
+              <defs>
+                <marker id="registries-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="22">tracked runs</text>
+              <rect class="d-box" x="20" y="32" width="110" height="32" rx="6"/><text class="d-mono" x="75" y="53" text-anchor="middle">run #121</text>
+              <rect class="d-box" x="20" y="76" width="110" height="32" rx="6"/><text class="d-mono" x="75" y="97" text-anchor="middle">run #128</text>
+              <rect class="d-box" x="20" y="120" width="110" height="32" rx="6"/><text class="d-mono" x="75" y="141" text-anchor="middle">run #133</text>
+              <rect class="d-box" x="20" y="164" width="110" height="32" rx="6"/><text class="d-mono" x="75" y="185" text-anchor="middle">run #140</text>
+              <line class="d-line-accent" x1="130" y1="48" x2="208" y2="48" marker-end="url(#registries-arrow)"/>
+              <line class="d-line-accent" x1="130" y1="92" x2="208" y2="92" marker-end="url(#registries-arrow)"/>
+              <line class="d-line-accent" x1="130" y1="136" x2="208" y2="136" marker-end="url(#registries-arrow)"/>
+              <line class="d-line-accent" x1="130" y1="180" x2="208" y2="180" marker-end="url(#registries-arrow)"/>
+              <text class="d-label" x="169" y="40" text-anchor="middle">register</text>
+              <rect class="d-box d-dash" x="196" y="10" width="248" height="208" rx="10"/>
+              <text class="d-label" x="210" y="26">support-classifier</text>
+              <rect class="d-fill" x="210" y="34" width="90" height="28" rx="5"/><text class="d-mono" x="255" y="53" text-anchor="middle">v1</text>
+              <rect class="d-fill" x="210" y="78" width="90" height="28" rx="5"/><text class="d-mono" x="255" y="97" text-anchor="middle">v2</text>
+              <rect class="d-accent" x="210" y="122" width="90" height="28" rx="5"/><text class="d-mono" x="255" y="141" text-anchor="middle">v3</text>
+              <rect class="d-accent" x="210" y="166" width="90" height="28" rx="5"/><text class="d-mono" x="255" y="185" text-anchor="middle">v4</text>
+              <rect class="d-good" x="330" y="122" width="100" height="28" rx="14"/><text class="d-mono" x="380" y="141" text-anchor="middle">@champion</text>
+              <rect class="d-signal" x="330" y="166" width="100" height="28" rx="14"/><text class="d-mono" x="380" y="185" text-anchor="middle">@challenger</text>
+              <line class="d-line" x1="330" y1="136" x2="302" y2="136" marker-end="url(#registries-arrow)"/>
+              <line class="d-line" x1="330" y1="180" x2="302" y2="180" marker-end="url(#registries-arrow)"/>
+              <rect class="d-accent" x="490" y="96" width="180" height="50" rx="8"/><text class="d-text" x="580" y="117" text-anchor="middle">Production serving</text><text class="d-label" x="580" y="134" text-anchor="middle">loads …@champion</text>
+              <rect class="d-box" x="490" y="164" width="180" height="50" rx="8"/><text class="d-text" x="580" y="185" text-anchor="middle">Shadow eval</text><text class="d-label" x="580" y="202" text-anchor="middle">loads …@challenger</text>
+              <line class="d-line-accent" x1="430" y1="136" x2="488" y2="124" marker-end="url(#registries-arrow)"/>
+              <line class="d-line-accent" x1="430" y1="180" x2="488" y2="186" marker-end="url(#registries-arrow)"/>
+              <text class="d-label d-text-signal" x="490" y="40">rollback = point @champion</text>
+              <text class="d-label d-text-signal" x="490" y="56">back at v2; no rebuild</text>
+            </svg>
+          </div>
+          <figcaption>Serving refers to an alias, never a hard-coded version. Promotion and rollback become a metadata change, and every version links back to the run that produced it.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import mlflow
+from mlflow import MlflowClient
+
+mv = mlflow.register_model(f"runs:/{run_id}/model", "support-classifier")
+MlflowClient().set_registered_model_alias("support-classifier", "champion", mv.version)
+
+model = mlflow.pyfunc.load_model("models:/support-classifier@champion")   <span class="c"># what serving loads</span></code></pre>
+        <p>For LLM apps, the same idea applies to prompts, adapters and embedding models. Register the embedding model and the vector index as a pair: an index built with one embedding model is useless with another.</p>
+
+        <h3>Feature stores and point-in-time correctness</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Events feed an offline store with full history and, through materialization, an online store with the latest values; training reads the offline store with point-in-time joins and live inference reads the online store.">
+              <defs>
+                <marker id="registries-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="92" width="100" height="44" rx="8"/><text class="d-text" x="60" y="112" text-anchor="middle">Events</text><text class="d-label" x="60" y="128" text-anchor="middle">DB · streams</text>
+              <line class="d-line-accent" x1="110" y1="104" x2="168" y2="64" marker-end="url(#registries-arrow2)"/>
+              <line class="d-line-accent" x1="110" y1="124" x2="168" y2="166" marker-end="url(#registries-arrow2)"/>
+              <rect class="d-box" x="170" y="30" width="180" height="60" rx="8"/><text class="d-text" x="260" y="56" text-anchor="middle">Offline store</text><text class="d-label" x="260" y="74" text-anchor="middle">full history · warehouse</text>
+              <rect class="d-good" x="170" y="140" width="180" height="60" rx="8"/><text class="d-text" x="260" y="166" text-anchor="middle">Online store</text><text class="d-label" x="260" y="184" text-anchor="middle">latest values · key-value DB</text>
+              <line class="d-line-accent d-dash" x1="260" y1="90" x2="260" y2="138" marker-end="url(#registries-arrow2)"/>
+              <text class="d-label" x="268" y="118">materialize</text>
+              <line class="d-line-accent" x1="350" y1="60" x2="418" y2="60" marker-end="url(#registries-arrow2)"/>
+              <line class="d-line-accent" x1="350" y1="170" x2="418" y2="170" marker-end="url(#registries-arrow2)"/>
+              <rect class="d-accent" x="420" y="30" width="250" height="60" rx="8"/><text class="d-text" x="545" y="56" text-anchor="middle">Training · offline evals</text><text class="d-label" x="545" y="74" text-anchor="middle">point-in-time join on event time</text>
+              <rect class="d-accent" x="420" y="140" width="250" height="60" rx="8"/><text class="d-text" x="545" y="166" text-anchor="middle">Live inference</text><text class="d-label" x="545" y="184" text-anchor="middle">latest features in milliseconds</text>
+              <text class="d-label" x="545" y="120" text-anchor="middle">one feature definition → no train/serve skew</text>
+            </svg>
+          </div>
+          <figcaption>The offline store answers "what was this value at time t?" for training; the online store answers "what is it now?" for serving. Both come from the same definitions.</figcaption>
+        </figure>
+
+        <p>A <strong>point-in-time join</strong> attaches to each training example the feature values as they were at that example's timestamp. Joining today's values instead leaks the future into training, and the model looks better offline than it will ever be live.</p>
+
+        <div class="widget" id="registries-demo">
+          <div class="widget-head">
+            <span class="widget-title">Point-in-time join vs naive join</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="registries-t">Label event on day <input type="range" id="registries-t" min="1" max="30" step="1" value="10"><output id="registries-t-out">10</output></label>
+          </div>
+          <svg id="registries-plot" viewBox="0 0 600 220" role="img" aria-label="Step chart of a user's orders-in-last-30-days feature over 30 days, with the value a point-in-time join uses at the label event and the later value a naive join would use."></svg>
+          <p class="readout" id="registries-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>from feast import FeatureStore
+
+store = FeatureStore(repo_path=".")
+<span class="c"># Training: entity_df has user_id + event_timestamp; Feast does the point-in-time join</span>
+train_df = store.get_historical_features(
+    entity_df=labels_df,
+    features=["user_stats:orders_30d", "user_stats:refunds_90d"],
+).to_df()
+<span class="c"># Serving: latest values from the online store</span>
+feats = store.get_online_features(
+    features=["user_stats:orders_30d", "user_stats:refunds_90d"],
+    entity_rows=[{"user_id": 1001}],
+).to_dict()</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A registry holds versioned models with lineage; serving loads an alias like @champion.</li>
+            <li>Promotion and rollback are alias moves, not rebuilds.</li>
+            <li>Version embedding models and indexes together.</li>
+            <li>Feature stores share one definition between an offline store (history) and an online store (latest).</li>
+            <li>Point-in-time joins prevent future data from leaking into training.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Hard-coding a model version or file path in serving code.</li>
+            <li>Computing features one way in a training notebook and another way in the API (train/serve skew).</li>
+            <li>Joining current feature values to historical labels and celebrating an inflated offline score.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="registries-1"><span>Register a model, set a champion alias and load it by alias</span></label></li>
+          <li><label><input type="checkbox" data-key="registries-2"><span>Roll back production by moving an alias</span></label></li>
+          <li><label><input type="checkbox" data-key="registries-3"><span>Explain point-in-time correctness with a concrete leakage example</span></label></li>
+          <li><label><input type="checkbox" data-key="registries-4"><span>Explain the roles of the offline and online stores</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://mlflow.org/docs/latest/index.html">MLflow documentation (Model Registry)</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.feast.dev/">Feast documentation</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Trace and gate a RAG app</h4><p>Instrument a small RAG app with OpenTelemetry or Langfuse so every request shows retrieval, model call and token counts. Add a pytest eval gate on 50 cases that runs in GitHub Actions on every pull request.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Versioned prompts with canary rollout</h4><p>Move prompts into a registry with a production label, log the release id on every trace, and route 10% of traffic to a new version. Write a script that compares error rate and judge score between versions and rolls back automatically.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Production stack on Kubernetes</h4><p>Deploy a vLLM server and an API on Kubernetes with queue-based autoscaling, an async job endpoint, a semantic cache keyed by release, and dashboards for p95 latency, drift (PSI on input features) and cost per feature.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Ship a prompt or model change through an eval gate and a canary, with one-step rollback</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Trace any production request end to end and find its critical path</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Set up monitors for quality, drift and cost that alert without crying wolf</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Reproduce any production model from its registry entry and tracked run</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Design the Kubernetes, queue and cache layout for a GPU-backed AI service</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Shared helpers for this page's widgets (SVG built with the d-* theme classes). */
+var H = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function fmt(n, d) { d = d || 0; return Number(n).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function rng(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) { var u = 1 - r(), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function $(id) { return document.getElementById(id); }
+  return { el: el, clear: clear, fmt: fmt, rng: rng, gauss: gauss, $: $ };
+})();
+
+function phi(z) { /* standard normal CDF (Abramowitz-Stegun 7.1.26) */
+  var t = 1 / (1 + 0.3275911 * Math.abs(z) / Math.SQRT2), y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-z * z / 2);
+  return z >= 0 ? (1 + y) / 2 : (1 - y) / 2;
+}
+function bindAll(ids, fn) { ids.forEach(function (id) { var e = H.$(id); e.addEventListener("input", fn); e.addEventListener("change", fn); }); }
+
+/* 12.1 Canary rollout simulator */
+(function () {
+  if (!document.getElementById("deployment-demo")) return;
+  var $ = H.$, svg = $("deployment-plot"), seed = 3, BASE = 0.01, STAGES = [5, 25, 50, 100], MIN_N = 100;
+  function draw() {
+    var err = +$("deployment-err").value / 100, thr = +$("deployment-thr").value / 100, rpm = +$("deployment-rpm").value;
+    $("deployment-err-out").textContent = (err * 100).toFixed(1) + "%";
+    $("deployment-thr-out").textContent = (thr * 100).toFixed(1) + " pp";
+    $("deployment-rpm-out").textContent = rpm;
+    var r = H.rng(seed), mins = [], pct = 5, stage = 0, rolled = null, exposedErr = 0, exposedReq = 0, win = [];
+    for (var m = 0; m < 40; m++) {
+      if (rolled === null && m > 0 && m % 10 === 0 && stage < 3) { stage++; pct = STAGES[stage]; }
+      var n = rolled === null ? Math.round(rpm * pct / 100) : 0, e = 0;
+      for (var i = 0; i < n; i++) if (r() < err) e++;
+      exposedErr += e; exposedReq += n;
+      win.push([n, e]); if (win.length > 5) win.shift();
+      var wn = 0, we = 0; win.forEach(function (w) { wn += w[0]; we += w[1]; });
+      var obs = wn ? we / wn : 0;
+      mins.push({ m: m, pct: rolled === null ? pct : 0, rate: n ? e / n : null, obs: obs, wn: wn });
+      if (rolled === null && wn >= MIN_N && obs > BASE + thr) rolled = m;
+    }
+    H.clear(svg);
+    var X0 = 50, X1 = 550, Y0 = 20, Y1 = 190, maxR = 0.15;
+    function x(m) { return X0 + m / 40 * (X1 - X0); }
+    function yP(p) { return Y1 - p / 100 * (Y1 - Y0); }
+    function yR(v) { return Y1 - Math.min(v, maxR) / maxR * (Y1 - Y0); }
+    [0, 10, 20, 30, 40].forEach(function (m) { H.el("text", { "class": "d-label", x: x(m), y: Y1 + 15, "text-anchor": "middle" }, svg, m + " min"); });
+    [0, 25, 50, 75, 100].forEach(function (p) { H.el("line", { "class": "d-grid", x1: X0, x2: X1, y1: yP(p), y2: yP(p) }, svg); H.el("text", { "class": "d-label d-text-accent", x: X0 - 6, y: yP(p) + 4, "text-anchor": "end" }, svg, p + "%"); });
+    [0, 5, 10, 15].forEach(function (v) { H.el("text", { "class": "d-label d-text-signal", x: X1 + 6, y: yR(v / 100) + 4 }, svg, v + "%"); });
+    H.el("line", { "class": "d-line-signal d-dash", x1: X0, x2: X1, y1: yR(BASE + thr), y2: yR(BASE + thr) }, svg);
+    H.el("text", { "class": "d-label d-text-signal", x: X1 - 4, y: yR(BASE + thr) - 5, "text-anchor": "end" }, svg, "rollback threshold " + ((BASE + thr) * 100).toFixed(1) + "%");
+    var d = "";
+    mins.forEach(function (p, i) { d += (i ? " L" : "M") + x(p.m) + " " + yP(p.pct) + " L" + x(p.m + 1) + " " + yP(p.pct); });
+    H.el("path", { "class": "d-line-accent", d: d }, svg);
+    mins.forEach(function (p) { if (p.rate !== null) H.el("circle", { "class": "d-dot-signal", cx: x(p.m + 0.5), cy: yR(p.rate), r: 2.5, opacity: 0.55 }, svg); });
+    var od = ""; mins.forEach(function (p, i) { if (p.wn) od += (od ? " L" : "M") + x(p.m + 1) + " " + yR(p.obs); });
+    if (od) H.el("path", { "class": "d-line", d: od }, svg);
+    if (rolled !== null) {
+      H.el("line", { "class": "d-line-signal", x1: x(rolled + 1), x2: x(rolled + 1), y1: Y0, y2: Y1 }, svg);
+      H.el("text", { "class": "d-title d-text-signal", x: x(rolled + 1) + 6, y: Y0 + 14 }, svg, "rolled back");
+    }
+    H.el("text", { "class": "d-label d-text-accent", x: X0, y: 228 }, svg, "blue line: canary traffic share");
+    H.el("text", { "class": "d-label", x: X0 + 170, y: 228 }, svg, "grey line: 5-min canary error rate · dots: per minute");
+    $("deployment-readout").textContent = (rolled !== null ? "Rolled back at minute " + (rolled + 1) : (err > BASE + thr ? "Bad canary NOT caught; promoted to 100%" : "Promoted to 100%")) +
+      " · canary served " + H.fmt(exposedReq) + " requests, " + exposedErr + " of them failed";
+  }
+  bindAll(["deployment-err", "deployment-thr", "deployment-rpm"], draw);
+  $("deployment-run").addEventListener("click", function () { seed++; draw(); });
+  draw();
+})();
+
+/* 12.2 Eval gate vs noise */
+(function () {
+  if (!document.getElementById("cicd-demo")) return;
+  var $ = H.$, svg = $("cicd-plot"), P = 0.8;
+  function nOf(v) { return Math.round(20 * Math.pow(100, v / 20) / 10) * 10 || 20; }
+  function draw() {
+    var N = nOf(+$("cicd-n").value), delta = +$("cicd-delta").value / 100, tol = +$("cicd-tol").value / 100;
+    $("cicd-n-out").textContent = H.fmt(N);
+    $("cicd-delta-out").textContent = (delta < 0 ? "−" : "+") + Math.abs(delta * 100).toFixed(1) + " pp";
+    $("cicd-tol-out").textContent = (tol * 100).toFixed(1) + " pp";
+    var p2 = P + delta, se = Math.sqrt(P * (1 - P) / N + p2 * (1 - p2) / N), pPass = 1 - phi((-tol - delta) / se);
+    H.clear(svg);
+    var X0 = 30, X1 = 570, Y0 = 20, Y1 = 170, LO = -0.2, HI = 0.2;
+    function x(v) { return X0 + (Math.max(LO, Math.min(HI, v)) - LO) / (HI - LO) * (X1 - X0); }
+    var peak = 1 / (se * Math.sqrt(2 * Math.PI));
+    function y(v) { var z = (v - delta) / se; return Y1 - Math.exp(-z * z / 2) / (se * Math.sqrt(2 * Math.PI)) / peak * (Y1 - Y0); }
+    var dB = "M" + x(LO) + " " + Y1, dP = "M" + x(-tol) + " " + Y1;
+    for (var v = LO; v <= HI + 1e-9; v += 0.002) {
+      if (v <= -tol) dB += " L" + x(v).toFixed(1) + " " + y(v).toFixed(1); else dP += " L" + x(v).toFixed(1) + " " + y(v).toFixed(1);
+    }
+    dB += " L" + x(-tol) + " " + y(-tol).toFixed(1) + " L" + x(-tol) + " " + Y1 + " Z";
+    dP += " L" + x(HI) + " " + Y1 + " Z";
+    H.el("path", { "class": "d-signal", d: dB }, svg);
+    H.el("path", { "class": "d-good", d: dP }, svg);
+    H.el("line", { "class": "d-line", x1: X0, x2: X1, y1: Y1, y2: Y1 }, svg);
+    [-0.2, -0.1, 0, 0.1, 0.2].forEach(function (t) { H.el("text", { "class": "d-label", x: x(t), y: Y1 + 15, "text-anchor": "middle" }, svg, (t > 0 ? "+" : "") + Math.round(t * 100)); });
+    H.el("text", { "class": "d-label", x: (X0 + X1) / 2, y: Y1 + 32, "text-anchor": "middle" }, svg, "measured candidate − baseline (pp)");
+    H.el("line", { "class": "d-line-signal", x1: x(-tol), x2: x(-tol), y1: Y0 - 6, y2: Y1 }, svg);
+    H.el("text", { "class": "d-label d-text-signal", x: x(-tol) - 4, y: Y0, "text-anchor": "end" }, svg, "gate: block below −" + (tol * 100).toFixed(1));
+    H.el("line", { "class": "d-line d-dash", x1: x(delta), x2: x(delta), y1: Y0 + 10, y2: Y1 }, svg);
+    H.el("text", { "class": "d-label", x: x(delta) + 4, y: Y0 + 22 }, svg, "true change");
+    H.el("text", { "class": "d-mono d-text-good", x: X1, y: Y0, "text-anchor": "end" }, svg, "passes " + Math.round(pPass * 100) + "%");
+    var verdict = delta < -tol ? (pPass > 0.2 ? "a real regression slips through " + Math.round(pPass * 100) + "% of the time" : "the gate reliably blocks this regression")
+      : (pPass < 0.8 ? "a harmless change is blocked " + Math.round((1 - pPass) * 100) + "% of the time (flaky gate)" : "harmless change passes reliably");
+    $("cicd-readout").textContent = "baseline 80% · std. error of the difference " + (se * 100).toFixed(1) + " pp with " + H.fmt(N) + " cases · " + verdict;
+  }
+  bindAll(["cicd-n", "cicd-delta", "cicd-tol"], draw);
+  draw();
+})();
+
+/* 12.3 Trace waterfall */
+(function () {
+  if (!document.getElementById("observability-demo")) return;
+  var $ = H.$, svg = $("observability-plot");
+  function draw() {
+    var rerank = $("observability-rerank").checked, tool = $("observability-tool").checked, par = $("observability-par").checked, hit = $("observability-cache").checked;
+    var spans = [], t = 0;
+    function add(name, start, dur, cls, depth) { spans.push({ name: name, s: start, d: dur, cls: cls, depth: depth || 1 }); return start + dur; }
+    t = add("input guardrail", 0, 40, "d-fill");
+    t = add("semantic cache lookup", t, 35, "d-fill");
+    var ttft;
+    if (hit) { t = add("return cached answer", t, 10, "d-good"); ttft = t; }
+    else {
+      t = add("embed query", t, 45, "d-good");
+      var a = add("vector search", t, 80, "d-good", 2), b = add("keyword search", par ? t : a, 60, "d-good", 2);
+      t = Math.max(a, b);
+      if (rerank) t = add("rerank top 50", t, 160, "d-good");
+      if (tool) {
+        t = add("llm.chat #1 (decides tool)", t, 650, "d-accent");
+        t = add("tool: orders API", t, 420, "d-signal");
+      }
+      var gen = add("llm.chat (answer)", t, 1350, "d-accent");
+      ttft = t + 420; t = gen;
+      t = add("output guardrail", t, 90, "d-fill");
+    }
+    spans.unshift({ name: "rag.request", s: 0, d: t, cls: "d-box", depth: 0 });
+    H.clear(svg);
+    var X0 = 200, X1 = 580, rowH = 22, total = Math.max(t, 500), Y0 = 24;
+    function x(ms) { return X0 + ms / total * (X1 - X0); }
+    for (var g = 0; g <= total; g += total > 2500 ? 1000 : 500) {
+      H.el("line", { "class": "d-grid", x1: x(g), x2: x(g), y1: 14, y2: Y0 + spans.length * rowH }, svg);
+      H.el("text", { "class": "d-label", x: x(g), y: 10, "text-anchor": "middle" }, svg, g + " ms");
+    }
+    var modelMs = 0;
+    spans.forEach(function (s, i) {
+      var y = Y0 + i * rowH;
+      H.el("text", { "class": "d-label", x: 10 + s.depth * 12, y: y + 14 }, svg, s.name);
+      H.el("rect", { "class": s.cls, x: x(s.s), y: y + 3, width: Math.max(2, x(s.s + s.d) - x(s.s)), height: rowH - 7, rx: 3 }, svg);
+      if (s.cls === "d-accent") modelMs += s.d;
+    });
+    if (!hit) {
+      H.el("line", { "class": "d-line-signal d-dash", x1: x(ttft), x2: x(ttft), y1: 14, y2: Y0 + spans.length * rowH }, svg);
+      H.el("text", { "class": "d-label d-text-signal", x: x(ttft) - 4, y: Y0 + spans.length * rowH + 14, "text-anchor": "end" }, svg, "first token streamed");
+    }
+    $("observability-readout").textContent = "total " + H.fmt(t) + " ms · user sees first token at " + H.fmt(ttft) + " ms" +
+      (hit ? " · cache hit skipped retrieval and the model" : " · model calls = " + Math.round(modelMs / t * 100) + "% of the time");
+  }
+  bindAll(["observability-rerank", "observability-tool", "observability-par", "observability-cache"], draw);
+  draw();
+})();
+
+/* 12.4 Drift detector (PSI) */
+(function () {
+  if (!document.getElementById("monitoring-demo")) return;
+  var $ = H.$, svg = $("monitoring-plot"), seed = 21, NS = [50, 200, 1000, 5000, 20000], BINS = 10, LO = -3, HI = 3;
+  function edges() { var e = []; for (var i = 0; i <= BINS; i++) e.push(LO + i * (HI - LO) / BINS); return e; }
+  function binOf(v) { if (v < LO) return 0; if (v >= HI) return BINS - 1; return Math.min(BINS - 1, Math.floor((v - LO) / (HI - LO) * BINS)); }
+  function draw() {
+    var shift = +$("monitoring-shift").value, spread = +$("monitoring-spread").value, N = NS[+$("monitoring-n").value];
+    $("monitoring-shift-out").textContent = shift.toFixed(2) + "σ";
+    $("monitoring-spread-out").textContent = spread.toFixed(2);
+    $("monitoring-n-out").textContent = H.fmt(N);
+    var e = new Array(BINS).fill(0), a = new Array(BINS).fill(0), ed = edges();
+    for (var i = 0; i < BINS; i++) {           /* reference: exact standard normal shares */
+      var lo = i === 0 ? -Infinity : ed[i], hi = i === BINS - 1 ? Infinity : ed[i + 1];
+      e[i] = (hi === Infinity ? 1 : phi(hi)) - (lo === -Infinity ? 0 : phi(lo));
+    }
+    var r = H.rng(seed);
+    for (i = 0; i < N; i++) a[binOf(shift + spread * H.gauss(r))]++;
+    var psi = 0, kl = 0, contrib = [];
+    for (i = 0; i < BINS; i++) {
+      var ai = Math.max(a[i] / N, 1e-4), ei = Math.max(e[i], 1e-4), c = (ai - ei) * Math.log(ai / ei);
+      contrib.push(c); psi += c; kl += ai * Math.log(ai / ei); a[i] = ai;
+    }
+    H.clear(svg);
+    var X0 = 40, X1 = 580, Y0 = 16, Y1 = 150, bw = (X1 - X0) / BINS, maxS = Math.max.apply(null, a.concat(e)) * 1.1, maxC = Math.max(0.02, Math.max.apply(null, contrib));
+    for (i = 0; i < BINS; i++) {
+      var x0 = X0 + i * bw, he = e[i] / maxS * (Y1 - Y0), ha = a[i] / maxS * (Y1 - Y0);
+      H.el("rect", { "class": "d-fill", x: x0 + 4, y: Y1 - he, width: bw / 2 - 4, height: he }, svg);
+      H.el("rect", { "class": "d-accent", x: x0 + bw / 2, y: Y1 - ha, width: bw / 2 - 4, height: ha }, svg);
+      var hc = contrib[i] / maxC * 30;
+      H.el("rect", { "class": "d-signal", x: x0 + 8, y: 186 - hc, width: bw - 16, height: Math.max(1, hc) }, svg);
+    }
+    H.el("line", { "class": "d-line", x1: X0, x2: X1, y1: Y1, y2: Y1 }, svg);
+    H.el("line", { "class": "d-line", x1: X0, x2: X1, y1: 186, y2: 186 }, svg);
+    H.el("text", { "class": "d-label", x: X0, y: 202 }, svg, "per-bin PSI contribution (orange)");
+    H.el("rect", { "class": "d-fill", x: X0, y: 212, width: 12, height: 10 }, svg);
+    H.el("text", { "class": "d-label", x: X0 + 18, y: 221 }, svg, "reference");
+    H.el("rect", { "class": "d-accent", x: X0 + 100, y: 212, width: 12, height: 10 }, svg);
+    H.el("text", { "class": "d-label", x: X0 + 118, y: 221 }, svg, "current sample");
+    var level = psi < 0.1 ? ["stable", "d-text-good"] : psi < 0.25 ? ["moderate shift", "d-text-accent"] : ["significant shift", "d-text-signal"];
+    H.el("text", { "class": "d-title " + level[1], x: X1, y: Y0 + 10, "text-anchor": "end" }, svg, "PSI " + psi.toFixed(3) + " · " + level[0]);
+    $("monitoring-readout").textContent = "PSI " + psi.toFixed(3) + " · KL(current‖reference) " + kl.toFixed(3) + " · " + H.fmt(N) + " current samples, 10 bins";
+  }
+  bindAll(["monitoring-shift", "monitoring-spread", "monitoring-n"], draw);
+  $("monitoring-resample").addEventListener("click", function () { seed++; draw(); });
+  draw();
+})();
+
+/* 12.5 Pareto front of runs */
+(function () {
+  if (!document.getElementById("experiment-tracking-demo")) return;
+  var $ = H.$, svg = $("experiment-tracking-plot");
+  var runs = [["A", "8B · chunk 256", 71, 0.4, 1.1], ["B", "8B · rerank", 76, 0.6, 1.5], ["G", "API small · rerank", 79, 0.9, 1.6], ["H", "8B · k=16", 72, 1.0, 1.4],
+    ["C", "70B · chunk 512", 82, 2.1, 2.6], ["D", "70B · rerank", 85, 2.4, 3.0], ["I", "70B · k=16", 83, 3.5, 3.1], ["F", "API large · k=4", 86, 4.2, 2.9], ["E", "API large · k=8", 88, 6.0, 3.4]];
+  function dominated(r) { return runs.some(function (o) { return o !== r && o[2] >= r[2] && o[3] <= r[3] && (o[2] > r[2] || o[3] < r[3]); }); }
+  function draw() {
+    var budget = +$("experiment-tracking-budget").value, lat = $("experiment-tracking-lat").checked;
+    $("experiment-tracking-budget-out").textContent = budget.toFixed(1);
+    H.clear(svg);
+    var X0 = 50, X1 = 570, Y0 = 16, Y1 = 220;
+    function x(c) { return X0 + c / 6.5 * (X1 - X0); }
+    function y(q) { return Y1 - (q - 68) / 22 * (Y1 - Y0); }
+    [0, 1, 2, 3, 4, 5, 6].forEach(function (c) { H.el("text", { "class": "d-label", x: x(c), y: Y1 + 15, "text-anchor": "middle" }, svg, "$" + c); });
+    [70, 75, 80, 85, 90].forEach(function (q) { H.el("line", { "class": "d-grid", x1: X0, x2: X1, y1: y(q), y2: y(q) }, svg); H.el("text", { "class": "d-label", x: X0 - 6, y: y(q) + 4, "text-anchor": "end" }, svg, q + "%"); });
+    H.el("text", { "class": "d-label", x: X1, y: Y1 + 32, "text-anchor": "end" }, svg, "cost per 1k requests →");
+    H.el("rect", { "class": "d-fill", x: x(budget), y: Y0, width: X1 - x(budget), height: Y1 - Y0, opacity: 0.7 }, svg);
+    H.el("text", { "class": "d-label", x: Math.min(x(budget) + 6, X1 - 70), y: Y1 - 8 }, svg, "over budget");
+    var front = runs.filter(function (r) { return !dominated(r); }).sort(function (p, q) { return p[3] - q[3]; });
+    var d = ""; front.forEach(function (r, i) { d += (i ? " L" : "M") + x(r[3]) + " " + y(r[2]); });
+    H.el("path", { "class": "d-line-accent d-dash", d: d }, svg);
+    var ok = runs.filter(function (r) { return r[3] <= budget && (!lat || r[4] <= 2.5); });
+    var best = ok.sort(function (p, q) { return q[2] - p[2] || p[3] - q[3]; })[0];
+    runs.forEach(function (r) {
+      var dom = dominated(r);
+      H.el("circle", { "class": dom ? "d-dot-muted" : "d-dot", cx: x(r[3]), cy: y(r[2]), r: 6 }, svg);
+      H.el("text", { "class": "d-mono", x: x(r[3]) + 9, y: y(r[2]) + 4 }, svg, r[0]);
+    });
+    if (best) H.el("circle", { "class": "d-line-signal", cx: x(best[3]), cy: y(best[2]), r: 11 }, svg);
+    $("experiment-tracking-readout").textContent = best ? ("best within budget: run " + best[0] + " (" + best[1] + ") · quality " + best[2] + "% · $" + best[3].toFixed(1) + "/1k · p95 " + best[4] + " s · grey dots are dominated runs")
+      : "no run satisfies these constraints";
+  }
+  bindAll(["experiment-tracking-budget", "experiment-tracking-lat"], draw);
+  draw();
+})();
+
+/* 12.6 Cache hit rate vs cost and latency */
+(function () {
+  if (!document.getElementById("infra-demo")) return;
+  var $ = H.$, svg = $("infra-plot"), LLM_MS = 2000, LOOKUP_MS = 40, LOOKUP_COST = 0.00002;
+  function draw() {
+    var h = +$("infra-hit").value / 100, N = Math.round(Math.pow(10, +$("infra-req").value)), c = +$("infra-cost").value / 100, f = +$("infra-false").value / 100;
+    $("infra-hit-out").textContent = Math.round(h * 100) + "%";
+    $("infra-req-out").textContent = H.fmt(N);
+    $("infra-cost-out").textContent = (c * 100).toFixed(1) + "¢";
+    $("infra-false-out").textContent = (f * 100).toFixed(1) + "% of hits";
+    function cost(hr) { return N * (LOOKUP_COST + (1 - hr) * c); }
+    function latency(hr) { return LOOKUP_MS + (1 - hr) * LLM_MS; }
+    H.clear(svg);
+    var X0 = 60, X1 = 540, Y0 = 20, Y1 = 180, maxC = N * (c + LOOKUP_COST), maxL = LOOKUP_MS + LLM_MS;
+    function x(hr) { return X0 + hr / 0.8 * (X1 - X0); }
+    function yc(v) { return Y1 - v / maxC * (Y1 - Y0); }
+    function yl(v) { return Y1 - v / maxL * (Y1 - Y0); }
+    [0, 0.2, 0.4, 0.6, 0.8].forEach(function (hr) { H.el("line", { "class": "d-grid", x1: x(hr), x2: x(hr), y1: Y0, y2: Y1 }, svg); H.el("text", { "class": "d-label", x: x(hr), y: Y1 + 15, "text-anchor": "middle" }, svg, Math.round(hr * 100) + "%"); });
+    H.el("text", { "class": "d-label", x: (X0 + X1) / 2, y: Y1 + 32, "text-anchor": "middle" }, svg, "cache hit rate");
+    H.el("line", { "class": "d-line", x1: X0, x2: X1, y1: Y1, y2: Y1 }, svg);
+    H.el("path", { "class": "d-line-accent", d: "M" + x(0) + " " + yc(cost(0)) + " L" + x(0.8) + " " + yc(cost(0.8)) }, svg);
+    H.el("path", { "class": "d-line-signal", d: "M" + x(0) + " " + yl(latency(0)) + " L" + x(0.8) + " " + yl(latency(0.8)) }, svg);
+    H.el("text", { "class": "d-label d-text-accent", x: X0, y: 12 }, svg, "daily cost (max $" + H.fmt(maxC) + ")");
+    H.el("text", { "class": "d-label d-text-signal", x: X1, y: 12, "text-anchor": "end" }, svg, "mean latency (max " + H.fmt(maxL) + " ms)");
+    H.el("line", { "class": "d-line d-dash", x1: x(h), x2: x(h), y1: Y0, y2: Y1 }, svg);
+    H.el("circle", { "class": "d-dot", cx: x(h), cy: yc(cost(h)), r: 5 }, svg);
+    H.el("circle", { "class": "d-dot-signal", cx: x(h), cy: yl(latency(h)), r: 5 }, svg);
+    var saved = cost(0) - cost(h);
+    $("infra-readout").textContent = "$" + H.fmt(cost(h)) + "/day (saves $" + H.fmt(saved) + "/day, $" + H.fmt(saved * 30) + "/month) · mean latency " + H.fmt(latency(h)) + " ms · ~" + H.fmt(N * h * f) + " wrong cached answers/day";
+  }
+  bindAll(["infra-hit", "infra-req", "infra-cost", "infra-false"], draw);
+  draw();
+})();
+
+/* 12.7 Point-in-time join */
+(function () {
+  if (!document.getElementById("registries-demo")) return;
+  var $ = H.$, svg = $("registries-plot"), UPD = [[0, 0], [2, 1], [8, 3], [15, 4], [22, 7], [27, 9]], TODAY = 30;
+  function valueAt(t) { var v = 0; UPD.forEach(function (u) { if (u[0] <= t) v = u[1]; }); return v; }
+  function draw() {
+    var t = +$("registries-t").value;
+    $("registries-t-out").textContent = t;
+    H.clear(svg);
+    var X0 = 50, X1 = 570, Y0 = 30, Y1 = 170;
+    function x(d) { return X0 + d / TODAY * (X1 - X0); }
+    function y(v) { return Y1 - v / 10 * (Y1 - Y0); }
+    [0, 5, 10, 15, 20, 25, 30].forEach(function (d) { H.el("text", { "class": "d-label", x: x(d), y: Y1 + 15, "text-anchor": "middle" }, svg, "day " + d); });
+    [0, 5, 10].forEach(function (v) { H.el("line", { "class": "d-grid", x1: X0, x2: X1, y1: y(v), y2: y(v) }, svg); H.el("text", { "class": "d-label", x: X0 - 6, y: y(v) + 4, "text-anchor": "end" }, svg, String(v)); });
+    var d = "";
+    UPD.forEach(function (u, i) { var next = i + 1 < UPD.length ? UPD[i + 1][0] : TODAY; d += (i ? " L" : "M") + x(u[0]) + " " + y(u[1]) + " L" + x(next) + " " + y(u[1]); });
+    H.el("path", { "class": "d-line", d: d }, svg);
+    UPD.forEach(function (u) { if (u[0] > 0) H.el("circle", { "class": u[0] <= t ? "d-dot" : "d-dot-muted", cx: x(u[0]), cy: y(u[1]), r: 4 }, svg); });
+    H.el("rect", { "class": "d-fill", x: x(t), y: Y0, width: X1 - x(t), height: Y1 - Y0, opacity: 0.6 }, svg);
+    H.el("text", { "class": "d-label", x: Math.min(x(t) + 6, X1 - 110), y: Y0 + 14 }, svg, "future of the event");
+    H.el("line", { "class": "d-line-signal", x1: x(t), x2: x(t), y1: Y0 - 10, y2: Y1 }, svg);
+    H.el("text", { "class": "d-label d-text-signal", x: x(t), y: Y0 - 14, "text-anchor": "middle" }, svg, "label event");
+    var pit = valueAt(t), naive = valueAt(TODAY);
+    H.el("circle", { "class": "d-dot-good", cx: x(t), cy: y(pit), r: 7 }, svg);
+    H.el("circle", { "class": "d-dot-signal", cx: x(TODAY), cy: y(naive), r: 7 }, svg);
+    H.el("text", { "class": "d-mono d-text-good", x: X0, y: 210 }, svg, "point-in-time value: " + pit);
+    H.el("text", { "class": "d-mono d-text-signal", x: X1, y: 210, "text-anchor": "end" }, svg, "naive (today's) value: " + naive);
+    var leaks = UPD.filter(function (u) { return u[0] > t; }).length;
+    $("registries-readout").textContent = "feature orders_30d for user 1001 · a point-in-time join uses " + pit + " (value on day " + t + ")" +
+      (leaks ? " · a naive join uses " + naive + ", which includes " + leaks + " update(s) from after the event: leakage" : " · no later updates, so both joins agree");
+  }
+  bindAll(["registries-t"], draw);
+  draw();
+})();
+</script>
+</body>
+</html>

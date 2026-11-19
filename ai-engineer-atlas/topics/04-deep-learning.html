@@ -1,0 +1,1547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deep learning · AI Engineer Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="deep-learning">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="8" cy="9" r="2.3" fill="var(--accent-ink)"/><circle cx="18" cy="9" r="2.3" fill="var(--accent-ink)"/>
+        <circle cx="13" cy="18" r="2.3" fill="var(--accent-ink)"/>
+        <path d="M8 9 L13 18 L18 9" stroke="var(--accent-ink)" stroke-width="1.4" fill="none"/>
+      </svg>
+      AI Engineer Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Deep learning</h1>
+    <p class="lede">Deep learning stacks simple units into networks with millions or billions of parameters and trains them with gradients. Every LLM, image model and speech model is built from the pieces on this page: neurons, backpropagation, PyTorch, a handful of architectures, a training recipe and the GPUs that run it.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">A neural network is a stack of layers (lesson 01). Backpropagation computes how every weight should change (02), and PyTorch does that bookkeeping for you (03). Architectures (04) decide the network's shape for images, sequences or compression. The training recipe (05) makes optimization converge, and GPUs (06) make it fast enough to matter. Under all of it runs the same four-beat loop.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 250" role="img" aria-label="Neurons and layers feed backpropagation, which PyTorch automates; architectures decide the network shape; the training recipe and GPUs complete the stack. Every training step runs forward, loss, backward and update.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="320" y="20" width="120" height="50" rx="8"/>
+              <text class="d-title" x="380" y="41" text-anchor="middle">Architectures</text>
+              <text class="d-label" x="380" y="58" text-anchor="middle">04 · CNN, RNN, AE</text>
+              <line class="d-line" x1="380" y1="70" x2="380" y2="108" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="386" y="94">network shape</text>
+              <rect class="d-box" x="10" y="110" width="130" height="56" rx="8"/>
+              <text class="d-title" x="75" y="134" text-anchor="middle">Neurons &amp; layers</text>
+              <text class="d-label" x="75" y="152" text-anchor="middle">01 · z = Wx + b</text>
+              <line class="d-line-accent" x1="140" y1="138" x2="168" y2="138" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="170" y="110" width="120" height="56" rx="8"/>
+              <text class="d-title" x="230" y="134" text-anchor="middle">Backprop</text>
+              <text class="d-label" x="230" y="152" text-anchor="middle">02 · gradients</text>
+              <line class="d-line-accent" x1="290" y1="138" x2="318" y2="138" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="320" y="110" width="120" height="56" rx="8"/>
+              <text class="d-title" x="380" y="134" text-anchor="middle">PyTorch</text>
+              <text class="d-label" x="380" y="152" text-anchor="middle">03 · autograd, loop</text>
+              <line class="d-line-accent" x1="440" y1="138" x2="468" y2="138" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-good" x="470" y="110" width="140" height="56" rx="8"/>
+              <text class="d-title" x="540" y="134" text-anchor="middle">Training recipe</text>
+              <text class="d-label" x="540" y="152" text-anchor="middle">05 · optimizer, schedule</text>
+              <line class="d-line-accent" x1="610" y1="138" x2="638" y2="138" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-signal" x="640" y="110" width="130" height="56" rx="8"/>
+              <text class="d-title" x="705" y="134" text-anchor="middle">GPUs &amp; scale</text>
+              <text class="d-label" x="705" y="152" text-anchor="middle">06 · memory, parallel</text>
+              <path class="d-line-accent d-dash" d="M705 166 V222 H75 V168" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label d-text-accent" x="390" y="240" text-anchor="middle">every training step: forward → loss → backward → update</text>
+            </svg>
+          </div>
+          <figcaption>How the six lessons stack. The concepts on the left become code in PyTorch, and the recipe and hardware on the right decide whether training converges and how long it takes.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="neural-nets">
+        <header class="topic-head">
+          <p class="eyebrow">04.1 · From neuron to network</p>
+          <h2>Neural network basics</h2>
+        </header>
+
+        <p class="lead">A neuron is logistic regression with a choice of squashing function: multiply inputs by weights, add a bias, pass the sum through a nonlinear <strong>activation</strong>. A network is many neurons side by side (a layer) and many layers in a row. Each layer re-describes its input in features the next layer finds easier to use.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>A transformer is mostly these same layers: matrix multiplies, activations and normalization. Knowing what a layer computes lets you read model configs ("hidden size 4096, MLP ratio 4"), estimate parameter counts, and reason about what a fine-tune actually changes.</p>
+        </div>
+
+        <h3>One neuron</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 225" role="img" aria-label="A single neuron: three inputs multiplied by weights 0.8, minus 0.4 and 0.3 are summed with bias 0.1 to give z equals 0.4, which passes through an activation function to give the output.">
+              <defs>
+                <marker id="neural-nets-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <circle class="d-box" cx="70" cy="50" r="20"/><text class="d-mono" x="70" y="54" text-anchor="middle">1.0</text>
+              <circle class="d-box" cx="70" cy="110" r="20"/><text class="d-mono" x="70" y="114" text-anchor="middle">0.5</text>
+              <circle class="d-box" cx="70" cy="170" r="20"/><text class="d-mono" x="70" y="174" text-anchor="middle">−1.0</text>
+              <text class="d-label" x="40" y="54" text-anchor="end">x₁</text>
+              <text class="d-label" x="40" y="114" text-anchor="end">x₂</text>
+              <text class="d-label" x="40" y="174" text-anchor="end">x₃</text>
+              <line class="d-line-accent" x1="90" y1="54" x2="266" y2="100" marker-end="url(#neural-nets-arrow)"/>
+              <line class="d-line-accent" x1="90" y1="110" x2="264" y2="110" marker-end="url(#neural-nets-arrow)"/>
+              <line class="d-line-accent" x1="90" y1="166" x2="266" y2="120" marker-end="url(#neural-nets-arrow)"/>
+              <text class="d-mono d-text-accent" x="170" y="66">w₁ = 0.8</text>
+              <text class="d-mono d-text-accent" x="170" y="104">w₂ = −0.4</text>
+              <text class="d-mono d-text-accent" x="170" y="164">w₃ = 0.3</text>
+              <line class="d-line-accent" x1="300" y1="26" x2="300" y2="74" marker-end="url(#neural-nets-arrow)"/>
+              <text class="d-mono" x="308" y="38">b = 0.1</text>
+              <circle class="d-accent" cx="300" cy="110" r="34"/>
+              <text class="d-title" x="300" y="115" text-anchor="middle">Σ</text>
+              <line class="d-line-accent" x1="334" y1="110" x2="408" y2="110" marker-end="url(#neural-nets-arrow)"/>
+              <text class="d-mono" x="371" y="100" text-anchor="middle">z = 0.4</text>
+              <rect class="d-good" x="410" y="80" width="80" height="60" rx="8"/>
+              <path class="d-line" style="stroke: var(--accent); stroke-width: 2" d="M420,128 L450,128 L480,92"/>
+              <text class="d-label" x="450" y="156" text-anchor="middle">activation φ</text>
+              <line class="d-line-accent" x1="490" y1="110" x2="548" y2="110" marker-end="url(#neural-nets-arrow)"/>
+              <circle class="d-box" cx="575" cy="110" r="24"/>
+              <text class="d-mono" x="575" y="114" text-anchor="middle">a</text>
+              <text class="d-label" x="575" y="152" text-anchor="middle">ReLU: 0.40</text>
+              <text class="d-label" x="575" y="168" text-anchor="middle">sigmoid: 0.60</text>
+              <text class="d-mono" x="320" y="210" text-anchor="middle">z = 0.8·1.0 − 0.4·0.5 + 0.3·(−1.0) + 0.1 = 0.4</text>
+            </svg>
+          </div>
+          <figcaption>One neuron computes a weighted sum plus bias, then applies an activation. Every number here is something training can change except the inputs.</figcaption>
+        </figure>
+
+        <p>Why the activation? Stacking linear layers gives another linear layer (\(W_2 W_1 x\) is just one matrix times \(x\)), so without a nonlinearity depth buys nothing. With one, a wide enough network can approximate essentially any smooth function, and depth lets it build features out of features.</p>
+
+        <div class="widget" id="nn-demo">
+          <div class="widget-head">
+            <span class="widget-title">Single-neuron playground</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="nn-x1">x₁ <input type="range" id="nn-x1" min="-2" max="2" step="0.1" value="1"><output id="nn-x1-out">1.0</output></label>
+            <label for="nn-x2">x₂ <input type="range" id="nn-x2" min="-2" max="2" step="0.1" value="0.5"><output id="nn-x2-out">0.5</output></label>
+            <label for="nn-w1">w₁ <input type="range" id="nn-w1" min="-3" max="3" step="0.1" value="0.8"><output id="nn-w1-out">0.8</output></label>
+            <label for="nn-w2">w₂ <input type="range" id="nn-w2" min="-3" max="3" step="0.1" value="-0.4"><output id="nn-w2-out">-0.4</output></label>
+            <label for="nn-b">b <input type="range" id="nn-b" min="-3" max="3" step="0.1" value="0.1"><output id="nn-b-out">0.1</output></label>
+            <label for="nn-act">Activation <select id="nn-act"><option value="relu">ReLU</option><option value="sigmoid">sigmoid</option><option value="tanh">tanh</option><option value="gelu">GELU</option><option value="linear">none (linear)</option></select></label>
+          </div>
+          <svg id="nn-plot" viewBox="0 0 600 260" role="img" aria-label="The chosen activation function and its derivative plotted from z equals minus 6 to 6, with the neuron's current z and output marked."></svg>
+          <p class="readout" id="nn-readout"></p>
+        </div>
+        <p>Drive \(z\) far negative with ReLU and the slope (dashed) becomes exactly 0: that neuron passes no gradient back, which is how ReLUs "die". Push sigmoid or tanh far either way and the slope flattens towards 0 too. That saturation is why deep networks moved from sigmoid to ReLU, and why modern LLMs use smooth variants like GELU and SwiGLU.</p>
+
+        <h3>Layers are matrix multiplies</h3>
+        <div class="formula">
+          \[ h^{(\ell)} = \phi\big(W^{(\ell)} h^{(\ell-1)} + b^{(\ell)}\big), \qquad W^{(\ell)} \in \mathbb{R}^{d_\ell \times d_{\ell-1}} \]
+          <span class="formula-note">A layer with \(d_{\ell-1}\) inputs and \(d_\ell\) outputs has \(d_\ell d_{\ell-1} + d_\ell\) parameters. Processing a batch of \(B\) examples at once turns this into one matrix-matrix product, which is exactly what GPUs are fast at.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="A multilayer perceptron with 3 inputs, two hidden layers of 4 units and 2 outputs. Weight matrices are 4 by 3, 4 by 4 and 2 by 4, for 46 parameters in total.">
+              <g class="d-grid">
+                <line x1="80" y1="80" x2="240" y2="60"/><line x1="80" y1="80" x2="240" y2="100"/><line x1="80" y1="80" x2="240" y2="140"/><line x1="80" y1="80" x2="240" y2="180"/>
+                <line x1="80" y1="120" x2="240" y2="60"/><line x1="80" y1="120" x2="240" y2="100"/><line x1="80" y1="120" x2="240" y2="140"/><line x1="80" y1="120" x2="240" y2="180"/>
+                <line x1="80" y1="160" x2="240" y2="60"/><line x1="80" y1="160" x2="240" y2="100"/><line x1="80" y1="160" x2="240" y2="140"/><line x1="80" y1="160" x2="240" y2="180"/>
+                <line x1="240" y1="60" x2="400" y2="60"/><line x1="240" y1="60" x2="400" y2="100"/><line x1="240" y1="60" x2="400" y2="140"/><line x1="240" y1="60" x2="400" y2="180"/>
+                <line x1="240" y1="100" x2="400" y2="60"/><line x1="240" y1="100" x2="400" y2="100"/><line x1="240" y1="100" x2="400" y2="140"/><line x1="240" y1="100" x2="400" y2="180"/>
+                <line x1="240" y1="140" x2="400" y2="60"/><line x1="240" y1="140" x2="400" y2="100"/><line x1="240" y1="140" x2="400" y2="140"/><line x1="240" y1="140" x2="400" y2="180"/>
+                <line x1="240" y1="180" x2="400" y2="60"/><line x1="240" y1="180" x2="400" y2="100"/><line x1="240" y1="180" x2="400" y2="140"/><line x1="240" y1="180" x2="400" y2="180"/>
+                <line x1="400" y1="60" x2="560" y2="100"/><line x1="400" y1="60" x2="560" y2="140"/><line x1="400" y1="100" x2="560" y2="100"/><line x1="400" y1="100" x2="560" y2="140"/>
+                <line x1="400" y1="140" x2="560" y2="100"/><line x1="400" y1="140" x2="560" y2="140"/><line x1="400" y1="180" x2="560" y2="100"/><line x1="400" y1="180" x2="560" y2="140"/>
+              </g>
+              <circle class="d-box" cx="80" cy="80" r="11"/><circle class="d-box" cx="80" cy="120" r="11"/><circle class="d-box" cx="80" cy="160" r="11"/>
+              <circle class="d-accent" cx="240" cy="60" r="11"/><circle class="d-accent" cx="240" cy="100" r="11"/><circle class="d-accent" cx="240" cy="140" r="11"/><circle class="d-accent" cx="240" cy="180" r="11"/>
+              <circle class="d-accent" cx="400" cy="60" r="11"/><circle class="d-accent" cx="400" cy="100" r="11"/><circle class="d-accent" cx="400" cy="140" r="11"/><circle class="d-accent" cx="400" cy="180" r="11"/>
+              <circle class="d-good" cx="560" cy="100" r="11"/><circle class="d-good" cx="560" cy="140" r="11"/>
+              <text class="d-mono" x="160" y="28" text-anchor="middle">W₁: 4×3 + b₁</text>
+              <text class="d-mono" x="320" y="28" text-anchor="middle">W₂: 4×4 + b₂</text>
+              <text class="d-mono" x="480" y="28" text-anchor="middle">W₃: 2×4 + b₃</text>
+              <text class="d-label" x="80" y="210" text-anchor="middle">input x (3)</text>
+              <text class="d-label" x="240" y="210" text-anchor="middle">h₁ = ReLU(…) (4)</text>
+              <text class="d-label" x="400" y="210" text-anchor="middle">h₂ = ReLU(…) (4)</text>
+              <text class="d-label" x="560" y="210" text-anchor="middle">logits (2)</text>
+              <text class="d-mono" x="320" y="232" text-anchor="middle">parameters = (12+4) + (16+4) + (8+2) = 46</text>
+            </svg>
+          </div>
+          <figcaption>A 3-4-4-2 multilayer perceptron. Each column of lines is one weight matrix. The same arithmetic with 4,096-wide layers gives the billions of parameters in an LLM.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+rng = np.random.default_rng(0)
+sizes = [3, 4, 4, 2]
+<span class="c"># He initialization keeps activations from shrinking or exploding through ReLU layers</span>
+params = [(rng.normal(0, np.sqrt(2 / n_in), (n_in, n_out)), np.zeros(n_out))
+          for n_in, n_out in zip(sizes[:-1], sizes[1:])]
+
+def forward(X):                       <span class="c"># X: (batch, 3)</span>
+    h = X
+    for i, (W, b) in enumerate(params):
+        z = h @ W + b                 <span class="c"># (batch, n_out): one matmul per layer</span>
+        h = np.maximum(z, 0) if i &lt; len(params) - 1 else z   <span class="c"># ReLU, except on the logits</span>
+    return h
+
+print(forward(rng.normal(size=(5, 3))).shape)            <span class="c"># (5, 2)</span>
+print(sum(W.size + b.size for W, b in params))           <span class="c"># 46</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A neuron is a weighted sum plus bias, passed through a nonlinear activation.</li>
+            <li>Without nonlinearities, any stack of layers collapses to one linear map.</li>
+            <li>A layer is a matrix multiply; batching turns it into the matrix-matrix product GPUs excel at.</li>
+            <li>Activation slopes matter for learning: saturated sigmoids and dead ReLUs pass almost no gradient.</li>
+            <li>Parameter count per dense layer is inputs × outputs + outputs.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Applying ReLU or softmax to the final logits and then also using a loss that expects raw logits.</li>
+            <li>Initializing all weights to the same value, so every neuron in a layer learns the same thing.</li>
+            <li>Mixing up weight shapes: PyTorch's <code>nn.Linear</code> stores \(W\) as (out, in) and computes \(xW^\top + b\).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="neural-nets-1"><span>Compute a neuron's output by hand for given inputs, weights, bias and activation</span></label></li>
+          <li><label><input type="checkbox" data-key="neural-nets-2"><span>Explain why a network without activations is just a linear model</span></label></li>
+          <li><label><input type="checkbox" data-key="neural-nets-3"><span>Count the parameters of an MLP from its layer sizes</span></label></li>
+          <li><label><input type="checkbox" data-key="neural-nets-4"><span>Sketch ReLU, sigmoid, tanh and GELU and their derivatives</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Video</span><a href="https://www.3blue1brown.com/topics/neural-networks">3Blue1Brown: Neural networks</a></li>
+          <li><span class="kind">Book</span><a href="https://d2l.ai/">Dive into Deep Learning (free, with PyTorch code)</a></li>
+          <li><span class="kind">Book</span><a href="https://www.deeplearningbook.org/">Deep Learning (Goodfellow, Bengio, Courville)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="backprop">
+        <header class="topic-head">
+          <p class="eyebrow">04.2 · The chain rule at scale</p>
+          <h2>Backpropagation</h2>
+        </header>
+
+        <p class="lead">Training needs to know, for every weight, "if I nudge this up a little, does the loss go up or down, and how fast?" That number is the gradient. <strong>Backpropagation</strong> computes all of them in one backward sweep: run the network forward and remember the intermediate values, then walk the graph from the loss back to the inputs, multiplying local slopes as you go.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>You will rarely write backprop by hand, but you will debug it: NaN losses, exploding gradients, a frozen layer that is not learning, out-of-memory errors caused by stored activations. All of these make sense once you can see the forward and backward passes on a graph.</p>
+        </div>
+
+        <h3>Forward values, backward gradients</h3>
+        <p>Take one neuron with a squared-error loss: \(u = xw\), \(z = u + b\), \(a = \sigma(z)\), \(L = (a - y)^2\). The forward pass computes values left to right. The backward pass starts from \(\partial L / \partial L = 1\) and multiplies by each node's local derivative right to left.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 250" role="img" aria-label="Computational graph for one neuron with x equals 2, w equals 0.5, b equals minus 0.5 and target 1. Forward values: u equals 1, z equals 0.5, a equals 0.622, loss 0.143. Backward gradients: dL/da minus 0.755, dL/dz minus 0.177, dL/dw minus 0.355, dL/dx minus 0.089.">
+              <defs>
+                <marker id="backprop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="backprop-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <text class="d-label d-text-accent" x="335" y="16" text-anchor="middle">forward: compute and cache values, left to right</text>
+              <rect class="d-box" x="20" y="38" width="64" height="34" rx="6"/><text class="d-mono" x="52" y="60" text-anchor="middle">x = 2</text>
+              <rect class="d-box" x="20" y="138" width="64" height="34" rx="6"/><text class="d-mono" x="52" y="160" text-anchor="middle">w = 0.5</text>
+              <line class="d-line-accent" x1="84" y1="58" x2="160" y2="96" marker-end="url(#backprop-arrow)"/>
+              <line class="d-line-accent" x1="84" y1="152" x2="160" y2="114" marker-end="url(#backprop-arrow)"/>
+              <text class="d-label d-text-signal" x="96" y="94">∂x −0.089</text>
+              <text class="d-label d-text-signal" x="96" y="126">∂w −0.355</text>
+              <circle class="d-accent" cx="180" cy="105" r="22"/><text class="d-title" x="180" y="110" text-anchor="middle">×</text>
+              <rect class="d-box" x="148" y="190" width="72" height="34" rx="6"/><text class="d-mono" x="184" y="212" text-anchor="middle">b = −0.5</text>
+              <line class="d-line-accent" x1="202" y1="110" x2="288" y2="125" marker-end="url(#backprop-arrow)"/>
+              <text class="d-mono d-text-accent" x="244" y="106" text-anchor="middle">u = 1.0</text>
+              <text class="d-label d-text-signal" x="244" y="140" text-anchor="middle">−0.177</text>
+              <line class="d-line-accent" x1="214" y1="192" x2="292" y2="146" marker-end="url(#backprop-arrow)"/>
+              <text class="d-label d-text-signal" x="262" y="188">∂b −0.177</text>
+              <circle class="d-accent" cx="310" cy="130" r="22"/><text class="d-title" x="310" y="135" text-anchor="middle">+</text>
+              <line class="d-line-accent" x1="332" y1="130" x2="406" y2="130" marker-end="url(#backprop-arrow)"/>
+              <text class="d-mono d-text-accent" x="370" y="122" text-anchor="middle">z = 0.5</text>
+              <text class="d-label d-text-signal" x="370" y="148" text-anchor="middle">−0.177</text>
+              <circle class="d-accent" cx="430" cy="130" r="22"/><text class="d-title" x="430" y="135" text-anchor="middle">σ</text>
+              <line class="d-line-accent" x1="452" y1="130" x2="526" y2="130" marker-end="url(#backprop-arrow)"/>
+              <text class="d-mono d-text-accent" x="490" y="122" text-anchor="middle">a = 0.622</text>
+              <text class="d-label d-text-signal" x="490" y="148" text-anchor="middle">−0.755</text>
+              <rect class="d-box" x="420" y="186" width="56" height="30" rx="6"/><text class="d-mono" x="448" y="206" text-anchor="middle">y = 1</text>
+              <line class="d-line" x1="476" y1="196" x2="540" y2="152"/>
+              <rect class="d-good" x="528" y="110" width="110" height="40" rx="8"/>
+              <text class="d-mono" x="583" y="135" text-anchor="middle">(a − y)²</text>
+              <text class="d-mono" x="583" y="100" text-anchor="middle">L = 0.143</text>
+              <line class="d-line-signal" x1="630" y1="238" x2="40" y2="238" marker-end="url(#backprop-arrow-s)"/>
+              <text class="d-label d-text-signal" x="335" y="230" text-anchor="middle">backward: multiply local derivatives, right to left</text>
+            </svg>
+          </div>
+          <figcaption>Blue numbers are forward values; orange numbers are gradients of the loss with respect to each edge. \(\partial L/\partial a = 2(a-y) = -0.755\); the sigmoid's local slope \(a(1-a) = 0.235\) turns that into \(-0.177\); the multiply node hands \(w\) the gradient times \(x\).</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \frac{\partial L}{\partial w} = \underbrace{2(a-y)}_{-0.755}\cdot\underbrace{\sigma(z)(1-\sigma(z))}_{0.235}\cdot\underbrace{1}_{\partial z/\partial u}\cdot\underbrace{x}_{2} = -0.355 \]
+          <span class="formula-note">The gradient is negative, so increasing \(w\) lowers the loss. Gradient descent does exactly that: \(w \leftarrow w - \eta \cdot (-0.355)\).</span>
+        </div>
+
+        <div class="widget" id="bp-demo">
+          <div class="widget-head">
+            <span class="widget-title">Step through forward and backward</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="bp-x">x <input type="range" id="bp-x" min="-3" max="3" step="0.1" value="2"><output id="bp-x-out">2.0</output></label>
+            <label for="bp-w">w <input type="range" id="bp-w" min="-2" max="2" step="0.1" value="0.5"><output id="bp-w-out">0.5</output></label>
+            <label for="bp-b">b <input type="range" id="bp-b" min="-2" max="2" step="0.1" value="-0.5"><output id="bp-b-out">-0.5</output></label>
+            <button class="btn primary" type="button" id="bp-step">Step</button>
+            <button class="btn" type="button" id="bp-play">Play all</button>
+            <button class="btn" type="button" id="bp-reset">Reset</button>
+          </div>
+          <svg id="bp-plot" viewBox="0 0 640 230" role="img" aria-label="The same computational graph, revealing one forward value or one gradient per step, with the active node highlighted."></svg>
+          <p class="readout" id="bp-readout"></p>
+        </div>
+        <p>Step through once with the defaults, then change \(x\). The gradient for \(w\) scales with \(x\): a multiply node passes each input the upstream gradient times the <em>other</em> input. The last step checks the backprop answer against a finite difference, \((L(w+h) - L(w-h))/2h\), the same "gradient check" you would use to test hand-written code.</p>
+
+        <h3>Three local rules cover most of a network</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 175" role="img" aria-label="Local gradient rules with inputs 3 and minus 1 and upstream gradient 5. Add copies the gradient to both inputs. Multiply gives each input the gradient times the other input: minus 5 and 15. Max routes the gradient to the larger input and gives the other zero.">
+              <g transform="translate(15,0)">
+                <rect class="d-box" x="0" y="0" width="190" height="165" rx="8"/>
+                <text class="d-title" x="95" y="22" text-anchor="middle">add: copies</text>
+                <text class="d-mono" x="14" y="60">a = 3</text><text class="d-mono" x="14" y="110">b = −1</text>
+                <text class="d-label d-text-signal" x="14" y="76">grad 5</text><text class="d-label d-text-signal" x="14" y="126">grad 5</text>
+                <line class="d-line-accent" x1="60" y1="58" x2="88" y2="76"/><line class="d-line-accent" x1="60" y1="106" x2="88" y2="88"/>
+                <circle class="d-accent" cx="104" cy="82" r="16"/><text class="d-title" x="104" y="87" text-anchor="middle">+</text>
+                <line class="d-line-accent" x1="120" y1="82" x2="176" y2="82"/>
+                <text class="d-mono d-text-accent" x="150" y="74" text-anchor="middle">2</text>
+                <text class="d-label d-text-signal" x="150" y="100" text-anchor="middle">grad 5</text>
+                <text class="d-label" x="95" y="152" text-anchor="middle">both inputs get 5</text>
+              </g>
+              <g transform="translate(225,0)">
+                <rect class="d-box" x="0" y="0" width="190" height="165" rx="8"/>
+                <text class="d-title" x="95" y="22" text-anchor="middle">multiply: swaps</text>
+                <text class="d-mono" x="14" y="60">a = 3</text><text class="d-mono" x="14" y="110">b = −1</text>
+                <text class="d-label d-text-signal" x="14" y="76">5·(−1) = −5</text><text class="d-label d-text-signal" x="14" y="126">5·3 = 15</text>
+                <line class="d-line-accent" x1="60" y1="58" x2="88" y2="76"/><line class="d-line-accent" x1="60" y1="106" x2="88" y2="88"/>
+                <circle class="d-accent" cx="104" cy="82" r="16"/><text class="d-title" x="104" y="87" text-anchor="middle">×</text>
+                <line class="d-line-accent" x1="120" y1="82" x2="176" y2="82"/>
+                <text class="d-mono d-text-accent" x="150" y="74" text-anchor="middle">−3</text>
+                <text class="d-label d-text-signal" x="150" y="100" text-anchor="middle">grad 5</text>
+                <text class="d-label" x="95" y="152" text-anchor="middle">each gets grad × other input</text>
+              </g>
+              <g transform="translate(435,0)">
+                <rect class="d-box" x="0" y="0" width="190" height="165" rx="8"/>
+                <text class="d-title" x="95" y="22" text-anchor="middle">max / ReLU: routes</text>
+                <text class="d-mono" x="14" y="60">a = 3</text><text class="d-mono" x="14" y="110">b = −1</text>
+                <text class="d-label d-text-signal" x="14" y="76">grad 5</text><text class="d-label d-text-signal" x="14" y="126">grad 0</text>
+                <line class="d-line-accent" x1="60" y1="58" x2="88" y2="76"/><line class="d-line" x1="60" y1="106" x2="88" y2="88"/>
+                <circle class="d-accent" cx="104" cy="82" r="16"/><text class="d-mono" x="104" y="86" text-anchor="middle">max</text>
+                <line class="d-line-accent" x1="120" y1="82" x2="176" y2="82"/>
+                <text class="d-mono d-text-accent" x="150" y="74" text-anchor="middle">3</text>
+                <text class="d-label d-text-signal" x="150" y="100" text-anchor="middle">grad 5</text>
+                <text class="d-label" x="95" y="152" text-anchor="middle">only the winner gets it</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Inputs 3 and −1, upstream gradient 5. Residual connections are add gates, which is why gradients flow through very deep transformers: the add copies the gradient straight back.</figcaption>
+        </figure>
+
+        <p>Two practical consequences. The forward pass must <strong>cache activations</strong> for the backward pass, so training memory grows with batch size and depth; the backward pass costs roughly twice the forward. And long chains multiply many factors: if they are mostly below 1 gradients <em>vanish</em>, if above 1 they <em>explode</em>. Careful initialization, normalization, residual connections and gradient clipping all exist to keep that product near 1.</p>
+
+        <pre class="code" data-lang="python"><code>import torch
+
+x = torch.tensor(2.0)
+w = torch.tensor(0.5, requires_grad=True)
+b = torch.tensor(-0.5, requires_grad=True)
+y = torch.tensor(1.0)
+
+a = torch.sigmoid(x * w + b)          <span class="c"># forward: autograd records the graph</span>
+loss = (a - y) ** 2
+loss.backward()                       <span class="c"># backward: fills .grad on leaf tensors</span>
+print(loss.item(), w.grad.item(), b.grad.item())   <span class="c"># 0.1425  -0.3549  -0.1774</span>
+
+<span class="c"># finite-difference check of dL/dw</span>
+h = 1e-4
+f = lambda wv: (torch.sigmoid(x * wv + b.detach()) - y) ** 2
+print(((f(w.detach() + h) - f(w.detach() - h)) / (2 * h)).item())   <span class="c"># about -0.355</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Backprop is the chain rule applied on a graph, right to left, reusing values cached in the forward pass.</li>
+            <li>One backward pass gives the gradient for every parameter, at roughly twice the forward cost.</li>
+            <li>Add copies gradients, multiply swaps in the other input, max routes to the winner.</li>
+            <li>Long products of local slopes cause vanishing or exploding gradients.</li>
+            <li>Check hand-written gradients with central finite differences.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Forgetting to zero gradients between steps; PyTorch accumulates them by default.</li>
+            <li>Calling <code>.item()</code> or converting to NumPy mid-graph and silently cutting gradient flow.</li>
+            <li>Running evaluation without <code>torch.no_grad()</code>, wasting memory on a graph you never use.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="backprop-1"><span>Draw the computational graph of a small expression and backpropagate through it by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="backprop-2"><span>State the local gradient rules for add, multiply, max and sigmoid</span></label></li>
+          <li><label><input type="checkbox" data-key="backprop-3"><span>Verify an autograd gradient with a finite-difference check</span></label></li>
+          <li><label><input type="checkbox" data-key="backprop-4"><span>Explain why activations must be stored and how that drives training memory</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://colah.github.io/posts/2015-08-Backprop/">Calculus on Computational Graphs: Backpropagation (Olah)</a></li>
+          <li><span class="kind">Code</span><a href="https://github.com/karpathy/micrograd">micrograd: a tiny autograd engine (Karpathy)</a></li>
+          <li><span class="kind">Course</span><a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero (Karpathy)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="pytorch">
+        <header class="topic-head">
+          <p class="eyebrow">04.3 · The everyday toolkit</p>
+          <h2>PyTorch</h2>
+        </header>
+
+        <p class="lead">PyTorch is NumPy that runs on GPUs and remembers how every number was computed. You build a model from <code>nn.Module</code> layers, call it like a function, and autograd records the operations so <code>loss.backward()</code> can fill in every gradient. Almost all open models, including most open-weight LLMs, ship as PyTorch code and weights.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Fine-tuning, running open models locally, writing custom evaluation, debugging a Hugging Face model: all of it is PyTorch underneath. Reading tensor shapes fluently and writing a correct training loop are core skills, even if a library such as Transformers or Lightning writes the loop for you.</p>
+        </div>
+
+        <h3>Three ideas: tensors, modules, the loop</h3>
+        <p>A <strong>tensor</strong> is an n-dimensional array with a shape, a dtype (float32, bfloat16, int64) and a device (cpu or cuda). Operations between tensors must agree on device, and most bugs show up as shape errors. An <strong>nn.Module</strong> holds parameters and defines <code>forward</code>. The training loop is the same five lines in every project:</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 235" role="img" aria-label="The PyTorch training loop: get a batch from the DataLoader, run the model forward, compute the loss, call loss.backward to fill gradients, call optimizer.step to update weights, zero the gradients, and repeat.">
+              <defs>
+                <marker id="pytorch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="40" width="135" height="50" rx="8"/>
+              <text class="d-mono" x="87" y="70" text-anchor="middle">next(loader)</text>
+              <text class="d-label" x="87" y="106" text-anchor="middle">x, y → .to("cuda")</text>
+              <line class="d-line-accent" x1="155" y1="65" x2="173" y2="65" marker-end="url(#pytorch-arrow)"/>
+              <rect class="d-accent" x="175" y="40" width="135" height="50" rx="8"/>
+              <text class="d-mono" x="242" y="70" text-anchor="middle">logits = model(x)</text>
+              <text class="d-label" x="242" y="106" text-anchor="middle">forward, graph recorded</text>
+              <line class="d-line-accent" x1="310" y1="65" x2="328" y2="65" marker-end="url(#pytorch-arrow)"/>
+              <rect class="d-accent" x="330" y="40" width="135" height="50" rx="8"/>
+              <text class="d-mono" x="397" y="70" text-anchor="middle">loss_fn(logits, y)</text>
+              <text class="d-label" x="397" y="106" text-anchor="middle">one scalar</text>
+              <line class="d-line-accent" x1="465" y1="65" x2="483" y2="65" marker-end="url(#pytorch-arrow)"/>
+              <rect class="d-signal" x="485" y="40" width="135" height="50" rx="8"/>
+              <text class="d-mono" x="552" y="70" text-anchor="middle">loss.backward()</text>
+              <text class="d-label" x="552" y="106" text-anchor="middle">fills p.grad for all p</text>
+              <line class="d-line-accent" x1="552" y1="112" x2="552" y2="158" marker-end="url(#pytorch-arrow)"/>
+              <rect class="d-good" x="485" y="160" width="135" height="50" rx="8"/>
+              <text class="d-mono" x="552" y="190" text-anchor="middle">opt.step()</text>
+              <text class="d-label" x="552" y="226" text-anchor="middle">update weights</text>
+              <line class="d-line-accent" x1="485" y1="185" x2="467" y2="185" marker-end="url(#pytorch-arrow)"/>
+              <rect class="d-box" x="330" y="160" width="135" height="50" rx="8"/>
+              <text class="d-mono" x="397" y="190" text-anchor="middle">opt.zero_grad()</text>
+              <text class="d-label" x="397" y="226" text-anchor="middle">grads accumulate otherwise</text>
+              <path class="d-line-accent" d="M330 185 H87 V92" marker-end="url(#pytorch-arrow)"/>
+              <text class="d-label" x="200" y="178" text-anchor="middle">repeat for every batch</text>
+            </svg>
+          </div>
+          <figcaption>One training step. The order of the last three calls matters less than never skipping one: forgetting <code>zero_grad</code> silently adds this step's gradients to the last one's.</figcaption>
+        </figure>
+
+        <h3>Think in shapes</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 150" role="img" aria-label="Tensor shapes through an MNIST classifier: a batch of 64 images of shape 64 by 1 by 28 by 28 is flattened to 64 by 784, a linear layer gives 64 by 256, another gives 64 by 10 logits, and cross-entropy reduces it to a scalar loss.">
+              <defs>
+                <marker id="pytorch-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="30" width="96" height="40" rx="6"/><text class="d-mono" x="58" y="55" text-anchor="middle">64,1,28,28</text>
+              <line class="d-line-accent" x1="106" y1="50" x2="154" y2="50" marker-end="url(#pytorch-arrow2)"/>
+              <rect class="d-fill" x="156" y="30" width="96" height="40" rx="6"/><text class="d-mono" x="204" y="55" text-anchor="middle">64, 784</text>
+              <line class="d-line-accent" x1="252" y1="50" x2="300" y2="50" marker-end="url(#pytorch-arrow2)"/>
+              <rect class="d-fill" x="302" y="30" width="96" height="40" rx="6"/><text class="d-mono" x="350" y="55" text-anchor="middle">64, 256</text>
+              <line class="d-line-accent" x1="398" y1="50" x2="446" y2="50" marker-end="url(#pytorch-arrow2)"/>
+              <rect class="d-fill" x="448" y="30" width="96" height="40" rx="6"/><text class="d-mono" x="496" y="55" text-anchor="middle">64, 10</text>
+              <line class="d-line-accent" x1="544" y1="50" x2="592" y2="50" marker-end="url(#pytorch-arrow2)"/>
+              <rect class="d-good" x="594" y="30" width="96" height="40" rx="6"/><text class="d-mono" x="642" y="55" text-anchor="middle">scalar</text>
+              <text class="d-label" x="130" y="92" text-anchor="middle">Flatten</text>
+              <text class="d-label" x="276" y="92" text-anchor="middle">Linear(784, 256)</text>
+              <text class="d-label" x="276" y="106" text-anchor="middle">+ ReLU</text>
+              <text class="d-label" x="422" y="92" text-anchor="middle">Linear(256, 10)</text>
+              <text class="d-label" x="568" y="92" text-anchor="middle">cross-entropy</text>
+              <text class="d-label" x="276" y="132" text-anchor="middle">200,960 params</text>
+              <text class="d-label" x="422" y="132" text-anchor="middle">2,570 params</text>
+              <text class="d-label" x="58" y="22" text-anchor="middle">batch, channel, H, W</text>
+              <text class="d-label" x="496" y="22" text-anchor="middle">logits per class</text>
+            </svg>
+          </div>
+          <figcaption>The first dimension is almost always the batch. Write the expected shape next to every line while you build a model; most PyTorch bugs are a shape that silently broadcast into the wrong thing.</figcaption>
+        </figure>
+
+        <p><strong>Broadcasting</strong> lets tensors of different shapes combine: PyTorch aligns shapes from the right, and each dimension must be equal or 1 (a 1 is stretched; a missing dimension counts as 1). It saves memory and code, and it is also how a <code>(32, 1)</code> minus <code>(32,)</code> quietly becomes a <code>(32, 32)</code> matrix.</p>
+
+        <div class="widget" id="pt-demo">
+          <div class="widget-head">
+            <span class="widget-title">Broadcasting checker</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="pt-a">Shape A <select id="pt-a"><option value="32,10">(32, 10)</option><option value="32,1">(32, 1)</option><option value="32,3,224,224">(32, 3, 224, 224)</option><option value="4,3">(4, 3)</option><option value="8,1,5">(8, 1, 5)</option><option value="2,16,64,64">(2, 16, 64, 64)</option></select></label>
+            <label for="pt-b">Shape B <select id="pt-b"><option value="10">(10,)</option><option value="32">(32,)</option><option value="1,10">(1, 10)</option><option value="3,1,1">(3, 1, 1)</option><option value="3,4">(3, 4)</option><option value="6,1">(6, 1)</option><option value="16,64,1">(16, 64, 1)</option></select></label>
+          </div>
+          <svg id="pt-plot" viewBox="0 0 600 200" role="img" aria-label="The two shapes aligned from the right, each dimension coloured as equal, stretched from 1, missing, or mismatched, with the resulting shape."></svg>
+          <p class="readout" id="pt-readout"></p>
+        </div>
+        <p>Try A = (32, 1) with B = (32,): the result is (32, 32), the classic bug when subtracting predictions from targets of a slightly different shape. Then try (4, 3) with (3, 4) to see a real mismatch error.</p>
+
+        <pre class="code" data-lang="python"><code>import torch, torch.nn as nn
+from torch.utils.data import DataLoader, TensorDataset
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+X, y = torch.randn(10_000, 784), torch.randint(0, 10, (10_000,))   <span class="c"># stand-in data</span>
+train = DataLoader(TensorDataset(X, y), batch_size=64, shuffle=True)
+
+model = nn.Sequential(nn.Linear(784, 256), nn.ReLU(), nn.Linear(256, 10)).to(device)
+opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=0.01)
+loss_fn = nn.CrossEntropyLoss()                <span class="c"># takes raw logits; applies log-softmax itself</span>
+
+for epoch in range(3):
+    model.train()                              <span class="c"># enables dropout, batch-norm updates</span>
+    for xb, yb in train:
+        xb, yb = xb.to(device), yb.to(device)
+        loss = loss_fn(model(xb), yb)
+        opt.zero_grad(set_to_none=True)
+        loss.backward()
+        opt.step()
+    model.eval()
+    with torch.no_grad():                      <span class="c"># no graph, less memory</span>
+        acc = (model(X[:1000].to(device)).argmax(1) == y[:1000].to(device)).float().mean()
+    print(epoch, loss.item(), acc.item())
+
+torch.save(model.state_dict(), "mlp.pt")       <span class="c"># save weights, not the Python object</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A tensor has a shape, a dtype and a device; operations need matching devices and compatible shapes.</li>
+            <li>Every step is: batch, forward, loss, <code>backward()</code>, <code>step()</code>, <code>zero_grad()</code>.</li>
+            <li>Broadcasting aligns shapes from the right; size-1 and missing dimensions stretch.</li>
+            <li>Switch <code>model.train()</code> and <code>model.eval()</code>, and evaluate under <code>torch.no_grad()</code>.</li>
+            <li>Save and load <code>state_dict()</code>, not whole pickled models.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Putting softmax before <code>CrossEntropyLoss</code>, which already expects raw logits.</li>
+            <li>Leaving the model in train mode during evaluation, so dropout and batch norm change the results.</li>
+            <li>Accidental broadcasting from a <code>(N, 1)</code> vs <code>(N,)</code> mismatch in a loss.</li>
+            <li>Moving the model to the GPU but not the batch, or creating new tensors on the CPU inside <code>forward</code>.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="pytorch-1"><span>Write a training and evaluation loop from memory</span></label></li>
+          <li><label><input type="checkbox" data-key="pytorch-2"><span>Predict the result shape (or the error) of broadcasting two tensors</span></label></li>
+          <li><label><input type="checkbox" data-key="pytorch-3"><span>Annotate the tensor shape after every layer of a small model</span></label></li>
+          <li><label><input type="checkbox" data-key="pytorch-4"><span>Save a model's state_dict and reload it into a fresh instance</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pytorch.org/tutorials/">PyTorch tutorials</a></li>
+          <li><span class="kind">Docs</span><a href="https://pytorch.org/docs/stable/index.html">PyTorch documentation</a></li>
+          <li><span class="kind">Book</span><a href="https://d2l.ai/">Dive into Deep Learning (PyTorch edition)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="architectures">
+        <header class="topic-head">
+          <p class="eyebrow">04.4 · Shapes of networks</p>
+          <h2>CNNs, RNNs &amp; autoencoders</h2>
+        </header>
+
+        <p class="lead">An architecture builds an assumption about the data into the network's wiring. Convolutional networks assume that nearby pixels matter together and that a cat is a cat anywhere in the frame. Recurrent networks assume order matters and read one step at a time. Autoencoders assume the data can be squeezed through a narrow bottleneck and rebuilt.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Transformers replaced RNNs for text, but CNNs still run most on-device vision and appear inside vision-language models, and autoencoders compress images into the latent space where diffusion models work. Knowing these ideas also explains transformer design: attention is what you get when you drop the locality and recurrence assumptions.</p>
+        </div>
+
+        <h3>Convolution: one small filter, slid everywhere</h3>
+        <p>A convolution layer slides a small kernel (say 3×3) across the image and takes a weighted sum at each position. The same nine weights are reused everywhere (<strong>weight sharing</strong>), so a layer needs far fewer parameters than a dense layer and detects a pattern wherever it appears.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 225" role="img" aria-label="A 5 by 5 input with a vertical edge, a 3 by 3 vertical-edge kernel with columns minus 1, 0, 1, and the 3 by 3 output. The highlighted top-left window gives an output of 3.">
+              <defs>
+                <marker id="architectures-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="100" y="22" text-anchor="middle">input 5×5</text>
+              <g>
+                <rect class="d-box" x="20" y="30" width="32" height="32"/><rect class="d-box" x="52" y="30" width="32" height="32"/><rect class="d-fill" x="84" y="30" width="32" height="32"/><rect class="d-fill" x="116" y="30" width="32" height="32"/><rect class="d-fill" x="148" y="30" width="32" height="32"/>
+                <rect class="d-box" x="20" y="62" width="32" height="32"/><rect class="d-box" x="52" y="62" width="32" height="32"/><rect class="d-fill" x="84" y="62" width="32" height="32"/><rect class="d-fill" x="116" y="62" width="32" height="32"/><rect class="d-fill" x="148" y="62" width="32" height="32"/>
+                <rect class="d-box" x="20" y="94" width="32" height="32"/><rect class="d-box" x="52" y="94" width="32" height="32"/><rect class="d-fill" x="84" y="94" width="32" height="32"/><rect class="d-fill" x="116" y="94" width="32" height="32"/><rect class="d-fill" x="148" y="94" width="32" height="32"/>
+                <rect class="d-box" x="20" y="126" width="32" height="32"/><rect class="d-box" x="52" y="126" width="32" height="32"/><rect class="d-fill" x="84" y="126" width="32" height="32"/><rect class="d-fill" x="116" y="126" width="32" height="32"/><rect class="d-fill" x="148" y="126" width="32" height="32"/>
+                <rect class="d-box" x="20" y="158" width="32" height="32"/><rect class="d-box" x="52" y="158" width="32" height="32"/><rect class="d-fill" x="84" y="158" width="32" height="32"/><rect class="d-fill" x="116" y="158" width="32" height="32"/><rect class="d-fill" x="148" y="158" width="32" height="32"/>
+              </g>
+              <text class="d-mono" x="36" y="50" text-anchor="middle">0</text><text class="d-mono" x="68" y="50" text-anchor="middle">0</text><text class="d-mono" x="100" y="50" text-anchor="middle">1</text><text class="d-mono" x="132" y="50" text-anchor="middle">1</text><text class="d-mono" x="164" y="50" text-anchor="middle">1</text>
+              <text class="d-mono" x="36" y="82" text-anchor="middle">0</text><text class="d-mono" x="68" y="82" text-anchor="middle">0</text><text class="d-mono" x="100" y="82" text-anchor="middle">1</text><text class="d-mono" x="132" y="82" text-anchor="middle">1</text><text class="d-mono" x="164" y="82" text-anchor="middle">1</text>
+              <text class="d-mono" x="36" y="114" text-anchor="middle">0</text><text class="d-mono" x="68" y="114" text-anchor="middle">0</text><text class="d-mono" x="100" y="114" text-anchor="middle">1</text><text class="d-mono" x="132" y="114" text-anchor="middle">1</text><text class="d-mono" x="164" y="114" text-anchor="middle">1</text>
+              <text class="d-mono" x="36" y="146" text-anchor="middle">0</text><text class="d-mono" x="68" y="146" text-anchor="middle">0</text><text class="d-mono" x="100" y="146" text-anchor="middle">1</text><text class="d-mono" x="132" y="146" text-anchor="middle">1</text><text class="d-mono" x="164" y="146" text-anchor="middle">1</text>
+              <text class="d-mono" x="36" y="178" text-anchor="middle">0</text><text class="d-mono" x="68" y="178" text-anchor="middle">0</text><text class="d-mono" x="100" y="178" text-anchor="middle">1</text><text class="d-mono" x="132" y="178" text-anchor="middle">1</text><text class="d-mono" x="164" y="178" text-anchor="middle">1</text>
+              <rect class="d-line-accent" x="21" y="31" width="94" height="94" rx="3"/>
+              <line class="d-line-accent" x1="116" y1="78" x2="226" y2="108" marker-end="url(#architectures-arrow)"/>
+              <text class="d-label" x="170" y="80" text-anchor="middle">× then sum</text>
+              <text class="d-label" x="278" y="54" text-anchor="middle">kernel 3×3</text>
+              <rect class="d-accent" x="230" y="62" width="32" height="32"/><rect class="d-accent" x="262" y="62" width="32" height="32"/><rect class="d-accent" x="294" y="62" width="32" height="32"/>
+              <rect class="d-accent" x="230" y="94" width="32" height="32"/><rect class="d-accent" x="262" y="94" width="32" height="32"/><rect class="d-accent" x="294" y="94" width="32" height="32"/>
+              <rect class="d-accent" x="230" y="126" width="32" height="32"/><rect class="d-accent" x="262" y="126" width="32" height="32"/><rect class="d-accent" x="294" y="126" width="32" height="32"/>
+              <text class="d-mono" x="246" y="82" text-anchor="middle">−1</text><text class="d-mono" x="278" y="82" text-anchor="middle">0</text><text class="d-mono" x="310" y="82" text-anchor="middle">1</text>
+              <text class="d-mono" x="246" y="114" text-anchor="middle">−1</text><text class="d-mono" x="278" y="114" text-anchor="middle">0</text><text class="d-mono" x="310" y="114" text-anchor="middle">1</text>
+              <text class="d-mono" x="246" y="146" text-anchor="middle">−1</text><text class="d-mono" x="278" y="146" text-anchor="middle">0</text><text class="d-mono" x="310" y="146" text-anchor="middle">1</text>
+              <line class="d-line-accent" x1="326" y1="108" x2="438" y2="80" marker-end="url(#architectures-arrow)"/>
+              <text class="d-label" x="488" y="54" text-anchor="middle">output 3×3</text>
+              <rect class="d-good" x="440" y="62" width="32" height="32"/><rect class="d-box" x="472" y="62" width="32" height="32"/><rect class="d-box" x="504" y="62" width="32" height="32"/>
+              <rect class="d-box" x="440" y="94" width="32" height="32"/><rect class="d-box" x="472" y="94" width="32" height="32"/><rect class="d-box" x="504" y="94" width="32" height="32"/>
+              <rect class="d-box" x="440" y="126" width="32" height="32"/><rect class="d-box" x="472" y="126" width="32" height="32"/><rect class="d-box" x="504" y="126" width="32" height="32"/>
+              <text class="d-mono" x="456" y="82" text-anchor="middle">3</text><text class="d-mono" x="488" y="82" text-anchor="middle">3</text><text class="d-mono" x="520" y="82" text-anchor="middle">0</text>
+              <text class="d-mono" x="456" y="114" text-anchor="middle">3</text><text class="d-mono" x="488" y="114" text-anchor="middle">3</text><text class="d-mono" x="520" y="114" text-anchor="middle">0</text>
+              <text class="d-mono" x="456" y="146" text-anchor="middle">3</text><text class="d-mono" x="488" y="146" text-anchor="middle">3</text><text class="d-mono" x="520" y="146" text-anchor="middle">0</text>
+              <text class="d-label" x="560" y="114">edge found</text>
+              <text class="d-mono" x="330" y="214" text-anchor="middle">each row: 0·(−1) + 0·0 + 1·1 = 1; three rows → 3</text>
+            </svg>
+          </div>
+          <figcaption>A vertical-edge kernel lights up where dark meets bright (output 3) and stays at 0 inside the flat bright region. Training learns kernel values like these instead of you writing them.</figcaption>
+        </figure>
+
+        <div class="widget" id="cv-demo">
+          <div class="widget-head">
+            <span class="widget-title">3×3 convolution on a pixel grid</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="cv-k">Kernel <select id="cv-k"><option value="sobelx">Vertical edges (Sobel x)</option><option value="sobely">Horizontal edges (Sobel y)</option><option value="blur">Box blur</option><option value="sharpen">Sharpen</option><option value="outline">Outline (Laplacian)</option><option value="identity">Identity</option></select></label>
+            <label for="cv-r">Row <input type="range" id="cv-r" min="0" max="9" step="1" value="3"><output id="cv-r-out">3</output></label>
+            <label for="cv-c">Column <input type="range" id="cv-c" min="0" max="9" step="1" value="2"><output id="cv-c-out">2</output></label>
+            <button class="btn" type="button" id="cv-play">Sweep</button>
+          </div>
+          <svg id="cv-plot" viewBox="0 0 640 230" role="img" aria-label="A 12 by 12 input image, the selected 3 by 3 kernel, and the 10 by 10 output feature map; the current window and output cell are highlighted."></svg>
+          <p class="readout" id="cv-readout"></p>
+        </div>
+        <p>Blue output cells are positive, orange are negative. Sobel x responds only to left and right edges of the square and the diagonal; Sobel y only to top and bottom. A CNN's first layer learns dozens of kernels like these, and deeper layers combine their outputs into corners, textures, then object parts.</p>
+
+        <div class="formula">
+          \[ n_{\text{out}} = \frac{n + 2p - k}{s} + 1, \qquad \text{params} = k^2\, C_{\text{in}}\, C_{\text{out}} + C_{\text{out}} \]
+          <span class="formula-note">Input size \(n\), padding \(p\), kernel \(k\), stride \(s\). A 3×3 conv from 64 to 128 channels has \(9 \cdot 64 \cdot 128 + 128 = 73{,}856\) parameters, whatever the image size.</span>
+        </div>
+
+        <h3>Recurrence and bottlenecks</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 220" role="img" aria-label="Left: an RNN unrolled over three time steps, passing a hidden state h from step to step with the same weights. Right: an autoencoder whose encoder narrows the input to a small code z and whose decoder rebuilds it.">
+              <defs>
+                <marker id="architectures-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-mono" x="70" y="186" text-anchor="middle">x₁ "the"</text>
+              <text class="d-mono" x="170" y="186" text-anchor="middle">x₂ "cat"</text>
+              <text class="d-mono" x="270" y="186" text-anchor="middle">x₃ "sat"</text>
+              <line class="d-line-accent" x1="70" y1="170" x2="70" y2="132" marker-end="url(#architectures-arrow2)"/>
+              <line class="d-line-accent" x1="170" y1="170" x2="170" y2="132" marker-end="url(#architectures-arrow2)"/>
+              <line class="d-line-accent" x1="270" y1="170" x2="270" y2="132" marker-end="url(#architectures-arrow2)"/>
+              <rect class="d-accent" x="40" y="90" width="60" height="40" rx="6"/><text class="d-mono" x="70" y="115" text-anchor="middle">RNN</text>
+              <line class="d-line-accent" x1="100" y1="110" x2="138" y2="110" marker-end="url(#architectures-arrow2)"/>
+              <text class="d-mono" x="120" y="102" text-anchor="middle">h₁</text>
+              <rect class="d-accent" x="140" y="90" width="60" height="40" rx="6"/><text class="d-mono" x="170" y="115" text-anchor="middle">RNN</text>
+              <line class="d-line-accent" x1="200" y1="110" x2="238" y2="110" marker-end="url(#architectures-arrow2)"/>
+              <text class="d-mono" x="220" y="102" text-anchor="middle">h₂</text>
+              <rect class="d-accent" x="240" y="90" width="60" height="40" rx="6"/><text class="d-mono" x="270" y="115" text-anchor="middle">RNN</text>
+              <line class="d-line-accent" x1="270" y1="90" x2="270" y2="52" marker-end="url(#architectures-arrow2)"/>
+              <text class="d-mono" x="270" y="42" text-anchor="middle">h₃ → prediction</text>
+              <text class="d-label" x="170" y="212" text-anchor="middle">same weights at every step; memory lives in h</text>
+              <line class="d-grid" x1="340" y1="20" x2="340" y2="200"/>
+              <rect class="d-fill" x="370" y="40" width="30" height="140" rx="4"/>
+              <text class="d-mono" x="385" y="114" text-anchor="middle">x</text>
+              <polygon class="d-accent" points="410,40 480,85 480,135 410,180"/>
+              <rect class="d-signal" x="488" y="88" width="34" height="44" rx="4"/>
+              <text class="d-mono" x="505" y="114" text-anchor="middle">z</text>
+              <polygon class="d-accent" points="530,85 600,40 600,180 530,135"/>
+              <rect class="d-fill" x="610" y="40" width="30" height="140" rx="4"/>
+              <text class="d-mono" x="625" y="114" text-anchor="middle">x̂</text>
+              <text class="d-label" x="445" y="200" text-anchor="middle">encoder</text>
+              <text class="d-label" x="565" y="200" text-anchor="middle">decoder</text>
+              <text class="d-label" x="505" y="76" text-anchor="middle">code</text>
+              <text class="d-mono" x="505" y="24" text-anchor="middle">loss = ‖x − x̂‖²</text>
+            </svg>
+          </div>
+          <figcaption>An RNN (left) carries a hidden state through time, so step 3 can depend on step 1 only through \(h_1\) and \(h_2\). An autoencoder (right) is trained to reproduce its input through a narrow code \(z\), which forces \(z\) to keep only what matters.</figcaption>
+        </figure>
+
+        <p>An <strong>RNN</strong> updates \(h_t = \tanh(W h_{t-1} + U x_t)\) one token at a time. Gradients through long chains vanish, which LSTMs and GRUs ease with gates. The real limit is that step 1000 must wait for step 999, so RNNs cannot be parallelized across a sequence; transformers can. An <strong>autoencoder</strong>'s code \(z\) becomes a compact representation; a variational autoencoder (VAE) makes that space smooth enough to sample from, and latent diffusion models generate inside such a space.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Architecture</th><th>Built-in assumption</th><th>Still used for</th></tr></thead>
+            <tbody>
+              <tr><td>CNN (ResNet, ConvNeXt)</td><td>Locality, translation invariance</td><td>On-device vision, image encoders, audio spectrograms</td></tr>
+              <tr><td>RNN / LSTM / GRU</td><td>Sequential order, fixed-size memory</td><td>Small streaming models, some time series</td></tr>
+              <tr><td>Autoencoder / VAE</td><td>Data lies near a low-dimensional space</td><td>Compression, anomaly detection, latents for diffusion</td></tr>
+              <tr><td>Transformer (Area 05)</td><td>Any token may attend to any other</td><td>Language, and increasingly everything else</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Convolutions slide a shared kernel; parameters depend on kernel size and channels, not image size.</li>
+            <li>Stacked convolutions build features hierarchically: edges, textures, parts, objects.</li>
+            <li>RNNs carry a hidden state through time and cannot parallelize across the sequence.</li>
+            <li>Autoencoders learn a compressed code by reconstructing their input; VAEs make the code space sampleable.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Getting the output size wrong after strides and padding; compute it with the formula before building.</li>
+            <li>Feeding images as (H, W, C) when PyTorch convolutions expect (N, C, H, W).</li>
+            <li>Reaching for an RNN for new text work when a small transformer or a pretrained encoder is the better default.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="architectures-1"><span>Apply a 3×3 kernel to a small grid by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="architectures-2"><span>Compute a conv layer's output size and parameter count</span></label></li>
+          <li><label><input type="checkbox" data-key="architectures-3"><span>Explain why RNNs are hard to parallelize and how transformers avoid it</span></label></li>
+          <li><label><input type="checkbox" data-key="architectures-4"><span>Describe what an autoencoder's bottleneck forces it to learn</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Course</span><a href="https://cs231n.github.io/">CS231n: Convolutional Neural Networks for Visual Recognition (notes)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1512.03385">Deep Residual Learning for Image Recognition (He et al., 2015)</a></li>
+          <li><span class="kind">Article</span><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks (Olah)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1312.6114">Auto-Encoding Variational Bayes (Kingma &amp; Welling, 2013)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="training">
+        <header class="topic-head">
+          <p class="eyebrow">04.5 · Making it converge</p>
+          <h2>Training techniques</h2>
+        </header>
+
+        <p class="lead">Backprop tells you which way is downhill; the training recipe decides how big a step to take, how to keep activations well-behaved and how to stop memorizing. Most "my model won't train" problems are recipe problems, such as a learning rate off by 10× or no warmup.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>Every fine-tuning config you touch (learning rate, warmup ratio, scheduler, weight decay, max grad norm, bf16) is a line from this lesson. Knowing what each one does lets you read a loss curve and fix a run instead of re-launching it with random changes.</p>
+        </div>
+
+        <h3>The learning rate is the first knob</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Three loss curves. Too small a learning rate falls slowly. A good learning rate falls fast and flattens low. Too large a learning rate oscillates and then diverges to NaN.">
+              <line class="d-line" x1="60" y1="30" x2="60" y2="200"/>
+              <line class="d-line" x1="60" y1="200" x2="600" y2="200"/>
+              <text class="d-label" x="330" y="220" text-anchor="middle">training steps →</text>
+              <text class="d-label" x="24" y="115" transform="rotate(-90 24 115)" text-anchor="middle">loss</text>
+              <path class="d-line" style="stroke: var(--ink-3); stroke-width: 2" d="M60,40 C200,70 400,100 600,122"/>
+              <path class="d-line" style="stroke: var(--accent); stroke-width: 2.4" d="M60,40 C110,150 250,180 600,186"/>
+              <path class="d-line" style="stroke: var(--signal); stroke-width: 2" d="M60,40 L85,110 L105,70 L125,130 L145,60 L165,115 L185,45 L200,32"/>
+              <text class="d-label d-text-signal" x="206" y="40">too high: oscillates, then NaN</text>
+              <text class="d-label" x="596" y="114" text-anchor="end">too low: still falling slowly</text>
+              <text class="d-label d-text-accent" x="596" y="176" text-anchor="end">about right: fast, then flat</text>
+            </svg>
+          </div>
+          <figcaption>Sweep the learning rate by factors of 3 (1e-4, 3e-4, 1e-3…) on a short run and keep the largest one that is stable. That single sweep fixes more runs than any other change.</figcaption>
+        </figure>
+
+        <p>SGD with <strong>momentum</strong> steps along a running average of gradients. <strong>Adam</strong> also tracks squared gradients and gives each parameter its own step size. <strong>AdamW</strong>, which decouples weight decay from that scaling, is the transformer default.</p>
+
+        <h3>Warmup and decay</h3>
+        <p>Early in training, Adam's statistics are noisy and the weights are random, so large steps can blow the run up. <strong>Warmup</strong> ramps the learning rate from near 0 over the first few hundred or thousand steps. A <strong>cosine</strong> or linear decay then lowers it so the model can settle into a minimum.</p>
+
+        <div class="formula">
+          \[ \eta(t) = \begin{cases} \eta_{\max}\, \dfrac{t}{T_w} &amp; t &lt; T_w \\[6pt] \eta_{\min} + \tfrac12(\eta_{\max} - \eta_{\min})\Big(1 + \cos\big(\pi \tfrac{t - T_w}{T - T_w}\big)\Big) &amp; t \ge T_w \end{cases} \]
+          <span class="formula-note">\(T_w\): warmup steps, \(T\): total steps. A common choice is warmup of 1–5% of training and \(\eta_{\min} = 0.1\,\eta_{\max}\).</span>
+        </div>
+
+        <div class="widget" id="lr-demo">
+          <div class="widget-head">
+            <span class="widget-title">Learning-rate schedule plotter</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="lr-type">Schedule <select id="lr-type"><option value="cosine">warmup + cosine</option><option value="linear">warmup + linear</option><option value="constant">warmup + constant</option><option value="none">constant, no warmup</option></select></label>
+            <label for="lr-peak">Peak LR (log₁₀) <input type="range" id="lr-peak" min="-5" max="-2" step="0.1" value="-3.5"><output id="lr-peak-out">3.2e-4</output></label>
+            <label for="lr-warm">Warmup % <input type="range" id="lr-warm" min="0" max="30" step="1" value="5"><output id="lr-warm-out">5</output></label>
+            <label for="lr-min">Min / peak <input type="range" id="lr-min" min="0" max="0.5" step="0.05" value="0.1"><output id="lr-min-out">0.10</output></label>
+            <label for="lr-t">Step <input type="range" id="lr-t" min="0" max="10000" step="50" value="2500"><output id="lr-t-out">2500</output></label>
+          </div>
+          <svg id="lr-plot" viewBox="0 0 600 240" role="img" aria-label="Learning rate over 10,000 training steps for the chosen schedule, with the warmup region shaded and the current step marked."></svg>
+          <p class="readout" id="lr-readout"></p>
+        </div>
+        <p>Set warmup to 0 and imagine the very first update hitting random weights at full learning rate. Then compare cosine with linear: both end at the same floor, but cosine spends longer near the peak and drops faster at the end.</p>
+
+        <h3>Keeping activations and weights healthy</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 215" role="img" aria-label="Two grids of batch rows by feature columns. BatchNorm normalizes each feature column across the batch. LayerNorm normalizes each example row across its features and works with a batch of one.">
+              <text class="d-title" x="136" y="20" text-anchor="middle">BatchNorm</text>
+              <text class="d-title" x="456" y="20" text-anchor="middle">LayerNorm</text>
+              <g>
+                <rect class="d-fill" x="40" y="36" width="192" height="120"/>
+                <rect class="d-accent" x="112" y="36" width="24" height="120"/>
+                <path class="d-grid" d="M64,36V156M88,36V156M112,36V156M136,36V156M160,36V156M184,36V156M208,36V156M40,56H232M40,76H232M40,96H232M40,116H232M40,136H232"/>
+                <rect class="d-fill" x="360" y="36" width="192" height="120"/>
+                <rect class="d-accent" x="360" y="76" width="192" height="20"/>
+                <path class="d-grid" d="M384,36V156M408,36V156M432,36V156M456,36V156M480,36V156M504,36V156M528,36V156M360,56H552M360,76H552M360,96H552M360,116H552M360,136H552"/>
+              </g>
+              <text class="d-label" x="136" y="174" text-anchor="middle">features →</text>
+              <text class="d-label" x="456" y="174" text-anchor="middle">features →</text>
+              <text class="d-label" x="30" y="96" text-anchor="middle" transform="rotate(-90 30 96)">batch</text>
+              <text class="d-label" x="350" y="96" text-anchor="middle" transform="rotate(-90 350 96)">batch</text>
+              <text class="d-label" x="136" y="194" text-anchor="middle">mean, std of one feature over the batch</text>
+              <text class="d-label" x="136" y="208" text-anchor="middle">CNNs; needs decent batch sizes</text>
+              <text class="d-label" x="456" y="194" text-anchor="middle">mean, std of one example over its features</text>
+              <text class="d-label" x="456" y="208" text-anchor="middle">transformers (or RMSNorm); batch of 1 is fine</text>
+            </svg>
+          </div>
+          <figcaption>Normalization rescales activations to roughly zero mean and unit variance, with a learned scale and shift. The only difference is which numbers share the statistics.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Technique</th><th>What it fixes</th><th>Typical setting</th></tr></thead>
+            <tbody>
+              <tr><td>He / Xavier init</td><td>Activations shrinking or exploding at the start</td><td>Library default for each layer</td></tr>
+              <tr><td>Gradient clipping</td><td>Rare huge gradients spiking the loss</td><td>Clip global norm to 1.0</td></tr>
+              <tr><td>Weight decay</td><td>Weights growing large, overfitting</td><td>0.01 to 0.1 with AdamW</td></tr>
+              <tr><td>Dropout</td><td>Co-adapted neurons, overfitting</td><td>0.1 in small models; often 0 in large LLM pretraining</td></tr>
+              <tr><td>Data augmentation</td><td>Too little data variety</td><td>Crops, flips, noise; domain-specific</td></tr>
+              <tr><td>bf16 mixed precision</td><td>Slow math, high memory</td><td><code>torch.autocast(dtype=torch.bfloat16)</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import math, torch
+
+opt = torch.optim.AdamW(model.parameters(), lr=3e-4, betas=(0.9, 0.95), weight_decay=0.1)
+total, warmup, min_ratio = 10_000, 500, 0.1
+
+def lr_lambda(step):                         <span class="c"># multiplier on the peak lr</span>
+    if step &lt; warmup:
+        return (step + 1) / warmup
+    progress = (step - warmup) / max(1, total - warmup)
+    return min_ratio + (1 - min_ratio) * 0.5 * (1 + math.cos(math.pi * progress))
+
+sched = torch.optim.lr_scheduler.LambdaLR(opt, lr_lambda)
+
+for step, (xb, yb) in zip(range(total), loader):
+    with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+        loss = loss_fn(model(xb), yb)
+    loss.backward()
+    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+    opt.step(); sched.step(); opt.zero_grad(set_to_none=True)</code></pre>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>Before a long run, make the model overfit a single batch to near-zero loss. If it cannot, the bug is in the code (labels, loss, shapes), not the hyperparameters.</p>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>The learning rate matters most; sweep it on a log scale.</li>
+            <li>AdamW with warmup and cosine decay is the default recipe for transformers.</li>
+            <li>Normalization, good initialization and residual connections keep signals and gradients in range.</li>
+            <li>Gradient clipping guards against spikes; weight decay, dropout and augmentation fight overfitting.</li>
+            <li>Train in bf16 mixed precision for speed and memory.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Copying a learning rate from a paper with a very different batch size or model size.</li>
+            <li>Calling <code>scheduler.step()</code> once per epoch when the schedule was defined in steps, or vice versa.</li>
+            <li>Applying weight decay to biases and normalization weights (most LLM recipes exclude them).</li>
+            <li>Changing three hyperparameters at once and not knowing which one helped.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="training-1"><span>Diagnose too-high, too-low and good learning rates from loss curves</span></label></li>
+          <li><label><input type="checkbox" data-key="training-2"><span>Implement warmup plus cosine decay with LambdaLR</span></label></li>
+          <li><label><input type="checkbox" data-key="training-3"><span>Explain what Adam's two running averages do and what AdamW changes</span></label></li>
+          <li><label><input type="checkbox" data-key="training-4"><span>Explain the difference between BatchNorm and LayerNorm</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="http://karpathy.github.io/2019/04/25/recipe/">A Recipe for Training Neural Networks (Karpathy)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1412.6980">Adam: A Method for Stochastic Optimization (Kingma &amp; Ba, 2014)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1711.05101">Decoupled Weight Decay Regularization (AdamW, Loshchilov &amp; Hutter)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1607.06450">Layer Normalization (Ba et al., 2016)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="hardware">
+        <header class="topic-head">
+          <p class="eyebrow">04.6 · Memory, compute, many GPUs</p>
+          <h2>GPUs &amp; scaling training</h2>
+        </header>
+
+        <p class="lead">Deep learning is mostly big matrix multiplies, and GPUs are machines with thousands of small cores and very fast memory built for exactly that. Two numbers decide what you can train: how many bytes the model's training state needs (memory) and how many floating-point operations the run needs (compute). When either outgrows one GPU, you split the work across many.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for AI engineers</span>
+          <p>"Can we fine-tune this 8B model on one GPU?", "Why is this training job only using 30% of the GPU?", "Do we need FSDP?" are weekly questions. Back-of-envelope memory and compute math answers them before you spend money, and it is a staple of AI engineering interviews.</p>
+        </div>
+
+        <h3>Memory: count the bytes per parameter</h3>
+        <p>Inference in bf16 needs 2 bytes per parameter: a 7B model is about 14 GB of weights, plus the KV cache. Full training with AdamW in mixed precision needs about <strong>16 bytes per parameter</strong> before activations: bf16 weights and gradients, an fp32 master copy, and Adam's two fp32 moment estimates.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 205" role="img" aria-label="Memory for a 7B-parameter model. Training with AdamW in mixed precision: 14 GB weights, 14 GB gradients, 28 GB fp32 master weights, 28 GB Adam first moment and 28 GB second moment, 112 GB in total, above one 80 GB GPU. Inference in bf16: 14 GB of weights.">
+              <text class="d-label" x="112" y="72" text-anchor="end">train (AdamW)</text>
+              <text class="d-label" x="112" y="142" text-anchor="end">inference bf16</text>
+              <rect class="d-accent" x="120" y="50" width="48" height="36"/>
+              <rect class="d-good" x="168" y="50" width="48" height="36"/>
+              <rect class="d-fill" x="216" y="50" width="96" height="36"/>
+              <rect class="d-signal" x="312" y="50" width="96" height="36"/>
+              <rect class="d-signal" x="408" y="50" width="96" height="36"/>
+              <text class="d-mono" x="144" y="73" text-anchor="middle">W 14</text>
+              <text class="d-mono" x="192" y="73" text-anchor="middle">G 14</text>
+              <text class="d-mono" x="264" y="73" text-anchor="middle">fp32 W 28</text>
+              <text class="d-mono" x="360" y="73" text-anchor="middle">Adam m 28</text>
+              <text class="d-mono" x="456" y="73" text-anchor="middle">Adam v 28</text>
+              <text class="d-label" x="510" y="73">= 112 GB</text>
+              <text class="d-label" x="510" y="88">+ activations</text>
+              <rect class="d-accent" x="120" y="120" width="48" height="36"/>
+              <text class="d-mono" x="144" y="143" text-anchor="middle">W 14</text>
+              <text class="d-label" x="176" y="143">+ KV cache (grows with context × batch)</text>
+              <line class="d-line-signal d-dash" x1="394" y1="34" x2="394" y2="170"/>
+              <text class="d-label d-text-signal" x="394" y="28" text-anchor="middle">one 80 GB GPU</text>
+              <line class="d-line" x1="120" y1="176" x2="600" y2="176"/>
+              <text class="d-label" x="120" y="192" text-anchor="middle">0</text>
+              <text class="d-label" x="257" y="192" text-anchor="middle">40</text>
+              <text class="d-label" x="394" y="192" text-anchor="middle">80</text>
+              <text class="d-label" x="531" y="192" text-anchor="middle">120 GB</text>
+            </svg>
+          </div>
+          <figcaption>A 7B model fits on one 80 GB GPU for inference with room for a large KV cache, but its full training state does not. This is why LoRA (Area 09) and sharded training exist.</figcaption>
+        </figure>
+
+        <div class="widget" id="mem-demo">
+          <div class="widget-head">
+            <span class="widget-title">Training and inference memory calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="mem-p">Parameters <input type="range" id="mem-p" min="0" max="8" step="1" value="3"><output id="mem-p-out">7B</output></label>
+            <label for="mem-mode">Workload <select id="mem-mode"><option value="full">Full training, AdamW mixed (16 B/param)</option><option value="lora">LoRA on a bf16 base</option><option value="bf16">Inference, bf16</option><option value="int4">Inference, 4-bit</option></select></label>
+            <label for="mem-gpu">GPU memory <select id="mem-gpu"><option value="24">24 GB</option><option value="48">48 GB</option><option value="80" selected>80 GB</option><option value="141">141 GB</option></select></label>
+            <label for="mem-n">GPUs <input type="range" id="mem-n" min="0" max="6" step="1" value="0"><output id="mem-n-out">1</output></label>
+            <label for="mem-shard">Split <select id="mem-shard"><option value="shard">shard states across GPUs (FSDP / ZeRO-3)</option><option value="replicate">replicate on every GPU (DDP)</option></select></label>
+            <label for="mem-tok">Training tokens (log₁₀) <input type="range" id="mem-tok" min="8" max="13" step="0.1" value="10"><output id="mem-tok-out">1.0e10</output></label>
+          </div>
+          <svg id="mem-plot" viewBox="0 0 600 190" role="img" aria-label="Stacked bar of memory per GPU by component, compared with the selected GPU's capacity."></svg>
+          <p class="readout" id="mem-readout"></p>
+        </div>
+        <p>Start at 7B, full training, one 80 GB GPU: it does not fit. Switch to LoRA and it fits easily. Return to full training and add GPUs with sharding on: per-GPU memory falls as 1/N. Switch to "replicate" and it never falls, because data parallelism copies everything.</p>
+
+        <h3>Compute: about 6 FLOPs per parameter per token</h3>
+        <div class="formula">
+          \[ C_{\text{train}} \approx 6\,N\,D \]
+          <span class="formula-note">\(N\) parameters, \(D\) training tokens (2 FLOPs forward, 4 backward). A 7B model on 1T tokens needs \(6 \cdot 7\times10^{9} \cdot 10^{12} = 4.2\times10^{22}\) FLOPs. An H100 peaks near \(10^{15}\) dense bf16 FLOP/s; at a realistic 40% utilization that is about 29,000 GPU-hours.</span>
+        </div>
+
+        <p>The fraction of peak you actually achieve is <strong>MFU</strong> (model FLOPs utilization); 35–55% is good for large training. Small batches, slow data loading and communication waits all lower it. Many operations (normalization, element-wise ops, small-batch decoding) are <strong>memory-bound</strong>: the cores wait on memory bandwidth (about 3.35 TB/s on an H100), not on math.</p>
+
+        <h3>Four ways to split the work</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 200" role="img" aria-label="Four parallelism strategies on two GPUs. Data parallel copies the full model and splits the batch, then all-reduces gradients. FSDP shards parameters, gradients and optimizer state and gathers each layer when needed. Tensor parallel splits each weight matrix. Pipeline parallel puts different layers on different GPUs and passes activations between them.">
+              <g transform="translate(10,0)">
+                <rect class="d-box" x="0" y="0" width="150" height="190" rx="8"/>
+                <text class="d-title" x="75" y="22" text-anchor="middle">Data parallel</text>
+                <rect class="d-accent" x="15" y="40" width="120" height="40" rx="6"/><text class="d-label" x="75" y="57" text-anchor="middle">full model copy</text><text class="d-label" x="75" y="72" text-anchor="middle">batch ½</text>
+                <rect class="d-accent" x="15" y="104" width="120" height="40" rx="6"/><text class="d-label" x="75" y="121" text-anchor="middle">full model copy</text><text class="d-label" x="75" y="136" text-anchor="middle">batch ½</text>
+                <line class="d-line-signal" x1="75" y1="80" x2="75" y2="104"/>
+                <text class="d-label d-text-signal" x="82" y="96">all-reduce grads</text>
+                <text class="d-label" x="75" y="164" text-anchor="middle">simple; model must</text>
+                <text class="d-label" x="75" y="178" text-anchor="middle">fit on each GPU</text>
+              </g>
+              <g transform="translate(180,0)">
+                <rect class="d-box" x="0" y="0" width="150" height="190" rx="8"/>
+                <text class="d-title" x="75" y="22" text-anchor="middle">FSDP / ZeRO-3</text>
+                <rect class="d-good" x="15" y="40" width="120" height="40" rx="6"/><text class="d-label" x="75" y="57" text-anchor="middle">½ of W, G, Adam</text><text class="d-label" x="75" y="72" text-anchor="middle">batch ½</text>
+                <rect class="d-good" x="15" y="104" width="120" height="40" rx="6"/><text class="d-label" x="75" y="121" text-anchor="middle">other ½ of states</text><text class="d-label" x="75" y="136" text-anchor="middle">batch ½</text>
+                <line class="d-line-signal" x1="75" y1="80" x2="75" y2="104"/>
+                <text class="d-label d-text-signal" x="82" y="96">gather layer</text>
+                <text class="d-label" x="75" y="164" text-anchor="middle">memory ÷ N;</text>
+                <text class="d-label" x="75" y="178" text-anchor="middle">more communication</text>
+              </g>
+              <g transform="translate(350,0)">
+                <rect class="d-box" x="0" y="0" width="150" height="190" rx="8"/>
+                <text class="d-title" x="75" y="22" text-anchor="middle">Tensor parallel</text>
+                <rect class="d-signal" x="15" y="40" width="120" height="40" rx="6"/><text class="d-label" x="75" y="57" text-anchor="middle">left ½ of every</text><text class="d-label" x="75" y="72" text-anchor="middle">weight matrix</text>
+                <rect class="d-signal" x="15" y="104" width="120" height="40" rx="6"/><text class="d-label" x="75" y="121" text-anchor="middle">right ½ of every</text><text class="d-label" x="75" y="136" text-anchor="middle">weight matrix</text>
+                <line class="d-line-signal" x1="75" y1="80" x2="75" y2="104"/>
+                <text class="d-label d-text-signal" x="82" y="96">sync every layer</text>
+                <text class="d-label" x="75" y="164" text-anchor="middle">needs fast links</text>
+                <text class="d-label" x="75" y="178" text-anchor="middle">(within one node)</text>
+              </g>
+              <g transform="translate(520,0)">
+                <rect class="d-box" x="0" y="0" width="150" height="190" rx="8"/>
+                <text class="d-title" x="75" y="22" text-anchor="middle">Pipeline parallel</text>
+                <rect class="d-fill" x="15" y="40" width="120" height="40" rx="6"/><text class="d-label" x="75" y="65" text-anchor="middle">layers 1–16</text>
+                <rect class="d-fill" x="15" y="104" width="120" height="40" rx="6"/><text class="d-label" x="75" y="129" text-anchor="middle">layers 17–32</text>
+                <line class="d-line-accent" x1="75" y1="80" x2="75" y2="104"/>
+                <text class="d-label d-text-accent" x="82" y="96">activations</text>
+                <text class="d-label" x="75" y="164" text-anchor="middle">idle "bubbles";</text>
+                <text class="d-label" x="75" y="178" text-anchor="middle">use micro-batches</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>Large runs combine them ("3D parallelism"): tensor parallel inside a node over NVLink, pipeline across nodes, and data parallel or FSDP across groups. For most fine-tuning, FSDP or DeepSpeed ZeRO alone is enough.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># launch: torchrun --nproc_per_node=8 train.py   (one process per GPU)</span>
+import os, torch, torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+
+dist.init_process_group("nccl")
+local_rank = int(os.environ["LOCAL_RANK"])
+torch.cuda.set_device(local_rank)
+
+model = build_model().cuda()
+model = DDP(model, device_ids=[local_rank])       <span class="c"># gradients all-reduced during backward</span>
+<span class="c"># for models whose states do not fit on one GPU, wrap with FSDP instead of DDP</span>
+<span class="c"># and give each rank its own data shard with DistributedSampler</span>
+
+print(f"rank {dist.get_rank()}: {torch.cuda.max_memory_allocated() / 2**30:.1f} GiB peak")</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Inference in bf16: about 2 bytes per parameter. Full AdamW training: about 16 bytes per parameter plus activations.</li>
+            <li>Training compute is roughly \(6ND\) FLOPs; divide by achieved FLOP/s to get GPU-time.</li>
+            <li>Many operations are limited by memory bandwidth, not math; MFU measures how close you get to peak.</li>
+            <li>Data parallel replicates, FSDP/ZeRO shards states, tensor parallel splits matrices, pipeline parallel splits layers.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Budgeting only for the weights when planning a fine-tune and forgetting gradients and optimizer state.</li>
+            <li>Quoting sparse or fp8 peak FLOPs when estimating a dense bf16 run.</li>
+            <li>Ignoring activation memory, which grows with batch size and sequence length (activation checkpointing trades compute for it).</li>
+            <li>Reaching for tensor or pipeline parallelism when FSDP on one node would do.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="hardware-1"><span>Estimate inference and full-training memory for a given model size</span></label></li>
+          <li><label><input type="checkbox" data-key="hardware-2"><span>Estimate GPU-hours for a run from parameters, tokens and MFU</span></label></li>
+          <li><label><input type="checkbox" data-key="hardware-3"><span>Explain when to use DDP, FSDP, tensor and pipeline parallelism</span></label></li>
+          <li><label><input type="checkbox" data-key="hardware-4"><span>Launch a multi-GPU job with torchrun and report peak memory per rank</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1910.02054">ZeRO: Memory Optimizations Toward Training Trillion Parameter Models (Rajbhandari et al.)</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1909.08053">Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</a></li>
+          <li><span class="kind">Paper</span><a href="https://arxiv.org/abs/1710.03740">Mixed Precision Training (Micikevicius et al., 2017)</a></li>
+          <li><span class="kind">Book</span><a href="https://github.com/stas00/ml-engineering">Machine Learning Engineering Open Book (Bekman)</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Micrograd from scratch</h4><p>Write a 150-line scalar autograd engine with add, multiply, tanh and backward, then train a tiny MLP on a 2-D toy dataset. Check every gradient against finite differences and against PyTorch.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>CNN on CIFAR-10 with a real recipe</h4><p>Train a small ResNet in PyTorch with AdamW, warmup plus cosine schedule, data augmentation and bf16 autocast. Log loss curves, run a learning-rate sweep, and write up which change bought the most accuracy.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Scale a model across GPUs</h4><p>Take a ~100M-parameter transformer and train it on a rented multi-GPU machine with DDP, then FSDP. Measure tokens per second, memory per GPU and model FLOPs utilization, and explain where the time goes.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Derive and hand-compute the gradients of a two-layer network, and verify them numerically</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Write a correct PyTorch training and evaluation loop from memory</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Choose an architecture for image, sequence or compression problems and justify it</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Diagnose a diverging or stalled run from its loss curve and fix it</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Estimate the GPU memory and compute a training run needs before you launch it</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">AI Engineer Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 04. Shared helpers first, then one IIFE per widget. */
+var ATLAS04 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  /* small seeded PRNG so demos look the same on every load */
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) {
+    var u = 1 - r(), v = r();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  return { svg: svg, text: text, clear: clear, rng: rng, gauss: gauss };
+})();
+
+var REDUCED04 = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+/* ---------- 04.1 single-neuron / activation playground ---------- */
+(function () {
+  if (!document.getElementById("nn-demo")) return;
+  var H = ATLAS04, S = H.svg, plot = document.getElementById("nn-plot"), readout = document.getElementById("nn-readout");
+  var keys = ["x1", "x2", "w1", "w2", "b"], ins = {}, outs = {};
+  keys.forEach(function (k) { ins[k] = document.getElementById("nn-" + k); outs[k] = document.getElementById("nn-" + k + "-out"); });
+  var act = document.getElementById("nn-act");
+  var F = {
+    relu: function (z) { return Math.max(0, z); },
+    sigmoid: function (z) { return 1 / (1 + Math.exp(-z)); },
+    tanh: function (z) { return Math.tanh(z); },
+    gelu: function (z) { return 0.5 * z * (1 + Math.tanh(Math.sqrt(2 / Math.PI) * (z + 0.044715 * z * z * z))); },
+    linear: function (z) { return z; }
+  };
+  function slope(f, z) { var h = 1e-4; return (f(z + h) - f(z - h)) / (2 * h); }
+  var X = function (z) { return 50 + (z + 6) * (520 / 12); };
+  var Y = function (v) { return Math.max(14, Math.min(226, 160 - v * 40)); };
+  function draw() {
+    var v = {}; keys.forEach(function (k) { v[k] = parseFloat(ins[k].value); outs[k].textContent = v[k].toFixed(1); });
+    var name = act.value, f = F[name];
+    var z = v.w1 * v.x1 + v.w2 * v.x2 + v.b, a = f(z), s = name === "relu" ? (z > 0 ? 1 : 0) : slope(f, z);
+    H.clear(plot);
+    S("rect", { x: 50, y: 14, width: 520, height: 212, "class": "d-grid" }, plot);
+    S("line", { x1: 50, y1: Y(0), x2: 570, y2: Y(0), "class": "d-line" }, plot);
+    S("line", { x1: X(0), y1: 14, x2: X(0), y2: 226, "class": "d-line" }, plot);
+    [-6, -3, 0, 3, 6].forEach(function (t) { H.text(plot, X(t), 244, String(t), "d-label", "middle"); });
+    [-1, 1, 2, 3].forEach(function (t) { H.text(plot, 44, Y(t) + 4, String(t), "d-label", "end"); });
+    H.text(plot, 566, 256, "z", "d-label", "end");
+    function curve(fn, style) {
+      var d = "";
+      for (var i = 0; i <= 240; i++) { var t = -6 + i / 20; d += (i ? " L" : "M") + X(t).toFixed(1) + "," + Y(fn(t)).toFixed(1); }
+      S("path", { d: d, "class": "d-line", style: style }, plot);
+    }
+    curve(function (t) { return name === "relu" ? (t > 0 ? 1 : 0) : slope(f, t); }, "stroke: var(--signal); stroke-width: 1.8; stroke-dasharray: 5 4");
+    curve(f, "stroke: var(--accent); stroke-width: 2.6");
+    var zc = Math.max(-6, Math.min(6, z));
+    S("line", { x1: X(zc), y1: 14, x2: X(zc), y2: 226, "class": "d-grid", style: "stroke-dasharray: 3 3" }, plot);
+    S("circle", { cx: X(zc), cy: Y(f(zc)), r: 6, "class": "d-dot", style: "stroke: var(--surface); stroke-width: 2" }, plot);
+    S("circle", { cx: X(zc), cy: Y(name === "relu" ? (zc > 0 ? 1 : 0) : slope(f, zc)), r: 4.5, "class": "d-dot-signal" }, plot);
+    H.text(plot, 58, 32, "φ(z)", "d-label d-text-accent");
+    H.text(plot, 100, 32, "slope φ′(z)", "d-label d-text-signal");
+    var note = Math.abs(s) < 0.02 ? "  ·  almost no gradient flows back through this neuron" : "";
+    readout.textContent = "z = (" + v.w1.toFixed(1) + ")(" + v.x1.toFixed(1) + ") + (" + v.w2.toFixed(1) + ")(" + v.x2.toFixed(1) + ") + (" + v.b.toFixed(1) + ")" +
+      " = " + z.toFixed(2) + "  →  a = " + a.toFixed(3) + "  ·  slope " + s.toFixed(3) + note;
+  }
+  keys.forEach(function (k) { ins[k].addEventListener("input", draw); });
+  act.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 04.2 computational graph step-through ---------- */
+(function () {
+  if (!document.getElementById("bp-demo")) return;
+  var H = ATLAS04, S = H.svg, plot = document.getElementById("bp-plot"), readout = document.getElementById("bp-readout");
+  var ins = { x: document.getElementById("bp-x"), w: document.getElementById("bp-w"), b: document.getElementById("bp-b") };
+  var step = 0, timer = null, Y = 1, LAST = 9;
+  function sig(z) { return 1 / (1 + Math.exp(-z)); }
+  function lossAt(x, w, b) { var a = sig(x * w + b); return (a - Y) * (a - Y); }
+  function compute() {
+    var x = parseFloat(ins.x.value), w = parseFloat(ins.w.value), b = parseFloat(ins.b.value);
+    var u = x * w, z = u + b, a = sig(z), L = (a - Y) * (a - Y);
+    var da = 2 * (a - Y), dz = da * a * (1 - a), du = dz, db = dz, dw = du * x, dx = du * w;
+    var h = 1e-4, num = (lossAt(x, w + h, b) - lossAt(x, w - h, b)) / (2 * h);
+    return { x: x, w: w, b: b, u: u, z: z, a: a, L: L, da: da, dz: dz, du: du, db: db, dw: dw, dx: dx, num: num };
+  }
+  var MSG = [
+    "Press Step to run the forward pass one node at a time.",
+    "forward 1: multiply node computes u = x · w",
+    "forward 2: add node computes z = u + b",
+    "forward 3: sigmoid node computes a = σ(z)",
+    "forward 4: loss node computes L = (a − y)² with y = 1. Values are cached for the backward pass.",
+    "backward 1: start at the loss. ∂L/∂a = 2(a − y)",
+    "backward 2: sigmoid's local slope is a(1 − a); ∂L/∂z = ∂L/∂a · a(1 − a)",
+    "backward 3: the add node copies the gradient to both inputs: ∂L/∂u = ∂L/∂b = ∂L/∂z",
+    "backward 4: the multiply node swaps inputs: ∂L/∂w = ∂L/∂u · x and ∂L/∂x = ∂L/∂u · w",
+    "check: compare backprop's ∂L/∂w with a central finite difference"
+  ];
+  function f2(v) { return (Math.abs(v) < 0.0005 ? 0 : v).toFixed(3); }
+  function node(shape, cx, cy, label, active, done) {
+    var cls = active ? "d-good" : (done ? "d-accent" : "d-box");
+    if (shape === "c") S("circle", { cx: cx, cy: cy, r: 22, "class": cls }, plot);
+    else S("rect", { x: cx - 38, y: cy - 17, width: 76, height: 34, rx: 6, "class": cls }, plot);
+    H.text(plot, cx, cy + 5, label, shape === "c" ? "d-title" : "d-mono", "middle");
+  }
+  function draw() {
+    var v = compute();
+    ["x", "w", "b"].forEach(function (k) { document.getElementById("bp-" + k + "-out").textContent = v[k].toFixed(1); });
+    H.clear(plot);
+    var E = [[90, 40, 158, 84], [90, 150, 158, 106], [202, 99, 288, 116], [205, 183, 292, 136], [332, 120, 408, 120], [452, 120, 520, 120], [468, 186, 545, 142]];
+    E.forEach(function (e) { S("line", { x1: e[0], y1: e[1], x2: e[2], y2: e[3], "class": "d-line" }, plot); });
+    node("r", 52, 40, "x = " + v.x.toFixed(1), false, true);
+    node("r", 52, 150, "w = " + v.w.toFixed(1), false, true);
+    node("r", 184, 196, "b = " + v.b.toFixed(1), false, true);
+    node("r", 448, 196, "y = 1", false, true);
+    node("c", 180, 95, "×", step === 1 || step === 8, step >= 1);
+    node("c", 310, 120, "+", step === 2 || step === 7, step >= 2);
+    node("c", 430, 120, "σ", step === 3 || step === 6, step >= 3);
+    S("rect", { x: 522, y: 100, width: 106, height: 40, rx: 8, "class": step === 4 || step === 5 ? "d-good" : (step >= 4 ? "d-accent" : "d-box") }, plot);
+    H.text(plot, 575, 125, "(a − y)²", "d-mono", "middle");
+    function val(x, y, s, cls, anchor) { H.text(plot, x, y, s, "d-mono " + cls, anchor || "middle"); }
+    if (step >= 1) val(245, 98, "u=" + f2(v.u), "d-text-accent");
+    if (step >= 2) val(370, 112, "z=" + f2(v.z), "d-text-accent");
+    if (step >= 3) val(476, 112, "a=" + f2(v.a), "d-text-accent");
+    if (step >= 4) val(575, 92, "L=" + f2(v.L), "d-text-accent");
+    if (step >= 5) val(476, 140, f2(v.da), "d-text-signal");
+    if (step >= 6) val(370, 140, f2(v.dz), "d-text-signal");
+    if (step >= 7) { val(245, 128, f2(v.du), "d-text-signal"); val(262, 176, "∂b " + f2(v.db), "d-text-signal", "start"); }
+    if (step >= 8) { val(14, 15, "∂x " + f2(v.dx), "d-text-signal", "start"); val(14, 186, "∂w " + f2(v.dw), "d-text-signal", "start"); }
+    H.text(plot, 20, 224, step <= 4 ? "forward: values (blue), left to right" : "backward: gradients (orange), right to left", "d-label");
+    var extra = "";
+    if (step === 9) extra = "  →  backprop " + v.dw.toFixed(5) + " vs finite difference " + v.num.toFixed(5);
+    readout.textContent = "step " + step + "/" + LAST + "  ·  " + MSG[step] + extra;
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  document.getElementById("bp-step").addEventListener("click", function () { stop(); step = step >= LAST ? 0 : step + 1; draw(); });
+  document.getElementById("bp-reset").addEventListener("click", function () { stop(); step = 0; draw(); });
+  document.getElementById("bp-play").addEventListener("click", function () {
+    stop();
+    if (REDUCED04) { step = LAST; draw(); return; }
+    step = 0; draw();
+    timer = setInterval(function () { step++; draw(); if (step >= LAST) stop(); }, 750);
+  });
+  ["x", "w", "b"].forEach(function (k) { ins[k].addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---------- 04.3 broadcasting checker ---------- */
+(function () {
+  if (!document.getElementById("pt-demo")) return;
+  var H = ATLAS04, S = H.svg, plot = document.getElementById("pt-plot"), readout = document.getElementById("pt-readout");
+  var selA = document.getElementById("pt-a"), selB = document.getElementById("pt-b");
+  function parse(s) { return s.split(",").map(function (t) { return parseInt(t, 10); }); }
+  function fmt(sh) { return "(" + sh.join(", ") + (sh.length === 1 ? ",)" : ")"); }
+  function draw() {
+    var A = parse(selA.value), B = parse(selB.value), n = Math.max(A.length, B.length), res = [], bad = -1, notes = [];
+    var cols = [];
+    for (var i = 0; i < n; i++) {
+      var a = A[A.length - 1 - i], b = B[B.length - 1 - i];   /* i counts from the right */
+      var ea = a === undefined ? 1 : a, eb = b === undefined ? 1 : b, st;
+      if (ea === eb) st = "eq";
+      else if (ea === 1 || eb === 1) st = "stretch";
+      else { st = "bad"; if (bad < 0) bad = i; }
+      cols.push({ a: a, b: b, st: st, r: Math.max(ea, eb) });
+    }
+    H.clear(plot);
+    H.text(plot, 20, 46, "A", "d-title"); H.text(plot, 20, 101, "B", "d-title"); H.text(plot, 20, 156, "result", "d-title");
+    H.text(plot, 580, 16, "aligned from the right →", "d-label", "end");
+    cols.forEach(function (c, i) {
+      var x = 580 - (i + 1) * 95;
+      function cell(y, v, other) {
+        var cls, txt;
+        if (v === undefined) { cls = "d-box d-dash"; txt = "(1)"; }
+        else if (c.st === "bad") cls = "d-signal";
+        else if (c.st === "stretch" && v === 1 && other !== 1) cls = "d-accent";
+        else cls = "d-good";
+        S("rect", { x: x, y: y, width: 85, height: 34, rx: 6, "class": cls }, plot);
+        H.text(plot, x + 42.5, y + 22, txt || String(v), "d-mono", "middle");
+      }
+      cell(24, c.a, c.b === undefined ? 1 : c.b);
+      cell(79, c.b, c.a === undefined ? 1 : c.a);
+      if (bad < 0) {
+        S("rect", { x: x, y: 134, width: 85, height: 34, rx: 6, "class": "d-fill" }, plot);
+        H.text(plot, x + 42.5, 156, String(c.r), "d-mono", "middle");
+      } else if (c.st === "bad") {
+        H.text(plot, x + 42.5, 156, "✕", "d-title d-text-signal", "middle");
+      }
+      H.text(plot, x + 42.5, 186, "dim " + (-(i + 1)), "d-label", "middle");
+      if (c.st === "stretch") notes.push("dim " + (-(i + 1)) + ": size 1 stretched to " + c.r);
+    });
+    if (bad >= 0) {
+      var cb = cols[bad];
+      readout.textContent = "RuntimeError: size " + cb.a + " of A does not match size " + cb.b + " of B at dimension " + (-(bad + 1)) + " (sizes must be equal or 1)";
+    } else {
+      cols.forEach(function (c) { res.unshift(c.r); });
+      var warn = (A.length !== B.length || notes.length) && res.reduce(function (p, q) { return p * q; }, 1) > Math.max(
+        A.reduce(function (p, q) { return p * q; }, 1), B.reduce(function (p, q) { return p * q; }, 1)) ? "  ·  result is bigger than both inputs: check this is intended" : "";
+      readout.textContent = fmt(A) + " ⊕ " + fmt(B) + " → " + fmt(res) + (notes.length ? "  ·  " + notes.join("; ") : "  ·  shapes already match") + warn;
+    }
+  }
+  selA.addEventListener("change", draw); selB.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 04.4 3x3 convolution on a pixel grid ---------- */
+(function () {
+  if (!document.getElementById("cv-demo")) return;
+  var H = ATLAS04, S = H.svg, plot = document.getElementById("cv-plot"), readout = document.getElementById("cv-readout");
+  var kSel = document.getElementById("cv-k"), rIn = document.getElementById("cv-r"), cIn = document.getElementById("cv-c");
+  var KERNELS = {
+    sobelx: [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
+    sobely: [[-1, -2, -1], [0, 0, 0], [1, 2, 1]],
+    blur: [[1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9]],
+    sharpen: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]],
+    outline: [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]],
+    identity: [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+  };
+  var N = 12, img = [], r, c, timer = null;
+  for (r = 0; r < N; r++) { img.push([]); for (c = 0; c < N; c++) img[r].push(r >= 2 && r <= 5 && c >= 2 && c <= 5 ? 1 : 0); }
+  for (r = 6; r < N; r++) img[r][17 - r] = 1;            /* diagonal stroke */
+  function conv(K) {
+    var out = [];
+    for (var i = 0; i < N - 2; i++) {
+      out.push([]);
+      for (var j = 0; j < N - 2; j++) {
+        var s = 0;
+        for (var a = 0; a < 3; a++) for (var b = 0; b < 3; b++) s += img[i + a][j + b] * K[a][b];
+        out[i].push(s);
+      }
+    }
+    return out;
+  }
+  function kfmt(v) { return Math.abs(v - 1 / 9) < 1e-9 ? "1/9" : String(v); }
+  function draw() {
+    var K = KERNELS[kSel.value], out = conv(K), R = parseInt(rIn.value, 10), C = parseInt(cIn.value, 10);
+    document.getElementById("cv-r-out").textContent = R; document.getElementById("cv-c-out").textContent = C;
+    var maxAbs = 0; out.forEach(function (row) { row.forEach(function (v) { maxAbs = Math.max(maxAbs, Math.abs(v)); }); });
+    H.clear(plot);
+    H.text(plot, 106, 14, "input 12×12", "d-label", "middle");
+    for (r = 0; r < N; r++) for (c = 0; c < N; c++) {
+      S("rect", { x: 10 + c * 16, y: 20 + r * 16, width: 16, height: 16, "class": "d-grid", style: "fill: var(--ink); fill-opacity: " + (img[r][c] * 0.8) }, plot);
+    }
+    S("rect", { x: 10 + C * 16, y: 20 + R * 16, width: 48, height: 48, style: "fill: none; stroke: var(--accent); stroke-width: 3" }, plot);
+    H.text(plot, 280, 52, "kernel", "d-label", "middle");
+    for (var a = 0; a < 3; a++) for (var b = 0; b < 3; b++) {
+      S("rect", { x: 226 + b * 36, y: 62 + a * 36, width: 36, height: 36, "class": "d-accent" }, plot);
+      H.text(plot, 244 + b * 36, 84 + a * 36, kfmt(K[a][b]), "d-mono", "middle");
+    }
+    H.text(plot, 280, 190, "× window, then sum", "d-label", "middle");
+    H.text(plot, 520, 14, "output 10×10", "d-label", "middle");
+    for (r = 0; r < N - 2; r++) for (c = 0; c < N - 2; c++) {
+      var v = out[r][c], op = maxAbs ? Math.abs(v) / maxAbs * 0.9 : 0;
+      S("rect", { x: 425 + c * 19, y: 20 + r * 19, width: 19, height: 19, "class": "d-grid", style: "fill: " + (v >= 0 ? "var(--accent)" : "var(--signal)") + "; fill-opacity: " + op.toFixed(3) }, plot);
+    }
+    S("rect", { x: 425 + C * 19, y: 20 + R * 19, width: 19, height: 19, style: "fill: none; stroke: var(--ink); stroke-width: 2.5" }, plot);
+    var terms = [];
+    for (a = 0; a < 3; a++) for (b = 0; b < 3; b++) if (img[R + a][C + b] && K[a][b]) terms.push(kfmt(K[a][b]));
+    readout.textContent = "out[" + R + "][" + C + "] = Σ window × kernel = " + (terms.length ? terms.map(function (t, i) { var neg = t.charAt(0) === "-"; return (i ? (neg ? " − " : " + ") : (neg ? "−" : "")) + (neg ? t.slice(1) : t); }).join("") : "0 (window is all zeros)") +
+      " = " + out[R][C].toFixed(2) + "  ·  only bright input pixels contribute a term";
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  [kSel].forEach(function (e) { e.addEventListener("change", draw); });
+  [rIn, cIn].forEach(function (e) { e.addEventListener("input", function () { stop(); draw(); }); });
+  document.getElementById("cv-play").addEventListener("click", function () {
+    stop();
+    if (REDUCED04) { rIn.value = 9; cIn.value = 9; draw(); return; }
+    var k = 0;
+    timer = setInterval(function () {
+      rIn.value = Math.floor(k / 10); cIn.value = k % 10; draw();
+      if (++k >= 100) stop();
+    }, 60);
+  });
+  draw();
+})();
+
+/* ---------- 04.5 learning-rate schedule plotter ---------- */
+(function () {
+  if (!document.getElementById("lr-demo")) return;
+  var H = ATLAS04, S = H.svg, plot = document.getElementById("lr-plot"), readout = document.getElementById("lr-readout");
+  var ids = ["type", "peak", "warm", "min", "t"], el = {};
+  ids.forEach(function (k) { el[k] = document.getElementById("lr-" + k); });
+  var T = 10000;
+  function lrAt(t, o) {
+    if (o.type === "none") return o.peak;
+    var Tw = Math.round(T * o.warm / 100);
+    if (t < Tw) return o.peak * (t + 1) / Tw;
+    if (o.type === "constant") return o.peak;
+    var p = (t - Tw) / Math.max(1, T - Tw), lo = o.peak * o.min;
+    if (o.type === "linear") return lo + (o.peak - lo) * (1 - p);
+    return lo + 0.5 * (o.peak - lo) * (1 + Math.cos(Math.PI * p));
+  }
+  function sci(v) { return v.toExponential(1).replace("e-", "e-"); }
+  function draw() {
+    var o = { type: el.type.value, peak: Math.pow(10, parseFloat(el.peak.value)), warm: parseFloat(el.warm.value), min: parseFloat(el.min.value) };
+    var t = parseInt(el.t.value, 10);
+    document.getElementById("lr-peak-out").textContent = sci(o.peak);
+    document.getElementById("lr-warm-out").textContent = o.warm;
+    document.getElementById("lr-min-out").textContent = o.min.toFixed(2);
+    document.getElementById("lr-t-out").textContent = t;
+    var X = function (s) { return 70 + s / T * 510; }, Y = function (v) { return 200 - v / o.peak * 175; };
+    H.clear(plot);
+    var Tw = o.type === "none" ? 0 : Math.round(T * o.warm / 100);
+    if (Tw > 0) { S("rect", { x: 70, y: 20, width: X(Tw) - 70, height: 180, "class": "d-fill" }, plot); H.text(plot, 74, 34, "warmup", "d-label"); }
+    S("line", { x1: 70, y1: 200, x2: 580, y2: 200, "class": "d-line" }, plot);
+    S("line", { x1: 70, y1: 20, x2: 70, y2: 200, "class": "d-line" }, plot);
+    [0, 2500, 5000, 7500, 10000].forEach(function (s) { H.text(plot, X(s), 216, String(s), "d-label", "middle"); });
+    H.text(plot, 580, 234, "training step", "d-label", "end");
+    H.text(plot, 64, Y(o.peak) + 4, sci(o.peak), "d-label", "end");
+    H.text(plot, 64, 204, "0", "d-label", "end");
+    var d = "";
+    for (var s = 0; s <= T; s += 25) d += (s ? " L" : "M") + X(s).toFixed(1) + "," + Y(lrAt(Math.min(s, T - 1), o)).toFixed(1);
+    S("path", { d: d, "class": "d-line", style: "stroke: var(--accent); stroke-width: 2.6" }, plot);
+    var cur = lrAt(Math.min(t, T - 1), o);
+    S("line", { x1: X(t), y1: 20, x2: X(t), y2: 200, "class": "d-grid", style: "stroke-dasharray: 3 3" }, plot);
+    S("circle", { cx: X(t), cy: Y(cur), r: 6, "class": "d-dot-signal", style: "stroke: var(--surface); stroke-width: 2" }, plot);
+    var phase = o.type === "none" ? "constant" : (t < Tw ? "warmup (" + Math.round(100 * t / Tw) + "% of the way to peak)" : (o.type === "constant" ? "constant at peak" : "decay (" + Math.round(100 * (t - Tw) / (T - Tw)) + "% through)"));
+    readout.textContent = "step " + t + " of " + T + "  ·  lr " + sci(cur) + "  ·  " + phase + (Tw ? "  ·  warmup ends at step " + Tw : "  ·  no warmup: the first update uses the full peak rate");
+  }
+  ids.forEach(function (k) { el[k].addEventListener(k === "type" ? "change" : "input", draw); });
+  draw();
+})();
+
+/* ---------- 04.6 GPU memory and compute calculator ---------- */
+(function () {
+  if (!document.getElementById("mem-demo")) return;
+  var H = ATLAS04, S = H.svg, plot = document.getElementById("mem-plot"), readout = document.getElementById("mem-readout");
+  var P = [0.5, 1, 3, 7, 13, 34, 70, 180, 405], G = [1, 2, 4, 8, 16, 32, 64];
+  var el = {}; ["p", "mode", "gpu", "n", "shard", "tok"].forEach(function (k) { el[k] = document.getElementById("mem-" + k); });
+  var MODES = {
+    full: [["W bf16", 2, "d-accent"], ["grads", 2, "d-good"], ["fp32 W", 4, "d-fill"], ["Adam m", 4, "d-signal"], ["Adam v", 4, "d-signal"]],
+    lora: [["W bf16 (frozen)", 2, "d-accent"], ["adapters + their Adam", 0.16, "d-good"]],
+    bf16: [["W bf16", 2, "d-accent"]],
+    int4: [["W 4-bit", 0.5, "d-accent"], ["scales", 0.06, "d-fill"]]
+  };
+  function draw() {
+    var Nb = P[parseInt(el.p.value, 10)], n = G[parseInt(el.n.value, 10)], mode = el.mode.value, cap = parseFloat(el.gpu.value);
+    var shard = el.shard.value === "shard", D = Math.pow(10, parseFloat(el.tok.value));
+    document.getElementById("mem-p-out").textContent = Nb + "B";
+    document.getElementById("mem-n-out").textContent = n;
+    document.getElementById("mem-tok-out").textContent = D.toExponential(1);
+    var parts = MODES[mode].map(function (q) { return { name: q[0], gb: Nb * q[1] / (shard ? n : 1), cls: q[2] }; });
+    var total = parts.reduce(function (s, q) { return s + q.gb; }, 0);
+    var maxv = Math.max(total, cap) * 1.12, X = function (g) { return 110 + g / maxv * 470; };
+    H.clear(plot);
+    H.text(plot, 104, 64, "per GPU", "d-label", "end");
+    var x = 110;
+    parts.forEach(function (q) {
+      var w = X(q.gb) - 110;
+      S("rect", { x: x, y: 40, width: Math.max(0.5, w), height: 40, "class": q.cls }, plot);
+      if (w > 64) H.text(plot, x + w / 2, 58, q.name, "d-label", "middle");
+      if (w > 64) H.text(plot, x + w / 2, 73, q.gb.toFixed(q.gb < 10 ? 1 : 0) + " GB", "d-mono", "middle");
+      x += w;
+    });
+    S("line", { x1: X(cap), y1: 24, x2: X(cap), y2: 100, "class": "d-line", style: "stroke: var(--signal); stroke-dasharray: 5 4; stroke-width: 2" }, plot);
+    H.text(plot, X(cap), 18, cap + " GB GPU", "d-label d-text-signal", "middle");
+    S("line", { x1: 110, y1: 112, x2: 580, y2: 112, "class": "d-line" }, plot);
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (f) { var g = maxv * f; H.text(plot, X(g), 128, g.toFixed(g < 10 ? 1 : 0), "d-label", "middle"); });
+    H.text(plot, 580, 144, "GB (states only; activations / KV cache come on top)", "d-label", "end");
+    var fits = total <= cap * 0.9;
+    H.text(plot, 110, 176, fits ? "fits, with headroom for activations" : (total <= cap ? "fits only barely: activations will not" : "does not fit"), "d-title " + (fits ? "d-text-good" : "d-text-signal"));
+    var comp = "";
+    var flopsPerTok = mode === "full" ? 6 : (mode === "lora" ? 4 : 2), effective = 0.4e15;
+    if (mode === "full" || mode === "lora") {
+      var C = flopsPerTok * Nb * 1e9 * D, gpuh = C / effective / 3600;
+      comp = "  ·  compute ≈ " + flopsPerTok + "ND = " + C.toExponential(1) + " FLOPs ≈ " + Math.round(gpuh).toLocaleString() + " GPU-hours at 40% of 1e15 FLOP/s (" +
+        (gpuh / n / 24).toFixed(1) + " days on " + n + " GPU" + (n > 1 ? "s" : "") + ")";
+    } else {
+      comp = "  ·  generating costs ≈ 2N = " + (2 * Nb).toFixed(0) + " GFLOPs per token";
+    }
+    readout.textContent = "total states " + (total * (shard ? n : 1)).toFixed(1) + " GB, " + total.toFixed(1) + " GB per GPU" + (shard || n === 1 ? "" : " (replicated)") + comp;
+  }
+  ["p", "n", "tok"].forEach(function (k) { el[k].addEventListener("input", draw); });
+  ["mode", "gpu", "shard"].forEach(function (k) { el[k].addEventListener("change", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>
