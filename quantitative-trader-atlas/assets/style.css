@@ -10,9 +10,9 @@
   --ink-2: #5A4D3F;
   --ink-3: #8A7B69;
   --line: #E2D6C4;
-  --accent: #C2541B;
+  --accent: #059669;
   --accent-ink: #FFFFFF;
-  --accent-soft: #FBE3D2;
+  --accent-soft: #D1FAE5;
   --signal: #B4342B;
   --signal-soft: #F9DEDA;
   --good: #3E7D3A;
@@ -54,12 +54,12 @@
   }
 }
 :root[data-theme="dark"] {
-  --bg: #15110D; --surface: #1E1914; --surface-2: #2A231C; --ink: #F3EBE0; --ink-2: #C4B6A4; --ink-3: #928473;
-  --line: #3B3229; --accent: #F28A4C; --accent-ink: #15110D; --accent-soft: #3D2618;
-  --signal: #F27A6C; --signal-soft: #3C1F1B; --good: #7BC77A; --good-soft: #1E3320;
-  --t1: #F28A4C; --t2: #4FC1B5; --t3: #D08AD3; --t4: #E7B54A; --t5: #B3A595;
-  --code-bg: #0F0C09; --code-ink: #F1E8DC; --code-dim: #8E8170;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+  --bg: #0B0F17; --surface: #111827; --surface-2: #1F2937; --ink: #F9FAFB; --ink-2: #9CA3AF; --ink-3: #6B7280;
+  --line: #374151; --accent: #10B981; --accent-ink: #0B0F17; --accent-soft: #064E3B;
+  --signal: #F87171; --signal-soft: #450A0A; --good: #34D399; --good-soft: #064E3B;
+  --t1: #10B981; --t2: #38BDF8; --t3: #FBBF24; --t4: #A78BFA; --t5: #FB7185; --t6: #C084FC;
+  --code-bg: #030712; --code-ink: #F3F4F6; --code-dim: #9CA3AF;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 4px 16px rgba(0, 0, 0, .35);
   color-scheme: dark;
 }
 
@@ -920,3 +920,40 @@ html.app-loading body::after {
 .tree-row.area-row.soon { opacity: .5; cursor: default; }
 .map-node.soon { opacity: .5; cursor: default; pointer-events: none; }
 .chip:not([href]) { cursor: default; }
+
+/* Formula cards & KaTeX blocks */
+.formula-card {
+  margin: 18px 0;
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.formula-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.katex-block {
+  overflow-x: auto;
+  padding: 6px 0;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+.bullet-points {
+  margin: 14px 0;
+  padding-left: 20px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.bullet-points li {
+  margin-bottom: 8px;
+}
+.interactive-lab-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
