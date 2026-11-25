@@ -1,3 +1,51 @@
+
+var AREA_TO_STUDIO_MAP = {
+  "math-foundations": "prob-spaces",
+  "stochastic-calculus": "stochastic-calculus",
+  "time-series-econometrics": "brownian-motion",
+  "market-microstructure": "lob-mechanics",
+  "derivatives-pricing": "black-scholes",
+  "alpha-research-factor-investing": "factor-investing",
+  "statistical-arbitrage": "pairs-trading",
+  "machine-learning-finance": "financial-ml",
+  "portfolio-optimization": "the-greeks",
+  "risk-management": "vol-surface",
+  "backtesting-simulation": "order-flow-toxicity",
+  "high-frequency-trading": "latency-fpga",
+  "crypto-defi-quant": "execution-algos",
+  "execution-algorithms": "market-impact",
+  "quant-tech-stack": "quant-tech-stack",
+  "career-interview-prep": "svd-pca",
+  "llms-alternative-data": "llm-earnings-nlp",
+  "autonomous-agents-copilots": "autonomous-swarms"
+};
+function getStudioUrl(areaId) {
+  var id = AREA_TO_STUDIO_MAP[areaId] || "lob-mechanics";
+  return "studio.html#/" + id;
+}
+
+
+var MAP_SHORT_TITLES = {
+  1: ["Probability Spaces", "& Measure Theory"],
+  2: ["Stochastic Calculus", "& Itô's Lemma"],
+  3: ["Time Series &", "GARCH Volatility"],
+  4: ["Limit Order Book", "& Microstructure"],
+  5: ["Derivatives Pricing", "& Black-Scholes"],
+  6: ["Factor Investing", "& Alpha Models"],
+  7: ["Statistical Arbitrage", "& Pairs Trading"],
+  8: ["Financial ML &", "Deep Alpha Models"],
+  9: ["Portfolio Optimization", "& Mean-Variance"],
+  10: ["Risk Management", "& CVaR Modeling"],
+  11: ["Backtesting &", "Execution Simulation"],
+  12: ["High-Frequency Trading", "& FPGA Execution"],
+  13: ["Crypto Microstructure", "& DeFi Arbitrage"],
+  14: ["Optimal Execution", "& Almgren-Chriss"],
+  15: ["Quant Tech Stack", "C++20 & KDB+/q"],
+  16: ["Quant Interview Prep", "& Technical Drills"],
+  17: ["LLM Earnings NLP", "& Unstructured RAG"],
+  18: ["Autonomous Multi-Agent", "Trading Swarms"]
+};
+
 /* Quantitative Trader Atlas — shared behaviour: theme, progress, contents, checklists, map. */
 (function () {
   "use strict";
@@ -423,6 +471,7 @@
   }
   window.AtlasAnimate = { play: play, observe: animateSvg };
 
+  
   /* ================= home page ================= */
   function initHome() {
     var totalSubs = 0, totalDone = 0;
@@ -466,13 +515,13 @@
               '</h3><span class="muted" style="font-size:.92rem">' + t.blurb + '</span></div><div class="cards">';
       areas.forEach(function (a) {
         var d = areaDone(a), pct = Math.round(d / a.subs.length * 100);
-        html += (a.live ? '<a class="area-card" href="topics/' + a.file + '">' : '<div class="area-card soon" aria-disabled="true">') +
-          '<div class="top"><span class="n">' + pad(a.n) + '</span><span class="eyebrow" style="font-size:.68rem">' + (a.live ? a.weeks : "Coming soon") + "</span></div>" +
+        html += '<a class="area-card" href="' + getStudioUrl(a.id) + '">' +
+          '<div class="top"><span class="n">' + pad(a.n) + '</span><span class="eyebrow" style="font-size:.68rem;color:#059669;font-weight:700;">▶ Launch Motion</span></div>' +
           "<h4>" + a.title + "</h4>" +
           "<p>" + a.summary + "</p>" +
           '<div class="subs">' + a.subs.map(function (s) { return '<span class="' + (isMastered(a.id, s[0]) ? "done" : "") + '">' + s[1] + "</span>"; }).join("") + "</div>" +
           '<div class="foot"><span class="num">' + d + "/" + a.subs.length + '</span><span class="bar"><i style="width:' + pct + '%"></i></span></div>' +
-          (a.live ? "</a>" : "</div>");
+          "</a>";
       });
       html += "</div></div>";
     });
@@ -483,31 +532,34 @@
     var host = document.getElementById("map");
     if (!host) return;
     var NS = "http://www.w3.org/2000/svg";
-    var colW = 196, gap = 64, padX = 18, top = 70, nodeH = 62, vGap = 22;
+    var colW = 210, gap = 44, padX = 18, top = 76, nodeH = 74, vGap = 20;
     var cols = A.tiers.length;
     var W = padX * 2 + cols * colW + (cols - 1) * gap;
     var maxRows = Math.max.apply(null, A.tiers.map(function (t) { return A.areas.filter(function (a) { return a.tier === t.id; }).length; }));
-    var H = top + maxRows * nodeH + (maxRows - 1) * vGap + 20;
+    var H = top + maxRows * nodeH + (maxRows - 1) * vGap + 24;
     var pos = {};
     A.tiers.forEach(function (t, ci) {
       A.areas.filter(function (a) { return a.tier === t.id; }).forEach(function (a, ri) {
         pos[a.n] = { x: padX + ci * (colW + gap), y: top + ri * (nodeH + vGap), col: ci, row: ri, tier: t };
       });
     });
-    var s = '<svg xmlns="' + NS + '" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Learning path map: five tiers from Foundations to Grow, with arrows showing which areas build on which.">';
+    var s = '<svg xmlns="' + NS + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Quant Learning Path: six tiers from Foundations to Autonomous AI Swarms">';
     s += '<defs><marker id="map-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity=".6"/></marker></defs>';
-    // tier headers
+    
+    // tier headers (truncated cleanly to prevent overlap)
     A.tiers.forEach(function (t, ci) {
       var x = padX + ci * (colW + gap);
+      var shortName = t.name.length > 22 ? t.name.split("&")[0].trim() : t.name;
+      var shortBlurb = t.blurb.length > 30 ? t.blurb.slice(0, 28) + "…" : t.blurb;
       s += '<rect x="' + x + '" y="8" width="' + colW + '" height="3" rx="1.5" fill="' + t.color + '"/>';
-      s += '<text class="map-tier-label" x="' + x + '" y="32" fill="' + t.color + '">' + (ci + 1) + " · " + t.name + "</text>";
-      s += '<text class="map-tier-blurb" x="' + x + '" y="50">' + t.blurb + "</text>";
+      s += '<text class="map-tier-label" x="' + x + '" y="30" fill="' + t.color + '" font-size="12px" font-weight="700">' + (ci + 1) + ' · ' + shortName + '</text>';
+      s += '<text class="map-tier-blurb" x="' + x + '" y="48" font-size="11px" fill="var(--ink-3)">' + shortBlurb + '</text>';
     });
+
     // edges
     var edges = "";
     A.areas.forEach(function (a) {
       var to = pos[a.n];
-      if (a.tier === "E") return;
       a.prereqs.forEach(function (p) {
         var from = pos[p];
         if (!from) return;
@@ -517,7 +569,7 @@
           var cx = from.x + colW / 2;
           d = "M" + cx + "," + (from.y + nodeH) + " L" + cx + "," + (to.y - 3);
         } else {
-          if (to.col - from.col !== 1) return; // only draw links between neighbouring tiers
+          if (to.col - from.col !== 1) return;
           var x1 = from.x + colW, y1 = from.y + nodeH / 2, x2 = to.x - 3, y2 = to.y + nodeH / 2;
           var mx = (x1 + x2) / 2;
           d = "M" + x1 + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + x2 + "," + y2;
@@ -526,20 +578,24 @@
       });
     });
     s += edges;
-    // nodes
+
+    // nodes with 2 clean lines, no overflow, pointer cursor
     A.areas.forEach(function (a) {
       var p = pos[a.n];
       var d = areaDone(a), frac = d / a.subs.length;
-      var title = a.title.length > 24 ? a.title.replace("Retrieval-augmented generation", "RAG").replace("Safety, security & ethics", "Safety & security").replace("Inference & optimization", "Inference & speed") : a.title;
-      s += '<a class="map-node' + (a.live ? "" : " soon") + '"' + (a.live ? ' href="topics/' + a.file + '"' : ' aria-disabled="true"') + ' data-n="' + a.n + '">' +
-        '<title>' + a.title + " — " + a.summary + "</title>" +
+      var lines = MAP_SHORT_TITLES[a.n] || [a.title.slice(0, 20), a.title.slice(20)];
+      var targetUrl = getStudioUrl(a.id);
+
+      s += '<a class="map-node" href="' + targetUrl + '" data-n="' + a.n + '" style="cursor:pointer;">' +
+        '<title>' + a.title + " — Click to launch motion simulation" + '</title>' +
         '<rect class="node-bg" x="' + p.x + '" y="' + p.y + '" width="' + colW + '" height="' + nodeH + '" rx="9"/>' +
-        '<rect x="' + p.x + '" y="' + (p.y + 12) + '" width="3" height="' + (nodeH - 24) + '" rx="1.5" fill="' + p.tier.color + '"/>' +
-        '<text class="node-num" x="' + (p.x + 14) + '" y="' + (p.y + 21) + '">' + pad(a.n) + " · " + d + "/" + a.subs.length + "</text>" +
-        '<text class="node-title" x="' + (p.x + 14) + '" y="' + (p.y + 40) + '">' + title + "</text>" +
-        '<rect class="node-track" x="' + (p.x + 14) + '" y="' + (p.y + 49) + '" width="' + (colW - 28) + '" height="4" rx="2"/>' +
-        '<rect x="' + (p.x + 14) + '" y="' + (p.y + 49) + '" width="' + Math.max(0, (colW - 28) * frac) + '" height="4" rx="2" fill="var(--good)"/>' +
-        "</a>";
+        '<rect x="' + p.x + '" y="' + (p.y + 12) + '" width="3.5" height="' + (nodeH - 24) + '" rx="1.5" fill="' + p.tier.color + '"/>' +
+        '<text class="node-num" x="' + (p.x + 14) + '" y="' + (p.y + 20) + '">' + pad(a.n) + " · " + d + "/" + a.subs.length + " MASTERED</text>" +
+        '<text class="node-title" x="' + (p.x + 14) + '" y="' + (p.y + 36) + '">' + lines[0] + '</text>' +
+        '<text class="node-title" x="' + (p.x + 14) + '" y="' + (p.y + 50) + '">' + (lines[1] || "") + '</text>' +
+        '<rect class="node-track" x="' + (p.x + 14) + '" y="' + (p.y + 60) + '" width="' + (colW - 28) + '" height="3.5" rx="1.75"/>' +
+        '<rect x="' + (p.x + 14) + '" y="' + (p.y + 60) + '" width="' + Math.max(0, (colW - 28) * frac) + '" height="3.5" rx="1.75" fill="var(--good)"/>' +
+        '</a>';
     });
     s += "</svg>";
     host.innerHTML = s;
@@ -568,13 +624,10 @@
     if (document.body.getAttribute("data-page") === "home") initHome();
     if (BASE) {
       if (document.body.getAttribute("data-area")) { var ls = document.createElement("script"); ls.src = BASE + "lesson.js"; ls.async = false; document.body.appendChild(ls); }
-      var es = document.createElement("script"); es.src = BASE + "engage.js"; es.async = false; document.body.appendChild(es); }
-    initCode();
-    initAnimations();
-    if (false) {
-      if (document.body.getAttribute("data-area")) { var ls = document.createElement("script"); ls.src = BASE + "lesson.js"; ls.async = false; document.body.appendChild(ls); }
       var es = document.createElement("script"); es.src = BASE + "engage.js"; es.async = false; document.body.appendChild(es);
     }
+    initCode();
+    initAnimations();
     initMath();
   });
   window.addEventListener("pageshow", function (e) { if (e.persisted && document.body.getAttribute("data-page") === "home") initHome(); });

@@ -1,3 +1,29 @@
+
+var AREA_TO_STUDIO_MAP = {
+  "math-foundations": "prob-spaces",
+  "stochastic-calculus": "stochastic-calculus",
+  "time-series-econometrics": "brownian-motion",
+  "market-microstructure": "lob-mechanics",
+  "derivatives-pricing": "black-scholes",
+  "alpha-research-factor-investing": "factor-investing",
+  "statistical-arbitrage": "pairs-trading",
+  "machine-learning-finance": "financial-ml",
+  "portfolio-optimization": "the-greeks",
+  "risk-management": "vol-surface",
+  "backtesting-simulation": "order-flow-toxicity",
+  "high-frequency-trading": "latency-fpga",
+  "crypto-defi-quant": "execution-algos",
+  "execution-algorithms": "market-impact",
+  "quant-tech-stack": "quant-tech-stack",
+  "career-interview-prep": "svd-pca",
+  "llms-alternative-data": "llm-earnings-nlp",
+  "autonomous-agents-copilots": "autonomous-swarms"
+};
+function getStudioUrl(areaId) {
+  var id = AREA_TO_STUDIO_MAP[areaId] || "lob-mechanics";
+  return "studio.html#/" + id;
+}
+
 /* Data Analyst Atlas — learning layer:
    reading-level switch, glossary tooltips, time estimates, quick-check quizzes,
    demo challenges, spaced review, streaks, badges and "continue where you left off". */
@@ -382,8 +408,8 @@
     var la = last && areaById(last.area); if (la && !la.live) la = null;
     var firstLive = A.areas.find(function (x) { return x.live; }) || A.areas[0];
     var cont = la
-      ? '<a class="eg-card eg-continue" href="topics/' + la.file + "#" + esc(last.sub) + '"><span class="eyebrow">Continue where you left off</span><strong>' + At.pad(la.n) + " · " + esc(subTitle(la, last.sub)) + "</strong><span class=\"muted\">" + esc(la.title) + "</span><span class=\"eg-go\">Resume " + ICON.arrow + "</span></a>"
-      : '<a class="eg-card eg-continue" href="topics/' + firstLive.file + '"><span class="eyebrow">Start here</span><strong>' + At.pad(firstLive.n) + ' · ' + esc(firstLive.subs[0][1]) + '</strong><span class="muted">Each lesson takes about 10 minutes</span><span class="eg-go">Start learning ' + ICON.arrow + "</span></a>";
+      ? '<a class="eg-card eg-continue" href="' + getStudioUrl(la.id) + '"><span class="eyebrow" style="color:#ffffff;font-weight:800;">Motions</span><strong>' + At.pad(la.n) + " · " + esc(subTitle(la, last.sub)) + "</strong><span class=\"muted\">" + esc(la.title) + "</span><span class=\"eg-go\" style=\"color:#ffffff;font-weight:700;\">Start Motions " + ICON.arrow + "</span></a>"
+      : '<a class="eg-card eg-continue" href="studio.html#/lob-mechanics"><span class="eyebrow" style="color:#ffffff;font-weight:800;">Motions</span><strong>01 · Market Microstructure & Order Book</strong><span class="muted">Interactive step-by-step motion simulations</span><span class="eg-go" style="color:#ffffff;font-weight:700;">Start Motions ' + ICON.arrow + "</span></a>";
     var week = "";
     for (var i = 6; i >= 0; i--) { var d = new Date(); d.setDate(d.getDate() - i); var on = si.days[dayKey(d)]; week += '<span class="wk' + (on ? " on" : "") + '" title="' + d.toLocaleDateString(undefined, { weekday: "long" }) + '">' + d.toLocaleDateString(undefined, { weekday: "narrow" }) + "</span>"; }
     var streakCard = '<div class="eg-card eg-streak"><span class="eyebrow">Streak</span><div class="eg-big"><span class="flame' + (si.activeToday ? " lit" : "") + '">' + ICON.flame + '</span><span class="num">' + si.current + "</span><span class=\"muted\">day" + (si.current === 1 ? "" : "s") + "</span></div><div class=\"week\">" + week + "</div><span class=\"muted small\">" +

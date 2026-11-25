@@ -1,3 +1,29 @@
+
+var AREA_TO_STUDIO_MAP = {
+  "math-foundations": "prob-spaces",
+  "stochastic-calculus": "stochastic-calculus",
+  "time-series-econometrics": "brownian-motion",
+  "market-microstructure": "lob-mechanics",
+  "derivatives-pricing": "black-scholes",
+  "alpha-research-factor-investing": "factor-investing",
+  "statistical-arbitrage": "pairs-trading",
+  "machine-learning-finance": "financial-ml",
+  "portfolio-optimization": "the-greeks",
+  "risk-management": "vol-surface",
+  "backtesting-simulation": "order-flow-toxicity",
+  "high-frequency-trading": "latency-fpga",
+  "crypto-defi-quant": "execution-algos",
+  "execution-algorithms": "market-impact",
+  "quant-tech-stack": "quant-tech-stack",
+  "career-interview-prep": "svd-pca",
+  "llms-alternative-data": "llm-earnings-nlp",
+  "autonomous-agents-copilots": "autonomous-swarms"
+};
+function getStudioUrl(areaId) {
+  var id = AREA_TO_STUDIO_MAP[areaId] || "lob-mechanics";
+  return "studio.html#/" + id;
+}
+
 /* Quantitative Trader Atlas — home page motion:
    1. A real-time Three.js "atlas": 16 area blocks on a blueprint grid, packets flowing
       along the learning path, hover tooltips, click to open, drag to turn.
@@ -206,7 +232,7 @@
     host.addEventListener("pointerdown", function (ev) { drag = { x: ev.clientX, az: az, moved: false }; host.setPointerCapture && host.setPointerCapture(ev.pointerId); host.style.cursor = "grabbing"; });
     host.addEventListener("pointerup", function (ev) {
       var wasDrag = drag && drag.moved; drag = null; host.style.cursor = "grab";
-      if (!wasDrag) { var b = pick(ev); if (b && b.a.live) location.href = "topics/" + b.a.file; }
+      if (!wasDrag) { var b = pick(ev); if (b && b.a.live) location.href = getStudioUrl(b.a.id); }
     });
 
     /* ---- intro: blocks rise in, camera dollies in ---- */

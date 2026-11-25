@@ -31,7 +31,7 @@ window.ATLAS = {
   ],
   areas: [
     {
-      n: 1, id: "math-foundations", file: "01-math-foundations.html", tier: "A",
+      n: 1, id: "math-foundations", file: "01-math-foundations.html", tier: "A", live: true,
       title: "Mathematical & Probabilistic Foundations", weeks: "4–6 wks", prereqs: [],
       summary: "Probability spaces, Martingales, SVD decomposition, and Monte Carlo variance reduction.",
       subs: [
@@ -44,7 +44,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 2, id: "stochastic-calculus", file: "02-stochastic-calculus.html", tier: "A",
+      n: 2, id: "stochastic-calculus", file: "02-stochastic-calculus.html", tier: "A", live: true,
       title: "Stochastic Calculus & Asset Dynamics", weeks: "5–6 wks", prereqs: [1],
       summary: "Brownian motion, Itô's Lemma, Girsanov theorem, and mean-reverting jump-diffusion processes.",
       subs: [
@@ -57,7 +57,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 3, id: "time-series-econometrics", file: "03-time-series-econometrics.html", tier: "A",
+      n: 3, id: "time-series-econometrics", file: "03-time-series-econometrics.html", tier: "A", live: true,
       title: "Time-Series Analysis & Financial Econometrics", weeks: "4–5 wks", prereqs: [1],
       summary: "Stationarity, ARMA/ARIMA modeling, GARCH volatility clustering, and cointegration testing.",
       subs: [
@@ -70,7 +70,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 4, id: "market-microstructure", file: "04-market-microstructure.html", tier: "B",
+      n: 4, id: "market-microstructure", file: "04-market-microstructure.html", tier: "B", live: true,
       title: "Market Microstructure & Order Book Mechanics", weeks: "3–4 wks", prereqs: [],
       summary: "Limit order book dynamics, bid-ask spreads, order flow toxicity, and market impact models.",
       subs: [
@@ -83,7 +83,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 5, id: "derivatives-pricing", file: "05-derivatives-pricing.html", tier: "B",
+      n: 5, id: "derivatives-pricing", file: "05-derivatives-pricing.html", tier: "B", live: true,
       title: "Derivatives Pricing & Volatility Surface", weeks: "5–6 wks", prereqs: [2],
       summary: "Black-Scholes-Merton PDE, First and Second-Order Greeks, and Volatility Surface dynamics.",
       subs: [
@@ -96,7 +96,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 6, id: "alpha-research-factor-investing", file: "06-alpha-research-factor-investing.html", tier: "C",
+      n: 6, id: "alpha-research-factor-investing", file: "06-alpha-research-factor-investing.html", tier: "C", live: true,
       title: "Alpha Research & Factor Investing", weeks: "5–6 wks", prereqs: [1, 3],
       summary: "CAPM, Fama-French multi-factor anomalies, Information Coefficient (IC), and cross-sectional scoring.",
       subs: [
@@ -109,7 +109,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 7, id: "statistical-arbitrage", file: "07-statistical-arbitrage.html", tier: "C",
+      n: 7, id: "statistical-arbitrage", file: "07-statistical-arbitrage.html", tier: "C", live: true,
       title: "Statistical Arbitrage & Mean Reversion", weeks: "4–5 wks", prereqs: [3, 6],
       summary: "Pairs trading, Kalman filter dynamic hedge ratios, ETF basket arbitrage, and mean-reversion strategies.",
       subs: [
@@ -122,7 +122,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 8, id: "machine-learning-finance", file: "08-machine-learning-finance.html", tier: "C",
+      n: 8, id: "machine-learning-finance", file: "08-machine-learning-finance.html", tier: "C", live: true,
       title: "Machine Learning & Deep Learning in Finance", weeks: "5–6 wks", prereqs: [1, 6],
       summary: "Purged & embargoed K-Fold validation, tree ensembles, temporal transformers, and RL agents.",
       subs: [
@@ -135,7 +135,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 9, id: "portfolio-optimization", file: "09-portfolio-optimization.html", tier: "D",
+      n: 9, id: "portfolio-optimization", file: "09-portfolio-optimization.html", tier: "D", live: true,
       title: "Portfolio Optimization & Asset Allocation", weeks: "4–5 wks", prereqs: [1, 6],
       summary: "Markowitz mean-variance frontier, Black-Litterman model, Hierarchical Risk Parity, and Ledoit-Wolf shrinkage.",
       subs: [
@@ -148,7 +148,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 10, id: "risk-management", file: "10-risk-management.html", tier: "D",
+      n: 10, id: "risk-management", file: "10-risk-management.html", tier: "D", live: true,
       title: "Quantitative Risk Management", weeks: "3–4 wks", prereqs: [1, 9],
       summary: "Value-at-Risk (VaR), Expected Shortfall (CVaR), multi-factor Barra models, and tail-risk hedging.",
       subs: [
@@ -161,7 +161,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 11, id: "backtesting-simulation", file: "11-backtesting-simulation.html", tier: "D",
+      n: 11, id: "backtesting-simulation", file: "11-backtesting-simulation.html", tier: "D", live: true,
       title: "Backtesting, Simulation & Execution Reality", weeks: "3–4 wks", prereqs: [6, 8],
       summary: "Lookahead bias, survivorship bias, realistic slippage modeling, and statistical significance testing.",
       subs: [
@@ -174,7 +174,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 12, id: "high-frequency-trading", file: "12-high-frequency-trading.html", tier: "D",
+      n: 12, id: "high-frequency-trading", file: "12-high-frequency-trading.html", tier: "D", live: true,
       title: "High-Frequency Trading & Market Making", weeks: "5–6 wks", prereqs: [4, 5],
       summary: "Avellaneda-Stoikov quoting, inventory management, latency arbitrage, and hardware acceleration.",
       subs: [
@@ -187,7 +187,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 13, id: "crypto-defi-quant", file: "13-crypto-defi-quant.html", tier: "E",
+      n: 13, id: "crypto-defi-quant", file: "13-crypto-defi-quant.html", tier: "E", live: true,
       title: "Crypto, DeFi & Digital Asset Quantitative Trading", weeks: "3–4 wks", prereqs: [4, 7],
       summary: "Uniswap v2/v3 concentrated liquidity formulas, MEV extraction, perpetual futures funding, and cross-DEX arb.",
       subs: [
@@ -200,7 +200,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 14, id: "execution-algorithms", file: "14-execution-algorithms.html", tier: "E",
+      n: 14, id: "execution-algorithms", file: "14-execution-algorithms.html", tier: "E", live: true,
       title: "Execution Algorithms & Smart Order Routing (SOR)", weeks: "3–4 wks", prereqs: [4, 12],
       summary: "TWAP, VWAP, Implementation Shortfall, dark pools, and transaction cost analysis (TCA).",
       subs: [
@@ -213,7 +213,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 15, id: "quant-tech-stack", file: "15-quant-tech-stack.html", tier: "E",
+      n: 15, id: "quant-tech-stack", file: "15-quant-tech-stack.html", tier: "E", live: true,
       title: "The Quant Tech Stack: C++, KDB+/q, Python", weeks: "4–5 wks", prereqs: [],
       summary: "Zero-copy C++20 memory layouts, lock-free ring buffers, KDB+/q tick databases, and Polars acceleration.",
       subs: [
@@ -226,7 +226,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 16, id: "career-interview-prep", file: "16-career-interview-prep.html", tier: "E",
+      n: 16, id: "career-interview-prep", file: "16-career-interview-prep.html", tier: "E", live: true,
       title: "Career Roadmap & Quant Interview Preparation", weeks: "3–4 wks", prereqs: [],
       summary: "Prop shops vs hedge funds, probability brainteasers, mental math, coding rounds, and live drills.",
       subs: [
@@ -239,7 +239,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 17, id: "llms-alternative-data", file: "17-llms-alternative-data.html", tier: "F",
+      n: 17, id: "llms-alternative-data", file: "17-llms-alternative-data.html", tier: "F", live: true,
       title: "LLMs & Alternative Data in Quantitative Alpha Research", weeks: "4–5 wks", prereqs: [6, 8],
       summary: "Earnings transcript parsing, central bank speech NLP, multi-modal alternative signals, and temporal leakage prevention.",
       subs: [
@@ -252,7 +252,7 @@ window.ATLAS = {
       ]
     },
     {
-      n: 18, id: "autonomous-agents-copilots", file: "18-autonomous-agents-copilots.html", tier: "F",
+      n: 18, id: "autonomous-agents-copilots", file: "18-autonomous-agents-copilots.html", tier: "F", live: true,
       title: "Autonomous Agents & AI Copilots in Trading", weeks: "4–5 wks", prereqs: [8, 14, 17],
       summary: "Multi-agent research swarms, automated strategy code synthesis, live compliance auditors, and RLFF alignment.",
       subs: [
