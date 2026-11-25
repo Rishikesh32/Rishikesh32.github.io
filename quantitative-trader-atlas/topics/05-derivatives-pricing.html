@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Derivatives Pricing & Volatility Surface · Quantitative Trader Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="derivatives-pricing">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="#059669"/>
+        <polyline points="5,17 10,11 15,14 21,7" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="21" cy="7" r="2" fill="#F59E0B"/>
+      </svg>
+      Quantitative Trader Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Derivatives Pricing & Volatility Surface</h1>
+    <p class="lede">Black-Scholes-Merton PDE, First and Second-Order Greeks, and Volatility Surface dynamics.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Black-Scholes-Merton PDE, First and Second-Order Greeks, and Volatility Surface dynamics. This comprehensive module breaks down Derivatives Pricing & Volatility Surface with step-by-step mathematical formulations, practical market considerations, and interactive code implementations.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 200" role="img" aria-label="Workflow diagram for Derivatives Pricing & Volatility Surface">
+              <rect class="d-accent" x="20" y="30" width="200" height="60" rx="8" fill="#059669" fill-opacity="0.15" stroke="#059669" stroke-width="1.5"/>
+              <text class="d-title" x="120" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Formulation & Theory</text>
+
+              <line class="d-line-accent" x1="220" y1="60" x2="280" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-box" x="280" y="30" width="200" height="60" rx="8" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+              <text class="d-title" x="380" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Empirical Calibration</text>
+
+              <line class="d-line-accent" x1="480" y1="60" x2="540" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-good" x="540" y="30" width="200" height="60" rx="8" fill="#D97706" fill-opacity="0.15" stroke="#D97706" stroke-width="1.5"/>
+              <text class="d-title" x="640" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Production Alpha & Risk</text>
+
+              <rect class="d-fill" x="20" y="110" width="720" height="65" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+              <text class="d-label" x="40" y="135" fill="var(--ink-2)" font-size="13">Quantitative takeaway: In quantitative finance, theory without empirical validation is fantasy,</text>
+              <text class="d-label" x="40" y="155" fill="var(--ink-2)" font-size="13">and empirical patterns without economic theory or risk controls will fail when market regimes shift.</text>
+            </svg>
+          </div>
+        </figure>
+      </div>
+
+      <section class="topic" id="black-scholes">
+        <div class="topic-head">
+          <span class="sub-num">5.1</span>
+          <h2>Black-Scholes-Merton Formula & Assumptions</h2>
+          <button class="mark-done" type="button" data-check="black-scholes" aria-label="Mark Black-Scholes-Merton Formula & Assumptions mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Black-Scholes-Merton Formula & Assumptions requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Black-Scholes-Merton Formula & Assumptions to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="the-greeks">
+        <div class="topic-head">
+          <span class="sub-num">5.2</span>
+          <h2>Delta, Gamma, Theta, Vega, Rho</h2>
+          <button class="mark-done" type="button" data-check="the-greeks" aria-label="Mark Delta, Gamma, Theta, Vega, Rho mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Delta, Gamma, Theta, Vega, Rho requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Delta, Gamma, Theta, Vega, Rho to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="higher-order-greeks">
+        <div class="topic-head">
+          <span class="sub-num">5.3</span>
+          <h2>Higher-Order Greeks: Vanna, Volga & Charm</h2>
+          <button class="mark-done" type="button" data-check="higher-order-greeks" aria-label="Mark Higher-Order Greeks: Vanna, Volga & Charm mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Higher-Order Greeks: Vanna, Volga & Charm requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Higher-Order Greeks: Vanna, Volga & Charm to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="volatility-surface">
+        <div class="topic-head">
+          <span class="sub-num">5.4</span>
+          <h2>Implied Volatility Smile & Surface</h2>
+          <button class="mark-done" type="button" data-check="volatility-surface" aria-label="Mark Implied Volatility Smile & Surface mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Implied Volatility Smile & Surface requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Implied Volatility Smile & Surface to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="local-stochastic-vol">
+        <div class="topic-head">
+          <span class="sub-num">5.5</span>
+          <h2>Dupire Local Vol & Heston Stochastic Vol</h2>
+          <button class="mark-done" type="button" data-check="local-stochastic-vol" aria-label="Mark Dupire Local Vol & Heston Stochastic Vol mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Dupire Local Vol & Heston Stochastic Vol requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Dupire Local Vol & Heston Stochastic Vol to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="exotic-derivatives">
+        <div class="topic-head">
+          <span class="sub-num">5.6</span>
+          <h2>Barrier Options & Structured Payoffs</h2>
+          <button class="mark-done" type="button" data-check="exotic-derivatives" aria-label="Mark Barrier Options & Structured Payoffs mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Barrier Options & Structured Payoffs requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Barrier Options & Structured Payoffs to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="interactive-lab-card" style="margin-top: 40px; padding: 24px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line);">
+        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+          <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10B981;"></span>
+          Interactive Simulation &amp; Self-Check
+        </h3>
+        <p style="color: var(--ink-2); font-size: 0.95rem;">Test your quantitative reasoning on Derivatives Pricing & Volatility Surface. Open the interactive scene and quiz engine to verify your mastery.</p>
+        <div id="interactive-scene-container" style="margin-top: 16px;">
+          <canvas id="topic-scene-canvas" width="680" height="260" style="width: 100%; height: auto; border-radius: 8px; background: #0c1017; border: 1px solid var(--line);"></canvas>
+        </div>
+        <div id="quiz-container" style="margin-top: 20px;"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <a href="../index.html">← Back to Atlas</a> · Quantitative Trader Atlas
+  </div>
+</footer>
+
+<script src="../assets/iso.js"></script>
+<script src="../assets/scenes/derivatives-pricing.js"></script>
+<script src="../assets/learn/derivatives-pricing.js"></script>
+<script src="../assets/lesson.js"></script>
+</body>
+</html>

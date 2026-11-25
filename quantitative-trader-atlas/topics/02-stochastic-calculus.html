@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stochastic Calculus & Asset Dynamics · Quantitative Trader Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="stochastic-calculus">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="#059669"/>
+        <polyline points="5,17 10,11 15,14 21,7" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="21" cy="7" r="2" fill="#F59E0B"/>
+      </svg>
+      Quantitative Trader Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Stochastic Calculus & Asset Dynamics</h1>
+    <p class="lede">Brownian motion, Itô's Lemma, Girsanov theorem, and mean-reverting jump-diffusion processes.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Stochastic calculus is the mathematical language of continuous-time asset pricing, derivatives, and algorithmic volatility trading. From Itô's Lemma and Girsanov's change of measure to jump-diffusion and Ornstein-Uhlenbeck processes, it governs how quants price and hedge dynamic market risk.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 200" role="img" aria-label="Workflow diagram for Stochastic Calculus & Asset Dynamics">
+              <rect class="d-accent" x="20" y="30" width="200" height="60" rx="8" fill="#059669" fill-opacity="0.15" stroke="#059669" stroke-width="1.5"/>
+              <text class="d-title" x="120" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Brownian Motion W_t</text>
+
+              <line class="d-line-accent" x1="220" y1="60" x2="280" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-box" x="280" y="30" width="200" height="60" rx="8" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+              <text class="d-title" x="380" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Itô's Lemma & SDEs</text>
+
+              <line class="d-line-accent" x1="480" y1="60" x2="540" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-good" x="540" y="30" width="200" height="60" rx="8" fill="#D97706" fill-opacity="0.15" stroke="#D97706" stroke-width="1.5"/>
+              <text class="d-title" x="640" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Pricing & Jump Dynamics</text>
+
+              <rect class="d-fill" x="20" y="110" width="720" height="65" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+              <text class="d-label" x="40" y="135" fill="var(--ink-2)" font-size="13">Quantitative takeaway: In quantitative finance, theory without empirical validation is fantasy,</text>
+              <text class="d-label" x="40" y="155" fill="var(--ink-2)" font-size="13">and empirical patterns without economic theory or risk controls will fail when market regimes shift.</text>
+            </svg>
+          </div>
+        </figure>
+      </div>
+
+      <section class="topic" id="brownian-motion">
+        <div class="topic-head">
+          <span class="sub-num">2.1</span>
+          <h2>Brownian Motion & Wiener Process</h2>
+          <button class="mark-done" type="button" data-check="brownian-motion" aria-label="Mark Brownian Motion & Wiener Process mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Standard Brownian Motion (Wiener Process) $W_t$ is a continuous-time stochastic process with $W_0 = 0$, independent increments $W_t - W_s \sim \mathcal{N}(0, t-s)$, and continuous but nowhere differentiable sample paths. Its quadratic variation over $[0, t]$ is deterministic: $[W, W]_t = t$.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$W_t - W_s \sim \mathcal{N}(0, t-s), \quad (dW_t)^2 = dt, \quad dW_t \cdot dt = 0$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Nowhere differentiability means standard Newton-Leibniz calculus fails: ordinary chain rules do not apply.</li>
+            <li>Martingale property: $\mathbb{E}[W_t | \mathcal{F}_s] = W_s$ for $s \le t$.</li>
+            <li>Scaling invariance: $\frac{1}{\sqrt{c}} W_{ct}$ is also a standard Brownian motion.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="ito-lemma">
+        <div class="topic-head">
+          <span class="sub-num">2.2</span>
+          <h2>Itô's Lemma & Stochastic Integration</h2>
+          <button class="mark-done" type="button" data-check="ito-lemma" aria-label="Mark Itô's Lemma & Stochastic Integration mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Itô's Lemma is the stochastic Taylor expansion chain rule. For a twice continuously differentiable function $f(t, X_t)$ where $dX_t = \mu_t dt + \sigma_t dW_t$, the non-zero quadratic variation $(dW_t)^2 = dt$ produces an essential second-order drift term $\frac{1}{2} \sigma_t^2 \frac{\partial^2 f}{\partial x^2} dt$.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$df(t, X_t) = \left( \frac{\partial f}{\partial t} + \mu_t \frac{\partial f}{\partial x} + \frac{1}{2} \sigma_t^2 \frac{\partial^2 f}{\partial x^2} \right) dt + \sigma_t \frac{\partial f}{\partial x} dW_t$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>The convexity term $\frac{1}{2} \sigma^2 f''(x)$ represents Gamma in option pricing and explains option time decay (Theta).</li>
+            <li>Applied to $f(S) = \ln S$ where $dS = \mu S dt + \sigma S dW$, Itô's Lemma yields $d(\ln S) = (\mu - \frac{1}{2}\sigma^2)dt + \sigma dW$.</li>
+            <li>Multi-dimensional Itô Lemma accounts for cross-asset correlations $\rho_{ij} dt = dW_i dW_j$.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="girsanov-theorem">
+        <div class="topic-head">
+          <span class="sub-num">2.3</span>
+          <h2>Girsanov's Theorem & Risk-Neutral Measures</h2>
+          <button class="mark-done" type="button" data-check="girsanov-theorem" aria-label="Mark Girsanov's Theorem & Risk-Neutral Measures mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Girsanov's Theorem allows transforming probability measures, shifting the drift of a stochastic process without changing its volatility or impossible events (null sets). In finance, it changes the historical real-world measure $\mathbb{P}$ with drift $\mu$ into the risk-neutral measure $\mathbb{Q}$ where all discounted assets drift at the risk-free rate $r$.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$\left. \frac{d\mathbb{Q}}{d\mathbb{P}} \right|_{\mathcal{F}_t} = \exp\left( -\int_0^t \lambda_s dW_s - \frac{1}{2} \int_0^t \lambda_s^2 ds \right), \quad \lambda = \frac{\mu - r}{\sigma}$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>$\lambda = \frac{\mu - r}{\sigma}$ is the market price of risk (Sharpe ratio of the underlying asset).</li>
+            <li>Under $\mathbb{Q}$, the discounted price process $e^{-rt} S_t$ is a true martingale, enabling expectation pricing $\mathbb{E}^\mathbb{Q}[e^{-rT} Payoff]$.</li>
+            <li>Fundamental Theorem of Asset Pricing (FTAP): No arbitrage is equivalent to the existence of at least one equivalent martingale measure $\mathbb{Q}$.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="geometric-brownian-motion">
+        <div class="topic-head">
+          <span class="sub-num">2.4</span>
+          <h2>Geometric Brownian Motion (GBM)</h2>
+          <button class="mark-done" type="button" data-check="geometric-brownian-motion" aria-label="Mark Geometric Brownian Motion (GBM) mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Geometric Brownian Motion (GBM) models asset prices such that returns are log-normally distributed, preventing prices from going negative: $dS_t = \mu S_t dt + \sigma S_t dW_t$. The analytical solution is $S_t = S_0 \exp\left((\mu - \frac{1}{2}\sigma^2)t + \sigma W_t\right)$.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$S_t = S_0 \exp\left( \left(\mu - \frac{1}{2}\sigma^2\right)t + \sigma W_t \right)$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Expected value $\mathbb{E}[S_t] = S_0 e^{\mu t}$, while median value is $S_0 e^{(\mu - \frac{1}{2}\sigma^2)t}$.</li>
+            <li>Limitation: Real financial markets exhibit fat tails (leptokurtosis) and volatility clustering, which pure GBM underestimates.</li>
+            <li>Forms the underlying asset model for the Black-Scholes-Merton option pricing framework.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="ornstein-uhlenbeck">
+        <div class="topic-head">
+          <span class="sub-num">2.5</span>
+          <h2>Ornstein-Uhlenbeck Mean-Reverting Process</h2>
+          <button class="mark-done" type="button" data-check="ornstein-uhlenbeck" aria-label="Mark Ornstein-Uhlenbeck Mean-Reverting Process mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">The Ornstein-Uhlenbeck (OU) process models mean-reverting time series, fundamental to statistical arbitrage pairs trading, interest rates (Vasicek model), and volatility modeling: $dX_t = \theta(\mu - X_t)dt + \sigma dW_t$, where $\theta$ is the speed of mean reversion, $\mu$ is the long-term equilibrium, and $\sigma$ is diffusion volatility.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$dX_t = \theta(\mu - X_t)dt + \sigma dW_t, \quad \text{Half-life} = \frac{\ln 2}{\theta}$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Stationary distribution is Gaussian with mean $\mu$ and asymptotic variance $\sigma^2 / (2\theta)$.</li>
+            <li>Half-life of mean reversion $t_{1/2} = \frac{\ln 2}{\theta}$ determines strategy holding period and rebalancing frequency.</li>
+            <li>Trading rule: Enter when the spread deviates by $> 2\sigma$ from $\mu$, exit when it crosses $\mu$.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="jump-diffusion">
+        <div class="topic-head">
+          <span class="sub-num">2.6</span>
+          <h2>Jump-Diffusion & Merton Model</h2>
+          <button class="mark-done" type="button" data-check="jump-diffusion" aria-label="Mark Jump-Diffusion & Merton Model mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Merton's jump-diffusion model augments standard diffusion with a compound Poisson jump process to capture sudden market crashes, earnings surprises, and macro announcements: $dS_t = (\mu - \lambda k) S_t dt + \sigma S_t dW_t + (J-1) S_t dN_t$, where $N_t$ is a Poisson process with jump intensity $\lambda$ and $J$ is log-normal jump size.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$dS_t = (\mu - \lambda k)S_t dt + \sigma S_t dW_t + (J - 1)S_t dN_t$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Generates short-dated volatility smiles and negative skewness observed in index options.</li>
+            <li>Markets are incomplete when jumps exist: risks cannot be perfectly hedged with continuous Delta hedging alone.</li>
+            <li>Jump risk premium demands higher implied volatility for out-of-the-money put options.</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="interactive-lab-card" style="margin-top: 40px; padding: 24px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line);">
+        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+          <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10B981;"></span>
+          Interactive Simulation &amp; Self-Check
+        </h3>
+        <p style="color: var(--ink-2); font-size: 0.95rem;">Test your quantitative reasoning on Stochastic Calculus & Asset Dynamics. Open the interactive scene and quiz engine to verify your mastery.</p>
+        <div id="interactive-scene-container" style="margin-top: 16px;">
+          <canvas id="topic-scene-canvas" width="680" height="260" style="width: 100%; height: auto; border-radius: 8px; background: #0c1017; border: 1px solid var(--line);"></canvas>
+        </div>
+        <div id="quiz-container" style="margin-top: 20px;"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <a href="../index.html">← Back to Atlas</a> · Quantitative Trader Atlas
+  </div>
+</footer>
+
+<script src="../assets/iso.js"></script>
+<script src="../assets/scenes/stochastic-calculus.js"></script>
+<script src="../assets/learn/stochastic-calculus.js"></script>
+<script src="../assets/lesson.js"></script>
+</body>
+</html>

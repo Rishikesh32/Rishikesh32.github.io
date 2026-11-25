@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Market Microstructure & Order Book Mechanics · Quantitative Trader Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="market-microstructure">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="#059669"/>
+        <polyline points="5,17 10,11 15,14 21,7" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="21" cy="7" r="2" fill="#F59E0B"/>
+      </svg>
+      Quantitative Trader Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Market Microstructure & Order Book Mechanics</h1>
+    <p class="lede">Limit order book dynamics, bid-ask spreads, order flow toxicity, and market impact models.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Limit order book dynamics, bid-ask spreads, order flow toxicity, and market impact models. This comprehensive module breaks down Market Microstructure & Order Book Mechanics with step-by-step mathematical formulations, practical market considerations, and interactive code implementations.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 200" role="img" aria-label="Workflow diagram for Market Microstructure & Order Book Mechanics">
+              <rect class="d-accent" x="20" y="30" width="200" height="60" rx="8" fill="#059669" fill-opacity="0.15" stroke="#059669" stroke-width="1.5"/>
+              <text class="d-title" x="120" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Formulation & Theory</text>
+
+              <line class="d-line-accent" x1="220" y1="60" x2="280" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-box" x="280" y="30" width="200" height="60" rx="8" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+              <text class="d-title" x="380" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Empirical Calibration</text>
+
+              <line class="d-line-accent" x1="480" y1="60" x2="540" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-good" x="540" y="30" width="200" height="60" rx="8" fill="#D97706" fill-opacity="0.15" stroke="#D97706" stroke-width="1.5"/>
+              <text class="d-title" x="640" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Production Alpha & Risk</text>
+
+              <rect class="d-fill" x="20" y="110" width="720" height="65" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+              <text class="d-label" x="40" y="135" fill="var(--ink-2)" font-size="13">Quantitative takeaway: In quantitative finance, theory without empirical validation is fantasy,</text>
+              <text class="d-label" x="40" y="155" fill="var(--ink-2)" font-size="13">and empirical patterns without economic theory or risk controls will fail when market regimes shift.</text>
+            </svg>
+          </div>
+        </figure>
+      </div>
+
+      <section class="topic" id="lob-mechanics">
+        <div class="topic-head">
+          <span class="sub-num">4.1</span>
+          <h2>Limit Order Book (LOB) Architecture & Level 2/3</h2>
+          <button class="mark-done" type="button" data-check="lob-mechanics" aria-label="Mark Limit Order Book (LOB) Architecture & Level 2/3 mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Limit Order Book (LOB) Architecture & Level 2/3 requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Limit Order Book (LOB) Architecture & Level 2/3 to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="order-types">
+        <div class="topic-head">
+          <span class="sub-num">4.2</span>
+          <h2>Limit, Market, Iceberg & Hidden Orders</h2>
+          <button class="mark-done" type="button" data-check="order-types" aria-label="Mark Limit, Market, Iceberg & Hidden Orders mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Limit, Market, Iceberg & Hidden Orders requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Limit, Market, Iceberg & Hidden Orders to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="order-flow-toxicity">
+        <div class="topic-head">
+          <span class="sub-num">4.3</span>
+          <h2>Order Flow Toxicity, VPIN & Kyle's Lambda</h2>
+          <button class="mark-done" type="button" data-check="order-flow-toxicity" aria-label="Mark Order Flow Toxicity, VPIN & Kyle's Lambda mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Order Flow Toxicity, VPIN & Kyle's Lambda requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Order Flow Toxicity, VPIN & Kyle's Lambda to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="market-impact">
+        <div class="topic-head">
+          <span class="sub-num">4.4</span>
+          <h2>Market Impact: Almgren-Chriss Framework</h2>
+          <button class="mark-done" type="button" data-check="market-impact" aria-label="Mark Market Impact: Almgren-Chriss Framework mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Market Impact: Almgren-Chriss Framework requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Market Impact: Almgren-Chriss Framework to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="queue-position">
+        <div class="topic-head">
+          <span class="sub-num">4.5</span>
+          <h2>Queue Position, Fill Probabilities & Latency</h2>
+          <button class="mark-done" type="button" data-check="queue-position" aria-label="Mark Queue Position, Fill Probabilities & Latency mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Queue Position, Fill Probabilities & Latency requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Queue Position, Fill Probabilities & Latency to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="maker-taker">
+        <div class="topic-head">
+          <span class="sub-num">4.6</span>
+          <h2>Maker-Taker Fees & Rebate Arbitrage</h2>
+          <button class="mark-done" type="button" data-check="maker-taker" aria-label="Mark Maker-Taker Fees & Rebate Arbitrage mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Quantitative mastery of Maker-Taker Fees & Rebate Arbitrage requires combining theoretical mathematical rigor with real-world trading constraints. Quants analyze market data, calibrate empirical parameters, control for liquidity microstructures, and validate all algorithms under realistic transaction costs and market friction.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">\mathcal{L}_{\theta}(X_t) = \mathbb{E}\left[ \text{Utility}(R_{t+1}) - \lambda \cdot \text{Risk}(\Sigma_t) \mid \mathcal{F}_t \right]</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Core objective: Rigorously formulate Maker-Taker Fees & Rebate Arbitrage to maximize information ratio while strictly bounding tail drawdowns.</li>
+            <li>Empirical pitfall: In-sample overfitting and parameter instability across non-stationary market regimes.</li>
+            <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="interactive-lab-card" style="margin-top: 40px; padding: 24px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line);">
+        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+          <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10B981;"></span>
+          Interactive Simulation &amp; Self-Check
+        </h3>
+        <p style="color: var(--ink-2); font-size: 0.95rem;">Test your quantitative reasoning on Market Microstructure & Order Book Mechanics. Open the interactive scene and quiz engine to verify your mastery.</p>
+        <div id="interactive-scene-container" style="margin-top: 16px;">
+          <canvas id="topic-scene-canvas" width="680" height="260" style="width: 100%; height: auto; border-radius: 8px; background: #0c1017; border: 1px solid var(--line);"></canvas>
+        </div>
+        <div id="quiz-container" style="margin-top: 20px;"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <a href="../index.html">← Back to Atlas</a> · Quantitative Trader Atlas
+  </div>
+</footer>
+
+<script src="../assets/iso.js"></script>
+<script src="../assets/scenes/market-microstructure.js"></script>
+<script src="../assets/learn/market-microstructure.js"></script>
+<script src="../assets/lesson.js"></script>
+</body>
+</html>

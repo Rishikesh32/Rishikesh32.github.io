@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mathematical & Probabilistic Foundations · Quantitative Trader Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="math-foundations">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="#059669"/>
+        <polyline points="5,17 10,11 15,14 21,7" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="21" cy="7" r="2" fill="#F59E0B"/>
+      </svg>
+      Quantitative Trader Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Mathematical & Probabilistic Foundations</h1>
+    <p class="lede">Probability spaces, Martingales, SVD decomposition, and Monte Carlo variance reduction.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Quantitative trading rests on rigorous probabilistic foundations, linear algebra, and Monte Carlo mathematics. From measure spaces and martingales to high-dimensional SVD covariance cleaning, every price model and risk parameter derives from these mathematical pillars.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 200" role="img" aria-label="Workflow diagram for Mathematical & Probabilistic Foundations">
+              <rect class="d-accent" x="20" y="30" width="200" height="60" rx="8" fill="#059669" fill-opacity="0.15" stroke="#059669" stroke-width="1.5"/>
+              <text class="d-title" x="120" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Probability Space (Ω, F, P)</text>
+
+              <line class="d-line-accent" x1="220" y1="60" x2="280" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-box" x="280" y="30" width="200" height="60" rx="8" fill="var(--surface-2)" stroke="var(--line)" stroke-width="1.5"/>
+              <text class="d-title" x="380" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Martingales & SVD Filtering</text>
+
+              <line class="d-line-accent" x1="480" y1="60" x2="540" y2="60" stroke="#059669" stroke-width="2"/>
+
+              <rect class="d-good" x="540" y="30" width="200" height="60" rx="8" fill="#D97706" fill-opacity="0.15" stroke="#D97706" stroke-width="1.5"/>
+              <text class="d-title" x="640" y="65" text-anchor="middle" fill="currentColor" font-weight="600">Monte Carlo Estimators</text>
+
+              <rect class="d-fill" x="20" y="110" width="720" height="65" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+              <text class="d-label" x="40" y="135" fill="var(--ink-2)" font-size="13">Quantitative takeaway: In quantitative finance, theory without empirical validation is fantasy,</text>
+              <text class="d-label" x="40" y="155" fill="var(--ink-2)" font-size="13">and empirical patterns without economic theory or risk controls will fail when market regimes shift.</text>
+            </svg>
+          </div>
+        </figure>
+      </div>
+
+      <section class="topic" id="probability-spaces">
+        <div class="topic-head">
+          <span class="sub-num">1.1</span>
+          <h2>Probability Spaces & Measure Theory</h2>
+          <button class="mark-done" type="button" data-check="probability-spaces" aria-label="Mark Probability Spaces & Measure Theory mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">A rigorous mathematical model of financial markets starts with a probability space $(\Omega, \mathcal{F}, \mathbb{P})$, where $\Omega$ represents the sample space of all possible future market states, $\mathcal{F}$ is a $\sigma$-algebra of events (filtrations $\mathcal{F}_t$ representing information available up to time $t$), and $\mathbb{P}$ is the historical probability measure.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$\mathbb{P}(\Omega) = 1, \quad \mathcal{F}_s \subseteq \mathcal{F}_t \quad \forall s \le t$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Filtration represents information flow: traders cannot use information from $\mathcal{F}_{t+\Delta}$ at time $t$ without causing lookahead bias.</li>
+            <li>Measure-theoretic probability avoids paradoxes when modeling continuous asset prices over infinite states.</li>
+            <li>Radon-Nikodym derivatives $\frac{d\mathbb{Q}}{d\mathbb{P}}$ allow switching from physical reality $\mathbb{P}$ to risk-neutral pricing $\mathbb{Q}$.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="conditional-expectation">
+        <div class="topic-head">
+          <span class="sub-num">1.2</span>
+          <h2>Conditional Expectation & Martingales</h2>
+          <button class="mark-done" type="button" data-check="conditional-expectation" aria-label="Mark Conditional Expectation & Martingales mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">The expectation of future prices conditioned on available filtration $\mathbb{E}[S_{t+1} | \mathcal{F}_t]$ forms the core of fair game theory. A stochastic process $M_t$ is a Martingale if $\mathbb{E}[|M_t|] < \infty$ and $\mathbb{E}[M_t | \mathcal{F}_s] = M_s$ for all $s \le t$. In an efficient market with no arbitrage, discounted asset prices are martingales under an equivalent martingale measure.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$\mathbb{E}\left[ M_{t} \mid \mathcal{F}_s \right] = M_s, \quad s \le t$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Supermartingales represent unfavorable games (expected future wealth drifts downward).</li>
+            <li>Submartingales represent favorable games with positive drift (long equity market risk premium).</li>
+            <li>Doob Decomposition splits any submartingale into a unique martingale plus a predictable increasing process.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="linear-algebra-svd">
+        <div class="topic-head">
+          <span class="sub-num">1.3</span>
+          <h2>Linear Algebra, SVD & PCA</h2>
+          <button class="mark-done" type="button" data-check="linear-algebra-svd" aria-label="Mark Linear Algebra, SVD & PCA mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Cross-asset correlation matrices in equity portfolios suffer from empirical noise. Singular Value Decomposition (SVD) factorizes an $N \times T$ return matrix $X = U \Sigma V^T$. Principal Component Analysis (PCA) isolates the dominant eigenmodes: PC1 typically captures market beta (80%+ variance), PC2 captures sector tilts, and higher eigenvalues capture idiosyncratic factor noise.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$X = U \Sigma V^T = \sum_{i=1}^r \sigma_i u_i v_i^T$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Marchenko-Pastur Law from Random Matrix Theory (RMT) proves which eigenvalues contain real economic signal vs purely random noise.</li>
+            <li>Eigenvalues within $[\lambda_-, \lambda_+]$ must be filtered or clipped to prevent explosive portfolio weights in mean-variance optimizers.</li>
+            <li>Statistical arbitrage strategies trade mean-reverting residual spreads constructed by stripping out the top 3-5 PCA market components.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="covariance-matrices">
+        <div class="topic-head">
+          <span class="sub-num">1.4</span>
+          <h2>Covariance Matrix Properties & Cleaning</h2>
+          <button class="mark-done" type="button" data-check="covariance-matrices" aria-label="Mark Covariance Matrix Properties & Cleaning mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">A valid covariance matrix $\Sigma$ must be symmetric positive semi-definite (PSD). In practice, missing data, asynchronous trading, and non-synchronous asset updates produce non-PSD matrices with negative eigenvalues, causing portfolio optimization solvers to fail. Higham's nearest correlation matrix algorithm projects flawed empirical matrices back into the PSD cone.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$x^T \Sigma x \ge 0 \quad \forall x \in \mathbb{R}^n \setminus \{0\}$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Ledoit-Wolf shrinkage combines sample covariance $S$ with structured target $F$: $\Sigma_{shrink} = \delta F + (1-\delta)S$.</li>
+            <li>Condition number $\kappa(\Sigma) = \lambda_{max} / \lambda_{min}$ measures matrix inversion stability; ill-conditioned matrices amplify estimation errors 1,000x.</li>
+            <li>Denoising covariance via spectral clipping replaces random noise eigenvalues with their mean to preserve matrix trace.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="monte-carlo-methods">
+        <div class="topic-head">
+          <span class="sub-num">1.5</span>
+          <h2>Monte Carlo Simulation Fundamentals</h2>
+          <button class="mark-done" type="button" data-check="monte-carlo-methods" aria-label="Mark Monte Carlo Simulation Fundamentals mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">When derivatives lack closed-form analytical solutions (such as Asian options, barrier options, or multi-asset basket options), Monte Carlo simulation computes expected discounted payoff under risk-neutral measure $\mathbb{Q}$ by averaging over $M$ simulated paths: $\hat{V}_0 = e^{-rT} \frac{1}{M} \sum_{i=1}^M Payoff(S^{(i)}_T)$.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$\hat{V}_0 = e^{-rT} \frac{1}{M} \sum_{i=1}^M f(S_T^{(i)}), \quad \text{Standard Error} = \frac{\sigma}{\sqrt{M}}$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Convergence rate of standard Monte Carlo is $\mathcal{O}(1/\sqrt{M})$, independent of the dimensionality of the underlying assets.</li>
+            <li>Discretization schemes like Euler-Maruyama and Milstein simulate continuous stochastic differential equations over discrete time steps $\Delta t$.</li>
+            <li>Pseudo-random number generators (e.g. Mersenne Twister) vs Quasi-Monte Carlo low-discrepancy sequences (Sobol, Halton) for faster $\mathcal{O}((\log M)^d / M)$ convergence.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="variance-reduction">
+        <div class="topic-head">
+          <span class="sub-num">1.6</span>
+          <h2>Variance Reduction Techniques</h2>
+          <button class="mark-done" type="button" data-check="variance-reduction" aria-label="Mark Variance Reduction Techniques mastered">Mastered</button>
+        </div>
+        <p class="topic-lead">Because increasing sample size $M$ by $100\times$ only reduces error by $10\times$, quants employ mathematical variance reduction techniques: Antithetic Variates, Control Variates, and Importance Sampling. In Antithetic Variates, every generated standard normal path $\{Z_t\}$ is paired with its symmetric negative $\{-Z_t\}$, eliminating odd-order error terms.</p>
+        <div class="formula-card">
+          <p class="formula-label">Mathematical Formulation</p>
+          <div class="katex-block">$\text{Var}\left(\frac{X + X'}{2}\right) = \frac{1}{2}\text{Var}(X) + \frac{1}{2}\text{Cov}(X, X') < \frac{1}{2}\text{Var}(X)$</div>
+        </div>
+        <div class="topic-content">
+          <ul class="bullet-points">
+            <li>Control Variates uses a correlated instrument with a known analytical price to strip out common sampling noise.</li>
+            <li>Importance Sampling shifts sampling distributions toward rare out-of-the-money events, vital for deep out-of-the-money option Greeks and credit default simulation.</li>
+            <li>Stratified Sampling partitions the probability space into uniform strata, ensuring every probability quantile is sampled proportionately.</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="interactive-lab-card" style="margin-top: 40px; padding: 24px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line);">
+        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+          <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10B981;"></span>
+          Interactive Simulation &amp; Self-Check
+        </h3>
+        <p style="color: var(--ink-2); font-size: 0.95rem;">Test your quantitative reasoning on Mathematical & Probabilistic Foundations. Open the interactive scene and quiz engine to verify your mastery.</p>
+        <div id="interactive-scene-container" style="margin-top: 16px;">
+          <canvas id="topic-scene-canvas" width="680" height="260" style="width: 100%; height: auto; border-radius: 8px; background: #0c1017; border: 1px solid var(--line);"></canvas>
+        </div>
+        <div id="quiz-container" style="margin-top: 20px;"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <a href="../index.html">← Back to Atlas</a> · Quantitative Trader Atlas
+  </div>
+</footer>
+
+<script src="../assets/iso.js"></script>
+<script src="../assets/scenes/math-foundations.js"></script>
+<script src="../assets/learn/math-foundations.js"></script>
+<script src="../assets/lesson.js"></script>
+</body>
+</html>

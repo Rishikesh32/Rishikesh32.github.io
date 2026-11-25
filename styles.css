@@ -802,7 +802,8 @@ button { font: inherit; color: inherit; }
 }
 #atlas-iframe,
 #data-atlas-iframe,
-#psych-atlas-iframe {
+#psych-atlas-iframe,
+#quant-atlas-iframe {
   width: 100%;
   height: 600px;
   border: 0;
@@ -814,7 +815,8 @@ button { font: inherit; color: inherit; }
   .site-stats-row { grid-template-columns: repeat(2, 1fr); }
   #atlas-iframe,
   #data-atlas-iframe,
-  #psych-atlas-iframe { height: 450px; }
+  #psych-atlas-iframe,
+  #quant-atlas-iframe { height: 450px; }
 }
 
 /* ---------------- Reference architecture ---------------- */

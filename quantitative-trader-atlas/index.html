@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quantitative Trader Atlas</title>
+<meta name="description" content="Every mathematical, algorithmic, and operational skill a quantitative trader and researcher needs, mapped with interactive simulations, KaTeX derivations, and daily review.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</head>
+<body data-page="home">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="#059669"/>
+        <polyline points="5,17 10,11 15,14 21,7" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="21" cy="7" r="2" fill="#F59E0B"/>
+      </svg>
+      Quantitative Trader Atlas
+    </a>
+    <span class="spacer"></span>
+    <a class="nav-link" href="review.html" style="margin-right: 14px; font-size: 0.9rem; font-weight: 500; color: var(--ink-2);">Daily Review ↗</a>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="overall-bar"></i></span><span class="num" data-fill="pct">0%</span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="home-hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow" style="color: #059669; font-weight: 600;">The Complete Mathematical & Algorithmic Curriculum</p>
+        <h1>What a quantitative trader needs to master</h1>
+        <p class="lede">Eighteen core disciplines, from measure theory, Itô calculus, and order book microstructure to high-frequency execution, factor investing, crypto DeFi, and cutting-edge LLM-driven alpha swarms. Interactive simulations, rigorous derivations, and daily spaced repetition review.</p>
+        <div class="stats" aria-label="Atlas totals">
+          <div><span class="big" data-fill="n-areas">18</span><span class="eyebrow">Areas</span></div>
+          <div><span class="big" data-fill="n-subs">108</span><span class="eyebrow">Subtopics</span></div>
+          <div><span class="big" data-fill="n-done">0</span><span class="eyebrow">Mastered</span></div>
+          <div class="overall"><span>Overall</span><span class="bar"><i data-fill="overall-bar"></i></span><span class="num" data-fill="pct">0%</span></div>
+        </div>
+      </div>
+      <div class="atlas3d" id="atlas3d" role="img" aria-label="3D map of the 18 quant areas, grouped into six tiers, with packets flowing along the learning path.">
+        <div class="a3-hud"><span class="a3-badge">3D</span><span>Drag to rotate · click an area node to launch</span></div>
+        <div class="a3-tip" hidden></div>
+        <div class="a3-labels" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="map-section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>The Quant Learning Path</h2>
+        <span class="muted" style="font-size:.92rem">Arrows show the flow across foundational math, asset modeling, alpha discovery, and execution. Hover an area to trace prerequisites.</span>
+      </div>
+      <div class="map-frame" id="map" aria-live="polite"></div>
+      <div class="map-legend">
+        <span>Green bar in each node = subtopics you've marked as mastered</span>
+        <span>Tier 6 (AI & LLMs) integrates directly after ML and Alpha Research</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cards-section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Curriculum Areas & Syllabi</h2>
+        <button class="reset-btn" id="reset-progress" type="button">Reset progress</button>
+      </div>
+      <div id="cards"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">Quantitative Trader Atlas · Rigorous open-source curriculum for quantitative researchers, traders, and software engineers. Progress is persisted locally in your browser.</div>
+</footer>
+<script src="assets/hero3d.js"></script>
+</body>
+</html>
