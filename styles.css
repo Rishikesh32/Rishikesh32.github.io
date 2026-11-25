@@ -761,6 +761,10 @@ button { font: inherit; color: inherit; }
   font-size: 13.5px;
   border-radius: 10px;
 }
+[hidden] {
+  display: none !important;
+}
+
 .atlas-inline-frame {
   margin-top: 24px;
   border-radius: 16px;
