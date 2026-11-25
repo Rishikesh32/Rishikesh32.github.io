@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI tools, ethics &amp; career · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="career">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>AI tools, ethics &amp; career</h1>
+    <p class="lede">The analyst job is changing fast. AI assistants draft queries in seconds, scripts replace hours of copy-paste, and the data you touch is more sensitive than ever. This area covers how to use those tools without fooling yourself, how to handle people's data responsibly, and how to show your skills and choose where to grow next.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Three themes run through this area. <strong>Leverage</strong>: AI assistants and automation multiply what one analyst can do, as long as you verify what they produce. <strong>Responsibility</strong>: the rows you query describe real people, so privacy and bias are part of the job, not an afterthought. <strong>Growth</strong>: a portfolio, interview practice and a clear view of the career paths turn your skills into the next role. The running example is your first months as a junior analyst at an online store, with an <code>orders</code> table, a <code>customers</code> table and a weekly sales report that someone has been building by hand.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 250" role="img" aria-label="Three columns feeding a trusted analyst: leverage (AI assistants and automating reports), responsibility (ethics, privacy and bias), and growth (portfolio, interviews and career paths). Verification links the leverage column to the responsibility column.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="22">LEVERAGE</text>
+              <rect class="d-accent" x="20" y="32" width="190" height="52" rx="8"/>
+              <text class="d-title" x="115" y="55" text-anchor="middle">AI assistants</text>
+              <text class="d-label" x="115" y="73" text-anchor="middle">16.1 · draft, then verify</text>
+              <rect class="d-accent" x="20" y="96" width="190" height="52" rx="8"/>
+              <text class="d-title" x="115" y="119" text-anchor="middle">Automating reports</text>
+              <text class="d-label" x="115" y="137" text-anchor="middle">16.2 · hours back each week</text>
+              <text class="d-label" x="250" y="22">RESPONSIBILITY</text>
+              <rect class="d-signal" x="250" y="32" width="190" height="116" rx="8"/>
+              <text class="d-title" x="345" y="70" text-anchor="middle">Ethics, privacy</text>
+              <text class="d-title" x="345" y="90" text-anchor="middle">&amp; bias</text>
+              <text class="d-label" x="345" y="112" text-anchor="middle">16.3 · real people in the rows</text>
+              <line class="d-line" x1="210" y1="58" x2="250" y2="58"/>
+              <line class="d-line" x1="210" y1="122" x2="250" y2="122"/>
+              <text class="d-label" x="230" y="166" text-anchor="middle">verify</text>
+              <text class="d-label" x="480" y="22">GROWTH</text>
+              <rect class="d-box" x="480" y="32" width="150" height="34" rx="8"/>
+              <text class="d-text" x="555" y="54" text-anchor="middle">16.4 · Portfolio</text>
+              <rect class="d-box" x="480" y="73" width="150" height="34" rx="8"/>
+              <text class="d-text" x="555" y="95" text-anchor="middle">16.5 · Interviews</text>
+              <rect class="d-box" x="480" y="114" width="150" height="34" rx="8"/>
+              <text class="d-text" x="555" y="136" text-anchor="middle">16.6 · Career paths</text>
+              <path class="d-line-accent" d="M115 148 V200 H640" marker-end="url(#ov-arrow)"/>
+              <path class="d-line-accent" d="M345 148 V200" />
+              <path class="d-line-accent" d="M555 148 V200" />
+              <rect class="d-good" x="642" y="176" width="128" height="50" rx="8"/>
+              <text class="d-title" x="706" y="198" text-anchor="middle">Trusted analyst</text>
+              <text class="d-label" x="706" y="215" text-anchor="middle">and your next role</text>
+            </svg>
+          </div>
+          <figcaption>Leverage, responsibility and growth. The tools make you faster, the ethics keep you trusted, and the career lessons turn both into the next role.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="ai-assistants">
+        <header class="topic-head">
+          <p class="eyebrow">16.1 · Draft, then verify</p>
+          <h2>AI assistants for analysis</h2>
+        </header>
+
+        <p class="lead">Modern LLMs can draft complex SQL queries, Pandas wrangling transformations, and visualization scripts in seconds. However, LLMs are statistical language models—they do not run queries against your database or understand the business context unless you give it to them. The key to high-leverage AI-assisted analysis is treating the assistant as a fast junior drafter whose work you systematically verify before trusting.</p>
+
+        <div class="callout why">
+          <h4>The Verification Protocol</h4>
+          <p>Never run LLM code blindly in production. Follow the four-point check:</p>
+          <ol>
+            <li><strong>Grain check:</strong> Does the output row count match your mathematical expectation, or did a join cause a fan-out?</li>
+            <li><strong>Invariants check:</strong> Do the totals match known financial or transactional baselines?</li>
+            <li><strong>Nulls &amp; edge cases:</strong> How does the query handle zero denominators, missing foreign keys, or partial date ranges?</li>
+            <li><strong>Semantic alignment:</strong> Does the definition in the SQL match what the business actually measures (e.g. booked vs realized revenue)?</li>
+          </ol>
+        </div>
+
+        <h3>Prompting for Accurate SQL &amp; Analysis</h3>
+        <p>To get production-grade output, provide the model with four critical inputs:</p>
+        <ul>
+          <li><strong>Exact DDL &amp; Types:</strong> Include column names, primary/foreign keys, and data types.</li>
+          <li><strong>Target Dialect:</strong> Specify Postgres, Snowflake, BigQuery, or MySQL to avoid incompatible syntax.</li>
+          <li><strong>Explicit Metric Logic:</strong> Spell out business rules (e.g., "active user = completed at least 1 session in the last rolling 28 days excluding staff emails").</li>
+          <li><strong>Expected Output Grain:</strong> State exactly what one row of output should represent (e.g., "one row per user per month").</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>The Silent Hallucination Trap</h4>
+          <p>The most dangerous errors made by AI assistants are not syntax errors—which throw database exceptions—but <em>silent semantic errors</em>. A query that uses <code>COUNT(column)</code> instead of <code>COUNT(DISTINCT column)</code>, or an <code>INNER JOIN</code> that quietly drops null values, will run cleanly without warnings while giving decision-makers inaccurate numbers.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="automation">
+        <header class="topic-head">
+          <p class="eyebrow">16.2 · Hours back each week</p>
+          <h2>Automating reports</h2>
+        </header>
+
+        <p class="lead">Every organization has manual reports: spreadsheets refreshed by hand, numbers copied into slide decks, or CSVs emailed every Monday morning. Automating these workflows returns hours to your week and removes human copy-paste errors. But automation also introduces technical debt if built without proper guardrails.</p>
+
+        <h3>When to Automate (The ROI Equation)</h3>
+        <p>Before writing an automated pipeline, evaluate the time trade-off:</p>
+        <p>$$\text{Net Time Saved} = (\text{Frequency} \times \text{Manual Duration}) - (\text{Build Time} + \text{Maintenance Over Time})$$</p>
+        <p>If a report runs once a quarter and takes 20 minutes, spending 30 hours engineering an end-to-end Airflow pipeline is a negative return. If a daily report takes 45 minutes of manual wrangling, automation pays for itself in less than two months.</p>
+
+        <h3>Engineering Resilient Pipelines</h3>
+        <ul>
+          <li><strong>Parameterization:</strong> Never hardcode static date strings. Pass execution dates as dynamic arguments so pipelines can backfill missed days seamlessly.</li>
+          <li><strong>Idempotency:</strong> Running the script multiple times for the same day must produce the exact same outcome without duplicating rows.</li>
+          <li><strong>Fail Loudly:</strong> If an upstream API returns empty data or an unexpected schema, the job should abort immediately and alert the team via Slack/email, rather than broadcasting blank reports to leadership.</li>
+          <li><strong>Secret Management:</strong> Store database credentials and API keys in environment variables or cloud secrets managers, never in version-controlled scripts.</li>
+        </ul>
+      </section>
+
+      <section class="topic" id="ethics-privacy">
+        <header class="topic-head">
+          <p class="eyebrow">16.3 · Real people in the rows</p>
+          <h2>Ethics, privacy &amp; bias</h2>
+        </header>
+
+        <p class="lead">Behind every row in an analytical warehouse is a human being. As an analyst, you have unprecedented access to user actions, location histories, purchase habits, and communications. Handling this data responsibly requires understanding privacy frameworks, anonymization limits, and algorithmic fairness.</p>
+
+        <h3>PII and Quasi-Identifiers</h3>
+        <p>Data privacy distinguishes between two classes of identifiers:</p>
+        <ul>
+          <li><strong>Direct PII (Personally Identifiable Information):</strong> Explicit identifiers like full names, government IDs, email addresses, and phone numbers.</li>
+          <li><strong>Quasi-Identifiers:</strong> Demographic or behavioral fields that seem harmless in isolation—such as 5-digit ZIP code, birthdate, and gender. Groundbreaking research showed that <strong>87% of the US population can be uniquely identified</strong> by the combination of ZIP code, gender, and date of birth alone.</li>
+        </ul>
+
+        <h3>Preserving Privacy: k-Anonymity &amp; Differential Privacy</h3>
+        <div class="callout why">
+          <h4>k-Anonymity Principle</h4>
+          <p>A dataset satisfies <strong>k-anonymity</strong> if any individual's combination of quasi-identifying attributes is identical to at least \(k - 1\) other individuals in the dataset. Common techniques include generalising values (replacing exact age with 10-year brackets) and suppressing rare categories.</p>
+        </div>
+
+        <h3>Spotting and Mitigating Algorithmic Bias</h3>
+        <p>Data models and analytics reflect historical human behavior. If historical decisions were biased against certain groups, an automated credit-scoring or resume-ranking model will learn and amplify those inequities. Analysts must check for <em>proxy discrimination</em> (e.g. using postal code or university as a proxy for ethnicity) and conduct disparate impact evaluations across demographic cohorts.</p>
+      </section>
+
+      <section class="topic" id="portfolio">
+        <header class="topic-head">
+          <p class="eyebrow">16.4 · Proof of work</p>
+          <h2>Building a portfolio</h2>
+        </header>
+
+        <p class="lead">A strong portfolio is the fastest way to stand out to hiring managers and technical recruiters. Most generic portfolios fail because they replicate toy tutorials (like predicting Titanic survival or classifying iris flowers). A compelling portfolio showcases original curiosity, clean code, business empathy, and communicative clarity.</p>
+
+        <h3>The Anatomy of a Standout Project</h3>
+        <ol>
+          <li><strong>Real Business Problem:</strong> Frame the project around a clear decision (e.g., "Optimizing retention for a subscription gym platform" or "Analyzing supply chain delivery bottlenecks").</li>
+          <li><strong>Original or Scraped Data:</strong> Work with messy, authentic data from public APIs, government portals, or web scraping rather than perfectly pre-cleaned Kaggle benchmarks.</li>
+          <li><strong>Reproducible Codebase:</strong> Provide clean, commented SQL, notebooks, or dbt models with a clear setup guide.</li>
+          <li><strong>Insight-First README:</strong> Hiring managers spend less than 90 seconds on a repository. Place headline insights, charts, and actionable recommendations at the very top of your README before technical implementation details.</li>
+        </ol>
+
+        <div class="callout trap">
+          <h4>Proprietary Data Warning</h4>
+          <p>Never share proprietary schemas, business secrets, or customer data from past employers in your public portfolio. Doing so violates legal NDAs and signals poor professional ethics. Use public datasets, mock synthetic data, or anonymize details completely.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="interviews">
+        <header class="topic-head">
+          <p class="eyebrow">16.5 · Show your thinking</p>
+          <h2>Interviews &amp; case studies</h2>
+        </header>
+
+        <p class="lead">Analytics interview processes typically assess three pillars: technical SQL/coding ability, analytical product intuition, and behavioral communication. Excelling requires structuring your reasoning out loud and demonstrating commercial maturity.</p>
+
+        <h3>The Live SQL Technical Screen</h3>
+        <p>During technical screens, interviewers evaluate your thought process more than raw typing speed:</p>
+        <ul>
+          <li><strong>Clarify Assumptions:</strong> Ask about duplicate rows, handling NULLs, timezone conventions, and what grain is expected.</li>
+          <li><strong>Break Down Complex Logic:</strong> Use Common Table Expressions (CTEs) to separate data filtering, window calculations, and final aggregations into readable steps.</li>
+          <li><strong>Test Your Query:</strong> Before declaring you are finished, step through edge cases out loud (e.g. "If a user has zero purchases, our LEFT JOIN ensures they still appear with 0 spend").</li>
+        </ul>
+
+        <h3>The Metric-Drop Root Cause Framework</h3>
+        <p>When asked: <em>"DAU dropped 10% week-over-week. What do you do?"</em>, follow a structured diagnostic ladder:</p>
+        <ol>
+          <li><strong>Clarify &amp; Verify:</strong> Is the drop real or a data pipeline artifact (broken tracking tag, delayed ETL)? Was it a sudden drop on one day or a gradual decline?</li>
+          <li><strong>External Factors:</strong> Were there holidays, server outages, competitor launches, or changes in tracking regulations (e.g. iOS update)?</li>
+          <li><strong>Internal Dimensions:</strong> Segment the metric by platform (iOS vs Android), geography, user cohort (new vs returning), and app version to isolate the change.</li>
+          <li><strong>Formulate &amp; Test Hypotheses:</strong> Identify the root cause and propose actionable remediation steps with expected recovery timelines.</li>
+        </ol>
+      </section>
+
+      <section class="topic" id="career-paths">
+        <header class="topic-head">
+          <p class="eyebrow">16.6 · Where to grow next</p>
+          <h2>Career paths</h2>
+        </header>
+
+        <p class="lead">Data analytics is a broad foundation that opens doors to multiple specialized disciplines. Understanding the different career paths allows you to intentionally cultivate the skills that match your natural interests and strengths.</p>
+
+        <div class="diagram">
+          <svg viewBox="0 0 760 220" role="img" aria-label="Career trajectories branching from Data Analyst into Analytics Engineer, Product Analyst, BI Architect, Data Scientist, and Data Leader.">
+            <rect class="d-accent" x="20" y="85" width="160" height="50" rx="8"/>
+            <text class="d-title" x="100" y="108" text-anchor="middle">Data Analyst</text>
+            <text class="d-label" x="100" y="125" text-anchor="middle">Core Foundation</text>
+
+            <line class="d-line-accent" x1="180" y1="110" x2="260" y2="40"/>
+            <line class="d-line-accent" x1="180" y1="110" x2="260" y2="80"/>
+            <line class="d-line-accent" x1="180" y1="110" x2="260" y2="120"/>
+            <line class="d-line-accent" x1="180" y1="110" x2="260" y2="160"/>
+            <line class="d-line-accent" x1="180" y1="110" x2="260" y2="200"/>
+
+            <rect class="d-box" x="260" y="20" width="220" height="36" rx="6"/>
+            <text class="d-text" x="275" y="43">Analytics Engineer (dbt, CI/CD)</text>
+
+            <rect class="d-box" x="260" y="62" width="220" height="36" rx="6"/>
+            <text class="d-text" x="275" y="85">Product Analyst (A/B, funnels)</text>
+
+            <rect class="d-box" x="260" y="104" width="220" height="36" rx="6"/>
+            <text class="d-text" x="275" y="127">BI Architect (modeling, DAX)</text>
+
+            <rect class="d-box" x="260" y="146" width="220" height="36" rx="6"/>
+            <text class="d-text" x="275" y="169">Data Scientist (ML, forecasting)</text>
+
+            <rect class="d-good" x="260" y="188" width="220" height="36" rx="6"/>
+            <text class="d-title" x="275" y="211">Staff / Data Leader (strategy)</text>
+
+            <rect class="d-fill" x="510" y="20" width="230" height="204" rx="8"/>
+            <text class="d-title" x="525" y="48">Specialization Criteria</text>
+            <text class="d-label" x="525" y="75">• Love code &amp; testing? → Analytics Eng</text>
+            <text class="d-label" x="525" y="105">• Love product intuition? → Product Analyst</text>
+            <text class="d-label" x="525" y="135">• Love executive impact? → BI &amp; Storytelling</text>
+            <text class="d-label" x="525" y="165">• Love predictive math? → Data Science</text>
+            <text class="d-label" x="525" y="195">• Love organizational leverage? → Lead / Staff</text>
+          </svg>
+        </div>
+
+        <h3>The Archetypes of Analytics</h3>
+        <ul>
+          <li><strong>Analytics Engineer:</strong> Bridges the gap between data engineering and business analysis. Builds robust warehouse transformations, automated testing (dbt tests), and documentation.</li>
+          <li><strong>Product Data Analyst:</strong> Embedded in product teams to design experiments, optimize conversion funnels, evaluate feature retention, and steer roadmap prioritization.</li>
+          <li><strong>BI Architect:</strong> Focuses on enterprise semantic layers, dashboard governance, performance optimization, and self-service analytics enablement.</li>
+          <li><strong>Data Scientist:</strong> Applies statistical modeling, customer churn prediction, clustering, and recommendation engines to production data workflows.</li>
+          <li><strong>Staff / Lead Analyst:</strong> Multiplies the impact of entire teams. Shapes company-wide data culture, coaches junior peers, and partners with C-suite leadership on strategic investments.</li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>AI-assisted query, verified</h4><p>Ask an AI assistant to write three queries against a public dataset you know well. For each, write down the context you gave, the checks you ran (row counts, a hand-computed total, edge cases) and every bug you found. Publish the log as a short write-up.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Automate a weekly report</h4><p>Pick a report you or a friend builds by hand. Rebuild it as a parameterized script with sanity checks that fail loudly, schedule it, and measure the hours saved against the hours spent. Remove or mask any personal data before the output leaves your machine.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>A portfolio piece that gets interviews</h4><p>Choose a real dataset and a business question. Deliver a repository with a README that leads with the answer, reproducible SQL or notebooks, a short privacy and bias note, and a three-slide summary. Then do a mock interview where you present it in five minutes.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Prompt an AI assistant with schema, dialect, definitions and output shape, then verify its query before trusting it</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Decide whether automating a report pays back, and build it with checks that fail loudly</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Spot direct and quasi-identifiers in a dataset and share it with minimal personal data</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Show a portfolio project a hiring manager can understand in two minutes</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Solve a timed SQL question and structure a metric-drop case out loud</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Name the skills you would add for your preferred next role</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<!--SCRIPT-->
+</body>
+</html>

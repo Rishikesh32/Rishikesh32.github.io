@@ -1,0 +1,1734 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exploratory data analysis · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="eda">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Exploratory data analysis</h1>
+    <p class="lede">Exploratory data analysis (EDA) is how you get to know a dataset before you trust it with a decision. You sharpen the question, look at each column on its own, then at pairs of columns, segments and time, and you write down what you find. Most "why did this number move?" requests are answered with nothing more than this loop done carefully.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">EDA starts with a question and ends with findings that someone can act on. In between you walk the same data, an online store's <code>orders</code> table, from several angles: one column at a time, two columns together, split by segment and laid out over time. Each angle can send you back to sharpen the question. The six lessons follow that path, and the last one turns it into a repeatable workflow.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 250" role="img" aria-label="The EDA path: a sharp question leads to looking at one variable, then relationships, then segments, then time patterns, then written findings. All four views read from the orders table, and findings loop back to a new question.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="10" y="60" width="104" height="60" rx="8"/>
+              <text class="d-title" x="62" y="86" text-anchor="middle">Question</text>
+              <text class="d-label" x="62" y="104" text-anchor="middle">01 · sharpen</text>
+              <line class="d-line-accent" x1="114" y1="90" x2="136" y2="90" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="138" y="60" width="104" height="60" rx="8"/>
+              <text class="d-title" x="190" y="86" text-anchor="middle">One column</text>
+              <text class="d-label" x="190" y="104" text-anchor="middle">02 · shape</text>
+              <line class="d-line-accent" x1="242" y1="90" x2="264" y2="90" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="266" y="60" width="104" height="60" rx="8"/>
+              <text class="d-title" x="318" y="86" text-anchor="middle">Two columns</text>
+              <text class="d-label" x="318" y="104" text-anchor="middle">03 · relate</text>
+              <line class="d-line-accent" x1="370" y1="90" x2="392" y2="90" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="394" y="60" width="104" height="60" rx="8"/>
+              <text class="d-title" x="446" y="86" text-anchor="middle">Segments</text>
+              <text class="d-label" x="446" y="104" text-anchor="middle">04 · split</text>
+              <line class="d-line-accent" x1="498" y1="90" x2="520" y2="90" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="522" y="60" width="104" height="60" rx="8"/>
+              <text class="d-title" x="574" y="86" text-anchor="middle">Over time</text>
+              <text class="d-label" x="574" y="104" text-anchor="middle">05 · trend, cycle</text>
+              <line class="d-line-accent" x1="626" y1="90" x2="648" y2="90" marker-end="url(#ov-arrow)"/>
+              <rect class="d-good" x="650" y="60" width="100" height="60" rx="8"/>
+              <text class="d-title" x="700" y="86" text-anchor="middle">Findings</text>
+              <text class="d-label" x="700" y="104" text-anchor="middle">06 · workflow</text>
+              <rect class="d-fill" x="138" y="170" width="488" height="40" rx="8"/>
+              <text class="d-mono" x="382" y="195" text-anchor="middle">orders: order_id, customer_id, order_date, channel, device, order_value</text>
+              <line class="d-line" x1="190" y1="170" x2="190" y2="122" marker-end="url(#ov-arrow-g)"/>
+              <line class="d-line" x1="318" y1="170" x2="318" y2="122" marker-end="url(#ov-arrow-g)"/>
+              <line class="d-line" x1="446" y1="170" x2="446" y2="122" marker-end="url(#ov-arrow-g)"/>
+              <line class="d-line" x1="574" y1="170" x2="574" y2="122" marker-end="url(#ov-arrow-g)"/>
+              <text class="d-label" x="130" y="160" text-anchor="end">same table,</text>
+              <text class="d-label" x="130" y="174" text-anchor="end">four views</text>
+              <path class="d-line-signal d-dash" d="M700 60 V28 H62 V58" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="381" y="22" text-anchor="middle">a finding raises a sharper question, so you loop</text>
+              <text class="d-label" x="700" y="140" text-anchor="middle">decision, next step</text>
+            </svg>
+          </div>
+          <figcaption>The EDA path. One sharp question drives four views of the same <code>orders</code> table, and every finding can loop back into a sharper question.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="questions">
+        <header class="topic-head">
+          <p class="eyebrow">06.1 · Start sharp</p>
+          <h2>Asking the right questions</h2>
+        </header>
+
+        <p class="lead">"How are sales doing?" has no answer you can check. "What was net revenue from first-time customers in the last 4 weeks, compared with the 4 weeks before?" does. EDA goes well or badly depending on how sharp the question is before you open the data.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Stakeholders usually arrive with a worry, not a question. Turning that worry into something measurable is the most valuable thing you do all week. It stops you from making 40 charts that answer nothing and gives you a clear point at which the analysis is done.</p>
+        </div>
+
+        <h3>Climb the ladder from vague to measurable</h3>
+        <p>A sharp question names five things: the <strong>metric</strong> (exactly which number), the <strong>population</strong> (whose rows count), the <strong>time window</strong>, a <strong>comparison</strong> (against what), and the <strong>decision</strong> the answer will feed. Each rung below adds one of them.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 260" role="img" aria-label="A question ladder. Starting from how are sales doing, each rung adds a metric, a population, a time window with a comparison, and finally a decision, and the sharpness bar on the right grows from one fifth to five fifths.">
+              <defs>
+                <marker id="questions-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="22">adds</text>
+              <text class="d-label" x="150" y="22">question so far</text>
+              <text class="d-label" x="560" y="22">sharpness</text>
+              <rect class="d-signal" x="20" y="34" width="116" height="32" rx="6"/>
+              <text class="d-title" x="78" y="55" text-anchor="middle">vague start</text>
+              <text class="d-text" x="150" y="55">"How are sales doing?"</text>
+              <rect class="d-fill" x="560" y="42" width="100" height="16" rx="4"/>
+              <rect class="d-signal" x="560" y="42" width="8" height="16" rx="4"/>
+              <rect class="d-box" x="20" y="78" width="116" height="32" rx="6"/>
+              <text class="d-title" x="78" y="99" text-anchor="middle">+ metric</text>
+              <text class="d-text" x="150" y="99">"What is our <tspan class="d-text-accent">net revenue</tspan> …</text>
+              <rect class="d-fill" x="560" y="86" width="100" height="16" rx="4"/>
+              <rect class="d-accent" x="560" y="86" width="25" height="16" rx="4"/>
+              <rect class="d-box" x="20" y="122" width="116" height="32" rx="6"/>
+              <text class="d-title" x="78" y="143" text-anchor="middle">+ population</text>
+              <text class="d-text" x="150" y="143">… from <tspan class="d-text-accent">first-time customers</tspan> …</text>
+              <rect class="d-fill" x="560" y="130" width="100" height="16" rx="4"/>
+              <rect class="d-accent" x="560" y="130" width="45" height="16" rx="4"/>
+              <rect class="d-box" x="20" y="166" width="116" height="32" rx="6"/>
+              <text class="d-title" x="78" y="187" text-anchor="middle">+ time, compare</text>
+              <text class="d-text" x="150" y="187">… in the <tspan class="d-text-accent">last 4 weeks vs the prior 4</tspan> …</text>
+              <rect class="d-fill" x="560" y="174" width="100" height="16" rx="4"/>
+              <rect class="d-accent" x="560" y="174" width="80" height="16" rx="4"/>
+              <rect class="d-good" x="20" y="210" width="116" height="32" rx="6"/>
+              <text class="d-title" x="78" y="231" text-anchor="middle">+ decision</text>
+              <text class="d-text" x="150" y="231">… so we can <tspan class="d-text-good">decide on the welcome code</tspan>?"</text>
+              <rect class="d-fill" x="560" y="218" width="100" height="16" rx="4"/>
+              <rect class="d-good" x="560" y="218" width="100" height="16" rx="4"/>
+              <line class="d-line-accent" x1="10" y1="50" x2="10" y2="226" marker-end="url(#questions-arrow)"/>
+            </svg>
+          </div>
+          <figcaption>Each rung removes one way to misread the question. Only the last version tells you which rows to query, what to compare and when you are finished.</figcaption>
+        </figure>
+
+        <h3>Break "why?" into pieces you can measure</h3>
+        <p>"Why did revenue fall?" is too big to answer directly, so split it into parts that multiply back together. Revenue is orders times average order value (AOV), and orders are sessions times conversion rate. Each leaf of the tree is a number you can pull from the data, and the leaf that moved tells you where to dig next.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="A metric tree. Revenue splits into orders times average order value. Orders split into sessions times conversion rate. Average order value splits into items per order times price per item. The conversion leaf is highlighted as the one that moved.">
+              <defs>
+                <marker id="questions-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="20" y="96" width="130" height="48" rx="8"/>
+              <text class="d-title" x="85" y="117" text-anchor="middle">Revenue</text>
+              <text class="d-label" x="85" y="134" text-anchor="middle">−12% vs last month</text>
+              <line class="d-line" x1="150" y1="120" x2="238" y2="62" marker-end="url(#questions-arrow2)"/>
+              <line class="d-line" x1="150" y1="120" x2="238" y2="178" marker-end="url(#questions-arrow2)"/>
+              <text class="d-mono" x="196" y="125" text-anchor="middle">=</text>
+              <rect class="d-box" x="240" y="38" width="130" height="48" rx="8"/>
+              <text class="d-title" x="305" y="59" text-anchor="middle">Orders</text>
+              <text class="d-label" x="305" y="76" text-anchor="middle">−8%</text>
+              <text class="d-mono" x="305" y="122" text-anchor="middle">×</text>
+              <rect class="d-box" x="240" y="154" width="130" height="48" rx="8"/>
+              <text class="d-title" x="305" y="175" text-anchor="middle">AOV</text>
+              <text class="d-label" x="305" y="192" text-anchor="middle">−4%</text>
+              <line class="d-line" x1="370" y1="62" x2="458" y2="28" marker-end="url(#questions-arrow2)"/>
+              <line class="d-line" x1="370" y1="62" x2="458" y2="92" marker-end="url(#questions-arrow2)"/>
+              <line class="d-line" x1="370" y1="178" x2="458" y2="152" marker-end="url(#questions-arrow2)"/>
+              <line class="d-line" x1="370" y1="178" x2="458" y2="214" marker-end="url(#questions-arrow2)"/>
+              <rect class="d-box" x="460" y="10" width="140" height="36" rx="7"/>
+              <text class="d-text" x="530" y="33" text-anchor="middle">Sessions · flat</text>
+              <rect class="d-signal" x="460" y="74" width="140" height="36" rx="7"/>
+              <text class="d-text" x="530" y="97" text-anchor="middle">Conversion · −8%</text>
+              <rect class="d-box" x="460" y="134" width="140" height="36" rx="7"/>
+              <text class="d-text" x="530" y="157" text-anchor="middle">Items / order · flat</text>
+              <rect class="d-box" x="460" y="196" width="140" height="36" rx="7"/>
+              <text class="d-text" x="530" y="219" text-anchor="middle">Price / item · −4%</text>
+              <text class="d-label d-text-signal" x="610" y="96">dig here</text>
+              <text class="d-label" x="610" y="218">seasonal?</text>
+            </svg>
+          </div>
+          <figcaption>A metric tree (example numbers). Splitting revenue into factors turns one vague "why" into four leaves you can check, and only two of them moved.</figcaption>
+        </figure>
+
+        <div class="widget" id="questions-demo">
+          <div class="widget-head">
+            <span class="widget-title">Sharpen the question</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="questions-metric">Metric <select id="questions-metric">
+              <option value="sales" selected>sales</option>
+              <option value="net revenue">net revenue (after refunds)</option>
+              <option value="orders placed">orders placed</option>
+              <option value="customer happiness">customer happiness</option>
+            </select></label>
+            <label for="questions-pop">Who <select id="questions-pop">
+              <option value="people" selected>people</option>
+              <option value="our best customers">our best customers</option>
+              <option value="all customers">all customers</option>
+              <option value="first-time customers">first-time customers</option>
+            </select></label>
+            <label for="questions-time">When <select id="questions-time">
+              <option value="recently" selected>recently</option>
+              <option value="lately, more or less">lately, more or less</option>
+              <option value="in the last 4 weeks">in the last 4 weeks</option>
+            </select></label>
+            <label for="questions-cmp">Compared with <select id="questions-cmp">
+              <option value="" selected>nothing</option>
+              <option value="compared with our competitors">our competitors</option>
+              <option value="compared with the 4 weeks before">the 4 weeks before</option>
+              <option value="compared with the same weeks last year">same weeks last year</option>
+            </select></label>
+            <label for="questions-why">So that <select id="questions-why">
+              <option value="" selected>(just curious)</option>
+              <option value="to prove the welcome code worked">we can prove the welcome code worked</option>
+              <option value="to decide whether to keep the welcome code">we can decide whether to keep the welcome code</option>
+            </select></label>
+          </div>
+          <svg id="questions-plot" viewBox="0 0 640 170" role="img" aria-label="The question as you have built it, with five checks for metric, population, time window, comparison and decision, each ticked when that part is specific and measurable."></svg>
+          <p class="readout" id="questions-readout"></p>
+        </div>
+        <p>Watch the traps. "Customer happiness" is not in the <code>orders</code> table, "our best customers" has no definition, competitors' revenue is not data you hold, and "to prove it worked" decides the answer before you look.</p>
+
+        <h3>Vague versus sharp, side by side</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Vague request</th><th>Sharp version</th><th>What made it measurable</th></tr></thead>
+            <tbody>
+              <tr><td>"Is the new checkout working?"</td><td>Did checkout conversion on mobile change in the 14 days after release vs the 14 days before?</td><td>Metric, segment, window, baseline</td></tr>
+              <tr><td>"Who are our best customers?"</td><td>Which 10% of customers by 12-month net revenue, and what share of revenue do they bring?</td><td>Defined population and threshold</td></tr>
+              <tr><td>"Did the email campaign help?"</td><td>Was 30-day repeat-purchase rate higher for emailed customers than the held-out group?</td><td>Metric, comparison group</td></tr>
+              <tr><td>"Why are support tickets up?"</td><td>Which ticket categories grew most per 1,000 orders this month vs last month?</td><td>Normalized rate, breakdown</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Once the question is sharp, the first query almost writes itself:</p>
+        <pre class="code" data-lang="sql"><code><span class="c">-- Net revenue from first-time customers: last 4 weeks vs the 4 weeks before</span>
+WITH first_orders AS (
+  SELECT customer_id, MIN(order_date) AS first_date
+  FROM orders
+  GROUP BY customer_id
+)
+SELECT
+  CASE WHEN o.order_date &gt;= CURRENT_DATE - 28 THEN 'last_4w' ELSE 'prior_4w' END AS period,
+  SUM(o.order_value - o.refund_amount) AS net_revenue,
+  COUNT(*)                             AS orders
+FROM orders o
+JOIN first_orders f
+  ON f.customer_id = o.customer_id AND f.first_date = o.order_date
+WHERE o.order_date &gt;= CURRENT_DATE - 56
+  AND o.order_date &lt;  CURRENT_DATE
+GROUP BY 1
+ORDER BY 1;</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A sharp question names a metric, a population, a time window, a comparison and a decision.</li>
+            <li>Split "why did X move?" into factors that multiply back to X, then check which factor moved.</li>
+            <li>Agree on the question with the stakeholder before you query anything.</li>
+            <li>A question that can only have one welcome answer is not a question.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Starting with "let's see what the data says" and producing charts nobody asked for.</li>
+            <li>Comparing a number with nothing, so you cannot tell whether it is good or bad.</li>
+            <li>Using a metric whose definition differs by team ("revenue" with or without refunds and tax).</li>
+            <li>Framing the question to confirm what the requester already believes.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="questions-1"><span>Rewrite a vague request so it names metric, population, window, comparison and decision</span></label></li>
+          <li><label><input type="checkbox" data-key="questions-2"><span>Draw a metric tree that splits revenue into orders, AOV, sessions and conversion</span></label></li>
+          <li><label><input type="checkbox" data-key="questions-3"><span>Spot a leading question and restate it neutrally</span></label></li>
+          <li><label><input type="checkbox" data-key="questions-4"><span>Write the first SQL query that answers a sharpened question</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://r4ds.hadley.nz/">R for Data Science (2e): the EDA chapter's question-driven approach</a></li>
+          <li><span class="kind">Course</span><a href="https://www.coursera.org/professional-certificates/google-data-analytics">Google Data Analytics Certificate: "Ask questions to make data-driven decisions"</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="univariate">
+        <header class="topic-head">
+          <p class="eyebrow">06.2 · Shape before summary</p>
+          <h2>One variable at a time</h2>
+        </header>
+
+        <p class="lead">Before you relate columns to each other, look at each one alone. What values does it take, where is the middle, how spread out is it, and is anything impossible? A histogram of <code>order_value</code> answers more of these in one glance than any single number can.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Most reporting mistakes start here: quoting a mean for skewed money data, missing a spike caused by a pricing rule, or not noticing negative quantities and test orders. Five minutes of univariate checks per column saves a retraction later.</p>
+        </div>
+
+        <h3>Read the shape first</h3>
+        <p>Order values are <strong>right-skewed</strong>: lots of small baskets and a long tail of big ones. In skewed data the mean is pulled toward the tail, so the median describes a "typical" order better. Shapes also carry business stories. The bump just above $50 here is customers topping up their basket to reach free shipping.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="A right-skewed histogram of order values in 10 dollar bins. The median is 41 dollars and the mean is 58 dollars, pulled right by a long tail. A bump in the 50 to 60 dollar bin comes from customers reaching the free-shipping threshold.">
+              <defs>
+                <marker id="univariate-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <line class="d-grid" x1="60" y1="110" x2="560" y2="110"/>
+              <line class="d-grid" x1="60" y1="155" x2="560" y2="155"/>
+              <rect class="d-fill" x="61" y="198" width="22" height="2"/>
+              <rect class="d-accent" x="85" y="173" width="22" height="27"/>
+              <rect class="d-accent" x="109" y="92" width="22" height="108"/>
+              <rect class="d-accent" x="133" y="52" width="22" height="148"/>
+              <rect class="d-accent" x="157" y="65" width="22" height="135"/>
+              <rect class="d-signal" x="181" y="56" width="22" height="144"/>
+              <rect class="d-accent" x="205" y="114" width="22" height="86"/>
+              <rect class="d-accent" x="229" y="137" width="22" height="63"/>
+              <rect class="d-accent" x="253" y="153" width="22" height="47"/>
+              <rect class="d-accent" x="277" y="164" width="22" height="36"/>
+              <rect class="d-accent" x="301" y="173" width="22" height="27"/>
+              <rect class="d-accent" x="325" y="179" width="22" height="21"/>
+              <rect class="d-accent" x="349" y="184" width="22" height="16"/>
+              <rect class="d-accent" x="373" y="187" width="22" height="13"/>
+              <rect class="d-accent" x="397" y="190" width="22" height="10"/>
+              <rect class="d-accent" x="421" y="192" width="22" height="8"/>
+              <rect class="d-accent" x="445" y="194" width="22" height="6"/>
+              <rect class="d-accent" x="469" y="195" width="22" height="5"/>
+              <rect class="d-accent" x="493" y="196" width="22" height="4"/>
+              <rect class="d-accent" x="517" y="189" width="22" height="11"/>
+              <line class="d-line" x1="60" y1="200" x2="560" y2="200"/>
+              <text class="d-label" x="60" y="216" text-anchor="middle">$0</text>
+              <text class="d-label" x="180" y="216" text-anchor="middle">$50</text>
+              <text class="d-label" x="300" y="216" text-anchor="middle">$100</text>
+              <text class="d-label" x="420" y="216" text-anchor="middle">$150</text>
+              <text class="d-label" x="528" y="216" text-anchor="middle">$200+</text>
+              <text class="d-label" x="310" y="236" text-anchor="middle">order_value (10-dollar bins, example data)</text>
+              <line class="d-line d-dash" x1="158" y1="30" x2="158" y2="200"/>
+              <text class="d-label d-text-good" x="154" y="28" text-anchor="end">median $41</text>
+              <line class="d-line-signal d-dash" x1="199" y1="30" x2="199" y2="200"/>
+              <text class="d-label d-text-signal" x="203" y="28">mean $58</text>
+              <path class="d-line-signal" d="M280 70 Q240 60 206 66" marker-end="url(#univariate-arrow)"/>
+              <text class="d-label" x="284" y="66">free-shipping bump: $50 to $55</text>
+              <text class="d-label" x="284" y="80">customers top up to $50</text>
+              <text class="d-label" x="380" y="160">long right tail pulls the mean</text>
+              <text class="d-label" x="380" y="174">up; the median barely moves</text>
+            </svg>
+          </div>
+          <figcaption>A right-skewed distribution of order values (example data). The mean sits $17 above the median because of the tail, and the bump just above $50 is a pricing rule showing up in the data.</figcaption>
+        </figure>
+
+        <h3>A box plot in one line</h3>
+        <p>A box plot squeezes the same column into five numbers: the quartiles Q1, median and Q3, plus whiskers. The box holds the middle 50% of orders, its width is the <strong>interquartile range</strong> (IQR = Q3 − Q1). Points beyond Q3 + 1.5 × IQR are drawn one by one as possible outliers. These are rows to look at, not rows to delete.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 190" role="img" aria-label="A box plot of 50 sampled order values. Q1 is 26 dollars, the median 41, Q3 68, so the IQR is 42. The upper fence is 131 dollars and four orders above it are drawn as separate points.">
+              <line class="d-line" x1="60" y1="150" x2="620" y2="150"/>
+              <text class="d-label" x="60" y="168" text-anchor="middle">$0</text>
+              <text class="d-label" x="170" y="168" text-anchor="middle">$50</text>
+              <text class="d-label" x="280" y="168" text-anchor="middle">$100</text>
+              <text class="d-label" x="390" y="168" text-anchor="middle">$150</text>
+              <text class="d-label" x="500" y="168" text-anchor="middle">$200</text>
+              <text class="d-label" x="610" y="168" text-anchor="middle">$250</text>
+              <line class="d-line" x1="69" y1="95" x2="117" y2="95"/>
+              <line class="d-line" x1="69" y1="83" x2="69" y2="107"/>
+              <rect class="d-accent" x="117" y="75" width="93" height="40" rx="3"/>
+              <line class="d-line-signal" x1="150" y1="75" x2="150" y2="115" style="stroke-width:3"/>
+              <line class="d-line" x1="210" y1="95" x2="342" y2="95"/>
+              <line class="d-line" x1="342" y1="83" x2="342" y2="107"/>
+              <line class="d-line d-dash" x1="348" y1="60" x2="348" y2="130"/>
+              <circle class="d-dot-signal" cx="390" cy="95" r="5"/>
+              <circle class="d-dot-signal" cx="445" cy="95" r="5"/>
+              <circle class="d-dot-signal" cx="522" cy="95" r="5"/>
+              <circle class="d-dot-signal" cx="588" cy="95" r="5"/>
+              <text class="d-label" x="69" y="70" text-anchor="middle">min $4</text>
+              <text class="d-label" x="117" y="134" text-anchor="middle">Q1 $26</text>
+              <text class="d-label d-text-signal" x="150" y="66" text-anchor="middle">median $41</text>
+              <text class="d-label" x="210" y="134" text-anchor="middle">Q3 $68</text>
+              <text class="d-label" x="163" y="30" text-anchor="middle">IQR = 68 − 26 = $42</text>
+              <line class="d-line" x1="117" y1="40" x2="210" y2="40"/>
+              <line class="d-line" x1="117" y1="36" x2="117" y2="44"/>
+              <line class="d-line" x1="210" y1="36" x2="210" y2="44"/>
+              <text class="d-label" x="352" y="52">fence = 68 + 1.5 × 42 = $131</text>
+              <text class="d-label d-text-signal" x="490" y="122" text-anchor="middle">4 orders to inspect</text>
+            </svg>
+          </div>
+          <figcaption>A box plot of a sample of 50 orders from the same store. The middle half of orders falls between $26 and $68; four orders above the $131 fence get a closer look.</figcaption>
+        </figure>
+
+        <div class="widget" id="univariate-demo">
+          <div class="widget-head">
+            <span class="widget-title">Histogram bin width</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="univariate-bw">Bin width $ <input type="range" id="univariate-bw" min="2" max="40" step="1" value="25"><output id="univariate-bw-out">25</output></label>
+            <label for="univariate-bulk"><input type="checkbox" id="univariate-bulk"> Include 3 bulk B2B orders ($900+)</label>
+          </div>
+          <svg id="univariate-plot" viewBox="0 0 600 250" role="img" aria-label="Histogram of 1,290 example order values between 0 and 200 dollars, with mean and median lines. The bin width slider changes how many bars there are."></svg>
+          <p class="readout" id="univariate-readout"></p>
+        </div>
+        <p>Wide bins hide the free-shipping bump inside a big bar; very narrow bins turn the chart into noise. Try a few widths and keep the one that shows real features. Then add the bulk orders and watch the mean jump while the median hardly moves.</p>
+
+        <h3>What to check for each column type</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Column type</th><th>Look at</th><th>Red flags</th></tr></thead>
+            <tbody>
+              <tr><td>Money, counts (skewed)</td><td>Histogram, median, P90/P99, max</td><td>Negatives, round-number spikes, $0 test orders</td></tr>
+              <tr><td>Roughly symmetric numbers</td><td>Histogram, mean, standard deviation</td><td>Two humps (two populations mixed)</td></tr>
+              <tr><td>Categories (channel, device)</td><td>Bar chart of counts, share of "other"/null</td><td>Typos, a category at 90%+, new labels</td></tr>
+              <tr><td>Dates</td><td>Min, max, counts per day</td><td>Gaps, future dates, everything on the 1st</td></tr>
+              <tr><td>IDs</td><td>Count vs distinct count</td><td>Duplicates where the grain should be unique</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+import seaborn as sns
+
+orders = pd.read_csv("orders.csv", parse_dates=["order_date"])
+
+v = orders["order_value"]
+print(v.describe(percentiles=[.1, .25, .5, .75, .9, .99]))
+print("skew:", round(v.skew(), 2))                <span class="c"># &gt; 1 means strongly right-skewed</span>
+print("negative or zero:", (v &lt;= 0).sum())
+
+q1, q3 = v.quantile([.25, .75])
+fence = q3 + 1.5 * (q3 - q1)
+print(orders.loc[v &gt; fence].sort_values("order_value").tail())   <span class="c"># inspect, don't drop</span>
+
+print(orders["channel"].value_counts(dropna=False, normalize=True))
+sns.histplot(v[v &lt; 200], binwidth=5)            <span class="c"># try several bin widths</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Look at the shape (histogram) before you trust any summary number.</li>
+            <li>For skewed data, report the median and percentiles; the mean is pulled by the tail.</li>
+            <li>Bin width changes what a histogram shows, so try several.</li>
+            <li>Box-plot outliers are rows to investigate, not rows to delete.</li>
+            <li>Every column type has its own checklist: ranges, nulls, distinct counts, odd spikes.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reporting "average order value" from the mean without checking skew or a few huge orders.</li>
+            <li>Using the default bin count and missing a spike or a second hump.</li>
+            <li>Running <code>value_counts()</code> without <code>dropna=False</code>, so missing values disappear.</li>
+            <li>Dropping every point beyond the 1.5 × IQR fence as "bad data".</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="univariate-1"><span>Explain why the mean of order values sits above the median</span></label></li>
+          <li><label><input type="checkbox" data-key="univariate-2"><span>Compute Q1, Q3, IQR and the outlier fence for a column</span></label></li>
+          <li><label><input type="checkbox" data-key="univariate-3"><span>Choose a histogram bin width that shows real structure</span></label></li>
+          <li><label><input type="checkbox" data-key="univariate-4"><span>Run a per-column profile in pandas, including nulls and distinct counts</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://seaborn.pydata.org/tutorial/distributions.html">seaborn: Visualizing distributions of data</a></li>
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html">pandas: DataFrame.describe</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="bivariate">
+        <header class="topic-head">
+          <p class="eyebrow">06.3 · Two columns together</p>
+          <h2>Relationships between variables</h2>
+        </header>
+
+        <p class="lead">Once each column makes sense, you ask how pairs of columns move together. Do customers with more sessions spend more? Do mobile orders have smaller baskets? The kind of chart and the summary number you use depend on what types the two columns are.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Relationships are where hypotheses come from: "discounts drive bigger baskets", "slow delivery hurts repeat purchases". A single correlation coefficient can hide a curve, a cluster or one huge customer, so you plot first and quote numbers second.</p>
+        </div>
+
+        <h3>Match the chart to the pair of types</h3>
+        <p>Two numbers call for a scatter plot. A category and a number call for side-by-side box plots or bars of the median. Two categories call for a crosstab, often shaded as a heat map. A date and a number call for a line, which is the next-but-one lesson.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 280" role="img" aria-label="A two by two guide. Number with number: scatter plot, for example sessions against spend. Category with number: box plots per group, for example order value by device. Category with category: a crosstab heat map, for example channel by device. Date with number: a line chart, for example daily revenue.">
+              <rect class="d-box" x="20" y="10" width="295" height="125" rx="8"/>
+              <text class="d-title" x="34" y="32">number × number</text>
+              <text class="d-label" x="34" y="50">scatter · sessions vs spend</text>
+              <line class="d-line" x1="190" y1="122" x2="300" y2="122"/>
+              <line class="d-line" x1="190" y1="122" x2="190" y2="22"/>
+              <circle class="d-dot" cx="202" cy="112" r="3.5"/><circle class="d-dot" cx="214" cy="104" r="3.5"/>
+              <circle class="d-dot" cx="226" cy="108" r="3.5"/><circle class="d-dot" cx="238" cy="90" r="3.5"/>
+              <circle class="d-dot" cx="250" cy="80" r="3.5"/><circle class="d-dot" cx="262" cy="84" r="3.5"/>
+              <circle class="d-dot" cx="274" cy="62" r="3.5"/><circle class="d-dot" cx="286" cy="52" r="3.5"/>
+              <circle class="d-dot" cx="232" cy="96" r="3.5"/><circle class="d-dot" cx="280" cy="40" r="3.5"/>
+              <line class="d-line-accent" x1="196" y1="116" x2="296" y2="40"/>
+              <text class="d-label" x="34" y="110">summary: r, ρ, slope</text>
+              <rect class="d-box" x="325" y="10" width="295" height="125" rx="8"/>
+              <text class="d-title" x="339" y="32">category × number</text>
+              <text class="d-label" x="339" y="50">box plots · value by device</text>
+              <line class="d-line" x1="500" y1="122" x2="608" y2="122"/>
+              <rect class="d-accent" x="512" y="74" width="24" height="34" rx="2"/>
+              <line class="d-line" x1="524" y1="108" x2="524" y2="118"/><line class="d-line" x1="524" y1="74" x2="524" y2="48"/>
+              <line class="d-line-signal" x1="512" y1="92" x2="536" y2="92"/>
+              <rect class="d-accent" x="566" y="58" width="24" height="40" rx="2"/>
+              <line class="d-line" x1="578" y1="98" x2="578" y2="114"/><line class="d-line" x1="578" y1="58" x2="578" y2="28"/>
+              <line class="d-line-signal" x1="566" y1="76" x2="590" y2="76"/>
+              <text class="d-label" x="524" y="134" text-anchor="middle">mobile</text>
+              <text class="d-label" x="578" y="134" text-anchor="middle">desktop</text>
+              <text class="d-label" x="339" y="110">summary: median per group</text>
+              <rect class="d-box" x="20" y="145" width="295" height="125" rx="8"/>
+              <text class="d-title" x="34" y="167">category × category</text>
+              <text class="d-label" x="34" y="185">crosstab · channel by device</text>
+              <rect class="d-accent" x="200" y="160" width="32" height="26" style="fill-opacity:.9"/>
+              <rect class="d-fill" x="234" y="160" width="32" height="26"/>
+              <rect class="d-accent" x="268" y="160" width="32" height="26" style="fill-opacity:.4"/>
+              <rect class="d-fill" x="200" y="188" width="32" height="26"/>
+              <rect class="d-accent" x="234" y="188" width="32" height="26" style="fill-opacity:.7"/>
+              <rect class="d-fill" x="268" y="188" width="32" height="26"/>
+              <rect class="d-accent" x="200" y="216" width="32" height="26" style="fill-opacity:.4"/>
+              <rect class="d-fill" x="234" y="216" width="32" height="26"/>
+              <rect class="d-accent" x="268" y="216" width="32" height="26" style="fill-opacity:.9"/>
+              <text class="d-label" x="34" y="245">summary: row % shares</text>
+              <rect class="d-box" x="325" y="145" width="295" height="125" rx="8"/>
+              <text class="d-title" x="339" y="167">date × number</text>
+              <text class="d-label" x="339" y="185">line · daily revenue (06.5)</text>
+              <line class="d-line" x1="500" y1="256" x2="608" y2="256"/>
+              <path class="d-line-accent" d="M500 236 L512 228 L524 240 L536 222 L548 230 L560 214 L572 220 L584 202 L596 210 L608 192"/>
+              <text class="d-label" x="339" y="245">summary: trend, cycle</text>
+            </svg>
+          </div>
+          <figcaption>The pair of column types picks the chart. Each cell shows an example from the <code>orders</code> data and the summary number that goes with it.</figcaption>
+        </figure>
+
+        <h3>Correlation measures straight-line togetherness</h3>
+        <p>The <strong>Pearson correlation</strong> \(r\) runs from −1 to +1 and measures how well a straight line fits the cloud. <strong>Spearman's</strong> \(\rho\) is Pearson computed on ranks, so it captures any steadily rising or falling pattern and shrugs off extreme values.</p>
+
+        <div class="formula">
+          \[ r = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_i (x_i - \bar{x})^2}\,\sqrt{\sum_i (y_i - \bar{y})^2}} \]
+          <span class="formula-note">Each point contributes the product of its distances from the two means. One point far from both means can contribute more than all the others together.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Three scatter plots. Left: a clear straight-line relationship with r of 0.8. Middle: a strong U-shaped relationship with r near 0. Right: a shapeless cloud plus one extreme point that pushes r to 0.8.">
+              <rect class="d-box" x="10" y="10" width="200" height="160" rx="6"/>
+              <circle class="d-dot" cx="36" cy="150" r="4"/><circle class="d-dot" cx="52" cy="128" r="4"/><circle class="d-dot" cx="66" cy="140" r="4"/>
+              <circle class="d-dot" cx="80" cy="116" r="4"/><circle class="d-dot" cx="94" cy="104" r="4"/><circle class="d-dot" cx="108" cy="112" r="4"/>
+              <circle class="d-dot" cx="122" cy="88" r="4"/><circle class="d-dot" cx="136" cy="94" r="4"/><circle class="d-dot" cx="150" cy="70" r="4"/>
+              <circle class="d-dot" cx="164" cy="62" r="4"/><circle class="d-dot" cx="178" cy="48" r="4"/><circle class="d-dot" cx="190" cy="56" r="4"/>
+              <line class="d-line-accent" x1="28" y1="150" x2="198" y2="44"/>
+              <text class="d-title" x="110" y="192" text-anchor="middle">r = 0.80</text>
+              <text class="d-label" x="110" y="206" text-anchor="middle">a real straight-line link</text>
+              <rect class="d-box" x="220" y="10" width="200" height="160" rx="6"/>
+              <circle class="d-dot" cx="240" cy="40" r="4"/><circle class="d-dot" cx="254" cy="68" r="4"/><circle class="d-dot" cx="268" cy="94" r="4"/>
+              <circle class="d-dot" cx="282" cy="118" r="4"/><circle class="d-dot" cx="296" cy="134" r="4"/><circle class="d-dot" cx="310" cy="144" r="4"/>
+              <circle class="d-dot" cx="324" cy="146" r="4"/><circle class="d-dot" cx="338" cy="138" r="4"/><circle class="d-dot" cx="352" cy="122" r="4"/>
+              <circle class="d-dot" cx="366" cy="100" r="4"/><circle class="d-dot" cx="380" cy="72" r="4"/><circle class="d-dot" cx="396" cy="42" r="4"/>
+              <line class="d-line d-dash" x1="232" y1="96" x2="408" y2="96"/>
+              <text class="d-title" x="320" y="192" text-anchor="middle">r ≈ 0.0</text>
+              <text class="d-label" x="320" y="206" text-anchor="middle">strong, but curved</text>
+              <rect class="d-box" x="430" y="10" width="200" height="160" rx="6"/>
+              <circle class="d-dot" cx="446" cy="140" r="4"/><circle class="d-dot" cx="458" cy="152" r="4"/><circle class="d-dot" cx="466" cy="132" r="4"/>
+              <circle class="d-dot" cx="476" cy="148" r="4"/><circle class="d-dot" cx="486" cy="136" r="4"/><circle class="d-dot" cx="452" cy="126" r="4"/>
+              <circle class="d-dot" cx="494" cy="150" r="4"/><circle class="d-dot" cx="470" cy="156" r="4"/><circle class="d-dot" cx="482" cy="124" r="4"/>
+              <circle class="d-dot" cx="500" cy="140" r="4"/><circle class="d-dot" cx="462" cy="144" r="4"/>
+              <circle class="d-dot-signal" cx="612" cy="30" r="6"/>
+              <line class="d-line-accent" x1="440" y1="156" x2="618" y2="26"/>
+              <text class="d-label d-text-signal" x="604" y="52" text-anchor="end">one whale customer</text>
+              <text class="d-title" x="530" y="192" text-anchor="middle">r = 0.80</text>
+              <text class="d-label" x="530" y="206" text-anchor="middle">no link without the whale</text>
+            </svg>
+          </div>
+          <figcaption>Same coefficient, different stories. Always look at the scatter plot: \(r\) misses curves entirely and can be manufactured by a single extreme point.</figcaption>
+        </figure>
+
+        <div class="widget" id="bivariate-demo">
+          <div class="widget-head">
+            <span class="widget-title">Scatter, trend line and correlation</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="bivariate-strength">True link strength <input type="range" id="bivariate-strength" min="0" max="1" step="0.05" value="0.6"><output id="bivariate-strength-out">0.60</output></label>
+            <label for="bivariate-whale"><input type="checkbox" id="bivariate-whale"> Add one whale customer</label>
+            <label for="bivariate-method">Headline number <select id="bivariate-method">
+              <option value="pearson" selected>Pearson r</option>
+              <option value="spearman">Spearman ρ</option>
+            </select></label>
+          </div>
+          <svg id="bivariate-plot" viewBox="0 0 600 300" role="img" aria-label="Scatter plot of 40 customers, sessions in the last 30 days against spend, with a least-squares trend line and the correlation shown in the corner."></svg>
+          <p class="readout" id="bivariate-readout"></p>
+        </div>
+        <p>Lower the true link to almost nothing, then add the whale. The trend line swings toward that one point and Pearson's \(r\) jumps, while Spearman's \(\rho\), which only looks at ranks, barely moves.</p>
+
+        <pre class="code" data-lang="python"><code>cust = (orders.groupby("customer_id")
+             .agg(spend=("order_value", "sum"), sessions=("sessions_30d", "max")))
+
+print(cust[["sessions", "spend"]].corr(method="pearson"))
+print(cust[["sessions", "spend"]].corr(method="spearman"))   <span class="c"># rank-based, robust</span>
+
+import seaborn as sns
+sns.regplot(data=cust, x="sessions", y="spend", scatter_kws={"alpha": .4})
+
+<span class="c"># category x number: compare medians, not just means</span>
+print(orders.groupby("device")["order_value"].median())
+
+<span class="c"># category x category: row percentages</span>
+print(pd.crosstab(orders["channel"], orders["device"], normalize="index").round(2))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Column types choose the chart: scatter, grouped box plots, crosstab or line.</li>
+            <li>Pearson \(r\) measures straight-line fit; Spearman \(\rho\) measures any steady rank order.</li>
+            <li>A curve can have \(r \approx 0\), and one extreme point can create a large \(r\).</li>
+            <li>Correlation is a lead for a hypothesis, not proof that one column causes the other.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Quoting a correlation without plotting the scatter.</li>
+            <li>Reading \(r = 0\) as "no relationship" when the pattern is curved.</li>
+            <li>Concluding causation: active customers spend more, but maybe big spenders browse more.</li>
+            <li>Comparing raw counts in a crosstab instead of row or column percentages.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="bivariate-1"><span>Pick the right chart for any pair of column types</span></label></li>
+          <li><label><input type="checkbox" data-key="bivariate-2"><span>Explain when Pearson and Spearman disagree, and which to trust</span></label></li>
+          <li><label><input type="checkbox" data-key="bivariate-3"><span>Show how one outlier changes r and the trend line</span></label></li>
+          <li><label><input type="checkbox" data-key="bivariate-4"><span>Build a crosstab with row percentages in pandas</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://seaborn.pydata.org/tutorial/relational.html">seaborn: Visualizing statistical relationships</a></li>
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html">pandas: DataFrame.corr</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="segmentation">
+        <header class="topic-head">
+          <p class="eyebrow">06.4 · Split, then compare</p>
+          <h2>Segmentation &amp; cohorts</h2>
+        </header>
+
+        <p class="lead">An average over everyone hides the groups inside it. Split the orders by channel, device, region or customer type and the "flat" overall number often turns out to be one segment growing and another shrinking. A <strong>cohort</strong> is a special segment: customers grouped by when they started, followed over time.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Nearly every useful finding is a segment finding: "the drop is all mobile", "paid social brings low-value customers", "the March cohort retains better". Segments also protect you from the classic trap where the overall comparison points the opposite way from every segment.</p>
+        </div>
+
+        <h3>Split, apply, combine</h3>
+        <p>Segmenting is three moves. <strong>Split</strong> the rows by a column, <strong>apply</strong> the same metric to each group, then <strong>combine</strong> the results into one table you can compare. Always keep each segment's size next to its rate, because a dramatic rate on 40 orders is mostly noise.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Split, apply, combine. The orders table is split by channel into email, paid search and paid social groups, the average order value is computed for each, and the results are combined into one comparison with group sizes.">
+              <defs>
+                <marker id="segmentation-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="80" y="20" text-anchor="middle">orders</text>
+              <rect class="d-box" x="20" y="30" width="120" height="170" rx="6"/>
+              <rect class="d-accent" x="30" y="42" width="100" height="14" rx="3"/>
+              <rect class="d-good" x="30" y="62" width="100" height="14" rx="3"/>
+              <rect class="d-signal" x="30" y="82" width="100" height="14" rx="3"/>
+              <rect class="d-accent" x="30" y="102" width="100" height="14" rx="3"/>
+              <rect class="d-signal" x="30" y="122" width="100" height="14" rx="3"/>
+              <rect class="d-good" x="30" y="142" width="100" height="14" rx="3"/>
+              <rect class="d-accent" x="30" y="162" width="100" height="14" rx="3"/>
+              <text class="d-label" x="80" y="194" text-anchor="middle">46,000 rows</text>
+              <text class="d-label" x="188" y="20" text-anchor="middle">split</text>
+              <line class="d-line-accent" x1="140" y1="115" x2="232" y2="55" marker-end="url(#segmentation-arrow)"/>
+              <line class="d-line-accent" x1="140" y1="115" x2="232" y2="115" marker-end="url(#segmentation-arrow)"/>
+              <line class="d-line-accent" x1="140" y1="115" x2="232" y2="175" marker-end="url(#segmentation-arrow)"/>
+              <rect class="d-accent" x="234" y="36" width="110" height="38" rx="6"/>
+              <text class="d-title" x="289" y="60" text-anchor="middle">Email</text>
+              <rect class="d-good" x="234" y="96" width="110" height="38" rx="6"/>
+              <text class="d-title" x="289" y="120" text-anchor="middle">Paid search</text>
+              <rect class="d-signal" x="234" y="156" width="110" height="38" rx="6"/>
+              <text class="d-title" x="289" y="180" text-anchor="middle">Paid social</text>
+              <text class="d-label" x="400" y="20" text-anchor="middle">apply</text>
+              <line class="d-line" x1="344" y1="55" x2="368" y2="55"/>
+              <line class="d-line" x1="344" y1="115" x2="368" y2="115"/>
+              <line class="d-line" x1="344" y1="175" x2="368" y2="175"/>
+              <text class="d-mono" x="372" y="59">AOV $56</text>
+              <text class="d-mono" x="372" y="119">AOV $52</text>
+              <text class="d-mono" x="372" y="179">AOV $34</text>
+              <text class="d-label" x="560" y="20" text-anchor="middle">combine</text>
+              <line class="d-line-accent" x1="440" y1="115" x2="468" y2="115" marker-end="url(#segmentation-arrow)"/>
+              <rect class="d-box" x="470" y="36" width="190" height="158" rx="6"/>
+              <text class="d-label" x="482" y="56">channel</text>
+              <text class="d-label" x="590" y="56" text-anchor="end">orders</text>
+              <text class="d-label" x="648" y="56" text-anchor="end">AOV</text>
+              <line class="d-grid" x1="478" y1="64" x2="652" y2="64"/>
+              <text class="d-text" x="482" y="86">Email</text><text class="d-mono" x="590" y="86" text-anchor="end">12,400</text><text class="d-mono" x="648" y="86" text-anchor="end">$56</text>
+              <text class="d-text" x="482" y="112">Paid search</text><text class="d-mono" x="590" y="112" text-anchor="end">21,100</text><text class="d-mono" x="648" y="112" text-anchor="end">$52</text>
+              <text class="d-text d-text-signal" x="482" y="138">Paid social</text><text class="d-mono" x="590" y="138" text-anchor="end">12,500</text><text class="d-mono d-text-signal" x="648" y="138" text-anchor="end">$34</text>
+              <line class="d-grid" x1="478" y1="150" x2="652" y2="150"/>
+              <text class="d-text" x="482" y="174">All</text><text class="d-mono" x="590" y="174" text-anchor="end">46,000</text><text class="d-mono" x="648" y="174" text-anchor="end">$48</text>
+            </svg>
+          </div>
+          <figcaption>Split by channel, compute AOV per group, combine into one table (example numbers). The overall $48 hides a $22 gap between email and paid social.</figcaption>
+        </figure>
+
+        <h3>Simpson's paradox: when the total lies</h3>
+        <p>Suppose a new checkout (B) converts better than the old one (A) on mobile <em>and</em> on desktop. B can still look worse overall if more of B's traffic happens to be mobile, which converts lower for everyone. This is <strong>Simpson's paradox</strong>: a difference in segment <em>mix</em> flips the aggregate comparison. The cure is to compare within segments, or to weight both groups to the same mix.</p>
+
+        <div class="widget" id="segmentation-demo">
+          <div class="widget-head">
+            <span class="widget-title">Segment split and Simpson's paradox</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="segmentation-mix">B's visitors on mobile <input type="range" id="segmentation-mix" min="20" max="90" step="1" value="50"><output id="segmentation-mix-out">50%</output></label>
+            <label for="segmentation-split"><input type="checkbox" id="segmentation-split"> Split by device</label>
+          </div>
+          <svg id="segmentation-plot" viewBox="0 0 600 260" role="img" aria-label="Bar chart of checkout conversion for old checkout A and new checkout B, overall or split by mobile and desktop."></svg>
+          <p class="readout" id="segmentation-readout"></p>
+        </div>
+        <p>A always gets 10,000 visitors, half on mobile. B also gets 10,000, and the slider sets how many of them are on mobile. B wins on each device at every setting (2.4% vs 2.0% on mobile, 5.5% vs 5.0% on desktop). Push B's mobile share up and watch the overall bars.</p>
+
+        <h3>Cohorts: segments defined by a start date</h3>
+        <p>A cohort table puts the signup month on each row and "months since signup" across the columns. Reading along a row shows how one cohort decays; reading down a column compares cohorts at the same age, which is fair. Mixing ages, for example comparing January's total repeat rate with April's, is not.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 560 226" role="img" aria-label="A cohort retention triangle. Rows are signup months January to May 2026, columns are months since signup. January keeps 38 percent in month 1 and 23 percent by month 4. March has the best month-1 retention at 41 percent and April the worst at 33 percent.">
+              <text class="d-label" x="20" y="34">signup cohort</text>
+              <text class="d-label" x="188" y="34" text-anchor="middle">month 0</text>
+              <text class="d-label" x="266" y="34" text-anchor="middle">month 1</text>
+              <text class="d-label" x="344" y="34" text-anchor="middle">month 2</text>
+              <text class="d-label" x="422" y="34" text-anchor="middle">month 3</text>
+              <text class="d-label" x="500" y="34" text-anchor="middle">month 4</text>
+              <text class="d-title" x="20" y="64">Jan 2026</text>
+              <rect class="d-accent" x="151" y="45" width="76" height="28" rx="3" style="fill-opacity:0.25;stroke-opacity:.25"/>
+              <text class="d-mono" x="188" y="64" text-anchor="middle">100%</text>
+              <rect class="d-accent" x="229" y="45" width="76" height="28" rx="3" style="fill-opacity:0.47;stroke-opacity:.25"/>
+              <text class="d-mono" x="266" y="64" text-anchor="middle">38%</text>
+              <rect class="d-accent" x="307" y="45" width="76" height="28" rx="3" style="fill-opacity:0.40;stroke-opacity:.25"/>
+              <text class="d-mono" x="344" y="64" text-anchor="middle">29%</text>
+              <rect class="d-accent" x="385" y="45" width="76" height="28" rx="3" style="fill-opacity:0.36;stroke-opacity:.25"/>
+              <text class="d-mono" x="422" y="64" text-anchor="middle">25%</text>
+              <rect class="d-accent" x="463" y="45" width="76" height="28" rx="3" style="fill-opacity:0.35;stroke-opacity:.25"/>
+              <text class="d-mono" x="500" y="64" text-anchor="middle">23%</text>
+              <text class="d-title" x="20" y="94">Feb 2026</text>
+              <rect class="d-accent" x="151" y="75" width="76" height="28" rx="3" style="fill-opacity:0.25;stroke-opacity:.25"/>
+              <text class="d-mono" x="188" y="94" text-anchor="middle">100%</text>
+              <rect class="d-accent" x="229" y="75" width="76" height="28" rx="3" style="fill-opacity:0.46;stroke-opacity:.25"/>
+              <text class="d-mono" x="266" y="94" text-anchor="middle">36%</text>
+              <rect class="d-accent" x="307" y="75" width="76" height="28" rx="3" style="fill-opacity:0.38;stroke-opacity:.25"/>
+              <text class="d-mono" x="344" y="94" text-anchor="middle">27%</text>
+              <rect class="d-accent" x="385" y="75" width="76" height="28" rx="3" style="fill-opacity:0.35;stroke-opacity:.25"/>
+              <text class="d-mono" x="422" y="94" text-anchor="middle">24%</text>
+              <rect class="d-fill" x="463" y="75" width="76" height="28" rx="3"/>
+              <text class="d-title" x="20" y="124">Mar 2026</text>
+              <rect class="d-accent" x="151" y="105" width="76" height="28" rx="3" style="fill-opacity:0.25;stroke-opacity:.25"/>
+              <text class="d-mono" x="188" y="124" text-anchor="middle">100%</text>
+              <rect class="d-accent" x="229" y="105" width="76" height="28" rx="3" style="fill-opacity:0.50;stroke-opacity:.25"/>
+              <text class="d-mono" x="266" y="124" text-anchor="middle">41%</text>
+              <rect class="d-accent" x="307" y="105" width="76" height="28" rx="3" style="fill-opacity:0.41;stroke-opacity:.25"/>
+              <text class="d-mono" x="344" y="124" text-anchor="middle">31%</text>
+              <rect class="d-fill" x="385" y="105" width="76" height="28" rx="3"/>
+              <rect class="d-fill" x="463" y="105" width="76" height="28" rx="3"/>
+              <text class="d-title" x="20" y="154">Apr 2026</text>
+              <rect class="d-accent" x="151" y="135" width="76" height="28" rx="3" style="fill-opacity:0.25;stroke-opacity:.25"/>
+              <text class="d-mono" x="188" y="154" text-anchor="middle">100%</text>
+              <rect class="d-accent" x="229" y="135" width="76" height="28" rx="3" style="fill-opacity:0.43;stroke-opacity:.25"/>
+              <text class="d-mono" x="266" y="154" text-anchor="middle">33%</text>
+              <rect class="d-fill" x="307" y="135" width="76" height="28" rx="3"/>
+              <rect class="d-fill" x="385" y="135" width="76" height="28" rx="3"/>
+              <rect class="d-fill" x="463" y="135" width="76" height="28" rx="3"/>
+              <text class="d-title" x="20" y="184">May 2026</text>
+              <rect class="d-accent" x="151" y="165" width="76" height="28" rx="3" style="fill-opacity:0.25;stroke-opacity:.25"/>
+              <text class="d-mono" x="188" y="184" text-anchor="middle">100%</text>
+              <rect class="d-fill" x="229" y="165" width="76" height="28" rx="3"/>
+              <rect class="d-fill" x="307" y="165" width="76" height="28" rx="3"/>
+              <rect class="d-fill" x="385" y="165" width="76" height="28" rx="3"/>
+              <rect class="d-fill" x="463" y="165" width="76" height="28" rx="3"/>
+              <text class="d-label d-text-signal" x="150" y="216">compare down a column: Mar 41% vs Apr 33% at the same age</text>
+            </svg>
+          </div>
+          <figcaption>Monthly repeat-purchase cohorts (example numbers). Each row is a signup month; darker cells mean more customers still buying. The empty corner is the future.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Cohort table: share of each signup month's customers who order N months later</span>
+WITH firsts AS (
+  SELECT customer_id, DATE_TRUNC('month', MIN(order_date)) AS cohort
+  FROM orders GROUP BY customer_id
+), activity AS (
+  SELECT DISTINCT f.cohort, o.customer_id,
+         (EXTRACT(YEAR FROM AGE(DATE_TRUNC('month', o.order_date), f.cohort)) * 12
+          + EXTRACT(MONTH FROM AGE(DATE_TRUNC('month', o.order_date), f.cohort)))::int AS month_n
+  FROM orders o JOIN firsts f USING (customer_id)
+)
+SELECT cohort, month_n,
+       COUNT(*) * 100.0 / FIRST_VALUE(COUNT(*)) OVER (PARTITION BY cohort ORDER BY month_n) AS pct_active
+FROM activity
+GROUP BY cohort, month_n
+ORDER BY cohort, month_n;</code></pre>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Split-apply-combine in pandas, with segment sizes kept beside the rates</span>
+seg = (orders.groupby("channel")
+             .agg(orders=("order_id", "nunique"), revenue=("order_value", "sum"))
+             .assign(aov=lambda d: d.revenue / d.orders,
+                     share=lambda d: d.orders / d.orders.sum())
+             .sort_values("revenue", ascending=False))
+print(seg.round(2))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Split, apply, combine: the same metric per segment, side by side, with sizes.</li>
+            <li>A change in segment mix can move the total even when no segment changed.</li>
+            <li>Simpson's paradox: the aggregate can point the opposite way from every segment.</li>
+            <li>Cohorts group customers by start date so you compare them at the same age.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reporting a segment's dramatic rate without its tiny sample size.</li>
+            <li>Slicing by 30 dimensions until something looks significant by chance.</li>
+            <li>Comparing an old cohort's lifetime total with a young cohort's total.</li>
+            <li>Explaining a total change without checking whether the mix of segments shifted.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="segmentation-1"><span>Build a per-segment table with counts, rates and shares</span></label></li>
+          <li><label><input type="checkbox" data-key="segmentation-2"><span>Construct a numeric example of Simpson's paradox and explain it</span></label></li>
+          <li><label><input type="checkbox" data-key="segmentation-3"><span>Write a cohort retention query and read the triangle by row and by column</span></label></li>
+          <li><label><input type="checkbox" data-key="segmentation-4"><span>Tell a mix effect apart from a within-segment change</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/user_guide/groupby.html">pandas: Group by: split-apply-combine</a></li>
+          <li><span class="kind">Reading</span><a href="https://en.wikipedia.org/wiki/Simpson%27s_paradox">Simpson's paradox (Wikipedia, with the UC Berkeley admissions example)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="time-patterns">
+        <header class="topic-head">
+          <p class="eyebrow">06.5 · Trend, cycle, noise</p>
+          <h2>Patterns over time</h2>
+        </header>
+
+        <p class="lead">Plot almost any business metric by day and you see a mix of things layered together: slow growth, a weekly rhythm, a holiday season, one-off spikes and random wobble. Before you call a change "real", you need to know which layer moved.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>"Revenue is down 4% this month" is the most common alarm you will field, and a large share of these alarms are the calendar: fewer weekend days, a holiday moving week, or a promo last year. Separating the layers keeps you from chasing ghosts.</p>
+        </div>
+
+        <h3>Pull the series apart</h3>
+        <p>A daily series can be read as <strong>trend</strong> × <strong>seasonality</strong> × <strong>residual</strong>. Trend is the slow drift. Seasonality repeats on a fixed period: weekly for most stores, yearly for holidays. The residual is what is left, including spikes such as a promo day. For sales, the parts usually multiply: a Saturday is "17% above a normal day", whatever the level.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 262" role="img" aria-label="A 140-day revenue series broken into layers: the observed series equals a slow upward trend, times a weekly cycle where weekends are higher, times a holiday ramp in the last 40 days and a residual that contains one promo spike.">
+              <text class="d-title" x="20" y="36">observed</text>
+              <text class="d-label" x="20" y="52">what you see</text>
+              <line class="d-grid" x1="150" y1="62" x2="620" y2="62"/>
+              <path class="d-line-accent" d="M150.0,59.2 L153.4,59.6 L156.8,59.3 L160.1,56.2 L163.5,51.4 L166.9,46.2 L170.3,49.7 L173.7,60.0 L177.1,59.6 L180.4,59.2 L183.8,57.3 L187.2,52.5 L190.6,45.9 L194.0,51.0 L197.3,57.7 L200.7,56.3 L204.1,56.6 L207.5,58.0 L210.9,51.4 L214.2,46.8 L217.6,51.9 L221.0,56.1 L224.4,59.1 L227.8,60.0 L231.2,54.8 L234.5,51.6 L237.9,47.2 L241.3,52.0 L244.7,58.3 L248.1,58.4 L251.4,57.4 L254.8,54.6 L258.2,47.8 L261.6,46.0 L265.0,51.3 L268.3,57.3 L271.7,56.4 L275.1,57.3 L278.5,52.1 L281.9,52.2 L285.3,45.8 L288.6,49.6 L292.0,57.7 L295.4,58.3 L298.8,55.2 L302.2,52.7 L305.5,49.4 L308.9,43.9 L312.3,46.7 L315.7,55.5 L319.1,57.3 L322.4,53.7 L325.8,54.6 L329.2,48.8 L332.6,41.6 L336.0,48.4 L339.4,56.4 L342.7,56.1 L346.1,55.7 L349.5,53.7 L352.9,31.1 L356.3,39.8 L359.6,48.8 L363.0,53.5 L366.4,55.6 L369.8,54.9 L373.2,51.3 L376.5,47.6 L379.9,41.4 L383.3,49.7 L386.7,54.6 L390.1,54.4 L393.5,53.3 L396.8,50.3 L400.2,45.0 L403.6,40.3 L407.0,43.5 L410.4,56.4 L413.7,55.6 L417.1,57.3 L420.5,50.0 L423.9,46.8 L427.3,37.3 L430.6,46.9 L434.0,56.8 L437.4,52.9 L440.8,55.1 L444.2,52.8 L447.6,46.7 L450.9,38.7 L454.3,46.6 L457.7,53.0 L461.1,57.1 L464.5,50.0 L467.8,50.5 L471.2,45.7 L474.6,38.2 L478.0,44.9 L481.4,52.5 L484.7,55.2 L488.1,52.3 L491.5,49.2 L494.9,43.5 L498.3,38.8 L501.7,44.4 L505.0,51.6 L508.4,52.3 L511.8,50.9 L515.2,49.3 L518.6,45.0 L521.9,34.9 L525.3,42.5 L528.7,50.7 L532.1,46.2 L535.5,48.2 L538.8,45.5 L542.2,41.7 L545.6,36.6 L549.0,38.5 L552.4,48.7 L555.8,49.2 L559.1,45.4 L562.5,42.5 L565.9,38.4 L569.3,30.9 L572.7,33.1 L576.0,44.5 L579.4,48.0 L582.8,42.4 L586.2,40.4 L589.6,34.8 L592.9,24.7 L596.3,32.3 L599.7,37.8 L603.1,41.9 L606.5,39.1 L609.9,33.8 L613.2,31.0 L616.6,18.0 L620.0,27.6"/>
+              <text class="d-mono" x="136" y="96" text-anchor="middle">=</text>
+              <text class="d-title" x="20" y="96">trend</text>
+              <text class="d-label" x="20" y="112">slow growth</text>
+              <line class="d-grid" x1="150" y1="122" x2="620" y2="122"/>
+              <path class="d-line-accent" d="M150.0,115.5 L153.4,115.4 L156.8,115.3 L160.1,115.2 L163.5,115.2 L166.9,115.1 L170.3,115.0 L173.7,115.0 L177.1,114.9 L180.4,114.8 L183.8,114.7 L187.2,114.7 L190.6,114.6 L194.0,114.5 L197.3,114.5 L200.7,114.4 L204.1,114.3 L207.5,114.2 L210.9,114.2 L214.2,114.1 L217.6,114.0 L221.0,114.0 L224.4,113.9 L227.8,113.8 L231.2,113.7 L234.5,113.7 L237.9,113.6 L241.3,113.5 L244.7,113.4 L248.1,113.4 L251.4,113.3 L254.8,113.2 L258.2,113.2 L261.6,113.1 L265.0,113.0 L268.3,112.9 L271.7,112.9 L275.1,112.8 L278.5,112.7 L281.9,112.7 L285.3,112.6 L288.6,112.5 L292.0,112.4 L295.4,112.4 L298.8,112.3 L302.2,112.2 L305.5,112.2 L308.9,112.1 L312.3,112.0 L315.7,111.9 L319.1,111.9 L322.4,111.8 L325.8,111.7 L329.2,111.7 L332.6,111.6 L336.0,111.5 L339.4,111.4 L342.7,111.4 L346.1,111.3 L349.5,111.2 L352.9,111.2 L356.3,111.1 L359.6,111.0 L363.0,110.9 L366.4,110.9 L369.8,110.8 L373.2,110.7 L376.5,110.7 L379.9,110.6 L383.3,110.5 L386.7,110.4 L390.1,110.4 L393.5,110.3 L396.8,110.2 L400.2,110.2 L403.6,110.1 L407.0,110.0 L410.4,109.9 L413.7,109.9 L417.1,109.8 L420.5,109.7 L423.9,109.6 L427.3,109.6 L430.6,109.5 L434.0,109.4 L437.4,109.4 L440.8,109.3 L444.2,109.2 L447.6,109.1 L450.9,109.1 L454.3,109.0 L457.7,108.9 L461.1,108.9 L464.5,108.8 L467.8,108.7 L471.2,108.6 L474.6,108.6 L478.0,108.5 L481.4,108.4 L484.7,108.4 L488.1,108.3 L491.5,108.2 L494.9,108.1 L498.3,108.1 L501.7,108.0 L505.0,107.9 L508.4,107.9 L511.8,107.8 L515.2,107.7 L518.6,107.6 L521.9,107.6 L525.3,107.5 L528.7,107.4 L532.1,107.4 L535.5,107.3 L538.8,107.2 L542.2,107.1 L545.6,107.1 L549.0,107.0 L552.4,106.9 L555.8,106.9 L559.1,106.8 L562.5,106.7 L565.9,106.6 L569.3,106.6 L572.7,106.5 L576.0,106.4 L579.4,106.3 L582.8,106.3 L586.2,106.2 L589.6,106.1 L592.9,106.1 L596.3,106.0 L599.7,105.9 L603.1,105.8 L606.5,105.8 L609.9,105.7 L613.2,105.6 L616.6,105.6 L620.0,105.5"/>
+              <text class="d-mono" x="136" y="156" text-anchor="middle">×</text>
+              <text class="d-title" x="20" y="156">weekly cycle</text>
+              <text class="d-label" x="20" y="172">weekends higher</text>
+              <line class="d-grid" x1="150" y1="182" x2="620" y2="182"/>
+              <path class="d-line-accent" d="M150.0,176.9 L153.4,180.0 L156.8,175.3 L160.1,169.1 L163.5,156.7 L166.9,138.0 L170.3,155.1 L173.7,176.9 L177.1,180.0 L180.4,175.3 L183.8,169.1 L187.2,156.7 L190.6,138.0 L194.0,155.1 L197.3,176.9 L200.7,180.0 L204.1,175.3 L207.5,169.1 L210.9,156.7 L214.2,138.0 L217.6,155.1 L221.0,176.9 L224.4,180.0 L227.8,175.3 L231.2,169.1 L234.5,156.7 L237.9,138.0 L241.3,155.1 L244.7,176.9 L248.1,180.0 L251.4,175.3 L254.8,169.1 L258.2,156.7 L261.6,138.0 L265.0,155.1 L268.3,176.9 L271.7,180.0 L275.1,175.3 L278.5,169.1 L281.9,156.7 L285.3,138.0 L288.6,155.1 L292.0,176.9 L295.4,180.0 L298.8,175.3 L302.2,169.1 L305.5,156.7 L308.9,138.0 L312.3,155.1 L315.7,176.9 L319.1,180.0 L322.4,175.3 L325.8,169.1 L329.2,156.7 L332.6,138.0 L336.0,155.1 L339.4,176.9 L342.7,180.0 L346.1,175.3 L349.5,169.1 L352.9,156.7 L356.3,138.0 L359.6,155.1 L363.0,176.9 L366.4,180.0 L369.8,175.3 L373.2,169.1 L376.5,156.7 L379.9,138.0 L383.3,155.1 L386.7,176.9 L390.1,180.0 L393.5,175.3 L396.8,169.1 L400.2,156.7 L403.6,138.0 L407.0,155.1 L410.4,176.9 L413.7,180.0 L417.1,175.3 L420.5,169.1 L423.9,156.7 L427.3,138.0 L430.6,155.1 L434.0,176.9 L437.4,180.0 L440.8,175.3 L444.2,169.1 L447.6,156.7 L450.9,138.0 L454.3,155.1 L457.7,176.9 L461.1,180.0 L464.5,175.3 L467.8,169.1 L471.2,156.7 L474.6,138.0 L478.0,155.1 L481.4,176.9 L484.7,180.0 L488.1,175.3 L491.5,169.1 L494.9,156.7 L498.3,138.0 L501.7,155.1 L505.0,176.9 L508.4,180.0 L511.8,175.3 L515.2,169.1 L518.6,156.7 L521.9,138.0 L525.3,155.1 L528.7,176.9 L532.1,180.0 L535.5,175.3 L538.8,169.1 L542.2,156.7 L545.6,138.0 L549.0,155.1 L552.4,176.9 L555.8,180.0 L559.1,175.3 L562.5,169.1 L565.9,156.7 L569.3,138.0 L572.7,155.1 L576.0,176.9 L579.4,180.0 L582.8,175.3 L586.2,169.1 L589.6,156.7 L592.9,138.0 L596.3,155.1 L599.7,176.9 L603.1,180.0 L606.5,175.3 L609.9,169.1 L613.2,156.7 L616.6,138.0 L620.0,155.1"/>
+              <text class="d-mono" x="136" y="216" text-anchor="middle">×</text>
+              <text class="d-title" x="20" y="216">season + residual</text>
+              <text class="d-label" x="20" y="232">holiday ramp, promo spike</text>
+              <line class="d-grid" x1="150" y1="242" x2="620" y2="242"/>
+              <path class="d-line-signal" d="M150.0,231.8 L153.4,230.5 L156.8,233.4 L160.1,230.8 L163.5,229.0 L166.9,230.6 L170.3,227.0 L173.7,234.8 L177.1,231.7 L180.4,234.2 L183.8,234.4 L187.2,232.5 L190.6,231.2 L194.0,230.6 L197.3,230.3 L200.7,224.8 L204.1,229.2 L207.5,237.0 L210.9,231.3 L214.2,233.9 L217.6,233.6 L221.0,227.8 L224.4,232.7 L227.8,238.2 L231.2,231.0 L234.5,232.9 L237.9,235.7 L241.3,234.9 L244.7,233.9 L248.1,232.0 L251.4,233.3 L254.8,231.7 L258.2,226.1 L261.6,234.5 L265.0,234.5 L268.3,232.7 L271.7,228.5 L275.1,234.2 L278.5,227.4 L281.9,236.1 L285.3,235.2 L288.6,232.1 L292.0,234.7 L295.4,233.9 L298.8,230.5 L302.2,229.6 L305.5,231.6 L308.9,232.8 L312.3,227.7 L315.7,230.7 L319.1,232.7 L322.4,228.1 L325.8,234.8 L329.2,231.4 L332.6,229.8 L336.0,232.0 L339.4,233.8 L342.7,230.8 L346.1,233.7 L349.5,233.8 L352.9,198.0 L356.3,227.8 L359.6,233.7 L363.0,228.3 L366.4,230.7 L369.8,232.8 L373.2,229.8 L376.5,231.1 L379.9,231.5 L383.3,236.3 L386.7,231.7 L390.1,229.1 L393.5,230.4 L396.8,228.8 L400.2,227.2 L403.6,230.6 L407.0,225.6 L410.4,236.8 L413.7,232.7 L417.1,240.0 L420.5,229.3 L423.9,231.6 L427.3,226.6 L430.6,233.1 L434.0,238.4 L437.4,227.9 L440.8,236.2 L444.2,236.0 L447.6,232.5 L450.9,229.9 L454.3,233.6 L457.7,231.4 L461.1,237.9 L464.5,226.4 L467.8,232.2 L471.2,231.6 L474.6,230.1 L478.0,231.4 L481.4,231.3 L484.7,234.9 L488.1,232.3 L491.5,230.5 L494.9,228.6 L498.3,232.2 L501.7,231.4 L505.0,230.5 L508.4,229.5 L511.8,230.5 L515.2,231.7 L518.6,232.3 L521.9,226.6 L525.3,229.0 L528.7,229.5 L532.1,217.8 L535.5,225.8 L538.8,225.4 L542.2,227.2 L545.6,230.5 L549.0,222.8 L552.4,226.2 L555.8,225.1 L559.1,221.1 L562.5,220.4 L565.9,222.3 L569.3,222.3 L572.7,214.2 L576.0,218.7 L579.4,223.5 L582.8,216.2 L586.2,217.4 L589.6,216.9 L592.9,213.5 L596.3,214.1 L599.7,206.4 L603.1,212.0 L606.5,210.6 L609.9,206.0 L613.2,211.4 L616.6,204.0 L620.0,206.9"/>
+              <text class="d-label d-text-signal" x="361" y="208">promo day</text>
+              <line class="d-line d-dash" x1="488.1" y1="10" x2="488.1" y2="254"/>
+              <text class="d-label" x="494" y="10">Nov: season starts</text>
+            </svg>
+          </div>
+          <figcaption>Decomposing 140 days of example store revenue. What you see on the dashboard (top) is the product of the three layers below it.</figcaption>
+        </figure>
+
+        <h3>Smooth away the week, compare like with like</h3>
+        <p>A <strong>7-day rolling average</strong> contains exactly one of each weekday, so the weekly rhythm cancels out and the trend shows through. For month or year comparisons, align by weekday: compare with 364 days ago (52 weeks) rather than 365, and compare per day or per weekday-adjusted day rather than monthly totals.</p>
+
+        <div class="widget" id="time-patterns-demo">
+          <div class="widget-head">
+            <span class="widget-title">Daily revenue: cycles and smoothing</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="time-patterns-dow"><input type="checkbox" id="time-patterns-dow" checked> Day-of-week pattern</label>
+            <label for="time-patterns-season"><input type="checkbox" id="time-patterns-season" checked> Holiday season</label>
+            <label for="time-patterns-window">Rolling window (days) <input type="range" id="time-patterns-window" min="1" max="28" step="1" value="1"><output id="time-patterns-window-out">1</output></label>
+          </div>
+          <svg id="time-patterns-plot" viewBox="0 0 600 260" role="img" aria-label="140 days of example daily revenue as thin bars, with a rolling-average line whose window you control."></svg>
+          <p class="readout" id="time-patterns-readout"></p>
+        </div>
+        <p>The readout's "weekday swing" measures how much of the weekly zig-zag survives in the smoothed line. Try windows of 5, 6, 7 and 10 days. Only some window lengths cancel the cycle exactly. The cost of smoothing is lag: a 28-day average reacts to a real change weeks late.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Calendars of August 2026, with 31 days and 10 weekend days, and September 2026, with 30 days and 8 weekend days. With identical demand, September's total revenue is 4.2 percent lower, revenue per day is 1.0 percent lower, and weekday-adjusted revenue is unchanged.">
+              <text class="d-title" x="20" y="20">August 2026</text>
+              <text class="d-label" x="20" y="36">31 days · 10 weekend days</text>
+              <text class="d-label" x="31" y="56" text-anchor="middle">M</text>
+              <text class="d-label" x="55" y="56" text-anchor="middle">T</text>
+              <text class="d-label" x="79" y="56" text-anchor="middle">W</text>
+              <text class="d-label" x="103" y="56" text-anchor="middle">T</text>
+              <text class="d-label" x="127" y="56" text-anchor="middle">F</text>
+              <text class="d-label" x="151" y="56" text-anchor="middle">S</text>
+              <text class="d-label" x="175" y="56" text-anchor="middle">S</text>
+              <rect class="d-signal" x="140" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="151" y="76" text-anchor="middle">1</text>
+              <rect class="d-signal" x="164" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="175" y="76" text-anchor="middle">2</text>
+              <rect class="d-box" x="20" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="31" y="98" text-anchor="middle">3</text>
+              <rect class="d-box" x="44" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="55" y="98" text-anchor="middle">4</text>
+              <rect class="d-box" x="68" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="79" y="98" text-anchor="middle">5</text>
+              <rect class="d-box" x="92" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="103" y="98" text-anchor="middle">6</text>
+              <rect class="d-box" x="116" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="127" y="98" text-anchor="middle">7</text>
+              <rect class="d-signal" x="140" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="151" y="98" text-anchor="middle">8</text>
+              <rect class="d-signal" x="164" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="175" y="98" text-anchor="middle">9</text>
+              <rect class="d-box" x="20" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="31" y="120" text-anchor="middle">10</text>
+              <rect class="d-box" x="44" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="55" y="120" text-anchor="middle">11</text>
+              <rect class="d-box" x="68" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="79" y="120" text-anchor="middle">12</text>
+              <rect class="d-box" x="92" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="103" y="120" text-anchor="middle">13</text>
+              <rect class="d-box" x="116" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="127" y="120" text-anchor="middle">14</text>
+              <rect class="d-signal" x="140" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="151" y="120" text-anchor="middle">15</text>
+              <rect class="d-signal" x="164" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="175" y="120" text-anchor="middle">16</text>
+              <rect class="d-box" x="20" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="31" y="142" text-anchor="middle">17</text>
+              <rect class="d-box" x="44" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="55" y="142" text-anchor="middle">18</text>
+              <rect class="d-box" x="68" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="79" y="142" text-anchor="middle">19</text>
+              <rect class="d-box" x="92" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="103" y="142" text-anchor="middle">20</text>
+              <rect class="d-box" x="116" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="127" y="142" text-anchor="middle">21</text>
+              <rect class="d-signal" x="140" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="151" y="142" text-anchor="middle">22</text>
+              <rect class="d-signal" x="164" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="175" y="142" text-anchor="middle">23</text>
+              <rect class="d-box" x="20" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="31" y="164" text-anchor="middle">24</text>
+              <rect class="d-box" x="44" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="55" y="164" text-anchor="middle">25</text>
+              <rect class="d-box" x="68" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="79" y="164" text-anchor="middle">26</text>
+              <rect class="d-box" x="92" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="103" y="164" text-anchor="middle">27</text>
+              <rect class="d-box" x="116" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="127" y="164" text-anchor="middle">28</text>
+              <rect class="d-signal" x="140" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="151" y="164" text-anchor="middle">29</text>
+              <rect class="d-signal" x="164" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="175" y="164" text-anchor="middle">30</text>
+              <rect class="d-box" x="20" y="172" width="22" height="20" rx="3"/>
+              <text class="d-label" x="31" y="186" text-anchor="middle">31</text>
+              <text class="d-title" x="210" y="20">September 2026</text>
+              <text class="d-label" x="210" y="36">30 days · 8 weekend days</text>
+              <text class="d-label" x="221" y="56" text-anchor="middle">M</text>
+              <text class="d-label" x="245" y="56" text-anchor="middle">T</text>
+              <text class="d-label" x="269" y="56" text-anchor="middle">W</text>
+              <text class="d-label" x="293" y="56" text-anchor="middle">T</text>
+              <text class="d-label" x="317" y="56" text-anchor="middle">F</text>
+              <text class="d-label" x="341" y="56" text-anchor="middle">S</text>
+              <text class="d-label" x="365" y="56" text-anchor="middle">S</text>
+              <rect class="d-box" x="234" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="245" y="76" text-anchor="middle">1</text>
+              <rect class="d-box" x="258" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="269" y="76" text-anchor="middle">2</text>
+              <rect class="d-box" x="282" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="293" y="76" text-anchor="middle">3</text>
+              <rect class="d-box" x="306" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="317" y="76" text-anchor="middle">4</text>
+              <rect class="d-signal" x="330" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="341" y="76" text-anchor="middle">5</text>
+              <rect class="d-signal" x="354" y="62" width="22" height="20" rx="3"/>
+              <text class="d-label" x="365" y="76" text-anchor="middle">6</text>
+              <rect class="d-box" x="210" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="221" y="98" text-anchor="middle">7</text>
+              <rect class="d-box" x="234" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="245" y="98" text-anchor="middle">8</text>
+              <rect class="d-box" x="258" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="269" y="98" text-anchor="middle">9</text>
+              <rect class="d-box" x="282" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="293" y="98" text-anchor="middle">10</text>
+              <rect class="d-box" x="306" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="317" y="98" text-anchor="middle">11</text>
+              <rect class="d-signal" x="330" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="341" y="98" text-anchor="middle">12</text>
+              <rect class="d-signal" x="354" y="84" width="22" height="20" rx="3"/>
+              <text class="d-label" x="365" y="98" text-anchor="middle">13</text>
+              <rect class="d-box" x="210" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="221" y="120" text-anchor="middle">14</text>
+              <rect class="d-box" x="234" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="245" y="120" text-anchor="middle">15</text>
+              <rect class="d-box" x="258" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="269" y="120" text-anchor="middle">16</text>
+              <rect class="d-box" x="282" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="293" y="120" text-anchor="middle">17</text>
+              <rect class="d-box" x="306" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="317" y="120" text-anchor="middle">18</text>
+              <rect class="d-signal" x="330" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="341" y="120" text-anchor="middle">19</text>
+              <rect class="d-signal" x="354" y="106" width="22" height="20" rx="3"/>
+              <text class="d-label" x="365" y="120" text-anchor="middle">20</text>
+              <rect class="d-box" x="210" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="221" y="142" text-anchor="middle">21</text>
+              <rect class="d-box" x="234" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="245" y="142" text-anchor="middle">22</text>
+              <rect class="d-box" x="258" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="269" y="142" text-anchor="middle">23</text>
+              <rect class="d-box" x="282" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="293" y="142" text-anchor="middle">24</text>
+              <rect class="d-box" x="306" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="317" y="142" text-anchor="middle">25</text>
+              <rect class="d-signal" x="330" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="341" y="142" text-anchor="middle">26</text>
+              <rect class="d-signal" x="354" y="128" width="22" height="20" rx="3"/>
+              <text class="d-label" x="365" y="142" text-anchor="middle">27</text>
+              <rect class="d-box" x="210" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="221" y="164" text-anchor="middle">28</text>
+              <rect class="d-box" x="234" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="245" y="164" text-anchor="middle">29</text>
+              <rect class="d-box" x="258" y="150" width="22" height="20" rx="3"/>
+              <text class="d-label" x="269" y="164" text-anchor="middle">30</text>
+              <text class="d-title" x="420" y="20">Sep vs Aug, same demand</text>
+              <line class="d-line" x1="530" y1="40" x2="530" y2="160"/>
+              <text class="d-label" x="524" y="69" text-anchor="end">total revenue</text>
+              <rect class="d-signal" x="530" y="56" width="50" height="18" rx="3"/>
+              <text class="d-mono d-text-signal" x="586" y="69">-4.2%</text>
+              <text class="d-label" x="524" y="105" text-anchor="end">revenue per day</text>
+              <rect class="d-signal" x="530" y="92" width="12" height="18" rx="3"/>
+              <text class="d-mono d-text-signal" x="548" y="105">-1.0%</text>
+              <text class="d-label" x="524" y="141" text-anchor="end">weekday-adjusted</text>
+              <circle class="d-dot-good" cx="530" cy="137" r="5"/>
+              <text class="d-mono d-text-good" x="542" y="141">0.0%</text>
+              <text class="d-label" x="420" y="186">Demand did not change at all.</text>
+              <text class="d-label" x="420" y="202">The calendar made September</text>
+              <text class="d-label" x="420" y="218">look 4.2% worse.</text>
+            </svg>
+          </div>
+          <figcaption>The calendar trap, using the example weekday pattern from the demo. September 2026 has one fewer day and two fewer weekend days than August, so it "drops" 4.2% with no change in customer behaviour at all.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>daily = (orders.set_index("order_date")
+               .resample("D")["order_value"].sum())        <span class="c"># one row per day, gaps filled with 0</span>
+
+roll7 = daily.rolling(7).mean()                           <span class="c"># weekly cycle cancels out</span>
+
+dow_index = daily.groupby(daily.index.dayofweek).mean() / daily.mean()
+adjusted = daily / daily.index.dayofweek.map(dow_index)   <span class="c"># weekday-adjusted series</span>
+
+yoy = daily / daily.shift(364) - 1                        <span class="c"># same weekday, 52 weeks ago</span>
+
+from statsmodels.tsa.seasonal import STL
+parts = STL(daily, period=7, robust=True).fit()           <span class="c"># trend, seasonal, resid</span>
+parts.plot()</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A daily series layers trend, weekly and yearly seasonality, and residual noise or events.</li>
+            <li>A rolling window that is a multiple of 7 days removes the weekly cycle; other lengths leave some behind.</li>
+            <li>Compare like with like: per day, weekday-aligned (364 days back) or weekday-adjusted.</li>
+            <li>Smoothing adds lag, so use it to see trend, not to spot sudden breaks.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Comparing monthly totals of months with different lengths or weekend counts.</li>
+            <li>Comparing this week with last week when last week held a promo or a holiday.</li>
+            <li>Missing days in the data, so <code>rolling(7)</code> silently spans more than a week.</li>
+            <li>Calling a single residual spike a new trend.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="time-patterns-1"><span>Name the trend, seasonal and residual parts of a daily chart</span></label></li>
+          <li><label><input type="checkbox" data-key="time-patterns-2"><span>Explain why a 7-day rolling average removes the weekly cycle</span></label></li>
+          <li><label><input type="checkbox" data-key="time-patterns-3"><span>Adjust a month-over-month comparison for calendar effects</span></label></li>
+          <li><label><input type="checkbox" data-key="time-patterns-4"><span>Run an STL decomposition in statsmodels and read its panels</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://otexts.com/fpp3/">Forecasting: Principles and Practice (Hyndman &amp; Athanasopoulos), chapters on time series graphics and decomposition</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.statsmodels.org/stable/examples/notebooks/generated/stl_decomposition.html">statsmodels: Seasonal-Trend decomposition using LOESS (STL)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="eda-workflow">
+        <header class="topic-head">
+          <p class="eyebrow">06.6 · Make it repeatable</p>
+          <h2>An EDA workflow</h2>
+        </header>
+
+        <p class="lead">Good EDA looks creative but runs on a checklist. You agree the question, check that the table is what you think it is, profile each column, look at pairs, segments and time, and write every finding down with its evidence. The order matters: a segment comparison on a table full of duplicates is worse than no comparison.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>A repeatable workflow makes you fast on unfamiliar data and makes your work reviewable. When a stakeholder asks "did you check for duplicates?" you can point at the line in your findings log instead of re-running the notebook in a panic.</p>
+        </div>
+
+        <h3>Seven steps, one loop</h3>
+        <p>The first two steps are gates. Until you know the <strong>grain</strong> (what one row means: one order, one order line, one customer per day) and have checked duplicates, nulls and ranges, every later number is suspect. After that, explore freely, but log as you go.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="An EDA workflow loop. One: agree the question. Two: check grain and duplicates. Three: check nulls and ranges. Four: profile each column. Five: relationships. Six: segments and time. Seven: log findings and share, which loops back to step one with a sharper question. Steps two and three are a quality gate.">
+              <defs>
+                <marker id="eda-workflow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="eda-workflow-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-signal" x="168" y="20" width="300" height="88" rx="10" style="fill-opacity:.35"/>
+              <text class="d-label d-text-signal" x="318" y="16" text-anchor="middle">quality gate: nothing after this is trusted until it passes</text>
+              <rect class="d-accent" x="20" y="36" width="130" height="56" rx="8"/>
+              <text class="d-title" x="85" y="60" text-anchor="middle">1 · Question</text>
+              <text class="d-label" x="85" y="78" text-anchor="middle">metric, who, when</text>
+              <line class="d-line-accent" x1="150" y1="64" x2="178" y2="64" marker-end="url(#eda-workflow-arrow)"/>
+              <rect class="d-box" x="180" y="36" width="124" height="56" rx="8"/>
+              <text class="d-title" x="242" y="60" text-anchor="middle">2 · Grain</text>
+              <text class="d-label" x="242" y="78" text-anchor="middle">row = ? duplicates?</text>
+              <line class="d-line-accent" x1="304" y1="64" x2="330" y2="64" marker-end="url(#eda-workflow-arrow)"/>
+              <rect class="d-box" x="332" y="36" width="124" height="56" rx="8"/>
+              <text class="d-title" x="394" y="60" text-anchor="middle">3 · Nulls, ranges</text>
+              <text class="d-label" x="394" y="78" text-anchor="middle">impossible values?</text>
+              <line class="d-line-accent" x1="456" y1="64" x2="514" y2="64" marker-end="url(#eda-workflow-arrow)"/>
+              <rect class="d-box" x="516" y="36" width="140" height="56" rx="8"/>
+              <text class="d-title" x="586" y="60" text-anchor="middle">4 · Each column</text>
+              <text class="d-label" x="586" y="78" text-anchor="middle">shape, outliers</text>
+              <line class="d-line-accent" x1="586" y1="92" x2="586" y2="148" marker-end="url(#eda-workflow-arrow)"/>
+              <rect class="d-box" x="516" y="150" width="140" height="56" rx="8"/>
+              <text class="d-title" x="586" y="174" text-anchor="middle">5 · Pairs</text>
+              <text class="d-label" x="586" y="192" text-anchor="middle">scatter, crosstab</text>
+              <line class="d-line-accent" x1="516" y1="178" x2="454" y2="178" marker-end="url(#eda-workflow-arrow)"/>
+              <rect class="d-box" x="322" y="150" width="130" height="56" rx="8"/>
+              <text class="d-title" x="387" y="174" text-anchor="middle">6 · Segments, time</text>
+              <text class="d-label" x="387" y="192" text-anchor="middle">mix, cohorts, cycles</text>
+              <line class="d-line-accent" x1="322" y1="178" x2="262" y2="178" marker-end="url(#eda-workflow-arrow)"/>
+              <rect class="d-good" x="130" y="150" width="130" height="56" rx="8"/>
+              <text class="d-title" x="195" y="174" text-anchor="middle">7 · Log, share</text>
+              <text class="d-label" x="195" y="192" text-anchor="middle">finding + evidence</text>
+              <path class="d-line-signal d-dash" d="M130 178 H85 V94" marker-end="url(#eda-workflow-arrow-s)"/>
+              <text class="d-label d-text-signal" x="20" y="232">sharper question</text>
+              <text class="d-label" x="420" y="236">typical time split: gate 25%, explore 50%, write-up 25%</text>
+            </svg>
+          </div>
+          <figcaption>The EDA loop. Steps 2 and 3 gate everything after them; step 7 usually produces a sharper version of step 1.</figcaption>
+        </figure>
+
+        <div class="widget" id="eda-workflow-demo">
+          <div class="widget-head">
+            <span class="widget-title">Guided EDA checklist on the orders table</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <button class="btn" type="button" id="eda-workflow-s3">Profile order_value</button>
+            <button class="btn" type="button" id="eda-workflow-s6">Write the findings log</button>
+            <button class="btn" type="button" id="eda-workflow-s1">Check grain &amp; duplicates</button>
+            <button class="btn" type="button" id="eda-workflow-s4">Compare channels</button>
+            <button class="btn" type="button" id="eda-workflow-s2">Check nulls &amp; ranges</button>
+            <button class="btn" type="button" id="eda-workflow-s5">Plot revenue over time</button>
+            <button class="btn primary" type="button" id="eda-workflow-reset">Start over</button>
+          </div>
+          <svg id="eda-workflow-plot" viewBox="0 0 600 250" role="img" aria-label="Your findings log: one row per check you have run, marked as trusted or as a warning when you ran it before the checks it depends on."></svg>
+          <p class="readout" id="eda-workflow-readout"></p>
+        </div>
+        <p>The buttons are shuffled on purpose. Run a check before the ones it depends on and its finding is logged with a warning, because the number it produced cannot be trusted yet.</p>
+
+        <h3>Keep a findings log</h3>
+        <p>Write each finding as one sentence plus its evidence, your confidence and what to do next. A log turns a wandering notebook into something a reviewer can check and a stakeholder can act on, and it becomes the outline of your write-up.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="A findings log with three rows. Mobile conversion fell from 2.4 to 1.9 percent after the October 9 app release, high confidence, next step file a bug. Average order value fell 4 percent, but it also fell 4 percent last October, medium confidence, treat as seasonal. Paid social customers have lower order values, low confidence on why, next step check discount codes.">
+              <rect class="d-box" x="10" y="10" width="660" height="190" rx="10"/>
+              <text class="d-label" x="26" y="34">finding</text>
+              <text class="d-label" x="300" y="34">evidence</text>
+              <text class="d-label" x="476" y="34">confidence</text>
+              <text class="d-label" x="566" y="34">next step</text>
+              <line class="d-grid" x1="20" y1="44" x2="660" y2="44"/>
+              <text class="d-text" x="26" y="72">Mobile conversion 2.4% → 1.9%</text>
+              <text class="d-label" x="26" y="88">since the Oct 9 app release</text>
+              <text class="d-mono" x="300" y="78">daily chart, step change</text>
+              <rect class="d-good" x="476" y="62" width="64" height="22" rx="11"/>
+              <text class="d-label" x="508" y="77" text-anchor="middle">high</text>
+              <text class="d-text" x="566" y="78">file a bug</text>
+              <line class="d-grid" x1="20" y1="102" x2="660" y2="102"/>
+              <text class="d-text" x="26" y="128">AOV down 4% vs September</text>
+              <text class="d-label" x="26" y="144">same dip last October</text>
+              <text class="d-mono" x="300" y="134">YoY, weekday-aligned</text>
+              <rect class="d-accent" x="476" y="120" width="64" height="22" rx="11"/>
+              <text class="d-label" x="508" y="135" text-anchor="middle">medium</text>
+              <text class="d-text" x="566" y="134">seasonal</text>
+              <line class="d-grid" x1="20" y1="156" x2="660" y2="156"/>
+              <text class="d-text" x="26" y="180">Paid social AOV $34 vs $48</text>
+              <text class="d-mono" x="300" y="184">12,500 orders, groupby</text>
+              <rect class="d-signal" x="476" y="170" width="64" height="22" rx="11"/>
+              <text class="d-label" x="508" y="185" text-anchor="middle">low</text>
+              <text class="d-text" x="566" y="184">check codes</text>
+            </svg>
+          </div>
+          <figcaption>A findings log (example). Every row says what you saw, how you know, how sure you are and what happens next.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+
+def profile(df: pd.DataFrame, key: str) -&gt; pd.DataFrame:
+    """One row per column: type, nulls, distinct values, min and max."""
+    print(f"rows={len(df):,}  distinct {key}={df[key].nunique():,}")   <span class="c"># grain check</span>
+    out = pd.DataFrame({
+        "dtype":    df.dtypes.astype(str),
+        "null_pct": df.isna().mean().mul(100).round(1),
+        "distinct": df.nunique(),
+        "min":      df.min(numeric_only=False),
+        "max":      df.max(numeric_only=False),
+    })
+    return out.sort_values("null_pct", ascending=False)
+
+orders = pd.read_csv("orders.csv", parse_dates=["order_date"])
+print(profile(orders, key="order_id"))
+dupes = orders[orders.duplicated("order_id", keep=False)]
+print(len(dupes), "rows share an order_id")</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Agree the question, then pass the quality gate (grain, duplicates, nulls, ranges) before exploring.</li>
+            <li>Explore in widening circles: one column, pairs, segments, time.</li>
+            <li>Log each finding with evidence, confidence and a next step as you go.</li>
+            <li>Reuse a profiling function so every new table gets the same first look.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Jumping to segment charts before confirming one row means one order.</li>
+            <li>Keeping findings in your head, then forgetting how you got a number.</li>
+            <li>Exploring forever: stop when the agreed question is answered.</li>
+            <li>Presenting every chart you made instead of the three that matter.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>Automated profilers such as ydata-profiling produce a full report in one line. They are a good start for step 3, but they do not know your grain or your question, so steps 1, 2 and 7 stay with you.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="eda-workflow-1"><span>State the grain of a table and test it with a distinct count</span></label></li>
+          <li><label><input type="checkbox" data-key="eda-workflow-2"><span>Run the seven steps on a new dataset in under an hour</span></label></li>
+          <li><label><input type="checkbox" data-key="eda-workflow-3"><span>Write a findings log with evidence, confidence and next steps</span></label></li>
+          <li><label><input type="checkbox" data-key="eda-workflow-4"><span>Write a reusable profiling function in pandas</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://r4ds.hadley.nz/">R for Data Science (2e), "Exploratory data analysis"</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.profiling.ydata.ai/">ydata-profiling documentation</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Profile a public orders dataset</h4><p>Take a public e-commerce dataset (for example the Olist Brazilian e-commerce data on Kaggle). Write a sharp question, state the grain, run a profile of every column and produce three univariate charts with a one-line finding under each.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Segment and cohort deep dive</h4><p>On the same data, build a channel or region segment table with sizes and rates, plus a monthly repeat-purchase cohort triangle. Find one mix effect and explain it in a short findings log.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>"Why did it drop?" investigation</h4><p>Pick a month where a key metric fell. Decompose it with a metric tree, separate calendar and seasonal effects with weekday-aligned comparisons, check segments for a mix shift, and write a one-page memo with your confidence in each explanation.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Turn a vague stakeholder worry into a sharp, measurable question</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Profile any table: grain, nulls, ranges, shape and outliers</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Choose the right chart and summary for any pair of columns</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Spot Simpson's paradox and mix effects in a segment comparison</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Separate trend, weekly cycle, seasonality and calendar effects in a daily series</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Deliver a findings log that someone else can check and act on</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 06. Shared helpers first, then one IIFE per widget. */
+var ATLAS06 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) {
+    var u = 1 - r(), v = r();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  function fmt(n, d) { return n.toLocaleString("en-US", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+  function median(a) { var s = a.slice().sort(function (x, y) { return x - y; }), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
+  return { svg: svg, text: text, clear: clear, rng: rng, gauss: gauss, fmt: fmt, median: median };
+})();
+
+/* ---------- 06.1 question sharpener ---------- */
+(function () {
+  var w = document.getElementById("questions-demo");
+  if (!w) return;
+  var H = ATLAS06, S = H.svg, plot = document.getElementById("questions-plot"), readout = document.getElementById("questions-readout");
+  var parts = [
+    { id: "questions-metric", name: "Metric", ok: ["net revenue", "orders placed"],
+      why: { "sales": "“Sales” could mean orders, units or revenue, gross or net.", "customer happiness": "Happiness is not a column in orders. Pick something you can count." } },
+    { id: "questions-pop", name: "Population", ok: ["all customers", "first-time customers"],
+      why: { "people": "“People” could mean visitors, customers or anyone at all.", "our best customers": "“Best” has no agreed definition yet." } },
+    { id: "questions-time", name: "Time window", ok: ["in the last 4 weeks"],
+      why: { "recently": "“Recently” means different dates to different people.", "lately, more or less": "Name an exact window with a start and an end." } },
+    { id: "questions-cmp", name: "Comparison", ok: ["compared with the 4 weeks before", "compared with the same weeks last year"],
+      why: { "": "A number with no baseline cannot be good or bad.", "compared with our competitors": "You do not hold competitors' revenue, so this cannot be measured." } },
+    { id: "questions-why", name: "Decision", ok: ["to decide whether to keep the welcome code"],
+      why: { "": "Without a decision you will not know when the analysis is done.", "to prove the welcome code worked": "This picks the answer before you look. Ask a neutral question." } }
+  ];
+  function wrap(str, max) {
+    var words = str.split(" "), lines = [], cur = "";
+    words.forEach(function (wd) { if ((cur + " " + wd).trim().length > max) { lines.push(cur); cur = wd; } else cur = (cur + " " + wd).trim(); });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function draw() {
+    var v = parts.map(function (p) { return document.getElementById(p.id).value; });
+    var q = "What is our " + v[0] + " from " + v[1] + " " + v[2] + (v[3] ? ", " + v[3] : "") + (v[4] ? ", " + v[4] : "") + "?";
+    H.clear(plot);
+    S("rect", { x: 10, y: 8, width: 620, height: 78, rx: 8, "class": "d-box" }, plot);
+    wrap("“" + q + "”", 78).slice(0, 3).forEach(function (ln, i) { H.text(plot, 24, 32 + i * 20, ln, "d-text"); });
+    var score = 0, firstFix = "";
+    parts.forEach(function (p, i) {
+      var ok = p.ok.indexOf(v[i]) >= 0;
+      if (ok) score++; else if (!firstFix) firstFix = p.why[v[i]] || "";
+      var x = 10 + i * 125;
+      S("rect", { x: x, y: 104, width: 117, height: 54, rx: 8, "class": ok ? "d-good" : "d-signal" }, plot);
+      H.text(plot, x + 58.5, 126, (ok ? "✓ " : "✕ ") + p.name, "d-title", "middle");
+      H.text(plot, x + 58.5, 146, ok ? "measurable" : "too vague", "d-label", "middle");
+    });
+    w.setAttribute("data-score", String(score));
+    readout.textContent = "Sharpness " + score + "/5" + (score === 5 ? " · Ready to query: you know the rows, the metric, the baseline and the decision." : " · Next fix: " + firstFix);
+  }
+  parts.forEach(function (p) { document.getElementById(p.id).addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 06.2 histogram bin width ---------- */
+(function () {
+  var w = document.getElementById("univariate-demo");
+  if (!w) return;
+  var H = ATLAS06, S = H.svg, plot = document.getElementById("univariate-plot");
+  var bw = document.getElementById("univariate-bw"), bwOut = document.getElementById("univariate-bw-out");
+  var bulk = document.getElementById("univariate-bulk"), readout = document.getElementById("univariate-readout");
+  var r = H.rng(11), base = [], i;
+  for (i = 0; i < 1200; i++) base.push(Math.max(3, Math.round(Math.exp(Math.log(39) + 0.85 * H.gauss(r)) * 100) / 100));
+  for (i = 0; i < 90; i++) base.push(Math.round((50 + 5 * r()) * 100) / 100);
+  var BULK = [940, 1250, 1480], XMAX = 200, X0 = 50, XW = 530, Y0 = 20, YH = 180;
+  function sx(v) { return X0 + v / XMAX * XW; }
+  function draw() {
+    var width = parseInt(bw.value, 10);
+    bwOut.textContent = width;
+    var vals = bulk.checked ? base.concat(BULK) : base;
+    var nb = Math.ceil(XMAX / width), counts = [], k;
+    for (k = 0; k < nb; k++) counts.push(0);
+    var over = 0, sum = 0;
+    vals.forEach(function (v) { sum += v; if (v >= XMAX) { over++; return; } counts[Math.floor(v / width)]++; });
+    var mean = sum / vals.length, med = H.median(vals);
+    var maxC = Math.max.apply(null, counts), kb = Math.floor(52 / width);
+    var peak = kb * width >= 44 && kb < nb - 1 && counts[kb] > counts[kb - 1] && counts[kb] > counts[kb + 1];
+    w.setAttribute("data-peak", peak ? "1" : "0");
+    H.clear(plot);
+    [0.25, 0.5, 0.75, 1].forEach(function (f) { S("line", { x1: X0, x2: X0 + XW, y1: Y0 + YH - f * YH, y2: Y0 + YH - f * YH, "class": "d-grid" }, plot); });
+    for (k = 0; k < nb; k++) {
+      var x1 = sx(k * width), x2 = sx(Math.min(XMAX, (k + 1) * width)), h = counts[k] / maxC * YH;
+      S("rect", { x: x1 + 0.5, y: Y0 + YH - h, width: Math.max(0.5, x2 - x1 - 1), height: h, "class": k === kb ? "d-dot-signal" : "d-dot", "fill-opacity": k === kb ? 0.9 : 0.55 }, plot);
+    }
+    S("line", { x1: X0, x2: X0 + XW, y1: Y0 + YH, y2: Y0 + YH, "class": "d-line" }, plot);
+    [0, 50, 100, 150, 200].forEach(function (v) { H.text(plot, sx(v), Y0 + YH + 16, "$" + v, "d-label", "middle"); });
+    H.text(plot, X0 - 6, Y0 + 4, H.fmt(maxC), "d-label", "end");
+    H.text(plot, X0 - 6, Y0 + YH, "0", "d-label", "end");
+    H.text(plot, X0 + XW / 2, Y0 + YH + 34, "order_value, $" + width + " bins (example data)", "d-label", "middle");
+    S("line", { x1: sx(med), x2: sx(med), y1: Y0 - 4, y2: Y0 + YH, "class": "d-line d-dash", style: "stroke: var(--good); stroke-width: 2" }, plot);
+    S("line", { x1: sx(mean), x2: sx(mean), y1: Y0 - 4, y2: Y0 + YH, "class": "d-line-signal d-dash" }, plot);
+    H.text(plot, sx(med) - 4, Y0 + 8, "median $" + H.fmt(med), "d-label d-text-good", "end");
+    H.text(plot, sx(mean) + 4, Y0 + 8, "mean $" + H.fmt(mean), "d-label d-text-signal");
+    H.text(plot, sx(52) + 6, Y0 + YH - counts[kb] / maxC * YH - 6, peak ? "free-shipping bump" : "", "d-label d-text-signal");
+    readout.textContent = "n = " + H.fmt(vals.length) + " · mean $" + H.fmt(mean, 2) + " · median $" + H.fmt(med, 2) + " · " + nb + " bins · above $200 (not drawn): " + over + " · $50–55 bump " + (peak ? "visible as its own peak" : "hidden");
+  }
+  bw.addEventListener("input", draw);
+  bulk.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 06.3 scatter and correlation ---------- */
+(function () {
+  var w = document.getElementById("bivariate-demo");
+  if (!w) return;
+  var H = ATLAS06, S = H.svg, plot = document.getElementById("bivariate-plot");
+  var st = document.getElementById("bivariate-strength"), stOut = document.getElementById("bivariate-strength-out");
+  var whale = document.getElementById("bivariate-whale"), method = document.getElementById("bivariate-method"), readout = document.getElementById("bivariate-readout");
+  var r = H.rng(21), xs = [], es = [], i, n = 40;
+  for (i = 0; i < n; i++) { xs.push(1 + Math.round(17 * r())); es.push(H.gauss(r)); }
+  var mx = xs.reduce(function (a, b) { return a + b; }, 0) / n;
+  var sdx = Math.sqrt(xs.reduce(function (a, b) { return a + (b - mx) * (b - mx); }, 0) / n);
+  function pearson(x, y) {
+    var m = x.length, ax = 0, ay = 0, j, sxy = 0, sxx = 0, syy = 0;
+    for (j = 0; j < m; j++) { ax += x[j]; ay += y[j]; }
+    ax /= m; ay /= m;
+    for (j = 0; j < m; j++) { sxy += (x[j] - ax) * (y[j] - ay); sxx += (x[j] - ax) * (x[j] - ax); syy += (y[j] - ay) * (y[j] - ay); }
+    return { r: sxy / Math.sqrt(sxx * syy), slope: sxy / sxx, icpt: ay - sxy / sxx * ax };
+  }
+  function ranks(a) {
+    var idx = a.map(function (v, j) { return [v, j]; }).sort(function (p, q) { return p[0] - q[0]; }), out = [], j = 0;
+    while (j < idx.length) {
+      var k = j; while (k + 1 < idx.length && idx[k + 1][0] === idx[j][0]) k++;
+      for (var t = j; t <= k; t++) out[idx[t][1]] = (j + k) / 2 + 1;
+      j = k + 1;
+    }
+    return out;
+  }
+  function draw() {
+    var s = parseFloat(st.value);
+    stOut.textContent = s.toFixed(2);
+    var x = xs.slice(), y = xs.map(function (xv, j) { return Math.max(15, 220 + 90 * (s * (xv - mx) / sdx + Math.sqrt(1 - s * s) * es[j])); });
+    if (whale.checked) { x.push(40); y.push(2400); }
+    var p = pearson(x, y), sp = pearson(ranks(x), ranks(y)).r;
+    w.setAttribute("data-pearson", p.r.toFixed(3));
+    w.setAttribute("data-spearman", sp.toFixed(3));
+    var XM = whale.checked ? 45 : 20, YM = whale.checked ? 2600 : 600;
+    var L = 60, T = 16, PW = 510, PH = 240;
+    function px(v) { return L + v / XM * PW; }
+    function py(v) { return T + PH - v / YM * PH; }
+    H.clear(plot);
+    for (var g = 0; g <= 4; g++) {
+      var yv = YM * g / 4;
+      S("line", { x1: L, x2: L + PW, y1: py(yv), y2: py(yv), "class": "d-grid" }, plot);
+      H.text(plot, L - 6, py(yv) + 4, "$" + H.fmt(yv), "d-label", "end");
+    }
+    S("line", { x1: L, x2: L + PW, y1: T + PH, y2: T + PH, "class": "d-line" }, plot);
+    for (var gx = 0; gx <= XM; gx += (whale.checked ? 10 : 5)) H.text(plot, px(gx), T + PH + 16, String(gx), "d-label", "middle");
+    H.text(plot, L + PW, T + PH + 32, "sessions in last 30 days", "d-label", "end");
+    H.text(plot, L + 4, T + 12, "spend", "d-label");
+    var clip = S("clipPath", { id: "bivariate-clip" }, plot);
+    S("rect", { x: L, y: T, width: PW, height: PH }, clip);
+    S("line", { x1: px(0), y1: py(p.icpt), x2: px(XM), y2: py(p.icpt + p.slope * XM), "class": "d-line-accent", "clip-path": "url(#bivariate-clip)" }, plot);
+    for (var j = 0; j < x.length; j++) {
+      var isW = whale.checked && j === x.length - 1;
+      S("circle", { cx: px(x[j]), cy: py(y[j]), r: isW ? 7 : 4.5, "class": isW ? "d-dot-signal" : "d-dot", "fill-opacity": isW ? 1 : 0.75 }, plot);
+    }
+    if (whale.checked) H.text(plot, px(40) - 10, py(2400) + 4, "whale: 40 sessions, $2,400", "d-label d-text-signal", "end");
+    var head = method.value === "pearson" ? "Pearson r = " + p.r.toFixed(2) : "Spearman ρ = " + sp.toFixed(2);
+    S("rect", { x: L + PW - 176, y: T + PH - 40, width: 168, height: 30, rx: 6, "class": "d-box" }, plot);
+    H.text(plot, L + PW - 92, T + PH - 20, head, "d-title", "middle");
+    readout.textContent = "n = " + x.length + " · Pearson r = " + p.r.toFixed(2) + " · Spearman ρ = " + sp.toFixed(2) + " · trend: $" + p.slope.toFixed(1) + " per extra session";
+  }
+  st.addEventListener("input", draw);
+  whale.addEventListener("change", draw);
+  method.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 06.4 Simpson's paradox ---------- */
+(function () {
+  var w = document.getElementById("segmentation-demo");
+  if (!w) return;
+  var H = ATLAS06, S = H.svg, plot = document.getElementById("segmentation-plot");
+  var mix = document.getElementById("segmentation-mix"), mixOut = document.getElementById("segmentation-mix-out");
+  var split = document.getElementById("segmentation-split"), readout = document.getElementById("segmentation-readout");
+  var RATE = { A: { mobile: 2.0, desktop: 5.0 }, B: { mobile: 2.4, desktop: 5.5 } }, N = 10000;
+  function draw() {
+    var m = parseInt(mix.value, 10) / 100;
+    mixOut.textContent = Math.round(m * 100) + "%";
+    var a = { mobile: N * 0.5, desktop: N * 0.5 }, b = { mobile: N * m, desktop: N * (1 - m) };
+    var aAll = (a.mobile * RATE.A.mobile + a.desktop * RATE.A.desktop) / N;
+    var bAll = (b.mobile * RATE.B.mobile + b.desktop * RATE.B.desktop) / N;
+    var flip = bAll < aAll;
+    w.setAttribute("data-flip", flip ? "1" : "0");
+    var groups = split.checked ? [["Mobile", RATE.A.mobile, RATE.B.mobile, a.mobile, b.mobile], ["Desktop", RATE.A.desktop, RATE.B.desktop, a.desktop, b.desktop], ["Overall", aAll, bAll, N, N]] : [["Overall", aAll, bAll, N, N]];
+    H.clear(plot);
+    var L = 50, T = 20, PW = 530, PH = 190, YM = 6;
+    function py(v) { return T + PH - v / YM * PH; }
+    for (var g = 0; g <= YM; g += 2) {
+      S("line", { x1: L, x2: L + PW, y1: py(g), y2: py(g), "class": "d-grid" }, plot);
+      H.text(plot, L - 6, py(g) + 4, g + "%", "d-label", "end");
+    }
+    S("line", { x1: L, x2: L + PW, y1: T + PH, y2: T + PH, "class": "d-line" }, plot);
+    var gw = PW / groups.length;
+    groups.forEach(function (gr, k) {
+      var cx = L + gw * k + gw / 2, bwid = Math.min(70, gw / 3.2);
+      [["A", gr[1], gr[3], "d-dot-muted"], ["B", gr[2], gr[4], "d-dot"]].forEach(function (bar, j) {
+        var x = cx + (j ? 6 : -6 - bwid);
+        S("rect", { x: x, y: py(bar[1]), width: bwid, height: T + PH - py(bar[1]), rx: 3, "class": bar[3], "fill-opacity": 0.85 }, plot);
+        H.text(plot, x + bwid / 2, py(bar[1]) - 6, bar[1].toFixed(2) + "%", "d-mono", "middle");
+        H.text(plot, x + bwid / 2, T + PH + 15, bar[0] + " · " + H.fmt(bar[2] / 1000, 1) + "k", "d-label", "middle");
+      });
+      var win = gr[2] > gr[1];
+      H.text(plot, cx, T + PH + 34, gr[0] + ": " + (win ? "B wins" : "A wins"), win ? "d-title d-text-good" : "d-title d-text-signal", "middle");
+    });
+    var msg = "A overall " + aAll.toFixed(2) + "% vs B overall " + bAll.toFixed(2) + "%";
+    if (flip && split.checked) msg += " · Simpson's paradox: B wins on mobile and on desktop but loses overall, because " + Math.round(m * 100) + "% of B's visitors are on low-converting mobile vs 50% of A's.";
+    else if (flip) msg += " · B looks worse overall. Is it really? Split by device.";
+    else msg += " · B wins overall" + (split.checked ? " and in each segment." : ".");
+    readout.textContent = msg;
+  }
+  mix.addEventListener("input", draw);
+  split.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 06.5 daily revenue: cycles and smoothing ---------- */
+(function () {
+  var w = document.getElementById("time-patterns-demo");
+  if (!w) return;
+  var H = ATLAS06, S = H.svg, plot = document.getElementById("time-patterns-plot");
+  var dow = document.getElementById("time-patterns-dow"), season = document.getElementById("time-patterns-season");
+  var win = document.getElementById("time-patterns-window"), winOut = document.getElementById("time-patterns-window-out"), readout = document.getElementById("time-patterns-readout");
+  var W = [0.92, 0.90, 0.93, 0.97, 1.05, 1.17, 1.06]; /* Mon..Sun, mean 1.00 */
+  var N = 140, r = H.rng(5), noise = [], t;
+  for (t = 0; t < N; t++) noise.push(0.03 * H.gauss(r));
+  noise[60] += 0.35; /* promo day */
+  var START = new Date(2026, 6, 20); /* Monday 20 July 2026 */
+  function series() {
+    var out = [];
+    for (var i = 0; i < N; i++) {
+      var v = (20000 + 30 * i) * (dow.checked ? W[i % 7] : 1) * (season.checked && i > 100 ? 1 + 0.25 * Math.pow((i - 100) / 40, 2) : 1) * (1 + noise[i]);
+      out.push(v);
+    }
+    return out;
+  }
+  function draw() {
+    var k = parseInt(win.value, 10);
+    winOut.textContent = k;
+    var y = series(), sm = [], i, j;
+    for (i = 0; i < N; i++) {
+      if (i < k - 1) { sm.push(null); continue; }
+      var s = 0; for (j = i - k + 1; j <= i; j++) s += y[j];
+      sm.push(s / k);
+    }
+    var swing = 0;
+    if (dow.checked) {
+      var f = [];
+      for (var p = 0; p < 7; p++) { var a = 0; for (j = 0; j < k; j++) a += W[((p - j) % 7 + 7) % 7]; f.push(a / k); }
+      swing = (Math.max.apply(null, f) - Math.min.apply(null, f)) * 100;
+    }
+    w.setAttribute("data-swing", swing.toFixed(2));
+    var L = 56, T = 14, PW = 530, PH = 200, YM = 34000;
+    function px(v) { return L + v / (N - 1) * PW; }
+    function py(v) { return T + PH - v / YM * PH; }
+    H.clear(plot);
+    for (var g = 0; g <= YM; g += 10000) {
+      S("line", { x1: L, x2: L + PW, y1: py(g), y2: py(g), "class": "d-grid" }, plot);
+      H.text(plot, L - 6, py(g) + 4, "$" + g / 1000 + "k", "d-label", "end");
+    }
+    for (i = 0; i < N; i++) S("rect", { x: px(i) - 1.5, y: py(y[i]), width: 3, height: T + PH - py(y[i]), "class": "d-dot-muted", "fill-opacity": 0.45 }, plot);
+    var d = "";
+    for (i = 0; i < N; i++) if (sm[i] !== null) d += (d ? " L" : "M") + px(i).toFixed(1) + "," + py(sm[i]).toFixed(1);
+    S("path", { d: d, "class": "d-line-accent", "stroke-width": 2.4 }, plot);
+    S("line", { x1: L, x2: L + PW, y1: T + PH, y2: T + PH, "class": "d-line" }, plot);
+    for (i = 0; i < N; i++) {
+      var dt = new Date(START.getTime() + i * 86400000);
+      if (dt.getDate() === 1) {
+        S("line", { x1: px(i), x2: px(i), y1: T + PH, y2: T + PH + 5, "class": "d-line" }, plot);
+        H.text(plot, px(i) + 3, T + PH + 18, dt.toLocaleDateString("en-US", { month: "short" }), "d-label");
+      }
+    }
+    H.text(plot, px(60), py(y[60]) - 6, "promo", "d-label d-text-signal", "middle");
+    H.text(plot, L + 6, T + 12, k === 1 ? "daily revenue (example)" : k + "-day rolling average over daily bars", "d-label");
+    var last = 0, prev = 0;
+    for (i = N - 28; i < N; i++) last += y[i];
+    for (i = N - 56; i < N - 28; i++) prev += y[i];
+    readout.textContent = "Weekday swing left in the line: " + swing.toFixed(1) + "% · lag ≈ " + ((k - 1) / 2).toFixed(1) + " days · last 28 days vs prior 28: " + (last / prev - 1 >= 0 ? "+" : "") + ((last / prev - 1) * 100).toFixed(1) + "%";
+  }
+  [dow, season].forEach(function (c) { c.addEventListener("change", draw); });
+  win.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---------- 06.6 guided EDA checklist ---------- */
+(function () {
+  var w = document.getElementById("eda-workflow-demo");
+  if (!w) return;
+  var H = ATLAS06, S = H.svg, plot = document.getElementById("eda-workflow-plot"), readout = document.getElementById("eda-workflow-readout");
+  var STEPS = {
+    s1: { name: "Check grain & duplicates", needs: [], ok: "46,000 rows but 45,100 distinct order_id: drop 900 retry duplicates" },
+    s2: { name: "Check nulls & ranges", needs: [], ok: "channel null in 6% of rows (app 5.2); 12 test orders at $0 removed" },
+    s3: { name: "Profile order_value", needs: ["s1"], ok: "median $41, mean $58, P99 $310: report the median",
+      bad: { s1: "duplicates still in: every summary counts 900 orders twice" } },
+    s4: { name: "Compare channels", needs: ["s1", "s2"], ok: "paid social AOV $34 vs $48 overall, on 12,500 orders",
+      bad: { s1: "duplicates inflate the channel the retry bug hit", s2: "6% of rows have no channel, so shares do not add up" } },
+    s5: { name: "Plot revenue over time", needs: ["s1"], ok: "weekends +17%; mobile conversion stepped down on Oct 9",
+      bad: { s1: "duplicates create fake spikes on the retry-bug days" } },
+    s6: { name: "Write the findings log", needs: ["s3", "s4", "s5"], ok: "log written: 5 findings, each with evidence and a next step",
+      bad: { s3: "written before all checks ran: claims cannot be backed up", s4: "written before all checks ran: claims cannot be backed up", s5: "written before all checks ran: claims cannot be backed up" } }
+  };
+  var log = [];
+  function done(id) { return log.some(function (e) { return e.id === id; }); }
+  function run(id) {
+    if (done(id)) return;
+    var st = STEPS[id], missing = st.needs.filter(function (n) { return !done(n); });
+    log.push({ id: id, warn: missing.length > 0, text: missing.length ? st.bad[missing[0]] : st.ok });
+    draw();
+  }
+  function draw() {
+    H.clear(plot);
+    var warns = log.filter(function (e) { return e.warn; }).length;
+    w.setAttribute("data-found", String(log.length));
+    w.setAttribute("data-warn", String(warns));
+    Object.keys(STEPS).forEach(function (id) { document.getElementById("eda-workflow-" + id).disabled = done(id); });
+    H.text(plot, 12, 18, "FINDINGS LOG · orders table", "d-label");
+    S("line", { x1: 10, x2: 590, y1: 26, y2: 26, "class": "d-grid" }, plot);
+    if (!log.length) {
+      H.text(plot, 300, 120, "Run a check to start your log.", "d-text", "middle");
+      H.text(plot, 300, 142, "Think first: which checks do the others depend on?", "d-label", "middle");
+    }
+    log.forEach(function (e, i) {
+      var y = 32 + i * 36;
+      S("rect", { x: 10, y: y, width: 580, height: 32, rx: 6, "class": e.warn ? "d-signal" : "d-box", "fill-opacity": e.warn ? 0.6 : 1 }, plot);
+      H.text(plot, 22, y + 14, (i + 1) + ". " + STEPS[e.id].name, "d-label");
+      H.text(plot, 22, y + 27, e.text, e.warn ? "d-label d-text-signal" : "d-label");
+      S("rect", { x: 508, y: y + 7, width: 72, height: 18, rx: 9, "class": e.warn ? "d-signal" : "d-good" }, plot);
+      H.text(plot, 544, y + 20, e.warn ? "warning" : "trusted", "d-label", "middle");
+    });
+    readout.textContent = "Findings " + log.length + "/6 · warnings " + warns + (log.length === 6 ? (warns ? " · Some findings rest on unchecked data. Start over and pass the quality gate first." : " · Clean run: every finding rests on checked data.") : "");
+  }
+  Object.keys(STEPS).forEach(function (id) { document.getElementById("eda-workflow-" + id).addEventListener("click", function () { run(id); }); });
+  document.getElementById("eda-workflow-reset").addEventListener("click", function () { log = []; draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

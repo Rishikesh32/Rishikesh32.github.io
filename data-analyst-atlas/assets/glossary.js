@@ -1,0 +1,147 @@
+/* Plain-English definitions shown when hovering an underlined term.
+   match: "|"-separated spellings to find in the text. cs: true = case-sensitive (acronyms). */
+window.ATLAS_GLOSSARY = [
+  // statistics
+  { term: "Mean", match: "mean|average", def: "The sum of the values divided by how many there are. Pulled strongly by outliers." },
+  { term: "Median", match: "median", def: "The middle value when the data is sorted. Half the values are below it, half above. Barely moved by outliers." },
+  { term: "Mode", match: "mode", def: "The most common value in the data." },
+  { term: "Standard deviation", match: "standard deviation|SD", def: "How far values typically sit from the mean. Small means tightly clustered; large means spread out." },
+  { term: "Variance", match: "variance", def: "The standard deviation squared. Used in formulas more than in reports." },
+  { term: "Percentile", match: "percentile|percentiles|quartile|quartiles", def: "The value below which a given percentage of the data falls. The 90th percentile is higher than 90% of values; quartiles are the 25th, 50th and 75th." },
+  { term: "IQR", match: "IQR|interquartile range", cs: true, def: "Interquartile range: the 75th percentile minus the 25th. The spread of the middle half of the data." },
+  { term: "Skew", match: "skew|skewed|skewness", def: "When a distribution has a long tail on one side. Income and order values are usually right-skewed: most are small, a few are huge." },
+  { term: "Normal distribution", match: "normal distribution|bell curve", def: "The symmetric bell-shaped curve. About 68% of values lie within 1 SD of the mean and 95% within 2 SD." },
+  { term: "Distribution", match: "distribution|distributions", def: "How often each value, or range of values, occurs in the data." },
+  { term: "Probability", match: "probability|probabilities", def: "How likely something is, from 0 (never) to 1 (always)." },
+  { term: "Conditional probability", match: "conditional probability", def: "The probability of A given that B already happened, written P(A | B)." },
+  { term: "Sample", match: "sample|samples", def: "The subset of data you actually observe, used to learn about a larger population." },
+  { term: "Population", match: "population", def: "The whole group you want to draw conclusions about, such as all customers, not just the ones you surveyed." },
+  { term: "Central limit theorem", match: "central limit theorem|CLT", def: "Averages of large enough samples are roughly normally distributed, even when the underlying data isn't. It's why confidence intervals work." },
+  { term: "Standard error", match: "standard error", def: "How much a sample statistic, like a mean, would vary from sample to sample. Shrinks as the sample grows." },
+  { term: "Confidence interval", match: "confidence interval|confidence intervals|CI", def: "A range that likely contains the true value. A 95% CI method catches the truth in about 95% of repeated samples." },
+  { term: "Hypothesis test", match: "hypothesis test|hypothesis testing|null hypothesis", def: "A way to check whether a difference is bigger than chance alone would produce. You start by assuming no effect (the null hypothesis)." },
+  { term: "p-value", match: "p-value|p-values", def: "If there were truly no effect, the chance of seeing a result at least this extreme. Small p-values suggest the effect is real; they don't measure its size." },
+  { term: "Statistical significance", match: "statistically significant|statistical significance", def: "A result unlikely to be explained by random noise alone, usually p < 0.05. Not the same as being large or important." },
+  { term: "Correlation", match: "correlation|correlated", def: "How strongly two variables move together, from −1 to 1. It doesn't tell you that one causes the other." },
+  { term: "Causation", match: "causation|causal", def: "When changing one thing actually changes another. Proving it usually needs an experiment or careful design." },
+  { term: "Confounder", match: "confounder|confounders|confounding", def: "A hidden third variable that drives both things you're comparing, creating a misleading correlation." },
+  { term: "Simpson's paradox", match: "Simpson's paradox", def: "A trend that appears in every group but reverses when the groups are combined, because the group sizes differ." },
+  { term: "Outlier", match: "outlier|outliers", def: "A value far from the rest. It may be an error, or the most interesting point in the data." },
+
+  // spreadsheets
+  { term: "Absolute reference", match: "absolute reference|absolute references|relative reference|relative references", def: "In spreadsheets, $A$1 always points to the same cell when copied; A1 (relative) shifts with the formula." },
+  { term: "XLOOKUP", match: "XLOOKUP|VLOOKUP|INDEX/MATCH|INDEX-MATCH", cs: true, def: "Spreadsheet functions that find a value in one column and return the matching value from another." },
+  { term: "Pivot table", match: "pivot table|pivot tables|pivot", def: "A tool that groups and summarises rows, like GROUP BY in SQL, by dragging fields into rows, columns and values." },
+  { term: "Goal seek", match: "goal seek|what-if analysis|data table", def: "Spreadsheet tools that change an input until an output hits a target, or show outputs for many inputs at once." },
+
+  // SQL
+  { term: "SQL", match: "SQL", cs: true, def: "Structured Query Language: the standard language for asking questions of tables in a database." },
+  { term: "Query", match: "query|queries", def: "A request for data written in SQL." },
+  { term: "Table", match: "table|tables", def: "Data stored in rows (records) and columns (fields)." },
+  { term: "Primary key", match: "primary key|primary keys", def: "A column that uniquely identifies each row, like order_id." },
+  { term: "Foreign key", match: "foreign key|foreign keys", def: "A column that points to another table's primary key, like orders.customer_id → customers.id." },
+  { term: "JOIN", match: "JOIN|JOINs|INNER JOIN|LEFT JOIN|FULL JOIN", cs: true, def: "Combines rows from two tables on a matching key. INNER keeps only matches; LEFT keeps every row from the left table." },
+  { term: "GROUP BY", match: "GROUP BY", cs: true, def: "Collapses rows that share a value into one row per group, so you can SUM, COUNT or AVG each group." },
+  { term: "HAVING", match: "HAVING", cs: true, def: "Filters groups after GROUP BY, the way WHERE filters rows before it." },
+  { term: "CTE", match: "CTE|CTEs|common table expression", cs: true, def: "A named subquery defined with WITH at the top of a query, so complex logic reads step by step." },
+  { term: "Subquery", match: "subquery|subqueries", def: "A query nested inside another query." },
+  { term: "Window function", match: "window function|window functions|PARTITION BY", cs: true, def: "A calculation across related rows that keeps every row, like a running total or a rank within each customer." },
+  { term: "Index", match: "index|indexes", def: "A lookup structure that lets the database find rows without scanning the whole table." },
+  { term: "NULL", match: "NULL|NULLs", cs: true, def: "SQL's marker for a missing or unknown value. NULL = NULL isn't true, so use IS NULL." },
+
+  // Python
+  { term: "pandas", match: "pandas", def: "The main Python library for tables of data (DataFrames): loading, filtering, grouping, merging and reshaping." },
+  { term: "DataFrame", match: "DataFrame|DataFrames", cs: true, def: "pandas' table: labelled rows and columns, much like a spreadsheet or SQL table in memory." },
+  { term: "NumPy", match: "NumPy", cs: true, def: "Python's library for fast maths on arrays of numbers. pandas is built on it." },
+  { term: "Vectorization", match: "vectorization|vectorised|vectorized", def: "Doing an operation on a whole column at once instead of looping row by row. Much faster in pandas and NumPy." },
+  { term: "Jupyter notebook", match: "Jupyter|notebook|notebooks", def: "An interactive document mixing code, results, charts and notes. Great for exploring; risky if cells run out of order." },
+  { term: "Merge", match: "merge|merges|merging", def: "pandas' version of a SQL JOIN: combine two DataFrames on matching key columns." },
+  { term: "Reshape", match: "reshape|reshaping|melt|pivot_table", def: "Switching data between wide (one column per month) and long (one row per month) layouts." },
+
+  // cleaning & EDA
+  { term: "Missing values", match: "missing values|missing value|missing data", def: "Empty cells. Why they're missing matters: dropping or filling them can bias results." },
+  { term: "Imputation", match: "imputation|impute|imputed", def: "Filling missing values with a guess, such as the median or a model prediction." },
+  { term: "Deduplication", match: "deduplication|dedupe|duplicates|duplicate", def: "Finding and removing repeated records, which first means deciding what makes two rows the same." },
+  { term: "Data quality", match: "data quality", def: "Whether data is accurate, complete, consistent and fresh enough to trust for a decision." },
+  { term: "EDA", match: "EDA|exploratory data analysis", cs: true, def: "Exploratory data analysis: summarising and plotting data to understand it before drawing conclusions." },
+  { term: "Histogram", match: "histogram|histograms", def: "A bar chart of how many values fall in each range (bin). Shows a distribution's shape." },
+  { term: "Box plot", match: "box plot|box plots|boxplot", def: "A chart showing the median, quartiles and outliers of a distribution." },
+  { term: "Segmentation", match: "segmentation|segment|segments", def: "Splitting users or data into groups (by region, plan or channel) to compare how they behave." },
+  { term: "Cohort", match: "cohort|cohorts", def: "A group defined by when something started, such as all customers who signed up in March." },
+  { term: "Seasonality", match: "seasonality|seasonal", def: "A pattern that repeats on a fixed cycle: weekends, months or holidays." },
+  { term: "Trend", match: "trend|trends", def: "The long-run direction of a series, ignoring short-term ups and downs." },
+
+  // visualization
+  { term: "Encoding", match: "encoding|encode|encodes", def: "How a chart maps data to visuals: position, length, color, size or angle. Position is read most accurately." },
+  { term: "Dual axis", match: "dual axis|dual-axis|truncated axis", def: "Chart tricks that can mislead: two y-axes with different scales, or a y-axis that doesn't start at zero for bars." },
+  { term: "Small multiples", match: "small multiples", def: "A grid of small charts with the same axes, one per group. Easier to compare than one crowded chart." },
+  { term: "matplotlib", match: "matplotlib|seaborn|plotly", def: "Python plotting libraries. seaborn adds statistical charts on top of matplotlib; plotly makes interactive ones." },
+
+  // metrics
+  { term: "KPI", match: "KPI|KPIs", cs: true, def: "Key performance indicator: a metric a team is judged on." },
+  { term: "Metric", match: "metric|metrics", def: "A precisely defined number tracked over time, with a clear formula, time window and data source." },
+  { term: "Funnel", match: "funnel|funnels", def: "The sequence of steps users take, such as visit → sign-up → purchase, and how many drop off at each." },
+  { term: "Conversion rate", match: "conversion rate|conversion|conversions", def: "The share of users who complete a step, out of those who reached the step before it." },
+  { term: "Retention", match: "retention|retained|churn|churned", def: "Retention is the share of users still active after some time; churn is the share who left." },
+  { term: "CAC", match: "CAC", cs: true, def: "Customer acquisition cost: marketing and sales spend divided by the new customers it brought in." },
+  { term: "LTV", match: "LTV|CLV|lifetime value", cs: true, def: "Customer lifetime value: the profit a customer is expected to bring over their whole relationship with you." },
+  { term: "North star metric", match: "north star|guardrail metric|guardrail metrics|guardrails", def: "The north star is the one metric that best captures the value customers get; guardrails are metrics that must not get worse while you push it." },
+  { term: "ARPU", match: "ARPU|AOV|MRR|ARR", cs: true, def: "Revenue metrics: average revenue per user, average order value, monthly and annual recurring revenue." },
+
+  // experiments
+  { term: "A/B test", match: "A/B test|A/B tests|A/B testing|experiment|experiments", def: "Randomly splitting users between versions so any difference in outcomes can be credited to the change." },
+  { term: "Control group", match: "control group|treatment group|variant", def: "The control sees the current version; the treatment (variant) sees the change." },
+  { term: "Statistical power", match: "statistical power|power analysis", def: "The chance a test detects a real effect of a given size. Low power means real wins get missed." },
+  { term: "MDE", match: "MDE|minimum detectable effect", cs: true, def: "Minimum detectable effect: the smallest change your test is designed to reliably detect." },
+  { term: "Sample size", match: "sample size", def: "How many users or observations a test needs, set by baseline rate, MDE, significance level and power." },
+  { term: "Peeking", match: "peeking|peek", def: "Checking results repeatedly and stopping as soon as they look significant. It sharply inflates false positives." },
+  { term: "SRM", match: "SRM|sample ratio mismatch", cs: true, def: "Sample ratio mismatch: the groups ended up with a different split than planned, a sign the experiment is broken." },
+  { term: "False positive", match: "false positive|false positives|false negative|false negatives", def: "A false positive declares an effect that isn't there; a false negative misses one that is." },
+  { term: "Difference-in-differences", match: "difference-in-differences|diff-in-diff", def: "Comparing the change over time in a treated group with the change in a similar untreated group, when you can't randomize." },
+
+  // regression & ML
+  { term: "Regression", match: "regression|regressions", def: "Modelling how an outcome changes with one or more inputs, to explain or predict it." },
+  { term: "Coefficient", match: "coefficient|coefficients", def: "How much the predicted outcome changes per one-unit change in an input, holding the other inputs fixed." },
+  { term: "R²", match: "R²|R-squared|R squared", def: "The share of variation in the outcome that the model explains, from 0 to 1. High R² doesn't mean the model is right." },
+  { term: "Residual", match: "residual|residuals", def: "Actual value minus predicted value. Patterns in residuals reveal what the model is missing." },
+  { term: "Logistic regression", match: "logistic regression", def: "Regression for yes/no outcomes, such as churn or purchase. It predicts a probability between 0 and 1." },
+  { term: "Overfitting", match: "overfitting|overfit", def: "When a model memorises noise in its training data and does worse on new data." },
+  { term: "Cross-validation", match: "cross-validation", def: "Training and testing on several different splits of the data to get a more reliable score." },
+  { term: "Feature", match: "feature engineering|feature importance", def: "Features are the input columns a model uses; engineering them means creating better ones, like days since last order." },
+  { term: "Classification", match: "classification|classifier", def: "Predicting a category, such as churn vs stay." },
+  { term: "Clustering", match: "clustering|k-means", def: "Grouping similar rows together without labels, often used for customer segmentation." },
+  { term: "Precision", match: "precision|recall", def: "Precision: of the cases you flagged, how many were right. Recall: of all the real cases, how many you caught." },
+  { term: "Confusion matrix", match: "confusion matrix", def: "A table of true positives, false positives, true negatives and false negatives." },
+  { term: "SHAP", match: "SHAP|explainability", def: "Methods that show how much each feature pushed one prediction up or down." },
+
+  // forecasting
+  { term: "Time series", match: "time series", def: "Data recorded at regular time steps, such as daily sales." },
+  { term: "Moving average", match: "moving average|rolling average", def: "The average of the last N periods, recomputed each step. Smooths out noise." },
+  { term: "Forecast", match: "forecast|forecasts|forecasting", def: "A prediction of future values, ideally with a range showing its uncertainty." },
+  { term: "Baseline", match: "baseline|naive forecast|seasonal naive", def: "A simple reference forecast, like 'same as last week', that any fancier model must beat." },
+  { term: "ARIMA", match: "ARIMA|ETS|exponential smoothing", cs: true, def: "Classic forecasting models. ETS weights recent observations more; ARIMA models how a series depends on its own past." },
+  { term: "Backtesting", match: "backtesting|backtest|holdout", def: "Testing a forecast on past periods using only data that existed at the time." },
+  { term: "MAPE", match: "MAPE|MAE|RMSE", cs: true, def: "Forecast error measures: MAE is the average absolute miss; MAPE is that as a percentage; RMSE punishes big misses more." },
+  { term: "Anomaly", match: "anomaly|anomalies|anomaly detection", def: "A value that breaks the expected pattern, worth an alert or a closer look." },
+
+  // BI & data engineering
+  { term: "Dashboard", match: "dashboard|dashboards", def: "A page of charts and KPIs that people check regularly to monitor the business." },
+  { term: "BI", match: "BI|Power BI|Tableau|Looker", cs: true, def: "Business intelligence: tools for building dashboards and self-serve reports on top of a data model." },
+  { term: "Star schema", match: "star schema|fact table|fact tables|dimension table|dimension tables", def: "A data model with a central fact table of events (orders) linked to dimension tables that describe them (customers, products, dates)." },
+  { term: "DAX", match: "DAX|LOD|calculated column|calculated columns", cs: true, def: "Formula languages in BI tools. A measure is calculated on the fly for the current filters; a calculated column is stored per row." },
+  { term: "Data warehouse", match: "data warehouse|warehouse|warehouses|BigQuery|Snowflake", def: "A database built for analysis: it stores large tables by column so aggregations are fast." },
+  { term: "ETL", match: "ETL|ELT", cs: true, def: "Extract, transform, load (or extract, load, transform): moving data from source systems into the warehouse and shaping it." },
+  { term: "dbt", match: "dbt", def: "A tool for writing data transformations as SQL models, with tests, documentation and lineage." },
+  { term: "Slowly changing dimension", match: "slowly changing dimension|SCD", def: "How a dimension table keeps history when attributes change. Type 1 overwrites; Type 2 adds a new row with dates." },
+  { term: "Orchestration", match: "orchestration|Airflow|DAG", def: "Scheduling data jobs in the right order and re-running or alerting when one fails." },
+  { term: "Data lineage", match: "lineage", def: "Where a number came from: which sources and transformations produced it." },
+  { term: "Freshness", match: "freshness|stale", def: "How up to date the data is. Stale data quietly breaks dashboards." },
+
+  // storytelling & career
+  { term: "BLUF", match: "BLUF|bottom line up front", cs: true, def: "Bottom line up front: lead with the conclusion and recommendation, then the supporting detail." },
+  { term: "Executive summary", match: "executive summary|exec summary", def: "A short opening section stating the question, the answer, the impact and what you recommend." },
+  { term: "Stakeholder", match: "stakeholder|stakeholders", def: "Anyone who uses, funds or is affected by your analysis." },
+  { term: "PII", match: "PII", cs: true, def: "Personally identifiable information: names, emails, phone numbers and anything else that identifies a person." },
+  { term: "Anonymization", match: "anonymization|anonymise|anonymize|pseudonymization", def: "Removing or masking identifiers so data can't be tied back to a person." },
+  { term: "LLM", match: "LLM|LLMs|AI assistant|AI assistants", cs: true, def: "Large language models such as ChatGPT or Claude. They can draft SQL and code, but you must check every result." }
+];

@@ -1,0 +1,1545 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Communication &amp; storytelling · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="storytelling">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Communication &amp; storytelling</h1>
+    <p class="lede">An analysis only counts when someone decides something differently because of it. This area covers the half of the job that happens after the query runs: framing the question, writing the summary, presenting the chart, bringing people along and making a recommendation you can defend.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Communication is not a coat of paint you add at the end. It starts before the first query, when you turn a vague request into a decision with a metric and a deadline, and it ends when the decision is made. In between you write a summary that leads with the answer, present a few slides whose titles carry the message, keep a written doc others can check, work with the people who decide, and package the result as a recommendation with confidence and next steps. One running example ties the lessons together: a meal-kit subscription app whose monthly churn rose from 6.1% to 7.4% (illustrative numbers).</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 250" role="img" aria-label="The communication path of an analysis: a vague request is framed into a decision question, the analysis produces findings, which are written as an executive summary and analysis doc, presented as a few slides, shared with stakeholders, and turned into a recommendation that leads to a decision.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="96" width="104" height="58" rx="8"/>
+              <text class="d-title" x="62" y="121" text-anchor="middle">Request</text>
+              <text class="d-label" x="62" y="140" text-anchor="middle">"look into churn"</text>
+              <line class="d-line-accent" x1="114" y1="125" x2="146" y2="125" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="148" y="96" width="112" height="58" rx="8"/>
+              <text class="d-title" x="204" y="121" text-anchor="middle">Frame</text>
+              <text class="d-label" x="204" y="140" text-anchor="middle">15.1 · decision</text>
+              <line class="d-line-accent" x1="260" y1="125" x2="292" y2="125" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="294" y="96" width="104" height="58" rx="8"/>
+              <text class="d-title" x="346" y="121" text-anchor="middle">Analyze</text>
+              <text class="d-label" x="346" y="140" text-anchor="middle">areas 1–14</text>
+              <line class="d-line-accent" x1="398" y1="125" x2="440" y2="56" marker-end="url(#ov-arrow-a)"/>
+              <line class="d-line-accent" x1="398" y1="125" x2="440" y2="125" marker-end="url(#ov-arrow-a)"/>
+              <line class="d-line" x1="398" y1="125" x2="440" y2="194" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="412" y="100" text-anchor="middle">findings</text>
+              <rect class="d-accent" x="442" y="30" width="156" height="50" rx="8"/>
+              <text class="d-title" x="520" y="52" text-anchor="middle">Executive summary</text>
+              <text class="d-label" x="520" y="69" text-anchor="middle">15.2 · answer first</text>
+              <rect class="d-accent" x="442" y="100" width="156" height="50" rx="8"/>
+              <text class="d-title" x="520" y="122" text-anchor="middle">Slides</text>
+              <text class="d-label" x="520" y="139" text-anchor="middle">15.3 · takeaway titles</text>
+              <rect class="d-box" x="442" y="170" width="156" height="50" rx="8"/>
+              <text class="d-title" x="520" y="192" text-anchor="middle">Analysis doc</text>
+              <text class="d-label" x="520" y="209" text-anchor="middle">15.4 · the record</text>
+              <line class="d-line-accent" x1="598" y1="56" x2="640" y2="112" marker-end="url(#ov-arrow-a)"/>
+              <line class="d-line-accent" x1="598" y1="125" x2="640" y2="125" marker-end="url(#ov-arrow-a)"/>
+              <line class="d-line" x1="598" y1="194" x2="640" y2="140" marker-end="url(#ov-arrow)"/>
+              <rect class="d-good" x="642" y="96" width="128" height="58" rx="8"/>
+              <text class="d-title" x="706" y="121" text-anchor="middle">Recommend</text>
+              <text class="d-label" x="706" y="140" text-anchor="middle">15.6 · decide</text>
+              <path class="d-line d-dash" d="M204 154 V236 H706 V154" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="455" y="232" text-anchor="middle">15.5 · stakeholders: involved from framing to decision</text>
+            </svg>
+          </div>
+          <figcaption>The path from a vague request to a decision. Framing (15.1) shapes the analysis; the summary, slides and doc (15.2 to 15.4) carry the findings; stakeholders (15.5) are involved throughout; the recommendation (15.6) asks for the decision.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="framing">
+        <header class="topic-head">
+          <p class="eyebrow">15.1 · Before the first query</p>
+          <h2>Framing the question</h2>
+        </header>
+
+        <p class="lead">Most requests arrive as a topic: "can you look into churn?" A topic has no finish line, so the analysis grows until someone loses interest. Framing turns the topic into a question with a finish line: the decision it informs, who makes it, the metric that settles it, the result that would change the choice, and the date the answer is needed by.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Unframed work is the main reason good analysis goes unused. Ten minutes of framing at intake tells you which tables matter, how precise the answer must be, and when "good enough" arrives. It also gives you a polite way to push back on requests that no decision depends on.</p>
+        </div>
+
+        <h3>From topic to decision</h3>
+        <p>Ask the requester one question first: <em>what will you do differently depending on the answer?</em> If nothing would change, the request is curiosity, which is fine, but it gets a smaller budget. If something would change, you now know the <strong>decision</strong>, and the rest follows from it.</p>
+        <p>The metric must be one that can move the decision. Total monthly churn cannot tell you whether to change the promo; churn of promo signups compared with full-price signups can. The threshold says in advance which result means "act", so nobody reinterprets the finding afterwards to fit what they already believed.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 260" role="img" aria-label="A vague request passes through five intake questions (decision, owner, metric, threshold, deadline) and comes out as a framed question with all five filled in.">
+              <defs>
+                <marker id="framing-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-signal" x="10" y="100" width="150" height="62" rx="8"/>
+              <text class="d-title" x="85" y="125" text-anchor="middle">Vague request</text>
+              <text class="d-label" x="85" y="145" text-anchor="middle">"Can you look into churn?"</text>
+              <line class="d-line-accent" x1="160" y1="131" x2="196" y2="131" marker-end="url(#framing-arrow)"/>
+              <rect class="d-box" x="196" y="16" width="216" height="38" rx="8"/>
+              <text class="d-text" x="208" y="40">Decision: what will change?</text>
+              <rect class="d-box" x="196" y="62" width="216" height="38" rx="8"/>
+              <text class="d-text" x="208" y="86">Owner: who decides?</text>
+              <rect class="d-box" x="196" y="108" width="216" height="38" rx="8"/>
+              <text class="d-text" x="208" y="132">Metric: what settles it?</text>
+              <rect class="d-box" x="196" y="154" width="216" height="38" rx="8"/>
+              <text class="d-text" x="208" y="178">Threshold: when do we act?</text>
+              <rect class="d-box" x="196" y="200" width="216" height="38" rx="8"/>
+              <text class="d-text" x="208" y="224">Deadline: needed by when?</text>
+              <line class="d-line-accent" x1="412" y1="131" x2="440" y2="131" marker-end="url(#framing-arrow)"/>
+              <rect class="d-good" x="442" y="40" width="250" height="182" rx="10"/>
+              <text class="d-title" x="456" y="64">Framed question</text>
+              <text class="d-text" x="456" y="90">VP of Growth decides by 20 Oct</text>
+              <text class="d-text" x="456" y="110">whether to change the first-box</text>
+              <text class="d-text" x="456" y="130">promo before the 1 Nov campaign.</text>
+              <text class="d-text" x="456" y="156">Metric: month-2 churn, promo</text>
+              <text class="d-text" x="456" y="176">vs full-price signups.</text>
+              <text class="d-text" x="456" y="202">Act if the ratio is above 1.5×.</text>
+            </svg>
+          </div>
+          <figcaption>Five intake questions turn a topic into a framed question. The framed version tells you which tables to pull, how precise the answer needs to be, and when to stop.</figcaption>
+        </figure>
+
+        <div class="widget" id="framing-demo">
+          <div class="widget-head">
+            <span class="widget-title">Question framer</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="framing-req">Request <select id="framing-req"><option value="0">"Can you look into churn?"</option><option value="1">"Why are sales down in the North?"</option><option value="2">"Can we get a support dashboard?"</option></select></label>
+            <label for="framing-dec">Decision <select id="framing-dec"></select></label>
+            <label for="framing-met">Metric <select id="framing-met"></select></label>
+            <label for="framing-thr">Threshold <select id="framing-thr"></select></label>
+            <label for="framing-dl">Deadline <select id="framing-dl"></select></label>
+            <label for="framing-own">Owner <select id="framing-own"></select></label>
+          </div>
+          <svg id="framing-plot" viewBox="0 0 640 230" role="img" aria-label="The framed question assembled from your choices, with five checks for decision, metric, threshold, deadline and owner."></svg>
+          <p class="readout" id="framing-readout"></p>
+        </div>
+        <p>A decision such as "understand churn better" scores nothing: it has no finish line. Notice that the metric and threshold only count when they match the decision you picked. A churn-risk score is a fine metric for deciding who gets a retention call and a useless one for deciding about the promo.</p>
+
+        <h3>Break the question into a hypothesis tree</h3>
+        <p>Once the question is framed, split "why did churn rise?" into branches that do not overlap and together cover every explanation. Consultants call this <strong>MECE</strong> (mutually exclusive, collectively exhaustive). Each leaf is a hypothesis you can test with one query, so the tree doubles as your work plan.</p>
+        <p>Always include a "measurement changed" branch. A new tracking event, a redefined "active customer" or a pipeline bug can move a metric as easily as customers can.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 280" role="img" aria-label="A hypothesis tree for rising churn. The root splits into customer mix changed, experience got worse, and measurement changed. Under customer mix, promo share of signups rising from 20 to 45 percent is confirmed. Late deliveries, the July price rise and a tracking change are each refuted.">
+              <defs>
+                <marker id="framing-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="10" y="110" width="150" height="60" rx="8"/>
+              <text class="d-title" x="85" y="135" text-anchor="middle">Churn rose</text>
+              <text class="d-label" x="85" y="154" text-anchor="middle">6.1% → 7.4% a month</text>
+              <line class="d-line" x1="160" y1="140" x2="214" y2="50" marker-end="url(#framing-arrow2)"/>
+              <line class="d-line" x1="160" y1="140" x2="214" y2="140" marker-end="url(#framing-arrow2)"/>
+              <line class="d-line" x1="160" y1="140" x2="214" y2="230" marker-end="url(#framing-arrow2)"/>
+              <rect class="d-box" x="216" y="26" width="160" height="48" rx="8"/>
+              <text class="d-title" x="296" y="47" text-anchor="middle">Customer mix</text>
+              <text class="d-label" x="296" y="64" text-anchor="middle">who signs up changed</text>
+              <rect class="d-box" x="216" y="116" width="160" height="48" rx="8"/>
+              <text class="d-title" x="296" y="137" text-anchor="middle">Experience</text>
+              <text class="d-label" x="296" y="154" text-anchor="middle">service got worse</text>
+              <rect class="d-box" x="216" y="206" width="160" height="48" rx="8"/>
+              <text class="d-title" x="296" y="227" text-anchor="middle">Measurement</text>
+              <text class="d-label" x="296" y="244" text-anchor="middle">the number changed</text>
+              <line class="d-line" x1="376" y1="50" x2="420" y2="30" marker-end="url(#framing-arrow2)"/>
+              <line class="d-line" x1="376" y1="50" x2="420" y2="72" marker-end="url(#framing-arrow2)"/>
+              <line class="d-line" x1="376" y1="140" x2="420" y2="120" marker-end="url(#framing-arrow2)"/>
+              <line class="d-line" x1="376" y1="140" x2="420" y2="162" marker-end="url(#framing-arrow2)"/>
+              <line class="d-line" x1="376" y1="230" x2="420" y2="230" marker-end="url(#framing-arrow2)"/>
+              <rect class="d-good" x="422" y="12" width="268" height="36" rx="6"/>
+              <text class="d-text" x="434" y="35">Promo share of signups 20% → 45%</text>
+              <rect class="d-fill" x="422" y="54" width="268" height="36" rx="6"/>
+              <text class="d-label" x="434" y="77">Paid-social share of signups: flat</text>
+              <rect class="d-fill" x="422" y="102" width="268" height="36" rx="6"/>
+              <text class="d-label" x="434" y="125">Late deliveries: flat at about 3%</text>
+              <rect class="d-fill" x="422" y="144" width="268" height="36" rx="6"/>
+              <text class="d-label" x="434" y="167">July price rise: churn rose before it</text>
+              <rect class="d-fill" x="422" y="212" width="268" height="36" rx="6"/>
+              <text class="d-label" x="434" y="235">Tracking or definition change: none</text>
+              <text class="d-label d-text-good" x="690" y="64" text-anchor="end">confirmed</text>
+              <text class="d-label" x="690" y="270" text-anchor="end">grey = tested and ruled out</text>
+            </svg>
+          </div>
+          <figcaption>A hypothesis tree for the churn rise (illustrative numbers). Three branches cover the possible causes; each leaf is one query. Only the customer-mix leaf survives testing, so that is where the deep dive goes.</figcaption>
+        </figure>
+
+        <h3>Intake questions to ask every time</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Ask</th><th>Why</th><th>Example answer</th></tr></thead>
+            <tbody>
+              <tr><td>What will you do differently based on the answer?</td><td>Finds the decision</td><td>Change the promo, or not</td></tr>
+              <tr><td>Who makes that call, and who else must agree?</td><td>Finds the owner and the stakeholders</td><td>VP of Growth; Finance signs off on discounts</td></tr>
+              <tr><td>When is the decision made?</td><td>Sets the deadline and the precision you can afford</td><td>Planning meeting on 20 Oct</td></tr>
+              <tr><td>What result would make you act?</td><td>Sets the threshold before you see the data</td><td>Promo churn more than 1.5× full price</td></tr>
+              <tr><td>What have you already tried or ruled out?</td><td>Avoids redoing work</td><td>Ops already checked delivery times</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A framed question names a decision, an owner, a metric, a threshold and a deadline.</li>
+            <li>Ask "what will you do differently?" first; every other choice follows from the decision.</li>
+            <li>The metric and threshold must fit the decision, and the threshold is set before you look.</li>
+            <li>A MECE hypothesis tree turns the question into a list of testable queries.</li>
+            <li>Always keep a "measurement changed" branch in the tree.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Starting the query before anyone has named the decision, then answering the wrong question very precisely.</li>
+            <li>Accepting "understand X better" as a goal. It has no finish line.</li>
+            <li>Choosing the threshold after seeing the results, which lets everyone read the finding their own way.</li>
+            <li>Building a hypothesis tree with overlapping branches, so the same query "confirms" two causes.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="framing-1"><span>Rewrite a vague request as a framed question with decision, owner, metric, threshold and deadline</span></label></li>
+          <li><label><input type="checkbox" data-key="framing-2"><span>Explain why a metric can be accurate and still useless for a given decision</span></label></li>
+          <li><label><input type="checkbox" data-key="framing-3"><span>Draw a MECE hypothesis tree for a metric change, including a measurement branch</span></label></li>
+          <li><label><input type="checkbox" data-key="framing-4"><span>Run a five-question intake conversation with a requester</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.barbaraminto.com/">Barbara Minto: The Pyramid Principle</a></li>
+          <li><span class="kind">Guide</span><a href="https://www.gov.uk/government/publications/the-aqua-book-guidance-on-producing-quality-analysis-for-government">The Aqua Book: producing quality analysis (UK government)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="exec-summary">
+        <header class="topic-head">
+          <p class="eyebrow">15.2 · Answer first</p>
+          <h2>Executive summaries</h2>
+        </header>
+
+        <p class="lead">You did the work in order: background, data, method, findings, answer. Your reader wants it in the opposite order. An executive summary leads with the answer, follows with the two or three facts that justify it, and ends with what you need from the reader. This is called <strong>BLUF</strong>, bottom line up front.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Senior readers skim. Many will read your first two sentences and stop, often on a phone between meetings. If the answer is in sentence six, most of them never see it, and the decision gets made without your analysis.</p>
+        </div>
+
+        <h3>Flip the order: the pyramid</h3>
+        <p>Barbara Minto's <strong>pyramid principle</strong> puts the single main point at the top. Under it sit a few supporting arguments, and under each argument sits its evidence. The reader can stop at any level and still leave with the right conclusion.</p>
+        <p>The chronological version feels natural to write because it mirrors your memory of the project. It makes the reader relive your three weeks before learning what you found.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 270" role="img" aria-label="Left: a chronological summary ordered background, data, method, findings, answer, with the answer at the bottom. Right: the pyramid order, with the answer at the top, three supporting arguments below it, and evidence under each argument.">
+              <defs>
+                <marker id="exec-summary-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="20">CHRONOLOGICAL (how you worked)</text>
+              <rect class="d-fill" x="20" y="30" width="190" height="34" rx="6"/>
+              <text class="d-text" x="34" y="52">1 · Background</text>
+              <rect class="d-fill" x="20" y="70" width="190" height="34" rx="6"/>
+              <text class="d-text" x="34" y="92">2 · Data we pulled</text>
+              <rect class="d-fill" x="20" y="110" width="190" height="34" rx="6"/>
+              <text class="d-text" x="34" y="132">3 · Method</text>
+              <rect class="d-fill" x="20" y="150" width="190" height="34" rx="6"/>
+              <text class="d-text" x="34" y="172">4 · Findings</text>
+              <rect class="d-signal" x="20" y="190" width="190" height="34" rx="6"/>
+              <text class="d-text" x="34" y="212">5 · The answer</text>
+              <text class="d-label d-text-signal" x="20" y="248">most readers stop before here</text>
+              <path class="d-line-accent" d="M230 130 H270" marker-end="url(#exec-summary-arrow)"/>
+              <text class="d-label" x="250" y="120" text-anchor="middle">flip</text>
+              <text class="d-label" x="290" y="20">PYRAMID (what the reader needs)</text>
+              <rect class="d-good" x="400" y="30" width="200" height="44" rx="8"/>
+              <text class="d-title" x="500" y="50" text-anchor="middle">Answer</text>
+              <text class="d-label" x="500" y="66" text-anchor="middle">cap the promo at 30% off</text>
+              <line class="d-line" x1="500" y1="74" x2="355" y2="104"/>
+              <line class="d-line" x1="500" y1="74" x2="500" y2="104"/>
+              <line class="d-line" x1="500" y1="74" x2="645" y2="104"/>
+              <rect class="d-accent" x="290" y="104" width="130" height="44" rx="8"/>
+              <text class="d-text" x="355" y="123" text-anchor="middle">Promo users</text>
+              <text class="d-text" x="355" y="140" text-anchor="middle">churn 2.3×</text>
+              <rect class="d-accent" x="435" y="104" width="130" height="44" rx="8"/>
+              <text class="d-text" x="500" y="123" text-anchor="middle">Promo share</text>
+              <text class="d-text" x="500" y="140" text-anchor="middle">20% → 45%</text>
+              <rect class="d-accent" x="580" y="104" width="110" height="44" rx="8"/>
+              <text class="d-text" x="635" y="123" text-anchor="middle">Other causes</text>
+              <text class="d-text" x="635" y="140" text-anchor="middle">ruled out</text>
+              <line class="d-line" x1="355" y1="148" x2="355" y2="174"/>
+              <line class="d-line" x1="500" y1="148" x2="500" y2="174"/>
+              <line class="d-line" x1="635" y1="148" x2="635" y2="174"/>
+              <rect class="d-box" x="290" y="174" width="130" height="50" rx="6"/>
+              <text class="d-label" x="355" y="195" text-anchor="middle">cohort table:</text>
+              <text class="d-label" x="355" y="212" text-anchor="middle">14% vs 6% month 2</text>
+              <rect class="d-box" x="435" y="174" width="130" height="50" rx="6"/>
+              <text class="d-label" x="500" y="195" text-anchor="middle">signups by</text>
+              <text class="d-label" x="500" y="212" text-anchor="middle">offer, by month</text>
+              <rect class="d-box" x="580" y="174" width="110" height="50" rx="6"/>
+              <text class="d-label" x="635" y="195" text-anchor="middle">delivery, price,</text>
+              <text class="d-label" x="635" y="212" text-anchor="middle">tracking checks</text>
+              <text class="d-label" x="290" y="248">stop at any level and you still have the answer</text>
+            </svg>
+          </div>
+          <figcaption>The same content in two orders. The pyramid puts the answer on top, the reasons in the middle and the evidence at the bottom (illustrative churn example).</figcaption>
+        </figure>
+
+        <h3>Five sentences that carry the decision</h3>
+        <p>A reliable shape for a summary is five sentences: the <strong>recommendation</strong>, the <strong>evidence</strong> behind it, the expected <strong>impact</strong>, the main <strong>risk</strong>, and the <strong>ask</strong> (what you need, from whom, by when). Method details go last or into the appendix. A reader who wants to check your work will keep reading; a reader who only needs the answer can stop after one line.</p>
+
+        <div class="widget" id="exec-demo">
+          <div class="widget-head">
+            <span class="widget-title">BLUF ordering game</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <style>
+            #exec-demo .ex-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: exs; }
+            #exec-demo .ex-item { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-size: .92rem; }
+            #exec-demo .ex-item .ex-n { font-family: var(--font-mono); color: var(--ink-3); font-size: .8rem; }
+            #exec-demo .ex-item .ex-k { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); display: block; }
+            #exec-demo .ex-btns { display: inline-flex; gap: 4px; }
+            #exec-demo .ex-btns .btn { padding: 3px 9px; }
+          </style>
+          <div class="widget-controls">
+            <button class="btn" type="button" id="exec-shuffle">Reset to chronological</button>
+            <span class="muted">Use ↑ and ↓ to reorder the summary.</span>
+          </div>
+          <ol class="ex-list" id="exec-list"></ol>
+          <svg id="exec-plot" viewBox="0 0 640 170" role="img" aria-label="Share of readers who reach each sentence, with the position of the recommendation highlighted."></svg>
+          <p class="readout" id="exec-readout"></p>
+        </div>
+        <p>The bars show a typical skim pattern: each extra sentence loses some readers (an illustrative curve, not a measured one). Wherever the recommendation sits, only the readers who get that far see it. Move it to the top and every reader leaves with the answer.</p>
+
+        <h3>Count the cost of burying the lead</h3>
+        <p>Even with made-up numbers, the shape is the point. Attention drops fast after the first lines, so the expected number of readers who learn your conclusion depends mostly on where you put it.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 230" role="img" aria-label="An illustrative reader-attention curve: 100 percent read sentence 1, 70 percent sentence 2, then 50, 35, 25 and 18 percent. A BLUF summary puts the answer at sentence 1 where everyone sees it; a chronological one puts it at sentence 5 where about a quarter do.">
+              <line class="d-line" x1="60" y1="190" x2="640" y2="190"/>
+              <line class="d-line" x1="60" y1="20" x2="60" y2="190"/>
+              <line class="d-grid" x1="60" y1="20" x2="640" y2="20"/>
+              <line class="d-grid" x1="60" y1="105" x2="640" y2="105"/>
+              <text class="d-label" x="52" y="24" text-anchor="end">100%</text>
+              <text class="d-label" x="52" y="109" text-anchor="end">50%</text>
+              <text class="d-label" x="52" y="194" text-anchor="end">0</text>
+              <rect class="d-good" x="80" y="20" width="60" height="170" rx="4"/>
+              <rect class="d-fill" x="175" y="71" width="60" height="119" rx="4"/>
+              <rect class="d-fill" x="270" y="105" width="60" height="85" rx="4"/>
+              <rect class="d-fill" x="365" y="130.5" width="60" height="59.5" rx="4"/>
+              <rect class="d-signal" x="460" y="147.5" width="60" height="42.5" rx="4"/>
+              <rect class="d-fill" x="555" y="159.4" width="60" height="30.6" rx="4"/>
+              <text class="d-label" x="110" y="208" text-anchor="middle">1</text>
+              <text class="d-label" x="205" y="208" text-anchor="middle">2</text>
+              <text class="d-label" x="300" y="208" text-anchor="middle">3</text>
+              <text class="d-label" x="395" y="208" text-anchor="middle">4</text>
+              <text class="d-label" x="490" y="208" text-anchor="middle">5</text>
+              <text class="d-label" x="585" y="208" text-anchor="middle">6</text>
+              <text class="d-label" x="350" y="225" text-anchor="middle">sentence number in the summary</text>
+              <text class="d-label d-text-good" x="148" y="36">BLUF answer: 100% see it</text>
+              <text class="d-label d-text-signal" x="490" y="138" text-anchor="middle">chronological answer: 25%</text>
+              <text class="d-mono" x="205" y="64" text-anchor="middle">70%</text>
+              <text class="d-mono" x="300" y="98" text-anchor="middle">50%</text>
+              <text class="d-mono" x="395" y="123" text-anchor="middle">35%</text>
+              <text class="d-mono" x="585" y="152" text-anchor="middle">18%</text>
+            </svg>
+          </div>
+          <figcaption>An illustrative skim curve. The position of the answer, not the quality of the prose, decides how many readers see it.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="markdown"><code><span class="c">&lt;!-- Five-sentence executive summary template --&gt;</span>
+**Recommendation:** Cap the first-box promo at 30% off and require a second box, starting with the 1 Nov campaign.
+**Why:** Promo signups churn 14% in month 2 vs 6% for full price, and promo share of signups rose from 20% to 45%.
+**Impact:** Monthly churn should fall from 7.4% to about 6.6% (range 6.4% to 6.9%).
+**Risk:** Signups may drop 10 to 15% with the smaller discount, so we propose a 4-week test first.
+**Ask:** Approve the test by 20 Oct so results arrive before the campaign.
+
+<span class="c">&lt;!-- Method, data sources and caveats go below, or in the appendix --&gt;</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>BLUF: put the recommendation in the first sentence.</li>
+            <li>The pyramid: one main point, a few supporting arguments, evidence underneath.</li>
+            <li>Recommendation, evidence, impact, risk, ask: five sentences cover most decisions.</li>
+            <li>Method goes last or in an appendix; it serves the checkers, not the deciders.</li>
+            <li>Specific numbers beat adjectives: "14% vs 6%" instead of "much higher".</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Opening with "We analysed 18 months of data using…" instead of the answer.</li>
+            <li>Listing findings without saying what to do about them.</li>
+            <li>Hedging every sentence until the reader cannot tell what you recommend.</li>
+            <li>Forgetting the ask, so the reader agrees and nothing happens.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>Write the summary first, as a hypothesis, on day one. Update it as the analysis proceeds. If you cannot write the first sentence by the end, you probably do not have a finding yet.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="exec-summary-1"><span>Rewrite a chronological summary into BLUF order</span></label></li>
+          <li><label><input type="checkbox" data-key="exec-summary-2"><span>Draw the pyramid for one of your analyses: answer, arguments, evidence</span></label></li>
+          <li><label><input type="checkbox" data-key="exec-summary-3"><span>Write a five-sentence summary with recommendation, evidence, impact, risk and ask</span></label></li>
+          <li><label><input type="checkbox" data-key="exec-summary-4"><span>Explain why method details belong at the end</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.barbaraminto.com/">Barbara Minto: The Pyramid Principle</a></li>
+          <li><span class="kind">Guide</span><a href="https://www.plainlanguage.gov/">plainlanguage.gov: Federal plain language guidelines</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="presenting">
+        <header class="topic-head">
+          <p class="eyebrow">15.3 · Slides that say something</p>
+          <h2>Presenting insights</h2>
+        </header>
+
+        <p class="lead">A slide titled "Churn by acquisition offer" tells the audience what the chart is about and leaves them to work out what it means. A slide titled "Promo signups churn 2.3× faster than full-price signups" tells them what to see. The chart then becomes evidence for a sentence, and everyone in the room reads it the same way.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>In a meeting you get a few minutes and a lot of competing opinions. If each slide makes one claim in its title, the discussion stays on your conclusion instead of on what the axes mean, and people who only flip through the deck later still get the message.</p>
+        </div>
+
+        <h3>Anatomy of a slide that lands</h3>
+        <p>Each slide carries one message. The <strong>action title</strong> (also called a takeaway title or headline) states it as a full sentence with a number. The chart shows the evidence, with the series that matters in colour and everything else in grey. An annotation puts the key number where the eye lands, and a footnote gives the source and definitions so nobody has to ask.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 300" role="img" aria-label="Anatomy of a slide: an action title stating the takeaway with a number, a bar chart with the promo bar highlighted and other bars grey, an annotation on the highlighted bar, and a source footnote. Numbered callouts explain each part.">
+              <rect class="d-box" x="10" y="10" width="440" height="280" rx="8"/>
+              <text class="d-title" x="30" y="40">Promo signups churn 2.3× faster than</text>
+              <text class="d-title" x="30" y="60">full-price signups</text>
+              <text class="d-label" x="30" y="84">Month-2 churn by acquisition offer, signups Jan 2025 to Jun 2026</text>
+              <text class="d-label" x="126" y="120" text-anchor="end">Full price</text>
+              <rect class="d-fill" x="132" y="108" width="128" height="18" rx="3"/>
+              <text class="d-mono" x="266" y="122">6.0%</text>
+              <text class="d-label" x="126" y="152" text-anchor="end">Referral</text>
+              <rect class="d-fill" x="132" y="140" width="152" height="18" rx="3"/>
+              <text class="d-mono" x="290" y="154">7.1%</text>
+              <text class="d-label" x="126" y="184" text-anchor="end">30% off</text>
+              <rect class="d-fill" x="132" y="172" width="190" height="18" rx="3"/>
+              <text class="d-mono" x="328" y="186">8.9%</text>
+              <text class="d-label d-text-accent" x="126" y="216" text-anchor="end">60% off box 1</text>
+              <rect class="d-accent" x="132" y="204" width="298" height="18" rx="3"/>
+              <text class="d-mono d-text-accent" x="380" y="242" text-anchor="end">14.0%: 2.3× full price</text>
+              <line class="d-grid" x1="30" y1="258" x2="430" y2="258"/>
+              <text class="d-label" x="30" y="276">Source: subscriptions table; churn = cancelled before box 3</text>
+              <circle class="d-dot" cx="470" cy="45" r="11"/>
+              <text class="d-mono" x="470" y="49" text-anchor="middle" style="fill: var(--accent-ink)">1</text>
+              <text class="d-text" x="490" y="42">Action title: the claim,</text>
+              <text class="d-label" x="490" y="58">a full sentence with a number</text>
+              <circle class="d-dot" cx="470" cy="125" r="11"/>
+              <text class="d-mono" x="470" y="129" text-anchor="middle" style="fill: var(--accent-ink)">2</text>
+              <text class="d-text" x="490" y="122">Grey out the context,</text>
+              <text class="d-label" x="490" y="138">colour only the evidence</text>
+              <circle class="d-dot" cx="470" cy="215" r="11"/>
+              <text class="d-mono" x="470" y="219" text-anchor="middle" style="fill: var(--accent-ink)">3</text>
+              <text class="d-text" x="490" y="212">Annotate where the eye</text>
+              <text class="d-label" x="490" y="228">lands, in the title's words</text>
+              <circle class="d-dot" cx="470" cy="272" r="11"/>
+              <text class="d-mono" x="470" y="276" text-anchor="middle" style="fill: var(--accent-ink)">4</text>
+              <text class="d-text" x="490" y="269">Source and definitions</text>
+              <text class="d-label" x="490" y="285">so nobody has to ask</text>
+            </svg>
+          </div>
+          <figcaption>One slide, one message. The title makes the claim, the colour points to the evidence, the annotation repeats the number, and the footnote answers "where is this from?" (illustrative data).</figcaption>
+        </figure>
+
+        <div class="widget" id="present-demo">
+          <div class="widget-head">
+            <span class="widget-title">Slide headline rewriter</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="present-title" style="flex: 1 1 100%">Slide title <input type="text" id="present-title" value="Churn by acquisition offer" style="flex: 1; min-width: 0" autocomplete="off"></label>
+            <button class="btn" type="button" id="present-p1">Topic title</button>
+            <button class="btn" type="button" id="present-p2">Vague claim</button>
+            <button class="btn" type="button" id="present-p3">Data dump</button>
+          </div>
+          <svg id="present-plot" viewBox="0 0 640 250" role="img" aria-label="A mini slide that shows your title above the churn-by-offer bar chart, plus five checks on the title."></svg>
+          <p class="readout" id="present-readout"></p>
+        </div>
+        <p>Type a title and watch the checks: a verb, a number, the segment the chart is about, a comparison, and a length that fits on one or two lines. When your title names the promo segment, the chart greys out the other bars, because the title has told the audience where to look.</p>
+
+        <h3>Three slides in three minutes</h3>
+        <p>For a decision meeting, plan the talk backwards from the ask. Twenty seconds of context, a minute on the one insight, a minute on the recommendation and its impact, and the last forty seconds on what you need and by when. Everything else goes into an appendix you open only when someone asks.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 190" role="img" aria-label="A three-minute talk timeline: 20 seconds of context, 60 seconds of insight on slide 1, 60 seconds of recommendation on slide 2, 40 seconds for the ask on slide 3, then questions answered from the appendix.">
+              <defs>
+                <marker id="presenting-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="50" width="60" height="50" rx="6"/>
+              <text class="d-title" x="50" y="80" text-anchor="middle">Context</text>
+              <rect class="d-accent" x="84" y="50" width="180" height="50" rx="6"/>
+              <text class="d-title" x="174" y="72" text-anchor="middle">Slide 1 · Insight</text>
+              <text class="d-label" x="174" y="90" text-anchor="middle">promo users churn 2.3×</text>
+              <rect class="d-accent" x="268" y="50" width="180" height="50" rx="6"/>
+              <text class="d-title" x="358" y="72" text-anchor="middle">Slide 2 · Recommend</text>
+              <text class="d-label" x="358" y="90" text-anchor="middle">cap at 30%, churn → 6.6%</text>
+              <rect class="d-good" x="452" y="50" width="120" height="50" rx="6"/>
+              <text class="d-title" x="512" y="72" text-anchor="middle">Slide 3 · Ask</text>
+              <text class="d-label" x="512" y="90" text-anchor="middle">approve by 20 Oct</text>
+              <line class="d-line d-dash" x1="576" y1="75" x2="606" y2="75" marker-end="url(#presenting-arrow)"/>
+              <rect class="d-box" x="608" y="50" width="80" height="50" rx="6"/>
+              <text class="d-title" x="648" y="72" text-anchor="middle">Q&amp;A</text>
+              <text class="d-label" x="648" y="90" text-anchor="middle">appendix</text>
+              <line class="d-line" x1="20" y1="128" x2="572" y2="128"/>
+              <line class="d-line" x1="20" y1="122" x2="20" y2="134"/>
+              <line class="d-line" x1="82" y1="122" x2="82" y2="134"/>
+              <line class="d-line" x1="266" y1="122" x2="266" y2="134"/>
+              <line class="d-line" x1="450" y1="122" x2="450" y2="134"/>
+              <line class="d-line" x1="572" y1="122" x2="572" y2="134"/>
+              <text class="d-mono" x="20" y="152" text-anchor="middle">0:00</text>
+              <text class="d-mono" x="82" y="152" text-anchor="middle">0:20</text>
+              <text class="d-mono" x="266" y="152" text-anchor="middle">1:20</text>
+              <text class="d-mono" x="450" y="152" text-anchor="middle">2:20</text>
+              <text class="d-mono" x="572" y="152" text-anchor="middle">3:00</text>
+              <text class="d-label" x="20" y="30">Plan backwards from the ask; 37 supporting slides wait in the appendix</text>
+            </svg>
+          </div>
+          <figcaption>A three-minute decision talk. Each slide earns its minute by making one claim; the appendix holds the evidence for questions.</figcaption>
+        </figure>
+
+        <h3>Topic titles versus takeaway titles</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Topic title (what it is about)</th><th>Takeaway title (what it means)</th></tr></thead>
+            <tbody>
+              <tr><td>Churn by acquisition offer</td><td>Promo signups churn 2.3× faster than full-price signups</td></tr>
+              <tr><td>Weekly orders, North region</td><td>North orders fell 12% the week free shipping ended</td></tr>
+              <tr><td>Support tickets by hour</td><td>Monday 9–11am gets 30% of weekly tickets with 15% of staff</td></tr>
+              <tr><td>Campaign results</td><td>Email beat paid social on cost per order, $8 vs $21</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import matplotlib.pyplot as plt
+
+offers = ["Full price", "Referral", "30% off", "60% off box 1"]
+churn  = [6.0, 7.1, 8.9, 14.0]                      <span class="c"># month-2 churn, % (example data)</span>
+colors = ["#B8B0A6"] * 3 + ["#C2541B"]             <span class="c"># grey context, one accent bar</span>
+
+fig, ax = plt.subplots(figsize=(8, 3.6))
+ax.barh(offers, churn, color=colors)
+ax.set_title("Promo signups churn 2.3× faster than full-price signups",
+             loc="left", fontsize=13, fontweight="bold")
+ax.annotate("14.0%: 2.3× full price", xy=(14.0, 3), xytext=(9.5, 2.4),
+            arrowprops={"arrowstyle": "-&gt;"}, color="#C2541B")
+for side in ["top", "right"]:
+    ax.spines[side].set_visible(False)
+ax.set_xlabel("Month-2 churn (%)")
+fig.text(0.01, 0.01, "Source: subscriptions table; churn = cancelled before box 3", fontsize=8)
+fig.tight_layout()
+fig.savefig("slide1.png", dpi=200)</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>One slide, one message, stated in an action title with a number.</li>
+            <li>Colour the evidence and grey out the context.</li>
+            <li>Annotate the key number on the chart, using the title's words.</li>
+            <li>Plan the talk backwards from the ask; keep the main deck to a few slides.</li>
+            <li>An appendix lets you answer detailed questions without making everyone sit through them.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Topic titles that leave each person in the room to draw a different conclusion.</li>
+            <li>Showing every chart you made because each one cost you effort.</li>
+            <li>Reading the slide aloud instead of saying what it means.</li>
+            <li>Running out of time before the ask, so the meeting ends without a decision.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>Read only your slide titles in order, out loud. If they tell the whole story on their own, the deck works. If they don't, fix the titles before you touch the charts.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="presenting-1"><span>Rewrite a topic title as a takeaway title with a verb, a number and a comparison</span></label></li>
+          <li><label><input type="checkbox" data-key="presenting-2"><span>Restyle a chart so only the series that supports the title is coloured</span></label></li>
+          <li><label><input type="checkbox" data-key="presenting-3"><span>Plan a three-slide, three-minute talk backwards from the ask</span></label></li>
+          <li><label><input type="checkbox" data-key="presenting-4"><span>Pass the "titles only" test on one of your own decks</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.storytellingwithdata.com/">Cole Nussbaumer Knaflic: Storytelling with Data</a></li>
+          <li><span class="kind">Docs</span><a href="https://matplotlib.org/stable/index.html">Matplotlib documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="analysis-docs">
+        <header class="topic-head">
+          <p class="eyebrow">15.4 · The written record</p>
+          <h2>Writing analysis docs</h2>
+        </header>
+
+        <p class="lead">Slides are for the meeting; the analysis doc is for everything after it. A good doc lets three different readers get what they need: the executive reads the first paragraph, the manager reads the findings, and a peer analyst checks the method and reruns the queries. One document serves all three if you put things in the right order.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Six months from now someone will ask why the promo changed. The doc is the answer. It also protects you: when your numbers are questioned, a doc with definitions, sources and queries lets anyone check them in minutes instead of reopening the whole project.</p>
+        </div>
+
+        <h3>Layer the doc by reader</h3>
+        <p>Put the <strong>TL;DR</strong> (too long; didn't read: a three-to-five sentence summary) and the question at the top. Findings and the recommendation follow, each finding stated as a sentence with its chart. <strong>Limitations</strong> stay in the main body because they change how much weight the reader should give the result. Method details, full queries and the twenty exploratory charts you made along the way go to the appendix.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 300" role="img" aria-label="An analysis doc drawn as a page with sections from top to bottom: TL;DR, question and decision, findings, recommendation, limitations, then an appendix with method, queries and exploratory charts. Brackets on the right show the executive stops after 30 seconds, the manager after 5 minutes, and the peer reviewer reads everything in about 30 minutes.">
+              <rect class="d-box" x="20" y="10" width="360" height="280" rx="8"/>
+              <rect class="d-good" x="36" y="24" width="328" height="34" rx="5"/>
+              <text class="d-text" x="50" y="46">TL;DR: recommendation in 3 to 5 sentences</text>
+              <rect class="d-accent" x="36" y="64" width="328" height="26" rx="5"/>
+              <text class="d-text" x="50" y="82">Question, decision, owner, deadline</text>
+              <rect class="d-accent" x="36" y="96" width="328" height="44" rx="5"/>
+              <text class="d-text" x="50" y="116">Findings: one sentence + one chart each</text>
+              <text class="d-label" x="50" y="132">promo churn 14% vs 6%; mix shift 20% → 45%</text>
+              <rect class="d-accent" x="36" y="146" width="328" height="26" rx="5"/>
+              <text class="d-text" x="50" y="164">Recommendation and next steps</text>
+              <rect class="d-accent" x="36" y="178" width="328" height="26" rx="5"/>
+              <text class="d-text" x="50" y="196">Limitations and open questions</text>
+              <line class="d-grid" x1="36" y1="214" x2="364" y2="214"/>
+              <text class="d-label" x="50" y="230">APPENDIX</text>
+              <rect class="d-fill" x="36" y="238" width="328" height="20" rx="4"/>
+              <text class="d-label" x="50" y="252">Method, data sources, metric definitions</text>
+              <rect class="d-fill" x="36" y="262" width="328" height="20" rx="4"/>
+              <text class="d-label" x="50" y="276">Queries, notebook link, exploratory charts</text>
+              <path class="d-line" d="M392 24 H402 V58 H392"/>
+              <text class="d-text" x="412" y="38">Executive</text>
+              <text class="d-label" x="412" y="54">reads ~30 s, then decides</text>
+              <path class="d-line" d="M392 64 H422 V204 H392"/>
+              <text class="d-text" x="432" y="128">Manager</text>
+              <text class="d-label" x="432" y="144">reads ~5 min, plans the work</text>
+              <path class="d-line" d="M392 238 H442 V282 H392"/>
+              <text class="d-text" x="452" y="256">Peer reviewer</text>
+              <text class="d-label" x="452" y="272">reads all ~30 min, reruns queries</text>
+            </svg>
+          </div>
+          <figcaption>One doc, three depths. Each reader stops when they have what they need, so the most important content goes first and the most detailed goes last.</figcaption>
+        </figure>
+
+        <div class="widget" id="docs-demo">
+          <div class="widget-head">
+            <span class="widget-title">Analysis doc outline checker</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls" id="docs-controls"></div>
+          <svg id="docs-plot" viewBox="0 0 640 320" role="img" aria-label="Your doc outline drawn as a main document column and an appendix column, with each section coloured by whether it is in a good place."></svg>
+          <p class="readout" id="docs-readout"></p>
+        </div>
+        <p>Each section has a place: <em>Top</em>, <em>Body</em>, <em>Appendix</em> or <em>Omit</em>. The default outline is the order the work happened in, with method first and the queries pasted into the body. Fix it so the reader reaches the answer in seconds and the main doc reads in under eight minutes, without dropping anything a reviewer needs.</p>
+
+        <h3>Make every number traceable</h3>
+        <p>Every number in the doc should lead back to a query or notebook a peer can rerun. Link each chart to the query that produced it, state the date the data was pulled, and write the metric definition next to the first use. "Churn" alone is ambiguous; "cancelled before the third box" is not.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 170" role="img" aria-label="A traceability chain: a claim in the doc links to a saved query in version control, which runs on a dated data snapshot, which produces the chart. A reviewer can follow the chain backwards to check any number.">
+              <defs>
+                <marker id="analysis-docs-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="analysis-docs-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="40" width="140" height="62" rx="8"/>
+              <text class="d-title" x="90" y="64" text-anchor="middle">Data snapshot</text>
+              <text class="d-label" x="90" y="84" text-anchor="middle">pulled 2026-10-06</text>
+              <line class="d-line-accent" x1="160" y1="71" x2="196" y2="71" marker-end="url(#analysis-docs-arrow)"/>
+              <rect class="d-box" x="198" y="40" width="140" height="62" rx="8"/>
+              <text class="d-title" x="268" y="64" text-anchor="middle">Saved query</text>
+              <text class="d-label" x="268" y="84" text-anchor="middle">churn_by_offer.sql</text>
+              <line class="d-line-accent" x1="338" y1="71" x2="374" y2="71" marker-end="url(#analysis-docs-arrow)"/>
+              <rect class="d-box" x="376" y="40" width="140" height="62" rx="8"/>
+              <text class="d-title" x="446" y="64" text-anchor="middle">Chart</text>
+              <text class="d-label" x="446" y="84" text-anchor="middle">figure 2 in the doc</text>
+              <line class="d-line-accent" x1="516" y1="71" x2="552" y2="71" marker-end="url(#analysis-docs-arrow)"/>
+              <rect class="d-good" x="554" y="40" width="130" height="62" rx="8"/>
+              <text class="d-title" x="619" y="64" text-anchor="middle">Claim</text>
+              <text class="d-label" x="619" y="84" text-anchor="middle">"14% vs 6%"</text>
+              <path class="d-line d-dash" d="M619 102 V140 H90 V104" marker-end="url(#analysis-docs-arrow2)"/>
+              <text class="d-label" x="355" y="158" text-anchor="middle">a reviewer follows the links backwards to check any number</text>
+            </svg>
+          </div>
+          <figcaption>Traceability: claim to chart to query to dated data. If any link is missing, the number can only be checked by asking you.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- churn_by_offer.sql  (appendix A, figure 2)
+-- Question: month-2 churn by acquisition offer, signups Jan 2025 to Jun 2026
+-- Definition: churned = cancelled before the third box was shipped
+-- Data pulled: 2026-10-06 from analytics.subscriptions</span>
+SELECT
+    acquisition_offer,
+    COUNT(*)                                             AS signups,
+    AVG(CASE WHEN boxes_shipped &lt; 3 AND cancelled_at IS NOT NULL
+             THEN 1.0 ELSE 0.0 END)                       AS month2_churn
+FROM analytics.subscriptions
+WHERE signup_date &gt;= DATE '2025-01-01'
+  AND signup_date &lt;  DATE '2026-07-01'
+GROUP BY acquisition_offer
+ORDER BY month2_churn DESC;</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Order the doc by reader: TL;DR and question first, findings and recommendation next, method and queries last.</li>
+            <li>Limitations belong in the main body because they change how much to trust the result.</li>
+            <li>Every number links to a query, a data date and a written definition.</li>
+            <li>Exploratory charts are part of the work, not the doc; keep them in the appendix or drop them.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>A doc that reads like a lab notebook: everything you tried, in the order you tried it.</li>
+            <li>Undefined metrics, so two readers compute "churn" two ways and disagree.</li>
+            <li>Screenshots of numbers with no query behind them.</li>
+            <li>Hiding the limitations in an appendix nobody opens.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="analysis-docs-1"><span>Outline an analysis doc that serves an executive, a manager and a peer reviewer</span></label></li>
+          <li><label><input type="checkbox" data-key="analysis-docs-2"><span>Write a query header with question, definition and data date</span></label></li>
+          <li><label><input type="checkbox" data-key="analysis-docs-3"><span>Trace any number in your doc back to the query and data that produced it</span></label></li>
+          <li><label><input type="checkbox" data-key="analysis-docs-4"><span>Decide which charts belong in the body and which in the appendix</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Guide</span><a href="https://www.gov.uk/government/publications/the-aqua-book-guidance-on-producing-quality-analysis-for-government">The Aqua Book: producing quality analysis (UK government)</a></li>
+          <li><span class="kind">Guide</span><a href="https://www.plainlanguage.gov/">plainlanguage.gov: Federal plain language guidelines</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="stakeholders">
+        <header class="topic-head">
+          <p class="eyebrow">15.5 · People, not just data</p>
+          <h2>Working with stakeholders</h2>
+        </header>
+
+        <p class="lead">A <strong>stakeholder</strong> is anyone who can affect your analysis or is affected by its result. The VP who asked, the CFO who signs off on discounts, and the campaign manager whose promo is about to be cut all react differently to the same finding. Knowing who they are, what they care about and when to talk to them decides whether your recommendation survives the meeting.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Analyses rarely fail in the query. They fail when a senior person sees a surprising number for the first time in a group meeting and spends the hour questioning it, or when the person whose work looks bad hears it in public. Both are avoidable with a little planning.</p>
+        </div>
+
+        <h3>Map influence against interest</h3>
+        <p>Place each stakeholder on two axes: <strong>influence</strong> (how much they can change the decision) and <strong>interest</strong> (how much they care about the outcome). The quadrant tells you how to engage. High influence and high interest: manage closely, involve them from framing onwards. High influence, low interest: keep satisfied with short, conclusion-first updates. Low influence, high interest: keep informed. Low on both: monitor and send the final doc.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 320" role="img" aria-label="An influence by interest grid with four quadrants: manage closely (high influence, high interest) containing the VP of Growth; keep satisfied (high influence, low interest) containing the CFO; keep informed (low influence, high interest) containing the campaign manager and support lead; monitor (low on both) containing the brand designer.">
+              <rect class="d-fill" x="70" y="20" width="270" height="130"/>
+              <rect class="d-accent" x="340" y="20" width="270" height="130"/>
+              <rect class="d-box" x="70" y="150" width="270" height="130"/>
+              <rect class="d-fill" x="340" y="150" width="270" height="130"/>
+              <text class="d-title" x="84" y="44">Keep satisfied</text>
+              <text class="d-label" x="84" y="62">brief, conclusion first</text>
+              <text class="d-title" x="354" y="44">Manage closely</text>
+              <text class="d-label" x="354" y="62">involve from framing on</text>
+              <text class="d-title" x="84" y="174">Monitor</text>
+              <text class="d-label" x="84" y="192">send the final doc</text>
+              <text class="d-title" x="354" y="174">Keep informed</text>
+              <text class="d-label" x="354" y="192">regular short updates</text>
+              <circle class="d-dot" cx="180" cy="110" r="7"/>
+              <text class="d-text" x="192" y="115">CFO</text>
+              <circle class="d-dot" cx="520" cy="90" r="7"/>
+              <text class="d-text" x="508" y="115" text-anchor="end">VP of Growth</text>
+              <circle class="d-dot" cx="500" cy="232" r="7"/>
+              <text class="d-text" x="488" y="237" text-anchor="end">Campaign manager</text>
+              <circle class="d-dot" cx="560" cy="258" r="7"/>
+              <text class="d-text" x="548" y="270" text-anchor="end">Support lead</text>
+              <circle class="d-dot" cx="150" cy="248" r="7"/>
+              <text class="d-text" x="162" y="253">Brand designer</text>
+              <line class="d-line" x1="70" y1="280" x2="616" y2="280"/>
+              <line class="d-line" x1="70" y1="14" x2="70" y2="280"/>
+              <text class="d-label" x="340" y="300" text-anchor="middle">interest in the outcome →</text>
+              <text class="d-label" x="40" y="150" text-anchor="middle" transform="rotate(-90 40 150)">influence on the decision →</text>
+            </svg>
+          </div>
+          <figcaption>A stakeholder map for the promo decision. The quadrant sets the engagement style, from involving the VP at framing to sending the designer the final doc.</figcaption>
+        </figure>
+
+        <div class="widget" id="stake-demo">
+          <div class="widget-head">
+            <span class="widget-title">Stakeholder map</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="stake-who">Stakeholder <select id="stake-who"></select></label>
+            <label for="stake-inf">Influence <input type="range" id="stake-inf" min="0" max="10" step="1" value="5"><output id="stake-inf-out">5</output></label>
+            <label for="stake-int">Interest <input type="range" id="stake-int" min="0" max="10" step="1" value="5"><output id="stake-int-out">5</output></label>
+          </div>
+          <p class="muted" id="stake-profile" style="font-size: .92rem"></p>
+          <svg id="stake-plot" viewBox="0 0 640 300" role="img" aria-label="Influence by interest grid with five stakeholders you can move with the sliders."></svg>
+          <p class="readout" id="stake-readout"></p>
+        </div>
+        <p>All five stakeholders start on the centre lines, which means "not yet thought about". Read each profile, then move the person into the quadrant that matches it. A point sitting exactly on a line counts as undecided.</p>
+
+        <h3>Pre-wire: no surprises in the meeting</h3>
+        <p>Before the decision meeting, walk the key people through the finding one at a time. The CFO sees the impact estimate and raises her question about the revenue risk in private, so you can add the answer to the deck. The campaign manager hears that her promo is the cause from you, early, and can help design the fix. By the time the group meets, nobody hears the main number for the first time.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 190" role="img" aria-label="A stakeholder cadence over three weeks: kickoff with the decision owner, a check-in after the first finding, one-to-one pre-wires with the CFO and campaign manager, the decision meeting, and a follow-up with the doc and next steps.">
+              <defs>
+                <marker id="stakeholders-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <line class="d-line-accent" x1="20" y1="100" x2="680" y2="100" marker-end="url(#stakeholders-arrow)"/>
+              <circle class="d-dot" cx="60" cy="100" r="7"/>
+              <text class="d-title" x="60" y="70" text-anchor="middle">Kickoff</text>
+              <text class="d-label" x="60" y="130" text-anchor="middle">frame with VP</text>
+              <text class="d-mono" x="60" y="150" text-anchor="middle">day 1</text>
+              <circle class="d-dot" cx="200" cy="100" r="7"/>
+              <text class="d-title" x="200" y="70" text-anchor="middle">Check-in</text>
+              <text class="d-label" x="200" y="130" text-anchor="middle">first finding: useful?</text>
+              <text class="d-mono" x="200" y="150" text-anchor="middle">day 5</text>
+              <rect class="d-accent" x="290" y="50" width="200" height="34" rx="6"/>
+              <text class="d-title" x="390" y="72" text-anchor="middle">Pre-wire 1:1s</text>
+              <circle class="d-dot" cx="340" cy="100" r="7"/>
+              <circle class="d-dot" cx="440" cy="100" r="7"/>
+              <text class="d-label" x="340" y="130" text-anchor="middle">CFO: impact</text>
+              <text class="d-label" x="440" y="130" text-anchor="middle">campaign mgr</text>
+              <text class="d-mono" x="390" y="150" text-anchor="middle">days 12–13</text>
+              <circle class="d-dot-good" cx="550" cy="100" r="9"/>
+              <text class="d-title" x="550" y="70" text-anchor="middle">Decision</text>
+              <text class="d-label" x="550" y="130" text-anchor="middle">no surprises</text>
+              <text class="d-mono" x="550" y="150" text-anchor="middle">day 15</text>
+              <circle class="d-dot" cx="640" cy="100" r="7"/>
+              <text class="d-title" x="640" y="70" text-anchor="middle">Follow-up</text>
+              <text class="d-label" x="640" y="130" text-anchor="middle">doc + owners</text>
+              <text class="d-mono" x="640" y="150" text-anchor="middle">day 16</text>
+              <text class="d-label" x="350" y="180" text-anchor="middle">everyone who matters has seen the key number before the meeting</text>
+            </svg>
+          </div>
+          <figcaption>A three-week cadence. The one-to-one pre-wires before the decision meeting turn objections into slide content instead of meeting derailers.</figcaption>
+        </figure>
+
+        <h3>Who does what: a RACI for the decision</h3>
+        <p>A <strong>RACI</strong> chart lists who is Responsible for the work, who is Accountable for the decision (exactly one person), who is Consulted before it and who is Informed after it. Agreeing it at kickoff prevents the late "why wasn't I asked?" that reopens a decision.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Task</th><th>Analyst</th><th>VP of Growth</th><th>CFO</th><th>Campaign manager</th></tr></thead>
+            <tbody>
+              <tr><td>Frame the question</td><td>R</td><td>A</td><td>I</td><td>C</td></tr>
+              <tr><td>Run the analysis</td><td>R, A</td><td>I</td><td>I</td><td>C</td></tr>
+              <tr><td>Decide on the promo</td><td>C</td><td>A</td><td>C</td><td>C</td></tr>
+              <tr><td>Run the 4-week test</td><td>R (measure)</td><td>A</td><td>I</td><td>R (launch)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Map stakeholders by influence and interest; the quadrant sets how you engage.</li>
+            <li>Involve the decision owner from framing onwards, not just at the readout.</li>
+            <li>Pre-wire: show key people the finding one-to-one before the group meeting.</li>
+            <li>Tell people whose work looks bad early and privately, and invite them into the fix.</li>
+            <li>Agree who is accountable for the decision at kickoff.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Disappearing for three weeks and returning with a finished deck nobody asked to see early.</li>
+            <li>Sending a high-influence, low-interest executive a 20-page doc instead of three sentences.</li>
+            <li>Letting the loudest person in the meeting redefine the question halfway through.</li>
+            <li>Treating disagreement as an attack. It usually points to a definition or an assumption you can check together.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>When a stakeholder pushes back on a number, ask "what would you expect it to be, and why?" Their answer often reveals a different definition or a known data issue, and you can resolve it with a query instead of an argument.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="stakeholders-1"><span>Place the stakeholders of a real project on an influence and interest map</span></label></li>
+          <li><label><input type="checkbox" data-key="stakeholders-2"><span>Plan a cadence with kickoff, check-in, pre-wires, decision and follow-up</span></label></li>
+          <li><label><input type="checkbox" data-key="stakeholders-3"><span>Write a RACI with exactly one accountable person per decision</span></label></li>
+          <li><label><input type="checkbox" data-key="stakeholders-4"><span>Handle pushback on a number by asking for the expected value and its reasoning</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Guide</span><a href="https://www.atlassian.com/team-playbook">Atlassian Team Playbook (stakeholder and project plays)</a></li>
+          <li><span class="kind">Book</span><a href="https://www.storytellingwithdata.com/">Storytelling with Data: knowing your audience</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="recommendations">
+        <header class="topic-head">
+          <p class="eyebrow">15.6 · Ask for the decision</p>
+          <h2>Making recommendations</h2>
+        </header>
+
+        <p class="lead">A finding says what is true. A recommendation says what to do about it, how much it should help, how sure you are, and what happens next. Analysts who stop at findings leave the hardest step to someone with less context. Analysts who recommend, with honest uncertainty, become the people decision makers call first.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Decision makers rarely lack data; they lack a clear option with its trade-offs spelled out. A recommendation with an impact range, a confidence level and a dated next step can be approved in one meeting. A list of findings usually produces a request for more analysis.</p>
+        </div>
+
+        <h3>The parts of a recommendation</h3>
+        <p>State the action first. Give the expected impact as a <strong>range</strong>, not a single number, because a point estimate hides how uncertain you are. Say your confidence in plain words and what it rests on. Name the main risk and the alternatives you rejected. End with the next step, an owner and a date, plus the result that would make you change your mind.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 300" role="img" aria-label="A recommendation card with seven labelled rows: action, impact range, confidence with its basis, main risk, alternatives considered, next step with owner and date, and what would change our mind.">
+              <rect class="d-box" x="10" y="10" width="680" height="280" rx="10"/>
+              <rect class="d-good" x="10" y="10" width="680" height="44" rx="10"/>
+              <text class="d-title" x="30" y="38">Recommend: cap the first-box promo at 30% off and require a second box</text>
+              <text class="d-label d-text-accent" x="30" y="84">IMPACT</text>
+              <text class="d-text" x="150" y="84">Churn 7.4% → about 6.6% a month (range 6.4% to 6.9%)</text>
+              <text class="d-label d-text-accent" x="30" y="116">CONFIDENCE</text>
+              <text class="d-text" x="150" y="116">Medium: cohort gap is large and stable; signup effect is untested</text>
+              <text class="d-label d-text-accent" x="30" y="148">MAIN RISK</text>
+              <text class="d-text" x="150" y="148">Signups could fall 10% to 15% with the smaller discount</text>
+              <text class="d-label d-text-accent" x="30" y="180">ALTERNATIVES</text>
+              <text class="d-text" x="150" y="180">Remove the promo (bigger signup loss); onboarding emails (small effect)</text>
+              <text class="d-label d-text-accent" x="30" y="212">NEXT STEP</text>
+              <text class="d-text" x="150" y="212">4-week A/B test from 22 Oct; campaign manager launches; readout 19 Nov</text>
+              <text class="d-label d-text-accent" x="30" y="244">CHANGE OUR MIND</text>
+              <text class="d-text" x="150" y="244">If test signups fall more than 15%, or month-2 churn does not drop</text>
+              <line class="d-grid" x1="30" y1="260" x2="670" y2="260"/>
+              <text class="d-label" x="30" y="280">Illustrative numbers. Every row answers a question the decision maker would otherwise ask.</text>
+            </svg>
+          </div>
+          <figcaption>Anatomy of a recommendation. The action comes first; the range, confidence, risk and alternatives make it honest; the next step and the "change our mind" condition make it actionable.</figcaption>
+        </figure>
+
+        <h3>Compare options by range, not by point</h3>
+        <p>Put every serious option on the same scale with its plausible range. An option with a higher best guess can still be the riskier choice if its range crosses zero. Removing the promo entirely might add more revenue, or it might lose some; capping it is smaller but positive across the whole range.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="Three options shown as ranges of monthly net revenue change. Cap promo at 30 percent: plus 20 to plus 60 thousand. Remove promo: minus 30 to plus 80 thousand, crossing zero. Onboarding emails: plus 5 to plus 15 thousand.">
+              <line class="d-line" x1="200" y1="190" x2="680" y2="190"/>
+              <line class="d-line d-dash" x1="306.7" y1="30" x2="306.7" y2="190"/>
+              <text class="d-label" x="306.7" y="208" text-anchor="middle">$0</text>
+              <text class="d-label" x="200" y="208" text-anchor="middle">−$40k</text>
+              <text class="d-label" x="413.3" y="208" text-anchor="middle">+$40k</text>
+              <text class="d-label" x="520" y="208" text-anchor="middle">+$80k</text>
+              <text class="d-label" x="680" y="208" text-anchor="end">+$140k</text>
+              <text class="d-label" x="440" y="226" text-anchor="middle">change in monthly net revenue (illustrative)</text>
+              <text class="d-text" x="190" y="64" text-anchor="end">Cap promo at 30%</text>
+              <line class="d-line-accent" x1="360" y1="60" x2="466.7" y2="60" stroke-width="10" stroke-linecap="round"/>
+              <circle class="d-dot-good" cx="413.3" cy="60" r="7"/>
+              <text class="d-label d-text-good" x="476" y="64">+20k to +60k: positive everywhere</text>
+              <text class="d-text" x="190" y="114" text-anchor="end">Remove promo</text>
+              <line class="d-line-signal" x1="226.7" y1="110" x2="520" y2="110" stroke-width="10" stroke-linecap="round"/>
+              <circle class="d-dot-signal" cx="373.3" cy="110" r="7"/>
+              <text class="d-label d-text-signal" x="530" y="114">−30k to +80k: crosses zero</text>
+              <text class="d-text" x="190" y="164" text-anchor="end">Onboarding emails</text>
+              <line class="d-line" x1="320" y1="160" x2="346.7" y2="160" stroke-width="10" stroke-linecap="round"/>
+              <circle class="d-dot-muted" cx="333.3" cy="160" r="7"/>
+              <text class="d-label" x="358" y="164">+5k to +15k: safe but small</text>
+            </svg>
+          </div>
+          <figcaption>Three options on one scale (illustrative ranges). Ranges, not best guesses, show which option is safe, which is a gamble and which is too small to matter.</figcaption>
+        </figure>
+
+        <h3>Match the action to confidence and reversibility</h3>
+        <p>How sure you need to be depends on how easy the decision is to undo. A reversible change with a positive expected value can roll out with a holdout group and a review date. A change that is hard to reverse, such as a price announced publicly, deserves a test first when confidence is only medium. Low confidence means gather more evidence before recommending anything.</p>
+
+        <div class="widget" id="rec-demo">
+          <div class="widget-head">
+            <span class="widget-title">Recommendation builder</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="rec-opt">Option <select id="rec-opt"><option value="0">Cap promo at 30% off</option><option value="1">Remove the promo</option><option value="2">Onboarding emails</option></select></label>
+            <label for="rec-conf">Confidence the effect is real <input type="range" id="rec-conf" min="10" max="95" step="5" value="50"><output id="rec-conf-out">50%</output></label>
+            <label for="rec-rev"><input type="checkbox" id="rec-rev" checked> Easy to reverse</label>
+          </div>
+          <svg id="rec-plot" viewBox="0 0 640 250" role="img" aria-label="A recommendation card showing the option, its impact range, the confidence level, a verdict and the next step."></svg>
+          <p class="readout" id="rec-readout"></p>
+        </div>
+        <p>The expected annual value is confidence × midpoint impact × 12 months, minus the one-off cost (example figures). Watch how the verdict changes when you untick "easy to reverse" at the same confidence, and how a cheap option can still be a bad recommendation when its expected value is below its cost.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Confidence</th><th>Typical evidence</th><th>How to say it</th></tr></thead>
+            <tbody>
+              <tr><td>High</td><td>Randomized test, or a large effect replicated across cohorts</td><td>"We expect…", "The test showed…"</td></tr>
+              <tr><td>Medium</td><td>Strong observational pattern, plausible mechanism, no test yet</td><td>"The evidence points to…; a test would confirm it"</td></tr>
+              <tr><td>Low</td><td>Small sample, one cohort, or a pattern with obvious confounders</td><td>"An early signal suggests…; we need X before deciding"</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A recommendation states the action, impact range, confidence, risk, alternatives and next step.</li>
+            <li>Compare options by their ranges; a range that crosses zero is a gamble.</li>
+            <li>Reversible decisions can move faster; hard-to-reverse ones need more confidence or a test.</li>
+            <li>Say in advance what result would change your mind.</li>
+            <li>Every next step needs an owner and a date.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Presenting findings and waiting for someone else to say what they mean.</li>
+            <li>A single impact number with false precision, such as "+$38,412 a month".</li>
+            <li>Overclaiming causality from an observational pattern.</li>
+            <li>Ending with "let me know your thoughts" instead of a specific ask.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="recommendations-1"><span>Write a recommendation with action, impact range, confidence, risk, alternatives and next step</span></label></li>
+          <li><label><input type="checkbox" data-key="recommendations-2"><span>Compare two options by their ranges and explain which is the safer bet</span></label></li>
+          <li><label><input type="checkbox" data-key="recommendations-3"><span>Choose between "do it", "roll out with a holdout" and "test first" from confidence and reversibility</span></label></li>
+          <li><label><input type="checkbox" data-key="recommendations-4"><span>Match confidence wording to the strength of your evidence</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Guide</span><a href="https://www.gov.uk/government/publications/the-aqua-book-guidance-on-producing-quality-analysis-for-government">The Aqua Book: communicating uncertainty in analysis</a></li>
+          <li><span class="kind">Book</span><a href="https://www.barbaraminto.com/">Barbara Minto: The Pyramid Principle</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Rewrite a past analysis</h4><p>Take an analysis you already did (a class project or a Kaggle notebook). Write a five-sentence executive summary that leads with the answer, and rewrite every chart title as a takeaway. Compare reading time before and after.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Framed question to 3-slide readout</h4><p>Pick a public dataset (for example a bike-share or e-commerce dataset). Write a one-page brief with the decision, metric, deadline and threshold, run the analysis, then deliver a 3-slide, 3-minute readout with an appendix. Record yourself and time it.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Full analysis doc with recommendation</h4><p>Write a complete analysis doc: TL;DR, question, findings, a recommendation with an impact range and confidence level, limitations and next steps, plus reproducible queries in the appendix. Ask a friend to play the skeptical stakeholder and log every question they ask.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Turn a vague request into a decision, metric, threshold, deadline and owner in one intake conversation</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Write an executive summary a busy reader can act on after the first sentence</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Present three slides in three minutes, each with a takeaway title and one highlighted point</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Write an analysis doc that a peer can check and rerun without asking you</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Map stakeholders and pre-wire a decision so the meeting holds no surprises</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Make a recommendation with an impact range, a stated confidence and a dated next step</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 15. Shared helpers first, then one IIFE per widget. */
+var DA15 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function wrap(str, max) {
+    var words = String(str).split(/\s+/), lines = [], cur = "";
+    words.forEach(function (w) {
+      if (!w) return;
+      if ((cur + " " + w).trim().length > max && cur) { lines.push(cur); cur = w; }
+      else cur = (cur + " " + w).trim();
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function fill(select, arr) {
+    while (select.firstChild) select.removeChild(select.firstChild);
+    arr.forEach(function (t, i) { var o = document.createElement("option"); o.value = String(i); o.textContent = t; select.appendChild(o); });
+  }
+  return { svg: svg, text: text, clear: clear, wrap: wrap, fill: fill };
+})();
+
+/* ---------- 15.1 question framer ---------- */
+(function () {
+  if (!document.getElementById("framing-demo")) return;
+  var H = DA15, S = H.svg;
+  var R = [
+    { dec: [["Understand churn better", 0], ["Whether to change the first-box promo", 1], ["Which customers get a retention call", 2]],
+      met: [["Total monthly churn rate", 0], ["Month-2 churn, promo vs full-price signups", 1], ["Predicted churn risk per active customer", 2]],
+      thr: [["None: we'll see what the data says", 0], ["Change it if promo churn is over 1.5x full price", 1], ["Call the riskiest 300 customers each week", 2]],
+      deadline: "By 20 Oct, before the 1 Nov campaign", owner: "VP of Growth" },
+    { dec: [["Explain the sales dip", 0], ["Whether to restore free shipping in the North", 1], ["Whether to move ad budget from North to South", 2]],
+      met: [["Total revenue by region", 0], ["North conversion before vs after the shipping change", 1], ["Return on ad spend (ROAS) by region", 2]],
+      thr: [["None: we'll see what the data says", 0], ["Restore it if conversion fell over 0.5 points", 1], ["Move budget if North ROAS stays below 2.0 for 4 weeks", 2]],
+      deadline: "Before the pricing review on 3 Dec", owner: "Head of e-commerce" },
+    { dec: [["Have a dashboard to look at", 0], ["How many agents to staff each weekday", 1], ["Which ticket types to automate first", 2]],
+      met: [["Total tickets this month", 0], ["Tickets per hour vs agent capacity, by weekday", 1], ["Volume x handle time by ticket type", 2]],
+      thr: [["None: we'll see what the data says", 0], ["Add a shift where queue time tops 10 min on 2+ days", 1], ["Automate types costing over 200 agent-hours a month", 2]],
+      deadline: "Before the Q1 staffing plan locks on 15 Jan", owner: "Support operations lead" }
+  ];
+  var req = document.getElementById("framing-req"), dec = document.getElementById("framing-dec"), met = document.getElementById("framing-met"),
+    thr = document.getElementById("framing-thr"), dl = document.getElementById("framing-dl"), own = document.getElementById("framing-own");
+  var plot = document.getElementById("framing-plot"), readout = document.getElementById("framing-readout");
+  function first(a) { return a.map(function (x) { return x[0]; }); }
+  function loadReq() {
+    var r = R[+req.value];
+    H.fill(dec, first(r.dec)); H.fill(met, first(r.met)); H.fill(thr, first(r.thr));
+    H.fill(dl, ["ASAP", "Whenever it's ready", r.deadline]);
+    H.fill(own, ["Everyone on the team", r.owner, "The data team"]);
+    draw();
+  }
+  function draw() {
+    var r = R[+req.value];
+    var d = r.dec[+dec.value][1];
+    var ok = {
+      decision: d > 0,
+      metric: d > 0 && r.met[+met.value][1] === d,
+      threshold: d > 0 && r.thr[+thr.value][1] === d,
+      deadline: +dl.value === 2,
+      owner: +own.value === 1
+    };
+    var names = ["decision", "metric", "threshold", "deadline", "owner"];
+    var score = names.filter(function (k) { return ok[k]; }).length;
+    H.clear(plot);
+    S("rect", { x: 6, y: 6, width: 628, height: 170, rx: 10, "class": score === 5 ? "d-good" : "d-box" }, plot);
+    H.text(plot, 22, 30, score === 5 ? "Framed question" : "Draft question", "d-title");
+    var rows = [
+      ["DECISION", r.dec[+dec.value][0], ok.decision],
+      ["OWNER", own.options[own.selectedIndex].textContent + "  ·  " + dl.options[dl.selectedIndex].textContent, ok.owner && ok.deadline],
+      ["METRIC", r.met[+met.value][0], ok.metric],
+      ["ACT IF", r.thr[+thr.value][0], ok.threshold]
+    ];
+    rows.forEach(function (row, i) {
+      var y = 60 + i * 30;
+      H.text(plot, 22, y, row[0], "d-label " + (row[2] ? "d-text-good" : "d-text-signal"));
+      H.text(plot, 110, y, row[1], "d-text");
+    });
+    names.forEach(function (k, i) {
+      var x = 22 + i * 122, y = 190;
+      S("rect", { x: x, y: y, width: 112, height: 28, rx: 14, "class": ok[k] ? "d-good" : "d-signal" }, plot);
+      H.text(plot, x + 56, y + 18, (ok[k] ? "✓ " : "✗ ") + k, "d-label " + (ok[k] ? "d-text-good" : "d-text-signal"), "middle");
+    });
+    var miss = names.filter(function (k) { return !ok[k]; });
+    readout.textContent = "framing score " + score + "/5" + (miss.length ? " · missing: " + miss.join(", ") : " · ready to start the analysis");
+  }
+  req.addEventListener("change", loadReq);
+  [dec, met, thr, dl, own].forEach(function (s) { s.addEventListener("change", draw); });
+  loadReq();
+})();
+
+/* ---------- 15.2 BLUF ordering game ---------- */
+(function () {
+  if (!document.getElementById("exec-demo")) return;
+  var H = DA15, S = H.svg;
+  var ITEMS = {
+    rec: ["Recommendation", "Cap the first-box promo at 30% off and require a second box, starting with the 1 Nov campaign."],
+    ev: ["Evidence", "Promo signups churn 14% in month 2 versus 6% at full price, and promo share of signups rose from 20% to 45%."],
+    imp: ["Impact", "We expect monthly churn to fall from 7.4% to about 6.6%."],
+    risk: ["Risk", "Signups may drop 10 to 15% with the smaller discount, so we propose a 4-week test first."],
+    ask: ["Ask", "Please approve the test by 20 Oct so results arrive before the campaign."],
+    meth: ["Method", "We analysed 18 months of subscriptions (212,000 signups) using monthly cohort tables."]
+  };
+  var DEF = ["meth", "ev", "risk", "imp", "rec", "ask"];
+  var REACH = [100, 70, 50, 35, 25, 18];
+  var order = DEF.slice();
+  var list = document.getElementById("exec-list"), plot = document.getElementById("exec-plot"), readout = document.getElementById("exec-readout");
+  function move(i, d) {
+    var j = i + d; if (j < 0 || j >= order.length) return;
+    var t = order[i]; order[i] = order[j]; order[j] = t; render(i + d, d);
+  }
+  function rules() {
+    var p = function (k) { return order.indexOf(k); };
+    return [
+      ["recommendation first", p("rec") === 0],
+      ["evidence right after it", p("ev") === p("rec") + 1],
+      ["impact before risk", p("imp") < p("risk")],
+      ["ask before method", p("ask") < p("meth")],
+      ["method last", p("meth") === order.length - 1]
+    ];
+  }
+  function render(focusIdx, dir) {
+    list.innerHTML = "";
+    order.forEach(function (k, i) {
+      var li = document.createElement("li"); li.className = "ex-item";
+      var n = document.createElement("span"); n.className = "ex-n"; n.textContent = (i + 1) + ".";
+      var body = document.createElement("span");
+      var kind = document.createElement("span"); kind.className = "ex-k"; kind.textContent = ITEMS[k][0];
+      body.appendChild(kind); body.appendChild(document.createTextNode(ITEMS[k][1]));
+      var btns = document.createElement("span"); btns.className = "ex-btns";
+      [["↑", -1, "Move up"], ["↓", 1, "Move down"]].forEach(function (b) {
+        var bt = document.createElement("button"); bt.type = "button"; bt.className = "btn"; bt.textContent = b[0];
+        bt.setAttribute("aria-label", b[2] + ": " + ITEMS[k][0]);
+        bt.disabled = (b[1] < 0 && i === 0) || (b[1] > 0 && i === order.length - 1);
+        bt.addEventListener("click", function () { move(i, b[1]); });
+        btns.appendChild(bt);
+      });
+      li.appendChild(n); li.appendChild(body); li.appendChild(btns);
+      list.appendChild(li);
+    });
+    if (focusIdx != null) {
+      var row = list.children[focusIdx];
+      var b = row && row.querySelectorAll("button")[dir < 0 ? 0 : 1];
+      if (b && !b.disabled) b.focus(); else if (row) { var o = row.querySelector("button:not([disabled])"); if (o) o.focus(); }
+    }
+    draw();
+  }
+  function draw() {
+    H.clear(plot);
+    var rp = order.indexOf("rec");
+    S("line", { x1: 40, y1: 130, x2: 630, y2: 130, "class": "d-line" }, plot);
+    H.text(plot, 34, 34, "100%", "d-label", "end");
+    H.text(plot, 34, 134, "0", "d-label", "end");
+    REACH.forEach(function (r, i) {
+      var x = 60 + i * 96, h = r, y = 130 - h;
+      S("rect", { x: x, y: y, width: 70, height: h, rx: 4, "class": i === rp ? "d-accent" : "d-fill" }, plot);
+      H.text(plot, x + 35, y - 6, r + "%", "d-mono", "middle");
+      H.text(plot, x + 35, 148, ITEMS[order[i]][0], "d-label" + (i === rp ? " d-text-accent" : ""), "middle");
+    });
+    H.text(plot, 335, 166, "share of readers who reach each sentence (illustrative)", "d-label", "middle");
+    var rs = rules(), score = rs.filter(function (x) { return x[1]; }).length;
+    var bad = rs.filter(function (x) { return !x[1]; }).map(function (x) { return x[0]; });
+    readout.textContent = "order score " + score + "/5 · recommendation at sentence " + (rp + 1) + " · about " + REACH[rp] + "% of readers reach it" + (bad.length ? " · next: " + bad[0] : " · BLUF");
+  }
+  document.getElementById("exec-shuffle").addEventListener("click", function () { order = DEF.slice(); render(); });
+  render();
+})();
+
+/* ---------- 15.3 slide headline rewriter ---------- */
+(function () {
+  if (!document.getElementById("present-demo")) return;
+  var H = DA15, S = H.svg;
+  var input = document.getElementById("present-title"), plot = document.getElementById("present-plot"), readout = document.getElementById("present-readout");
+  var BARS = [["Full price", 6.0], ["Referral", 7.1], ["30% off", 8.9], ["60% off box 1", 14.0]];
+  var VERB = /\b(is|are|was|were|rose|rise|rises|risen|fell|fall|falls|drop|drops|dropped|grew|grow|grows|double|doubled|doubles|triple|tripled|cut|cuts|drive|drives|drove|beat|beats|leave|leaves|left|quit|quits|cancel|cancels|cancelled|churns|lose|loses|lost|keep|keeps|kept|stay|stays|stayed|increase|increased|increases|decrease|decreased|decreases|reduce|reduced|reduces|raise|raised|raises|outperform|outperforms|lag|lags|halve|halves|halved|jump|jumps|jumped|climb|climbs|climbed|cost|costs|need|needs|should|explain|explains|account|accounts|make|makes|made)\b/i;
+  var CHURNV = /\bchurn\s+(\d|faster|slower|more|less|at|twice)/i;
+  var SEG = /(promo|60\s*%|discount|first[- ]box|box 1)/i;
+  var CMP = /(faster|slower|\bmore\b|\bless\b|fewer|\bthan\b|\bvs\.?\b|versus|×|\d\s*x\b|times|higher|lower|double|twice|\bhalf\b|compared)/i;
+  var PRE = { p1: "Churn by acquisition offer", p2: "Churn is a problem we need to look at more closely",
+    p3: "Month-2 churn: full price 6.0%, referral 7.1%, 30% off 8.9%, 60% off 14.0%" };
+  function checks(t) {
+    var words = t.trim() ? t.trim().split(/\s+/).length : 0;
+    return [
+      ["verb", VERB.test(t) || CHURNV.test(t)],
+      ["number", /\d/.test(t)],
+      ["segment", SEG.test(t)],
+      ["comparison", CMP.test(t)],
+      ["length", words >= 6 && words <= 15, words]
+    ];
+  }
+  function draw() {
+    var t = input.value, cs = checks(t), seg = cs[2][1];
+    var score = cs.filter(function (c) { return c[1]; }).length;
+    H.clear(plot);
+    S("rect", { x: 4, y: 4, width: 440, height: 240, rx: 8, "class": "d-box" }, plot);
+    var lines = H.wrap(t || "(empty title)", 46).slice(0, 3);
+    lines.forEach(function (ln, i) { H.text(plot, 20, 30 + i * 19, ln, "d-title"); });
+    var top = 30 + lines.length * 19 + 14;
+    var sc = 230 / 14;
+    BARS.forEach(function (b, i) {
+      var y = top + i * ((236 - top) / 4.3);
+      var hi = i === 3 && seg;
+      H.text(plot, 108, y + 13, b[0], "d-label" + (hi ? " d-text-accent" : ""), "end");
+      S("rect", { x: 114, y: y, width: b[1] * sc, height: 18, rx: 3, "class": hi ? "d-accent" : (seg ? "d-fill" : "d-box") }, plot);
+      H.text(plot, 120 + b[1] * sc, y + 13, b[1].toFixed(1) + "%", "d-mono" + (hi ? " d-text-accent" : ""));
+    });
+    H.text(plot, 464, 26, "TITLE CHECKS", "d-label");
+    cs.forEach(function (c, i) {
+      var y = 44 + i * 36;
+      S("rect", { x: 460, y: y, width: 172, height: 28, rx: 14, "class": c[1] ? "d-good" : "d-signal" }, plot);
+      var label = c[0] === "length" ? "6–15 words (" + c[2] + ")" : c[0] === "segment" ? "names the segment" : "has a " + c[0];
+      H.text(plot, 546, y + 18, (c[1] ? "✓ " : "✗ ") + label, "d-label " + (c[1] ? "d-text-good" : "d-text-signal"), "middle");
+    });
+    H.text(plot, 546, 236, score + " / 5", "d-title", "middle");
+    var miss = cs.filter(function (c) { return !c[1]; }).map(function (c) { return c[0]; });
+    readout.textContent = "title score " + score + "/5" + (miss.length ? " · missing: " + miss.join(", ") : " · a takeaway title");
+  }
+  input.addEventListener("input", draw);
+  ["p1", "p2", "p3"].forEach(function (k) {
+    document.getElementById("present-" + k).addEventListener("click", function () { input.value = PRE[k]; draw(); });
+  });
+  draw();
+})();
+
+/* ---------- 15.4 analysis doc outline checker ---------- */
+(function () {
+  if (!document.getElementById("docs-demo")) return;
+  var H = DA15, S = H.svg;
+  var PLACES = ["top", "body", "app", "omit"], PLABEL = ["Top", "Body", "Appendix", "Omit"];
+  var SECS = [
+    { k: "tldr", n: "TL;DR", m: 0.5, ok: ["top"], def: "omit", msg: "TL;DR belongs at the top" },
+    { k: "q", n: "Question & decision", m: 0.5, ok: ["top"], def: "body", msg: "put the question and decision at the top" },
+    { k: "rec", n: "Recommendation", m: 1, ok: ["top", "body"], def: "body", msg: "the recommendation must be in the main doc" },
+    { k: "find", n: "Key findings", m: 4, ok: ["body"], def: "body", msg: "findings go in the body" },
+    { k: "lim", n: "Limitations", m: 1, ok: ["body"], def: "omit", msg: "limitations belong in the main body" },
+    { k: "meth", n: "Method & data", m: 3, ok: ["body", "app"], def: "top", msg: "method at the top delays the answer" },
+    { k: "qry", n: "Full SQL queries", m: 6, ok: ["app"], def: "body", msg: "queries go in the appendix" },
+    { k: "expl", n: "Exploratory charts", m: 8, ok: ["app", "omit"], def: "body", msg: "exploratory charts go in the appendix or nowhere" },
+    { k: "defs", n: "Metric definitions", m: 1, ok: ["body", "app"], def: "omit", msg: "define your metrics somewhere" }
+  ];
+  var ctr = document.getElementById("docs-controls"), plot = document.getElementById("docs-plot"), readout = document.getElementById("docs-readout");
+  SECS.forEach(function (s, i) {
+    var lab = document.createElement("label"); lab.setAttribute("for", "docs-s" + i);
+    lab.appendChild(document.createTextNode(s.n + " "));
+    var sel = document.createElement("select"); sel.id = "docs-s" + i;
+    PLACES.forEach(function (p, j) { var o = document.createElement("option"); o.value = p; o.textContent = PLABEL[j]; sel.appendChild(o); });
+    sel.value = s.def; sel.addEventListener("change", draw);
+    lab.appendChild(sel); ctr.appendChild(lab); s.sel = sel;
+  });
+  var reset = document.createElement("button"); reset.type = "button"; reset.className = "btn"; reset.textContent = "Reset outline";
+  reset.addEventListener("click", function () { SECS.forEach(function (s) { s.sel.value = s.def; }); draw(); });
+  ctr.appendChild(reset);
+  function fmt(m) { return (Math.round(m * 10) / 10).toString(); }
+  function draw() {
+    var place = {}; SECS.forEach(function (s) { place[s.k] = s.sel.value; });
+    var issues = SECS.filter(function (s) { return s.ok.indexOf(place[s.k]) < 0; });
+    var main = SECS.filter(function (s) { return place[s.k] === "top"; }).concat(SECS.filter(function (s) { return place[s.k] === "body"; }));
+    var app = SECS.filter(function (s) { return place[s.k] === "app"; });
+    var omit = SECS.filter(function (s) { return place[s.k] === "omit"; });
+    var mainMin = main.reduce(function (a, s) { return a + s.m; }, 0);
+    var t = 0, ans = null;
+    for (var i = 0; i < main.length; i++) { if (main[i].k === "tldr" || main[i].k === "rec") { ans = t; break; } t += main[i].m; }
+    H.clear(plot);
+    H.text(plot, 20, 18, "MAIN DOC · " + fmt(mainMin) + " min", "d-label");
+    H.text(plot, 360, 18, "APPENDIX", "d-label");
+    function column(arr, x, w) {
+      var y = 28, prevTop = null, ys = {};
+      arr.forEach(function (s) {
+        var isTop = place[s.k] === "top";
+        if (prevTop === true && !isTop) { S("line", { x1: x, y1: y - 1, x2: x + w, y2: y - 1, "class": "d-line d-dash" }, plot); y += 4; }
+        prevTop = isTop;
+        var h = 14 + s.m * 4.5, bad = s.ok.indexOf(place[s.k]) < 0;
+        S("rect", { x: x, y: y, width: w, height: h, rx: 4, "class": bad ? "d-signal" : "d-good" }, plot);
+        H.text(plot, x + 8, y + h / 2 + 4, s.n + " · " + fmt(s.m) + " min", "d-label");
+        ys[s.k] = y + h / 2; y += h + 3;
+      });
+      return ys;
+    }
+    var ys = column(main, 20, 230);
+    column(app, 360, 230);
+    if (ans != null) {
+      var ak = main.filter(function (s) { return s.k === "tldr" || s.k === "rec"; })[0].k;
+      S("line", { x1: 256, y1: ys[ak], x2: 290, y2: ys[ak], "class": "d-line-accent" }, plot);
+      H.text(plot, 294, ys[ak] - 2, "answer", "d-label d-text-accent");
+      H.text(plot, 294, ys[ak] + 12, "at " + fmt(ans) + " min", "d-label d-text-accent");
+    }
+    if (omit.length) H.text(plot, 360, 312, "Omitted: " + omit.map(function (s) { return s.n; }).join(", "), "d-label");
+    readout.textContent = "issues " + issues.length + " · main doc " + fmt(mainMin) + " min · answer " + (ans == null ? "never reached" : "after " + fmt(ans) + " min") +
+      (issues.length ? " · " + issues[0].msg : " · clean outline");
+  }
+  draw();
+})();
+
+/* ---------- 15.5 stakeholder map ---------- */
+(function () {
+  if (!document.getElementById("stake-demo")) return;
+  var H = DA15, S = H.svg;
+  var P = [
+    { n: "VP of Growth", p: "Asked for the analysis and owns the promo decision. Wants to hear about progress every week.", hi: [true, true] },
+    { n: "CFO", p: "Must sign off on any change to discount budgets, but rarely reads analytics and has no strong view on churn.", hi: [true, false] },
+    { n: "Campaign manager", p: "Runs the promo day to day and her signup target depends on it. Cannot approve pricing changes herself.", hi: [false, true] },
+    { n: "Support team lead", p: "Hears from cancelling customers every day and wants to know the outcome. Has no say in pricing.", hi: [false, true] },
+    { n: "Brand designer", p: "Makes the promo banners. Has no say in pricing and is not affected by churn.", hi: [false, false] }
+  ];
+  P.forEach(function (x) { x.inf = 5; x.int = 5; });
+  var who = document.getElementById("stake-who"), inf = document.getElementById("stake-inf"), inte = document.getElementById("stake-int");
+  var infO = document.getElementById("stake-inf-out"), intO = document.getElementById("stake-int-out");
+  var prof = document.getElementById("stake-profile"), plot = document.getElementById("stake-plot"), readout = document.getElementById("stake-readout");
+  H.fill(who, P.map(function (x) { return x.n; }));
+  function quad(x) {
+    if (x.inf === 5 || x.int === 5) return "on the line";
+    return x.inf > 5 ? (x.int > 5 ? "manage closely" : "keep satisfied") : (x.int > 5 ? "keep informed" : "monitor");
+  }
+  function right(x) { return x.inf !== 5 && x.int !== 5 && (x.inf > 5) === x.hi[0] && (x.int > 5) === x.hi[1]; }
+  function X(v) { return 70 + v * 54; }
+  function Y(v) { return 270 - v * 25; }
+  function draw() {
+    var cur = P[+who.value];
+    H.clear(plot);
+    S("rect", { x: X(0), y: Y(10), width: 270, height: 125, "class": "d-fill" }, plot);
+    S("rect", { x: X(5), y: Y(10), width: 270, height: 125, "class": "d-accent" }, plot);
+    S("rect", { x: X(0), y: Y(5), width: 270, height: 125, "class": "d-box" }, plot);
+    S("rect", { x: X(5), y: Y(5), width: 270, height: 125, "class": "d-fill" }, plot);
+    H.text(plot, X(0) + 10, Y(10) + 18, "Keep satisfied", "d-label");
+    H.text(plot, X(10) - 10, Y(10) + 18, "Manage closely", "d-label", "end");
+    H.text(plot, X(0) + 10, Y(0) - 8, "Monitor", "d-label");
+    H.text(plot, X(10) - 10, Y(0) - 8, "Keep informed", "d-label", "end");
+    H.text(plot, 340, 292, "interest in the outcome →", "d-label", "middle");
+    H.text(plot, 36, 145, "influence →", "d-label", "middle").setAttribute("transform", "rotate(-90 36 145)");
+    var seen = {};
+    P.forEach(function (x, i) {
+      var key = x.inf + "," + x.int, k = seen[key] = (seen[key] || 0) + 1;
+      var cx = X(x.int), cy = Y(x.inf);
+      var sel = x === cur;
+      if (sel) S("circle", { cx: cx, cy: cy, r: 12, "class": "d-line-accent" }, plot);
+      S("circle", { cx: cx, cy: cy, r: 6, "class": right(x) ? "d-dot-good" : (quad(x) === "on the line" ? "d-dot-muted" : "d-dot-signal") }, plot);
+      var left = cx > 470;
+      H.text(plot, cx + (left ? -16 : 16), cy + 4 + (k - 1) * 14, x.n, "d-text" + (sel ? " d-text-accent" : ""), left ? "end" : "start");
+    });
+    var n = P.filter(right).length;
+    readout.textContent = "placed " + n + "/5 correctly · " + cur.n + ": " + quad(cur) + (right(cur) ? " ✓" : "");
+  }
+  function sync() {
+    var cur = P[+who.value];
+    inf.value = cur.inf; inte.value = cur.int; infO.textContent = cur.inf; intO.textContent = cur.int; prof.textContent = cur.n + ": " + cur.p; draw();
+  }
+  who.addEventListener("change", sync);
+  inf.addEventListener("input", function () { var c = P[+who.value]; c.inf = +inf.value; infO.textContent = c.inf; draw(); });
+  inte.addEventListener("input", function () { var c = P[+who.value]; c.int = +inte.value; intO.textContent = c.int; draw(); });
+  sync();
+})();
+
+/* ---------- 15.6 recommendation builder ---------- */
+(function () {
+  if (!document.getElementById("rec-demo")) return;
+  var H = DA15, S = H.svg;
+  var OPT = [
+    { n: "Cap the first-box promo at 30% off", lo: 20, hi: 60, mid: 40, cost: 15 },
+    { n: "Remove the promo entirely", lo: -30, hi: 80, mid: 25, cost: 5 },
+    { n: "Add onboarding emails for promo signups", lo: 5, hi: 15, mid: 10, cost: 30 }
+  ];
+  var NEXT = {
+    "Do it now": "Launch with the 1 Nov campaign; review month-2 churn on 1 Dec.",
+    "Roll out with a holdout": "Launch to 90%, keep 10% on the old offer; review in 4 weeks.",
+    "Test first": "Run a 4-week A/B test from 22 Oct; decide at the 19 Nov readout.",
+    "Gather more evidence": "Too uncertain to recommend: check another cohort before deciding.",
+    "Don't recommend": "Drop this option: expected value is below its cost."
+  };
+  var opt = document.getElementById("rec-opt"), conf = document.getElementById("rec-conf"), confO = document.getElementById("rec-conf-out"),
+    rev = document.getElementById("rec-rev"), plot = document.getElementById("rec-plot"), readout = document.getElementById("rec-readout");
+  function verdict(p, ev, r) {
+    if (ev <= 0) return ["Don't recommend", "d-signal"];
+    if (p >= 0.8) return ["Do it now", "d-good"];
+    if (p < 0.4) return ["Gather more evidence", "d-box"];
+    return r ? ["Roll out with a holdout", "d-accent"] : ["Test first", "d-accent"];
+  }
+  function draw() {
+    var o = OPT[+opt.value], p = +conf.value / 100, r = rev.checked;
+    confO.textContent = conf.value + "%";
+    var ev = Math.round(12 * p * o.mid - o.cost);
+    var v = verdict(p, ev, r), word = p >= 0.8 ? "high" : p >= 0.5 ? "medium" : "low";
+    H.clear(plot);
+    S("rect", { x: 4, y: 4, width: 632, height: 242, rx: 10, "class": "d-box" }, plot);
+    H.text(plot, 20, 30, "Recommend: " + o.n.charAt(0).toLowerCase() + o.n.slice(1), "d-title");
+    H.text(plot, 20, 60, "IMPACT", "d-label d-text-accent");
+    function xs(k) { return 140 + (k + 40) * 3.6; }
+    S("line", { x1: xs(-40), y1: 80, x2: xs(90), y2: 80, "class": "d-line" }, plot);
+    S("line", { x1: xs(0), y1: 66, x2: xs(0), y2: 92, "class": "d-line d-dash" }, plot);
+    [-40, 0, 40, 80].forEach(function (k) { H.text(plot, xs(k), 104, (k > 0 ? "+" : k < 0 ? "−" : "") + "$" + Math.abs(k) + "k", "d-label", "middle"); });
+    S("line", { x1: xs(o.lo), y1: 80, x2: xs(o.hi), y2: 80, "class": o.lo < 0 ? "d-line-signal" : "d-line-accent", "stroke-width": 10, "stroke-linecap": "round" }, plot);
+    S("circle", { cx: xs(o.mid), cy: 80, r: 7, "class": "d-dot-good" }, plot);
+    H.text(plot, 20, 76, (o.lo < 0 ? "−$" + (-o.lo) : "+$" + o.lo) + "k to +$" + o.hi + "k", "d-mono");
+    H.text(plot, 20, 92, "a month", "d-label");
+    H.text(plot, 20, 134, "CONFIDENCE", "d-label d-text-accent");
+    S("rect", { x: 140, y: 122, width: 200, height: 14, rx: 7, "class": "d-fill" }, plot);
+    S("rect", { x: 140, y: 122, width: 200 * p, height: 14, rx: 7, "class": "d-accent" }, plot);
+    H.text(plot, 352, 134, word + " (" + Math.round(p * 100) + "%) · " + (r ? "easy to reverse" : "hard to reverse"), "d-text");
+    H.text(plot, 20, 166, "VALUE", "d-label d-text-accent");
+    H.text(plot, 140, 166, Math.round(p * 100) + "% × $" + o.mid + "k × 12 − $" + o.cost + "k = " + (ev >= 0 ? "+$" : "−$") + Math.abs(ev) + "k a year", "d-mono");
+    S("rect", { x: 20, y: 184, width: 210, height: 30, rx: 15, "class": v[1] }, plot);
+    H.text(plot, 125, 204, v[0], "d-title", "middle");
+    H.text(plot, 244, 204, NEXT[v[0]], "d-label");
+    readout.textContent = "verdict: " + v[0] + " · expected value " + (ev >= 0 ? "+$" : "−$") + Math.abs(ev) + "k a year · confidence " + word + " (" + Math.round(p * 100) + "%)";
+  }
+  [opt, rev].forEach(function (c) { c.addEventListener("change", draw); });
+  conf.addEventListener("input", draw);
+  draw();
+})();
+</script>
+</body>
+</html>

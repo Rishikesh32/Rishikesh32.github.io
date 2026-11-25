@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data Analyst Atlas</title>
+<meta name="description" content="Every skill a data analyst needs, mapped and explained with animated scenes, live demos and self-checks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</head>
+<body data-page="home">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="overall-bar"></i></span><span class="num" data-fill="pct">0%</span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="home-hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">A study map for turning data into decisions</p>
+        <h1>What a data analyst needs to master</h1>
+        <p class="lede">Sixteen areas, from statistics and SQL to experiments, dashboards and storytelling. Each lesson plays as an animated, step-by-step scene with live demos, a quick check and a daily review, so the ideas stick.</p>
+        <div class="stats" aria-label="Atlas totals">
+          <div><span class="big" data-fill="n-areas">16</span><span class="eyebrow">Areas</span></div>
+          <div><span class="big" data-fill="n-subs">106</span><span class="eyebrow">Subtopics</span></div>
+          <div><span class="big" data-fill="n-done">0</span><span class="eyebrow">Mastered</span></div>
+          <div class="overall"><span>Overall</span><span class="bar"><i data-fill="overall-bar"></i></span><span class="num" data-fill="pct">0%</span></div>
+        </div>
+      </div>
+      <div class="atlas3d" id="atlas3d" role="img" aria-label="3D map of the 16 areas, grouped into five tiers, with packets flowing along the learning path. The same map is available below as cards and a diagram.">
+        <div class="a3-hud"><span class="a3-badge">3D</span><span>Drag to turn · click an area to open it</span></div>
+        <div class="a3-tip" hidden></div>
+        <div class="a3-labels" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="map-section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>The learning path</h2>
+        <span class="muted" style="font-size:.92rem">Arrows show the main path between neighbouring tiers. Hover an area to highlight everything it builds on.</span>
+      </div>
+      <div class="map-frame" id="map" aria-live="polite"></div>
+      <div class="map-legend">
+        <span>Green bar in each node = subtopics you've marked as mastered</span>
+        <span>Tier 5 areas can be started any time after Deep learning</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cards-section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>All areas</h2>
+        <button class="reset-btn" id="reset-progress" type="button">Reset progress</button>
+      </div>
+      <div id="cards"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">Progress is saved in this browser only. Suggested order: work through tiers 1–2 in sequence, then tiers 3–4, and pick a specialization when you're ready.</div>
+</footer>
+<script src="assets/hero3d.js"></script>
+</body>
+</html>

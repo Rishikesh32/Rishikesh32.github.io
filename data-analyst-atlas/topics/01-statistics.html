@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Statistics foundations · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="statistics">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Statistics foundations</h1>
+    <p class="lede">Every number you report in an analytics dashboard or presentation carries uncertainty. Statistics is the mathematical toolkit for summarizing messy data, separating genuine signals from random noise, estimating population parameters from limited samples, and avoiding the classic cognitive and analytical traps that fool decision-makers.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">From summarizing raw distributions to estimating population parameters and testing hypotheses, statistics underpins every analytical decision. The diagram below illustrates how descriptive summaries, sampling distributions, and statistical inference connect to separate signal from noise.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 220" role="img" aria-label="Statistical reasoning workflow: population to sampling to sample statistics to inference and hypothesis testing.">
+              <rect class="d-accent" x="20" y="30" width="180" height="70" rx="8"/>
+              <text class="d-title" x="110" y="58" text-anchor="middle">Unknown Population</text>
+              <text class="d-label" x="110" y="78" text-anchor="middle">μ, σ² (all users/orders)</text>
+
+              <line class="d-line-accent" x1="200" y1="65" x2="280" y2="65"/>
+              <text class="d-label" x="240" y="55" text-anchor="middle">Random Sample</text>
+
+              <rect class="d-box" x="280" y="30" width="180" height="70" rx="8"/>
+              <text class="d-title" x="370" y="58" text-anchor="middle">Sample Statistics</text>
+              <text class="d-mono" x="370" y="78" text-anchor="middle">x̄, s, median, IQR</text>
+
+              <line class="d-line-accent" x1="460" y1="65" x2="540" y2="65"/>
+              <text class="d-label" x="500" y="55" text-anchor="middle">CLT &amp; SE</text>
+
+              <rect class="d-good" x="540" y="30" width="200" height="70" rx="8"/>
+              <text class="d-title" x="640" y="58" text-anchor="middle">Statistical Inference</text>
+              <text class="d-label" x="640" y="78" text-anchor="middle">95% CI &amp; Hypothesis Tests</text>
+
+              <rect class="d-fill" x="20" y="130" width="720" height="60" rx="8"/>
+              <text class="d-label" x="40" y="155">Core rule: Sample statistics (x̄) estimate population parameters (μ). Because of sampling variability,</text>
+              <text class="d-label" x="40" y="175">never quote a single point estimate without quantifying its uncertainty via confidence intervals or standard error.</text>
+            </svg>
+          </div>
+          <figcaption>The workflow of inferential statistics: from unobserved population parameters to empirical samples and rigorous confidence bounds.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="descriptive">
+        <header class="topic-head">
+          <p class="eyebrow">01.1 · Summarizing data</p>
+          <h2>Descriptive statistics</h2>
+        </header>
+
+        <p class="lead">Before running models or hypothesis tests, you must understand the shape, center, and spread of your data. A single number never tells the whole story, and choosing the wrong summary metric can lead to disastrous business decisions.</p>
+
+        <h3>Measures of Central Tendency</h3>
+        <ul>
+          <li><strong>Mean (\(\bar{x}\)):</strong> The arithmetic average: \(\bar{x} = \frac{1}{n}\sum x_i\). Highly sensitive to extreme values.</li>
+          <li><strong>Median:</strong> The 50th percentile. Half the observations fall above, half below. Robust against heavy tails and outliers.</li>
+          <li><strong>Mode:</strong> The most frequently occurring value, particularly useful for categorical variables and discrete distributions.</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>The Skewness Trap</h4>
+          <p>In right-skewed distributions (such as customer lifetime value, income, or page load times), a tiny fraction of enormous numbers pulls the mean far to the right of the median. If a company claims "our average customer spends $450", but the median is $35, designing product tiers for the mean alienates 80% of your real audience.</p>
+        </div>
+
+        <h3>Measures of Dispersion</h3>
+        <p>Knowing the center without the spread is dangerous. We measure dispersion using:</p>
+        <ul>
+          <li><strong>Variance (\(s^2\)):</strong> The average squared deviation from the mean: \(s^2 = \frac{1}{n-1}\sum (x_i - \bar{x})^2\).</li>
+          <li><strong>Standard Deviation (\(s\)):</strong> The square root of variance, returned to the original units of measurement.</li>
+          <li><strong>Interquartile Range (IQR):</strong> \(Q_3 - Q_1\), capturing the span of the middle 50% of the data. Outliers are conventionally flagged as any point outside \([Q_1 - 1.5 \times \text{IQR}, Q_3 + 1.5 \times \text{IQR}]\).</li>
+        </ul>
+      </section>
+
+      <section class="topic" id="distributions">
+        <header class="topic-head">
+          <p class="eyebrow">01.2 · Probability models</p>
+          <h2>Distributions</h2>
+        </header>
+
+        <p class="lead">A probability distribution describes how probabilities are distributed over values of a random variable. Recognizing which theoretical distribution matches your empirical data allows you to calculate expected value, risk, and confidence.</p>
+
+        <h3>Core Distributions in Analytics</h3>
+        <ul>
+          <li><strong>Normal (Gaussian) Distribution:</strong> Symmetrical bell curve governed by mean \(\mu\) and standard deviation \(\sigma\). Governs phenomena shaped by the addition of many independent random factors.</li>
+          <li><strong>Poisson Distribution:</strong> Models counts of events occurring in a fixed interval of time or space (e.g. support calls per minute, server crash events) at a constant average rate \(\lambda\).</li>
+          <li><strong>Binomial Distribution:</strong> Models the number of successes in \(n\) independent Bernoulli trials with probability \(p\) (e.g. number of conversions out of 1,000 visitors).</li>
+          <li><strong>Exponential Distribution:</strong> Models the continuous time between events in a Poisson point process (e.g. time until next customer churn or machinery failure).</li>
+          <li><strong>Log-Normal &amp; Power Law Distributions:</strong> Heavy-tailed distributions where rare events dominate total volume (e.g. web traffic, wealth, file sizes).</li>
+        </ul>
+
+        <div class="callout why">
+          <h4>The Empirical Rule (68–95–99.7)</h4>
+          <p>For any normally distributed variable:</p>
+          <ul>
+            <li>\(\approx 68.2\%\) of observations fall within \(\mu \pm 1\sigma\)</li>
+            <li>\(\approx 95.4\%\) of observations fall within \(\mu \pm 2\sigma\)</li>
+            <li>\(\approx 99.7\%\) of observations fall within \(\mu \pm 3\sigma\)</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="probability">
+        <header class="topic-head">
+          <p class="eyebrow">01.3 · Reasoning under uncertainty</p>
+          <h2>Probability</h2>
+        </header>
+
+        <p class="lead">Probability provides the mathematical framework for making decisions under uncertainty. Understanding conditional probability and Bayesian updating prevents intuitive reasoning errors that plague business analysis.</p>
+
+        <h3>Conditional Probability &amp; Independence</h3>
+        <p>The probability of event \(A\) occurring given that event \(B\) has already occurred is:</p>
+        <p>$$P(A \mid B) = \frac{P(A \cap B)}{P(B)}$$</p>
+        <p>Two events are <strong>statistically independent</strong> if and only if \(P(A \cap B) = P(A) \times P(B)\), meaning knowing the outcome of \(B\) provides zero information about \(A\).</p>
+
+        <h3>Bayes' Theorem</h3>
+        <p>Bayes' Theorem formalizes how prior beliefs should update when confronted with new empirical evidence:</p>
+        <p>$$P(\text{Hypothesis} \mid \text{Evidence}) = \frac{P(\text{Evidence} \mid \text{Hypothesis}) \times P(\text{Hypothesis})}{P(\text{Evidence})}$$</p>
+
+        <div class="callout trap">
+          <h4>The Base Rate Fallacy</h4>
+          <p>Suppose a fraud detection algorithm is 99% accurate: if an account is fraudulent, it alerts 99% of the time, and if legitimate, it alerts only 1% of the time. If only 0.1% of accounts are actually fraudulent, what is the probability an alerted account is truly fraud? Applying Bayes' Theorem reveals it is only \(\approx 9\%\)! The tiny base rate of fraud means the overwhelming majority of alerts are false positives.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="sampling">
+        <header class="topic-head">
+          <p class="eyebrow">01.4 · The bridge to inference</p>
+          <h2>Sampling &amp; the central limit theorem</h2>
+        </header>
+
+        <p class="lead">You rarely have access to complete population data. Instead, you observe samples. The Central Limit Theorem is the foundational theorem of inferential statistics that allows us to make probabilistic statements about unknown populations.</p>
+
+        <h3>The Central Limit Theorem (CLT)</h3>
+        <p>The Central Limit Theorem states that as sample size \(n\) increases, the sampling distribution of the sample mean \(\bar{x}\) approaches a normal distribution, <strong>regardless of the shape of the underlying population distribution</strong>, with:</p>
+        <p>$$\text{Mean} = \mu \quad \text{and} \quad \text{Standard Error (SE)} = \frac{\sigma}{\sqrt{n}}$$</p>
+
+        <h3>Standard Error vs Standard Deviation</h3>
+        <ul>
+          <li><strong>Standard Deviation (\(s\)):</strong> Measures the spread of individual observations in the population or sample.</li>
+          <li><strong>Standard Error (\(\text{SE}\)):</strong> Measures the precision of the sample statistic (how much \(\bar{x}\) would bounce around across repeated samples). As sample size quadruples, standard error is halved.</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>Sampling Bias</h4>
+          <p>The CLT only holds if the sample is an independent and identically distributed (i.i.d.) random sample. Convenience samples, voluntary responses, and survivorship bias (e.g. analyzing only active users while ignoring churned ones) introduce systematic biases that no amount of sample size can fix.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="inference">
+        <header class="topic-head">
+          <p class="eyebrow">01.5 · Testing hypotheses</p>
+          <h2>Confidence intervals &amp; hypothesis tests</h2>
+        </header>
+
+        <p class="lead">Inferential statistics allows us to draw conclusions about a wider population from sample evidence. Hypothesis testing formalizes decision-making, while confidence intervals quantify the precision of our estimates.</p>
+
+        <h3>Constructing Confidence Intervals</h3>
+        <p>A \(95\%\) confidence interval for a population mean is calculated as:</p>
+        <p>$$\text{CI}_{95\%} = \bar{x} \pm t^* \times \frac{s}{\sqrt{n}}$$</p>
+        <p>Where \(t^*\) is the critical value from the Student's t-distribution corresponding to the chosen confidence level and degrees of freedom \(n - 1\).</p>
+
+        <h3>Hypothesis Testing Framework</h3>
+        <ol>
+          <li><strong>State Hypotheses:</strong> Null hypothesis \(H_0\) (no difference / effect) vs Alternative \(H_1\) (treatment effect).</li>
+          <li><strong>Choose Significance Level (\(\alpha\)):</strong> Typically set to 0.05, representing the maximum acceptable Type I error rate.</li>
+          <li><strong>Compute Test Statistic &amp; p-value:</strong> Calculate the probability of observing data at least as extreme as our sample, assuming \(H_0\) is true.</li>
+          <li><strong>Decide:</strong> If \(p \le \alpha\), reject \(H_0\); otherwise, fail to reject \(H_0\).</li>
+        </ol>
+
+        <div class="callout why">
+          <h4>Type I vs Type II Errors</h4>
+          <table>
+            <tr><th>Truth \ Decision</th><th>Fail to reject \(H_0\)</th><th>Reject \(H_0\)</th></tr>
+            <tr><td>\(H_0\) is True</td><td>Correct (\(1 - \alpha\))</td><td><strong>Type I Error (\(\alpha\))</strong> — False Positive</td></tr>
+            <tr><td>\(H_0\) is False</td><td><strong>Type II Error (\(\beta\))</strong> — False Negative</td><td><strong>Power (\(1 - \beta\))</strong> — True Positive</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="topic" id="correlation">
+        <header class="topic-head">
+          <p class="eyebrow">01.6 · Associational traps</p>
+          <h2>Correlation vs causation</h2>
+        </header>
+
+        <p class="lead">"Correlation does not imply causation" is the most repeated axiom in statistics, yet confusing the two remains the single most common cause of executive misdirection. Analysts must rigorously distinguish correlation from causal mechanisms.</p>
+
+        <h3>Measuring Linear and Monotonic Association</h3>
+        <ul>
+          <li><strong>Pearson's \(r\):</strong> Measures linear association between continuous variables, bounded between \(-1\) and \(+1\). It is vulnerable to non-linear curvature and extreme outliers.</li>
+          <li><strong>Spearman's \(\rho\):</strong> Measures monotonic rank relationships, resilient to outliers and non-linear monotonic trends.</li>
+        </ul>
+
+        <h3>Causal Threats &amp; Confounding</h3>
+        <p>When variable \(X\) is correlated with variable \(Y\), four causal explanations exist:</p>
+        <ol>
+          <li><strong>Direct Causation:</strong> \(X \to Y\) (e.g. lowering price increases units sold).</li>
+          <li><strong>Reverse Causality:</strong> \(Y \to X\) (e.g. highly engaged users receive more automated emails).</li>
+          <li><strong>Confounding Variable:</strong> A third variable \(Z\) causes both \(X\) and \(Y\) (e.g. heat causes both ice cream sales and swimming drownings).</li>
+          <li><strong>Coincidence:</strong> Spurious correlation produced by random noise in finite samples.</li>
+        </ol>
+
+        <div class="callout trap">
+          <h4>Simpson's Paradox</h4>
+          <p>Simpson's Paradox occurs when a statistical trend appears across distinct subgroups, but reverses when the groups are aggregated. This happens when an unobserved confounding variable creates an uneven distribution of participants across categories. Always inspect segmented data before presenting aggregated conclusions.</p>
+        </div>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Distribution Audit</h4><p>Take an orders or delivery latency dataset. Compute mean, median, IQR, skewness, and standard deviation. Identify extreme outliers and plot a histogram with fitted normal and log-normal density curves.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Confidence Interval Simulation</h4><p>Write a script that draws 1,000 random samples from an exponential distribution. Calculate 95% confidence intervals for each sample and verify that empirically 95% of the intervals contain the true population mean.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Confounder &amp; Simpson's Analysis</h4><p>Analyze a historical conversion dataset across multiple marketing channels. Identify an instance where aggregate conversion dropped despite increasing across every individual channel due to an unaddressed mix-shift.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="stat-1"><span>Select appropriate summary metrics for skewed vs symmetrical distributions</span></label></li>
+          <li><label><input type="checkbox" data-key="stat-2"><span>Apply the Central Limit Theorem to calculate standard errors and margin of error</span></label></li>
+          <li><label><input type="checkbox" data-key="stat-3"><span>Construct and correctly interpret frequentist confidence intervals</span></label></li>
+          <li><label><input type="checkbox" data-key="stat-4"><span>Formulate null hypotheses and evaluate p-values with Type I and Type II error bounds</span></label></li>
+          <li><label><input type="checkbox" data-key="stat-5"><span>Update probabilistic beliefs using Bayes' Theorem without committing base-rate fallacies</span></label></li>
+          <li><label><input type="checkbox" data-key="stat-6"><span>Disentangle confounding factors and identify Simpson's Paradox in real-world data</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+</body>
+</html>

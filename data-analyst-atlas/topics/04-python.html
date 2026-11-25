@@ -1,0 +1,1781 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Python for data · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="python">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Python for data</h1>
+    <p class="lede">Python with pandas is the analyst's workbench for anything too big, too messy or too repetitive for a spreadsheet. You will go from core Python and NumPy to DataFrames, joins and reshapes, then learn to keep notebooks honest and turn one-off cells into analysis code you can rerun every week.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every analysis in Python follows the same path. Raw files come in, you load them into a pandas DataFrame (which sits on top of NumPy arrays and plain Python), you clean, join and reshape them into the table the question needs, and you hand back a number, a chart or a report. Notebooks are where you explore that path; functions and modules are how you make it repeatable. The six lessons follow the path from the inside out.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 260" role="img" aria-label="The Python analysis path: orders.csv is loaded into a pandas DataFrame built on NumPy arrays and core Python, then merged and reshaped into a report. Notebooks are where you explore, and reusable functions turn the path into code you can rerun.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="60" width="104" height="60" rx="8"/>
+              <text class="d-title" x="62" y="86" text-anchor="middle">orders.csv</text>
+              <text class="d-label" x="62" y="104" text-anchor="middle">raw export</text>
+              <line class="d-line-accent" x1="114" y1="90" x2="176" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label" x="145" y="80" text-anchor="middle">read_csv</text>
+              <rect class="d-accent" x="178" y="40" width="190" height="100" rx="10"/>
+              <text class="d-title" x="273" y="64" text-anchor="middle">pandas DataFrame · 03</text>
+              <rect class="d-box" x="192" y="76" width="162" height="24" rx="5"/>
+              <text class="d-label" x="273" y="92" text-anchor="middle">NumPy arrays · 02</text>
+              <rect class="d-box" x="192" y="106" width="162" height="24" rx="5"/>
+              <text class="d-label" x="273" y="122" text-anchor="middle">core Python · 01</text>
+              <line class="d-line-accent" x1="368" y1="90" x2="430" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label" x="399" y="80" text-anchor="middle">clean</text>
+              <rect class="d-box" x="432" y="56" width="150" height="68" rx="8"/>
+              <text class="d-title" x="507" y="84" text-anchor="middle">Merge &amp; reshape</text>
+              <text class="d-label" x="507" y="104" text-anchor="middle">04 · join, pivot, melt</text>
+              <line class="d-line-accent" x1="582" y1="90" x2="644" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label" x="613" y="80" text-anchor="middle">answer</text>
+              <rect class="d-good" x="646" y="60" width="122" height="60" rx="8"/>
+              <text class="d-title" x="707" y="86" text-anchor="middle">Report</text>
+              <text class="d-label" x="707" y="104" text-anchor="middle">table, chart</text>
+              <rect class="d-box d-dash" x="178" y="176" width="190" height="56" rx="8"/>
+              <text class="d-title" x="273" y="200" text-anchor="middle">Notebook · 05</text>
+              <text class="d-label" x="273" y="218" text-anchor="middle">explore, in order</text>
+              <line class="d-line d-dash" x1="273" y1="176" x2="273" y2="142" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="280" y="162">runs</text>
+              <rect class="d-signal" x="432" y="176" width="150" height="56" rx="8"/>
+              <text class="d-title" x="507" y="200" text-anchor="middle">Reusable code · 06</text>
+              <text class="d-label" x="507" y="218" text-anchor="middle">functions, modules</text>
+              <line class="d-line-signal" x1="368" y1="204" x2="430" y2="204" marker-end="url(#ov-arrow-g)"/>
+              <text class="d-label" x="399" y="196" text-anchor="middle">refactor</text>
+              <path class="d-line-signal d-dash" d="M582 204 H707 V122" marker-end="url(#ov-arrow-g)"/>
+              <text class="d-label d-text-signal" x="714" y="170">rerun every</text>
+              <text class="d-label d-text-signal" x="714" y="184">Monday</text>
+            </svg>
+          </div>
+          <figcaption>The path through this area. A CSV becomes a DataFrame (built on NumPy and core Python), gets merged and reshaped into an answer, and the notebook work is finally refactored into functions you can rerun on next week's file.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="python-basics">
+        <header class="topic-head">
+          <p class="eyebrow">04.1 · The language underneath</p>
+          <h2>Python essentials</h2>
+        </header>
+
+        <p class="lead">You don't need all of Python to analyse data. You need values and their types, two containers (the <strong>list</strong>, an ordered sequence, and the <strong>dict</strong>, a set of key-value pairs), loops, comprehensions and small functions. Almost every pandas line you write later is these pieces in disguise.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>API responses arrive as lists of dicts, config lives in dicts, and file names come in lists. When a pandas call fails, the error message talks about these basic types. Knowing them lets you read the traceback instead of guessing.</p>
+        </div>
+
+        <h3>Records: a list of dicts</h3>
+        <p>A natural way to hold a few orders in plain Python is a list where each item is a dict. You reach an order by its position (starting at 0) and a field by its key. This "list of records" shape is exactly what <code>pd.DataFrame(records)</code> turns into a table.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="A list named orders holds three dicts. orders[1] picks the second dict by position, and orders[1]['amount'] then picks the value 18.5 by key.">
+              <defs>
+                <marker id="python-basics-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="python-basics-arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-mono" x="20" y="28">orders = [ … ]</text>
+              <rect class="d-box" x="20" y="44" width="70" height="40" rx="5"/>
+              <text class="d-mono" x="55" y="69" text-anchor="middle">[0]</text>
+              <rect class="d-accent" x="20" y="92" width="70" height="40" rx="5"/>
+              <text class="d-mono" x="55" y="117" text-anchor="middle">[1]</text>
+              <rect class="d-box" x="20" y="140" width="70" height="40" rx="5"/>
+              <text class="d-mono" x="55" y="165" text-anchor="middle">[2]</text>
+              <text class="d-label" x="55" y="200" text-anchor="middle">by position</text>
+              <line class="d-line" x1="90" y1="64" x2="148" y2="40" marker-end="url(#python-basics-arrow-g)"/>
+              <line class="d-line-accent" x1="90" y1="112" x2="148" y2="112" marker-end="url(#python-basics-arrow)"/>
+              <line class="d-line" x1="90" y1="160" x2="148" y2="186" marker-end="url(#python-basics-arrow-g)"/>
+              <rect class="d-box" x="150" y="20" width="200" height="34" rx="6"/>
+              <text class="d-mono" x="160" y="42">{"id": 101, …}</text>
+              <rect class="d-accent" x="150" y="64" width="200" height="98" rx="6"/>
+              <text class="d-mono" x="162" y="86" style="white-space:pre">"id":       102</text>
+              <text class="d-mono" x="162" y="106">"customer": "Ben"</text>
+              <text class="d-mono d-text-accent" x="162" y="126" style="white-space:pre">"amount":   18.5</text>
+              <text class="d-mono" x="162" y="146" style="white-space:pre">"status":   "refunded"</text>
+              <rect class="d-box" x="150" y="172" width="200" height="34" rx="6"/>
+              <text class="d-mono" x="160" y="194">{"id": 103, …}</text>
+              <line class="d-line-accent" x1="350" y1="121" x2="420" y2="121" marker-end="url(#python-basics-arrow)"/>
+              <text class="d-label" x="385" y="112" text-anchor="middle">by key</text>
+              <rect class="d-good" x="422" y="98" width="200" height="46" rx="8"/>
+              <text class="d-mono" x="522" y="118" text-anchor="middle">orders[1]["amount"]</text>
+              <text class="d-title" x="522" y="136" text-anchor="middle">18.5</text>
+              <text class="d-label" x="522" y="176" text-anchor="middle">lists: look up by position, O(n) search</text>
+              <text class="d-label" x="522" y="194" text-anchor="middle">dicts: look up by key, near-instant</text>
+            </svg>
+          </div>
+          <figcaption>A list of dicts is a table in disguise: the list index picks a row and the dict key picks a column. <code>orders[1]["amount"]</code> returns 18.5.</figcaption>
+        </figure>
+
+        <p>Each value has a type, and the type decides what operations make sense. The classic analyst bug is a number stored as text: <code>"42" + "8"</code> gives <code>"428"</code>, not 50.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Type</th><th>Example</th><th>Analyst use</th><th>Watch out for</th></tr></thead>
+            <tbody>
+              <tr><td><code>int</code>, <code>float</code></td><td><code>3</code>, <code>42.5</code></td><td>Counts, amounts</td><td><code>0.1 + 0.2</code> is <code>0.30000000000000004</code></td></tr>
+              <tr><td><code>str</code></td><td><code>"paid"</code></td><td>Categories, ids, names</td><td>Numbers read as text</td></tr>
+              <tr><td><code>bool</code></td><td><code>True</code></td><td>Flags, filters</td><td><code>True</code> counts as 1 in a sum</td></tr>
+              <tr><td><code>list</code></td><td><code>[42, 18.5]</code></td><td>Ordered items, file lists</td><td>Mutable: changes are shared</td></tr>
+              <tr><td><code>dict</code></td><td><code>{"Ana": 42}</code></td><td>Lookups, records, config</td><td>Keys must be unique</td></tr>
+              <tr><td><code>None</code></td><td><code>None</code></td><td>Missing value</td><td>Becomes <code>NaN</code> in pandas</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Loops and comprehensions</h3>
+        <p>A <strong>comprehension</strong> builds a new list or dict from an existing one in a single expression. It reads left to right as "give me <em>this</em>, for each item, if a condition holds". It does the same work as a loop with <code>append</code>, in one line.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="A list comprehension split into three parts: the expression o['amount'], the for clause over orders, and the if filter on status. The same logic is shown as a four-line for loop.">
+              <text class="d-mono" x="20" y="44" style="white-space:pre">[ o["amount"]   for o in orders   if o["status"] == "paid" ]</text>
+              <line class="d-line-accent" x1="34" y1="54" x2="114" y2="54"/>
+              <line class="d-line" x1="135" y1="54" x2="243" y2="54"/>
+              <line class="d-line-signal" x1="265" y1="54" x2="438" y2="54"/>
+              <text class="d-label d-text-accent" x="74" y="74" text-anchor="middle">1 · what to keep</text>
+              <text class="d-label" x="189" y="74" text-anchor="middle">2 · loop over</text>
+              <text class="d-label d-text-signal" x="351" y="74" text-anchor="middle">3 · optional filter</text>
+              <line class="d-grid" x1="20" y1="96" x2="620" y2="96"/>
+              <text class="d-label" x="20" y="120">same as:</text>
+              <text class="d-mono" x="90" y="120">result = []</text>
+              <text class="d-mono" x="90" y="140">for o in orders:</text>
+              <text class="d-mono d-text-signal" x="110" y="160">if o["status"] == "paid":</text>
+              <text class="d-mono d-text-accent" x="130" y="180">result.append(o["amount"])</text>
+              <rect class="d-good" x="430" y="120" width="190" height="62" rx="8"/>
+              <text class="d-title" x="525" y="144" text-anchor="middle">[42.0, 75.0, 64.0, 9.9]</text>
+              <text class="d-label" x="525" y="166" text-anchor="middle">4 of 6 orders kept</text>
+            </svg>
+          </div>
+          <figcaption>The three parts of a comprehension map one to one onto a loop: the expression is what you append, the <code>for</code> clause is the loop, the <code>if</code> clause is the filter.</figcaption>
+        </figure>
+
+        <p>Step through the six orders below. Switch to a dict comprehension keyed by customer and watch what happens when Ana appears twice.</p>
+
+        <div class="widget" id="py-comp-demo">
+          <div class="widget-head">
+            <span class="widget-title">Comprehension stepper</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="py-comp-kind">Build a <select id="py-comp-kind"><option value="list" selected>list</option><option value="dict">dict by customer</option></select></label>
+            <label for="py-comp-expr">Keep <select id="py-comp-expr"><option value="amount" selected>amount</option><option value="vat">amount with 20% VAT</option><option value="customer">customer</option></select></label>
+            <label for="py-comp-filter">Filter <select id="py-comp-filter"><option value="none" selected>none</option><option value="paid">status == "paid"</option><option value="big">amount &gt; 50</option></select></label>
+            <button class="btn primary" type="button" id="py-comp-step">Step</button>
+            <button class="btn" type="button" id="py-comp-run">Run all</button>
+            <button class="btn" type="button" id="py-comp-reset">Reset</button>
+          </div>
+          <svg id="py-comp-svg" viewBox="0 0 600 300" role="img" aria-label="The comprehension code, the six input orders with the current one highlighted, and the result being built item by item."></svg>
+          <p class="readout" id="py-comp-readout"></p>
+        </div>
+
+        <p>Functions wrap a few lines you use more than once, with a name and parameters. f-strings format numbers for output: <code>f"{x:,.2f}"</code> prints 1234.5 as <code>1,234.50</code>.</p>
+
+        <pre class="code" data-lang="python"><code>orders = [
+    {"id": 101, "customer": "Ana", "amount": 42.0,  "status": "paid"},
+    {"id": 102, "customer": "Ben", "amount": 18.5,  "status": "refunded"},
+    {"id": 103, "customer": "Ana", "amount": 75.0,  "status": "paid"},
+]
+
+<span class="c"># list comprehension: amounts of paid orders</span>
+paid = [o["amount"] for o in orders if o["status"] == "paid"]      <span class="c"># [42.0, 75.0]</span>
+
+<span class="c"># dict comprehension: duplicate keys keep the LAST value</span>
+last_by_customer = {o["customer"]: o["amount"] for o in orders}     <span class="c"># {'Ana': 75.0, 'Ben': 18.5}</span>
+
+<span class="c"># to total per customer, accumulate instead</span>
+totals = {}
+for o in orders:
+    totals[o["customer"]] = totals.get(o["customer"], 0) + o["amount"]
+
+def with_vat(amount, rate=0.20):
+    <span class="s">"""Return amount including VAT, rounded to cents."""</span>
+    return round(amount * (1 + rate), 2)
+
+print(f"Paid revenue: {sum(paid):,.2f}")                            <span class="c"># Paid revenue: 117.00</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A list is ordered and indexed from 0; a dict maps unique keys to values.</li>
+            <li>A list of dicts is a table: one dict per row, one key per column.</li>
+            <li>A comprehension is expression, loop and optional filter in one line.</li>
+            <li>In a dict comprehension, a repeated key silently overwrites the earlier value.</li>
+            <li>Types matter: text that looks like a number does not add like one.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Off-by-one indexing: <code>orders[1]</code> is the second order, not the first.</li>
+            <li>Building a dict keyed by a non-unique field and losing rows without any error.</li>
+            <li>Using a mutable default such as <code>def f(rows=[])</code>; the same list is reused across calls.</li>
+            <li>Writing loops over millions of rows in plain Python when pandas or NumPy can do it in one vectorized call.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="python-basics-1"><span>Pull one field out of a list of dicts by index and key</span></label></li>
+          <li><label><input type="checkbox" data-key="python-basics-2"><span>Rewrite a for-loop with append as a list comprehension with a filter</span></label></li>
+          <li><label><input type="checkbox" data-key="python-basics-3"><span>Explain why a dict comprehension keyed by customer can return fewer entries than rows</span></label></li>
+          <li><label><input type="checkbox" data-key="python-basics-4"><span>Write a small function with a default parameter and a docstring</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.python.org/3/tutorial/">The official Python tutorial</a></li>
+          <li><span class="kind">Book</span><a href="https://wesmckinney.com/book/">Python for Data Analysis, 3rd edition (free online)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="numpy">
+        <header class="topic-head">
+          <p class="eyebrow">04.2 · Fast arrays</p>
+          <h2>NumPy</h2>
+        </header>
+
+        <p class="lead">NumPy gives Python one new object, the <strong>ndarray</strong>: a grid of numbers that all share one type, stored side by side in memory. Because of that, one line like <code>prices * units</code> multiplies a million pairs in compiled code, with no Python loop in sight. pandas columns are NumPy arrays underneath.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Every fast pandas operation is a NumPy operation. Knowing arrays, axes and broadcasting explains why <code>df["amount"] * 1.2</code> is instant, why <code>.apply</code> with a Python function is slow, and what "shapes (3,4) (3,)" means in an error.</p>
+        </div>
+
+        <h3>Why arrays are fast</h3>
+        <p>A Python list stores pointers to separate number objects scattered in memory, and a loop handles them one at a time. An array stores raw 8-byte numbers in one block, so a single compiled loop can sweep through it. Applying one operation to the whole array at once is called <strong>vectorization</strong>.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Left: a Python list holds pointers to separate float objects scattered in memory. Right: a NumPy float64 array stores the same numbers in one contiguous block, eight bytes each, processed by one compiled loop.">
+              <defs>
+                <marker id="numpy-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="numpy-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="24">Python list</text>
+              <rect class="d-box" x="20" y="40" width="40" height="30" rx="3"/><rect class="d-box" x="60" y="40" width="40" height="30" rx="3"/><rect class="d-box" x="100" y="40" width="40" height="30" rx="3"/><rect class="d-box" x="140" y="40" width="40" height="30" rx="3"/>
+              <circle class="d-dot-muted" cx="40" cy="55" r="3"/><circle class="d-dot-muted" cx="80" cy="55" r="3"/><circle class="d-dot-muted" cx="120" cy="55" r="3"/><circle class="d-dot-muted" cx="160" cy="55" r="3"/>
+              <line class="d-line" x1="40" y1="58" x2="46" y2="118" marker-end="url(#numpy-arrow)"/>
+              <line class="d-line" x1="80" y1="58" x2="190" y2="148" marker-end="url(#numpy-arrow)"/>
+              <line class="d-line" x1="120" y1="58" x2="100" y2="172" marker-end="url(#numpy-arrow)"/>
+              <line class="d-line" x1="160" y1="58" x2="230" y2="96" marker-end="url(#numpy-arrow)"/>
+              <rect class="d-fill" x="20" y="120" width="64" height="34" rx="5"/><text class="d-mono" x="52" y="142" text-anchor="middle">42.0</text>
+              <rect class="d-fill" x="160" y="150" width="64" height="34" rx="5"/><text class="d-mono" x="192" y="172" text-anchor="middle">18.5</text>
+              <rect class="d-fill" x="70" y="174" width="64" height="34" rx="5"/><text class="d-mono" x="102" y="196" text-anchor="middle">75.0</text>
+              <rect class="d-fill" x="200" y="98" width="64" height="34" rx="5"/><text class="d-mono" x="232" y="120" text-anchor="middle">64.0</text>
+              <text class="d-label" x="150" y="216" text-anchor="middle">pointers to scattered objects, one at a time</text>
+              <line class="d-grid" x1="300" y1="20" x2="300" y2="210"/>
+              <text class="d-title" x="330" y="24">NumPy array (float64)</text>
+              <rect class="d-accent" x="330" y="60" width="70" height="40" rx="3"/><rect class="d-accent" x="400" y="60" width="70" height="40" rx="3"/><rect class="d-accent" x="470" y="60" width="70" height="40" rx="3"/><rect class="d-accent" x="540" y="60" width="70" height="40" rx="3"/>
+              <text class="d-mono" x="365" y="85" text-anchor="middle">42.0</text><text class="d-mono" x="435" y="85" text-anchor="middle">18.5</text><text class="d-mono" x="505" y="85" text-anchor="middle">75.0</text><text class="d-mono" x="575" y="85" text-anchor="middle">64.0</text>
+              <text class="d-label" x="365" y="116" text-anchor="middle">8 bytes</text><text class="d-label" x="435" y="116" text-anchor="middle">8 bytes</text><text class="d-label" x="505" y="116" text-anchor="middle">8 bytes</text><text class="d-label" x="575" y="116" text-anchor="middle">8 bytes</text>
+              <line class="d-line-accent" x1="335" y1="140" x2="605" y2="140" marker-end="url(#numpy-arrow-a)"/>
+              <text class="d-label d-text-accent" x="470" y="160" text-anchor="middle">one compiled loop over a contiguous block</text>
+              <text class="d-label" x="470" y="190" text-anchor="middle">sum of 1M values: often 10 to 100× faster (example)</text>
+            </svg>
+          </div>
+          <figcaption>A list holds pointers to separate Python objects; an array holds the raw numbers in one block. That layout is what lets NumPy run one compiled loop instead of a million Python steps.</figcaption>
+        </figure>
+
+        <h3>Axes and broadcasting</h3>
+        <p>A 2-D array has <strong>axis 0</strong> (down the rows) and <strong>axis 1</strong> (across the columns). <code>units.sum(axis=0)</code> collapses the rows and gives one total per column. <strong>Broadcasting</strong> lets arrays of different shapes combine: NumPy lines the shapes up from the right, and each pair of sizes must be equal or 1. A size-1 dimension is stretched to match, without copying data.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Broadcasting examples. A 3 by 4 array times a length-4 row: the row is repeated down three rows. A 3 by 1 column times a 1 by 4 row: both stretch to a 3 by 4 grid.">
+              <text class="d-mono" x="20" y="24" style="white-space:pre">(3, 4) * (4,)  →  (3, 4)</text>
+              <g>
+                <rect class="d-box" x="20" y="40" width="96" height="72" rx="3"/>
+                <line class="d-grid" x1="44" y1="40" x2="44" y2="112"/><line class="d-grid" x1="68" y1="40" x2="68" y2="112"/><line class="d-grid" x1="92" y1="40" x2="92" y2="112"/>
+                <line class="d-grid" x1="20" y1="64" x2="116" y2="64"/><line class="d-grid" x1="20" y1="88" x2="116" y2="88"/>
+                <text class="d-label" x="68" y="130" text-anchor="middle">units: 3 stores × 4 qtrs</text>
+                <text class="d-title" x="132" y="82" text-anchor="middle">×</text>
+                <rect class="d-accent" x="148" y="40" width="96" height="24" rx="3"/>
+                <rect class="d-box d-dash" x="148" y="64" width="96" height="24" rx="3"/>
+                <rect class="d-box d-dash" x="148" y="88" width="96" height="24" rx="3"/>
+                <text class="d-label d-text-accent" x="196" y="130" text-anchor="middle">price per qtr, stretched</text>
+                <text class="d-title" x="262" y="82" text-anchor="middle">=</text>
+                <rect class="d-good" x="278" y="40" width="96" height="72" rx="3"/>
+                <text class="d-label" x="326" y="130" text-anchor="middle">revenue (3, 4)</text>
+              </g>
+              <line class="d-grid" x1="20" y1="148" x2="620" y2="148"/>
+              <text class="d-mono" x="400" y="24" style="white-space:pre">(3, 1) * (1, 4)  →  (3, 4)</text>
+              <rect class="d-accent" x="400" y="40" width="24" height="72" rx="3"/>
+              <rect class="d-box d-dash" x="424" y="40" width="48" height="72" rx="3"/>
+              <text class="d-title" x="488" y="82" text-anchor="middle">×</text>
+              <rect class="d-accent" x="504" y="40" width="96" height="24" rx="3"/>
+              <rect class="d-box d-dash" x="504" y="64" width="96" height="48" rx="3"/>
+              <text class="d-label" x="500" y="130" text-anchor="middle">both stretch to (3, 4)</text>
+              <text class="d-label" x="20" y="172">Rule: right-align the shapes. Each pair of sizes must match, or one of them must be 1.</text>
+              <text class="d-label d-text-signal" x="20" y="194" style="white-space:pre">(3, 4) * (3,)  →  error: trailing sizes 4 and 3 differ. Use a (3, 1) column instead.</text>
+            </svg>
+          </div>
+          <figcaption>Dashed cells are virtual copies created by broadcasting. A length-4 row lines up with the 4 columns; a length-3 vector does not line up with anything until you make it a (3, 1) column.</figcaption>
+        </figure>
+
+        <p>Pick two shapes and see whether they broadcast. A is units sold per store and quarter; B is a multiplier such as price per quarter or a per-store adjustment.</p>
+
+        <div class="widget" id="py-bcast-demo">
+          <div class="widget-head">
+            <span class="widget-title">Broadcasting shapes</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="py-bcast-a">A shape <select id="py-bcast-a"><option value="3,4" selected>(3, 4)</option><option value="3,1">(3, 1)</option><option value="1,4">(1, 4)</option><option value="4">(4,)</option><option value="3">(3,)</option></select></label>
+            <label for="py-bcast-b">B shape <select id="py-bcast-b"><option value="3,4">(3, 4)</option><option value="3,1">(3, 1)</option><option value="1,4">(1, 4)</option><option value="4" selected>(4,)</option><option value="3">(3,)</option></select></label>
+            <output id="py-bcast-out">A * B</output>
+          </div>
+          <svg id="py-bcast-svg" viewBox="0 0 600 240" role="img" aria-label="Grids for array A, array B and the broadcast result. Real cells are solid; cells created by stretching are dashed."></svg>
+          <p class="readout" id="py-bcast-readout"></p>
+        </div>
+
+        <p>In real code you rarely write loops over arrays. You use vectorized arithmetic, reductions along an axis, boolean masks to filter, and <code>np.where</code> for if-else on every element.</p>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+units = np.array([[12, 15, 11, 18],      <span class="c"># store A, quarters 1-4</span>
+                  [ 8,  9, 10,  7],      <span class="c"># store B</span>
+                  [20, 22, 19, 25]])     <span class="c"># store C</span>
+price = np.array([2.0, 3.0, 2.0, 4.0])   <span class="c"># one price per quarter, shape (4,)</span>
+
+revenue = units * price                  <span class="c"># (3, 4) * (4,) broadcasts to (3, 4)</span>
+revenue.sum(axis=1)                      <span class="c"># per store:   [163.  91. 244.]</span>
+revenue.sum(axis=0)                      <span class="c"># per quarter: [ 80. 138.  80. 200.]</span>
+
+uplift = np.array([1.0, 1.1, 0.9])       <span class="c"># one factor per store, shape (3,)</span>
+adjusted = revenue * uplift[:, None]     <span class="c"># reshape to (3, 1) first, or you get an error</span>
+
+big = revenue[revenue &gt; 50]              <span class="c"># boolean mask keeps matching cells (1-D result)</span>
+flag = np.where(revenue &gt; 50, "high", "low")
+centered = units - units.mean(axis=0)    <span class="c"># subtract each column's mean: (3, 4) - (4,)</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>An ndarray is one type, one contiguous block, any number of dimensions.</li>
+            <li>Vectorized operations run in compiled code; Python loops over elements are slow.</li>
+            <li><code>axis=0</code> collapses rows (one result per column); <code>axis=1</code> collapses columns.</li>
+            <li>Broadcasting right-aligns shapes; sizes must match or be 1.</li>
+            <li>Use <code>[:, None]</code> or <code>.reshape(-1, 1)</code> to turn a vector into a column.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Mixing up axes: <code>sum(axis=0)</code> gives column totals, not row totals.</li>
+            <li>Expecting a length-3 vector to line up with 3 rows; it lines up with the last axis.</li>
+            <li>Storing mixed types in one array, which turns everything into slow <code>object</code> or text.</li>
+            <li>Using <code>==</code> to find missing values: <code>np.nan == np.nan</code> is False; use <code>np.isnan</code>.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="numpy-1"><span>Explain why a vectorized sum beats a Python loop</span></label></li>
+          <li><label><input type="checkbox" data-key="numpy-2"><span>Predict the result shape of two arrays, or say why they won't broadcast</span></label></li>
+          <li><label><input type="checkbox" data-key="numpy-3"><span>Compute row and column totals with the right axis</span></label></li>
+          <li><label><input type="checkbox" data-key="numpy-4"><span>Filter an array with a boolean mask and label values with <code>np.where</code></span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://numpy.org/doc/stable/">NumPy documentation</a></li>
+          <li><span class="kind">Book</span><a href="https://wesmckinney.com/book/">Python for Data Analysis, chapter 4: NumPy basics</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="pandas">
+        <header class="topic-head">
+          <p class="eyebrow">04.3 · Tables in code</p>
+          <h2>pandas fundamentals</h2>
+        </header>
+
+        <p class="lead">A pandas <strong>DataFrame</strong> is a table: an index that labels the rows, column names, and one typed column (a <strong>Series</strong>) per field. You load a file into one, then filter rows, pick columns, add calculated columns, group and sort, each as one readable line.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>pandas is where SQL thinking meets Python: <code>WHERE</code> becomes a boolean filter, <code>SELECT</code> becomes a column list, <code>GROUP BY</code> becomes <code>groupby</code>. It handles millions of rows on a laptop and connects to every chart, stats and ML library you will use.</p>
+        </div>
+
+        <h3>Anatomy of a DataFrame</h3>
+        <p>Every column has one <strong>dtype</strong>: <code>int64</code>, <code>float64</code>, <code>datetime64</code>, <code>bool</code> or <code>object</code> (usually text). Check dtypes first after every load. An amount column with dtype <code>object</code> means something like <code>"$1,204.50"</code> slipped in, and sums will fail or concatenate.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Anatomy of a DataFrame: the index labels rows on the left, column names run across the top, each column is a Series with its own dtype, and the shape is 5 rows by 4 columns.">
+              <defs>
+                <marker id="pandas-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="120" y="30" width="360" height="26" rx="3"/>
+              <text class="d-mono" x="170" y="48" text-anchor="middle">customer</text>
+              <text class="d-mono" x="260" y="48" text-anchor="middle">region</text>
+              <text class="d-mono" x="350" y="48" text-anchor="middle">amount</text>
+              <text class="d-mono" x="440" y="48" text-anchor="middle">status</text>
+              <rect class="d-fill" x="60" y="56" width="60" height="130" rx="3"/>
+              <text class="d-mono" x="90" y="78" text-anchor="middle">1001</text><text class="d-mono" x="90" y="104" text-anchor="middle">1002</text><text class="d-mono" x="90" y="130" text-anchor="middle">1003</text><text class="d-mono" x="90" y="156" text-anchor="middle">1004</text><text class="d-mono" x="90" y="182" text-anchor="middle">1005</text>
+              <rect class="d-box" x="120" y="56" width="360" height="130"/>
+              <rect class="d-accent" x="305" y="56" width="90" height="130"/>
+              <text class="d-mono" x="170" y="78" text-anchor="middle">Ana</text><text class="d-mono" x="260" y="78" text-anchor="middle">North</text><text class="d-mono" x="350" y="78" text-anchor="middle">42.0</text><text class="d-mono" x="440" y="78" text-anchor="middle">paid</text>
+              <text class="d-mono" x="170" y="104" text-anchor="middle">Ben</text><text class="d-mono" x="260" y="104" text-anchor="middle">South</text><text class="d-mono" x="350" y="104" text-anchor="middle">18.5</text><text class="d-mono" x="440" y="104" text-anchor="middle">refunded</text>
+              <text class="d-mono" x="170" y="130" text-anchor="middle">Ana</text><text class="d-mono" x="260" y="130" text-anchor="middle">North</text><text class="d-mono" x="350" y="130" text-anchor="middle">75.0</text><text class="d-mono" x="440" y="130" text-anchor="middle">paid</text>
+              <text class="d-mono" x="170" y="156" text-anchor="middle">Cy</text><text class="d-mono" x="260" y="156" text-anchor="middle">West</text><text class="d-mono" x="350" y="156" text-anchor="middle">120.0</text><text class="d-mono" x="440" y="156" text-anchor="middle">pending</text>
+              <text class="d-mono" x="170" y="182" text-anchor="middle">Ben</text><text class="d-mono" x="260" y="182" text-anchor="middle">South</text><text class="d-mono" x="350" y="182" text-anchor="middle">64.0</text><text class="d-mono" x="440" y="182" text-anchor="middle">paid</text>
+              <text class="d-label" x="170" y="204" text-anchor="middle">object</text><text class="d-label" x="260" y="204" text-anchor="middle">category</text><text class="d-label d-text-accent" x="350" y="204" text-anchor="middle">float64</text><text class="d-label" x="440" y="204" text-anchor="middle">object</text>
+              <text class="d-label" x="90" y="22" text-anchor="middle">index</text>
+              <line class="d-line" x1="90" y1="26" x2="90" y2="52" marker-end="url(#pandas-arrow)"/>
+              <text class="d-label" x="20" y="222">dtypes →</text>
+              <line class="d-line" x1="500" y1="43" x2="540" y2="43"/>
+              <text class="d-label" x="546" y="47">column labels</text>
+              <line class="d-line" x1="395" y1="120" x2="540" y2="120"/>
+              <text class="d-label d-text-accent" x="546" y="116">df["amount"]</text>
+              <text class="d-label d-text-accent" x="546" y="132">is a Series</text>
+              <text class="d-label" x="546" y="172">df.shape</text>
+              <text class="d-mono" x="546" y="190">(5, 4)</text>
+            </svg>
+          </div>
+          <figcaption>Index on the left, labels across the top, one dtype per column. <code>df["amount"]</code> pulls out one column as a Series; <code>df.shape</code> is (rows, columns).</figcaption>
+        </figure>
+
+        <h3>Filter, select, sort</h3>
+        <p>Filtering uses a <strong>boolean mask</strong>: <code>df["status"] == "paid"</code> gives True or False per row, and <code>df[mask]</code> keeps the True rows. Combine conditions with <code>&amp;</code> and <code>|</code>, each wrapped in parentheses. A list of names selects columns, and <code>sort_values</code> orders rows. Try the three on a mini <code>orders</code> table.</p>
+
+        <div class="widget" id="py-df-demo">
+          <div class="widget-head">
+            <span class="widget-title">DataFrame operations on orders</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="py-df-status">status == <select id="py-df-status"><option value="any" selected>(any)</option><option value="paid">"paid"</option><option value="pending">"pending"</option><option value="refunded">"refunded"</option></select></label>
+            <label for="py-df-min">amount &gt;= <input type="range" id="py-df-min" min="0" max="150" step="5" value="0"><output id="py-df-min-out">0</output></label>
+            <label for="py-df-cols">Columns <select id="py-df-cols"><option value="all" selected>all</option><option value="ca">customer, amount</option><option value="ra">region, amount</option></select></label>
+            <label for="py-df-sort">Sort <select id="py-df-sort"><option value="none" selected>none</option><option value="desc">amount, largest first</option><option value="asc">amount, smallest first</option><option value="cust">customer A to Z</option></select></label>
+          </div>
+          <svg id="py-df-svg" viewBox="0 0 600 300" role="img" aria-label="The pandas code for the chosen operations, the original orders table with removed rows and columns faded, and the result table."></svg>
+          <p class="readout" id="py-df-readout"></p>
+        </div>
+
+        <h3>Selecting by label or by position</h3>
+        <p>Square brackets cover the common cases. For anything more precise, use <code>.loc</code> (by labels and masks) or <code>.iloc</code> (by integer position). Write new values with <code>.loc</code> too, so pandas changes the original DataFrame rather than a temporary copy.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>You want</th><th>Write</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>One column</td><td><code>df["amount"]</code></td><td>Returns a Series</td></tr>
+              <tr><td>Several columns</td><td><code>df[["customer", "amount"]]</code></td><td>A list inside the brackets</td></tr>
+              <tr><td>Rows matching a condition</td><td><code>df[df["amount"] &gt;= 50]</code></td><td>Boolean mask</td></tr>
+              <tr><td>Rows and columns by label</td><td><code>df.loc[mask, ["customer", "amount"]]</code></td><td>Slices include the end label</td></tr>
+              <tr><td>Rows and columns by position</td><td><code>df.iloc[:10, :3]</code></td><td>Slices exclude the end, like Python</td></tr>
+              <tr><td>Set values safely</td><td><code>df.loc[mask, "flag"] = True</code></td><td>Avoids chained assignment</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Chains: from file to answer</h3>
+        <p>Most analyses are a short chain of verbs. Writing them as a <strong>method chain</strong>, one verb per line, reads top to bottom like a recipe and leaves no half-finished variables lying around.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="A method chain: read_csv gives 48,210 rows by 9 columns, query keeps 39,870 paid rows, assign adds a month column, groupby and agg collapse to 4 regions, and sort_values orders them by revenue.">
+              <defs>
+                <marker id="pandas-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="40" width="104" height="60" rx="8"/>
+              <text class="d-mono" x="62" y="66" text-anchor="middle">read_csv</text>
+              <text class="d-label" x="62" y="86" text-anchor="middle">48,210 × 9</text>
+              <line class="d-line-accent" x1="114" y1="70" x2="136" y2="70" marker-end="url(#pandas-arrow-a)"/>
+              <rect class="d-box" x="138" y="40" width="104" height="60" rx="8"/>
+              <text class="d-mono" x="190" y="66" text-anchor="middle">.query</text>
+              <text class="d-label" x="190" y="86" text-anchor="middle">39,870 × 9</text>
+              <line class="d-line-accent" x1="242" y1="70" x2="264" y2="70" marker-end="url(#pandas-arrow-a)"/>
+              <rect class="d-box" x="266" y="40" width="104" height="60" rx="8"/>
+              <text class="d-mono" x="318" y="66" text-anchor="middle">.assign</text>
+              <text class="d-label" x="318" y="86" text-anchor="middle">39,870 × 10</text>
+              <line class="d-line-accent" x1="370" y1="70" x2="392" y2="70" marker-end="url(#pandas-arrow-a)"/>
+              <rect class="d-accent" x="394" y="40" width="114" height="60" rx="8"/>
+              <text class="d-mono" x="451" y="66" text-anchor="middle">.groupby.agg</text>
+              <text class="d-label" x="451" y="86" text-anchor="middle">4 × 3</text>
+              <line class="d-line-accent" x1="508" y1="70" x2="530" y2="70" marker-end="url(#pandas-arrow-a)"/>
+              <rect class="d-good" x="532" y="40" width="98" height="60" rx="8"/>
+              <text class="d-mono" x="581" y="66" text-anchor="middle">.sort</text>
+              <text class="d-label" x="581" y="86" text-anchor="middle">4 × 3</text>
+              <text class="d-label" x="62" y="124" text-anchor="middle">load</text>
+              <text class="d-label" x="190" y="124" text-anchor="middle">WHERE</text>
+              <text class="d-label" x="318" y="124" text-anchor="middle">new column</text>
+              <text class="d-label" x="451" y="124" text-anchor="middle">GROUP BY</text>
+              <text class="d-label" x="581" y="124" text-anchor="middle">ORDER BY</text>
+              <text class="d-label" x="320" y="168" text-anchor="middle">Rows shrink only at filters and aggregations. Check the shape after each step when a number looks wrong.</text>
+            </svg>
+          </div>
+          <figcaption>The shape after each verb in an example chain. Each line maps to a SQL clause you already know.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+
+df = pd.read_csv("orders.csv", parse_dates=["order_date"])
+df.info()                      <span class="c"># rows, columns, dtypes, non-null counts</span>
+df.head()                      <span class="c"># first 5 rows</span>
+df["status"].value_counts()    <span class="c"># how many paid, pending, refunded</span>
+
+by_region = (
+    df
+    .query('status == "paid" and amount &gt;= 50')
+    .assign(net=lambda d: d["amount"] - d["discount"])
+    .groupby("region", as_index=False)
+    .agg(revenue=("net", "sum"), orders=("order_id", "count"))
+    .sort_values("revenue", ascending=False)
+)
+
+<span class="c"># the same filter without query()</span>
+mask = (df["status"] == "paid") &amp; (df["amount"] &gt;= 50)    <span class="c"># parentheses are required</span>
+df.loc[mask, ["customer", "amount"]].sort_values("amount", ascending=False)</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A DataFrame is an index plus named, typed columns; each column is a Series.</li>
+            <li>Check <code>df.info()</code> and dtypes right after loading.</li>
+            <li>Filter with boolean masks, select with a list of names, order with <code>sort_values</code>.</li>
+            <li>Use <code>.loc</code> for label-based access and for every assignment.</li>
+            <li>Method chains keep a transformation readable and free of stray variables.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Writing <code>df[df.a &gt; 1 and df.b &lt; 2]</code>; use <code>&amp;</code> with parentheses around each condition.</li>
+            <li>Chained assignment like <code>df[mask]["flag"] = 1</code>, which may change a copy and leave <code>df</code> untouched.</li>
+            <li>Summing an <code>object</code> column of text numbers; convert with <code>pd.to_numeric</code> first.</li>
+            <li>Forgetting that <code>groupby</code> drops rows whose key is missing unless you pass <code>dropna=False</code>.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="pandas-1"><span>Load a CSV, parse its dates and read its dtypes</span></label></li>
+          <li><label><input type="checkbox" data-key="pandas-2"><span>Filter rows with two conditions and select two columns in one line</span></label></li>
+          <li><label><input type="checkbox" data-key="pandas-3"><span>Explain the difference between <code>.loc</code> and <code>.iloc</code></span></label></li>
+          <li><label><input type="checkbox" data-key="pandas-4"><span>Write a groupby with named aggregations, sorted by the result</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/">pandas documentation (including "10 minutes to pandas")</a></li>
+          <li><span class="kind">Book</span><a href="https://wesmckinney.com/book/">Python for Data Analysis, chapter 5: Getting started with pandas</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="wrangling">
+        <header class="topic-head">
+          <p class="eyebrow">04.4 · Combine and reshape</p>
+          <h2>Merging &amp; reshaping</h2>
+        </header>
+
+        <p class="lead">Real questions span several tables, and the table you have is rarely the shape you need. <code>merge</code> joins tables on a key, like SQL <code>JOIN</code>. <code>pivot_table</code> turns a long list of facts into a grid, and <code>melt</code> turns a grid back into a long list.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>A bad join is the most common way an analysis silently goes wrong: revenue doubles because a lookup table had duplicate keys, or orders vanish because an inner join dropped unknown customers. Reshaping is how you get data into the form a chart or a model expects.</p>
+        </div>
+
+        <h3>Join types and row counts</h3>
+        <p><code>how=</code> decides which unmatched rows survive. <strong>inner</strong> keeps only matches, <strong>left</strong> keeps every left row, <strong>right</strong> every right row, <strong>outer</strong> everything. Unmatched cells become <code>NaN</code>. Always compare row counts before and after a merge.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Five orders joined to four customers on customer_id. Four orders match, one order has an unknown customer 9, and customer 4 has no orders. Inner returns 4 rows, left 5, right 5 and outer 6.">
+              <defs>
+                <marker id="wrangling-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="22">orders (5)</text>
+              <rect class="d-box" x="20" y="32" width="120" height="24" rx="3"/><text class="d-mono" x="30" y="49">o1 · cust 1</text>
+              <rect class="d-box" x="20" y="58" width="120" height="24" rx="3"/><text class="d-mono" x="30" y="75">o2 · cust 2</text>
+              <rect class="d-box" x="20" y="84" width="120" height="24" rx="3"/><text class="d-mono" x="30" y="101">o3 · cust 1</text>
+              <rect class="d-box" x="20" y="110" width="120" height="24" rx="3"/><text class="d-mono" x="30" y="127">o4 · cust 3</text>
+              <rect class="d-signal" x="20" y="136" width="120" height="24" rx="3"/><text class="d-mono" x="30" y="153">o5 · cust 9</text>
+              <text class="d-title" x="250" y="22">customers (4)</text>
+              <rect class="d-box" x="250" y="32" width="110" height="24" rx="3"/><text class="d-mono" x="260" y="49">1 · Ana</text>
+              <rect class="d-box" x="250" y="58" width="110" height="24" rx="3"/><text class="d-mono" x="260" y="75">2 · Ben</text>
+              <rect class="d-box" x="250" y="84" width="110" height="24" rx="3"/><text class="d-mono" x="260" y="101">3 · Cy</text>
+              <rect class="d-signal" x="250" y="110" width="110" height="24" rx="3"/><text class="d-mono" x="260" y="127">4 · Dee</text>
+              <line class="d-line-accent" x1="140" y1="44" x2="250" y2="44"/>
+              <line class="d-line-accent" x1="140" y1="70" x2="250" y2="70"/>
+              <line class="d-line-accent" x1="140" y1="96" x2="250" y2="46"/>
+              <line class="d-line-accent" x1="140" y1="122" x2="250" y2="96"/>
+              <text class="d-label d-text-signal" x="150" y="166">no match</text>
+              <text class="d-label d-text-signal" x="250" y="152">no orders</text>
+              <text class="d-label" x="20" y="196">key: customer_id</text>
+              <text class="d-title" x="420" y="22">rows returned</text>
+              <text class="d-mono" x="420" y="52">inner</text><rect class="d-accent" x="480" y="40" width="80" height="16" rx="3"/><text class="d-label" x="566" y="53">4</text>
+              <text class="d-mono" x="420" y="82">left</text><rect class="d-accent" x="480" y="70" width="100" height="16" rx="3"/><text class="d-label" x="586" y="83">5 (+o5)</text>
+              <text class="d-mono" x="420" y="112">right</text><rect class="d-accent" x="480" y="100" width="100" height="16" rx="3"/><text class="d-label" x="586" y="113">5 (+Dee)</text>
+              <text class="d-mono" x="420" y="142">outer</text><rect class="d-accent" x="480" y="130" width="120" height="16" rx="3"/><text class="d-label" x="606" y="143">6</text>
+              <text class="d-label" x="420" y="186">Unmatched cells are filled with NaN.</text>
+              <text class="d-label" x="420" y="204">indicator=True labels each row</text>
+              <text class="d-label" x="420" y="220">both, left_only or right_only.</text>
+            </svg>
+          </div>
+          <figcaption>Four orders find their customer, order o5 has an unknown customer and customer Dee has no orders. The <code>how</code> argument decides whether those two survive.</figcaption>
+        </figure>
+
+        <p>The real danger is a <strong>duplicate key</strong> on the side you expected to be unique. Every matching order is repeated once per duplicate, so sums inflate. Pass <code>validate="m:1"</code> and pandas raises an error instead.</p>
+
+        <div class="widget" id="py-merge-demo">
+          <div class="widget-head">
+            <span class="widget-title">Merge visualizer</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="py-merge-how">how= <select id="py-merge-how"><option value="inner">"inner"</option><option value="left" selected>"left"</option><option value="right">"right"</option><option value="outer">"outer"</option></select></label>
+            <label for="py-merge-dup"><input type="checkbox" id="py-merge-dup"> customers has a duplicate row for id 1</label>
+            <output id="py-merge-out">5 rows</output>
+          </div>
+          <svg id="py-merge-svg" viewBox="0 0 600 360" role="img" aria-label="The orders and customers tables with lines between matching keys, and the merged result with a _merge indicator column."></svg>
+          <p class="readout" id="py-merge-readout"></p>
+        </div>
+
+        <h3>Long and wide</h3>
+        <p><strong>Long</strong> (tidy) data has one row per fact: region, month, revenue. <strong>Wide</strong> data spreads one variable across columns: a row per region, a column per month. Long is best for grouping, plotting with seaborn and storing. Wide is best for reading and for spreadsheets.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="A long table with region, month and revenue rows becomes a wide table with one row per region and one column per month through pivot_table, and melt reverses it.">
+              <defs>
+                <marker id="wrangling-arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="wrangling-arrow-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="22">long · 6 rows</text>
+              <rect class="d-fill" x="20" y="30" width="200" height="22" rx="3"/>
+              <text class="d-mono" x="30" y="46">region month revenue</text>
+              <text class="d-mono" x="30" y="70" style="white-space:pre">North  Jan   120</text>
+              <text class="d-mono" x="30" y="90" style="white-space:pre">North  Feb   135</text>
+              <text class="d-mono" x="30" y="110" style="white-space:pre">North  Mar   150</text>
+              <text class="d-mono" x="30" y="130" style="white-space:pre">South  Jan    90</text>
+              <text class="d-mono" x="30" y="150" style="white-space:pre">South  Feb    80</text>
+              <text class="d-mono" x="30" y="170" style="white-space:pre">South  Mar   110</text>
+              <path class="d-line-accent" d="M232 80 C300 60, 340 60, 400 80" marker-end="url(#wrangling-arrow-b)"/>
+              <text class="d-mono d-text-accent" x="316" y="52" text-anchor="middle">pivot_table</text>
+              <path class="d-line-signal" d="M400 140 C340 160, 300 160, 232 140" marker-end="url(#wrangling-arrow-c)"/>
+              <text class="d-mono d-text-signal" x="316" y="180" text-anchor="middle">melt</text>
+              <text class="d-title" x="410" y="22">wide · 2 rows × 3 months</text>
+              <rect class="d-fill" x="410" y="70" width="210" height="22" rx="3"/>
+              <text class="d-mono" x="420" y="86" style="white-space:pre">region  Jan  Feb  Mar</text>
+              <text class="d-mono" x="420" y="112" style="white-space:pre">North   120  135  150</text>
+              <text class="d-mono" x="420" y="134" style="white-space:pre">South    90   80  110</text>
+              <text class="d-label" x="410" y="164">index="region", columns="month",</text>
+              <text class="d-label" x="410" y="180">values="revenue"</text>
+            </svg>
+          </div>
+          <figcaption>The same six facts in two shapes. <code>pivot_table</code> moves month values into column headers; <code>melt</code> moves column headers back into a month column.</figcaption>
+        </figure>
+
+        <p><code>pivot</code> only rearranges, so it fails if two rows land in the same cell. <code>pivot_table</code> aggregates those rows with <code>aggfunc</code> (mean by default, so pass <code>"sum"</code> for revenue).</p>
+
+        <div class="widget" id="py-reshape-demo">
+          <div class="widget-head">
+            <span class="widget-title">Pivot and melt</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="py-reshape-op">Operation <select id="py-reshape-op"><option value="pivot" selected>pivot (long → wide)</option><option value="pivot_table">pivot_table, aggfunc="sum"</option><option value="melt">melt (wide → long)</option></select></label>
+            <label for="py-reshape-dup"><input type="checkbox" id="py-reshape-dup"> add a second North / Feb row (+15)</label>
+            <output id="py-reshape-out">2 × 3</output>
+          </div>
+          <svg id="py-reshape-svg" viewBox="0 0 600 260" role="img" aria-label="An input table on the left, the reshape call in the middle, and the output table or an error on the right. Cells are coloured by month so you can follow them."></svg>
+          <p class="readout" id="py-reshape-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+
+<span class="c"># join: every order keeps its row, customer columns are added</span>
+merged = orders.merge(
+    customers, on="customer_id", how="left",
+    validate="m:1",          <span class="c"># raise if customers has duplicate ids</span>
+    indicator=True,          <span class="c"># adds _merge: both / left_only / right_only</span>
+)
+assert len(merged) == len(orders)
+merged["_merge"].value_counts()          <span class="c"># how many orders had no customer?</span>
+
+<span class="c"># stack files with the same columns (e.g. one export per month)</span>
+all_months = pd.concat([jan, feb, mar], ignore_index=True)
+
+<span class="c"># long -&gt; wide</span>
+wide = sales.pivot_table(index="region", columns="month",
+                         values="revenue", aggfunc="sum", fill_value=0)
+
+<span class="c"># wide -&gt; long</span>
+long = wide.reset_index().melt(id_vars="region", var_name="month",
+                               value_name="revenue")</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li><code>how</code> sets which unmatched rows survive: inner, left, right or outer.</li>
+            <li>Duplicate keys multiply rows; <code>validate="m:1"</code> turns that into an error.</li>
+            <li><code>indicator=True</code> shows where each row came from.</li>
+            <li>Long data suits grouping and plotting; wide data suits reading.</li>
+            <li><code>pivot</code> fails on duplicates; <code>pivot_table</code> aggregates them.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Using an inner join by default and silently dropping orders with unknown customers.</li>
+            <li>Merging on keys with different dtypes (<code>"1"</code> against <code>1</code>) and getting no matches.</li>
+            <li>Forgetting that <code>pivot_table</code> averages by default when you wanted a sum.</li>
+            <li>Not checking <code>len()</code> before and after every merge.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="wrangling-1"><span>Predict the row count of inner, left and outer joins on a small example</span></label></li>
+          <li><label><input type="checkbox" data-key="wrangling-2"><span>Spot and prevent a fan-out join with <code>validate</code></span></label></li>
+          <li><label><input type="checkbox" data-key="wrangling-3"><span>Turn a long table into a wide one with <code>pivot_table</code> and back with <code>melt</code></span></label></li>
+          <li><label><input type="checkbox" data-key="wrangling-4"><span>Explain when <code>pivot</code> raises an error and how to fix it</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/">pandas user guide: merge, join, concatenate and reshaping</a></li>
+          <li><span class="kind">Book</span><a href="https://wesmckinney.com/book/">Python for Data Analysis, chapter 8: Data wrangling</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="notebooks">
+        <header class="topic-head">
+          <p class="eyebrow">04.5 · Hidden state</p>
+          <h2>Notebooks &amp; reproducibility</h2>
+        </header>
+
+        <p class="lead">A Jupyter notebook mixes code, output and notes, which makes it perfect for exploring. Behind the page sits a <strong>kernel</strong>, a running Python process that remembers every variable from every cell you ran, in the order you ran them. The page shows the code; the kernel holds the truth. When the two drift apart, your numbers stop being reproducible.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>A number in a deck has to be reproducible next month by you or a colleague. A notebook that only works when cells run in one forgotten order produces numbers nobody can defend. "Restart and run all" is the cheapest audit you will ever run.</p>
+        </div>
+
+        <h3>Execution order is state</h3>
+        <p>The number in <code>In [n]</code> next to a cell is the order it ran. If those numbers don't increase from top to bottom, the outputs on the page came from a history you can't see. A cell that changes data in place, such as adding VAT to a column, gives a different answer every time you rerun it.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Four notebook cells shown top to bottom with execution counts 1, 4, 5 and 6 because cell 2 was run three times. The kernel memory on the right holds df with VAT applied three times and a total that is 44 percent too high.">
+              <defs>
+                <marker id="notebooks-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <text class="d-mono" x="20" y="44">In [1]</text>
+              <rect class="d-box" x="76" y="28" width="300" height="26" rx="4"/>
+              <text class="d-mono" x="86" y="46">df = pd.read_csv("orders.csv")</text>
+              <text class="d-mono d-text-signal" x="20" y="88">In [4]</text>
+              <rect class="d-signal" x="76" y="72" width="300" height="26" rx="4"/>
+              <text class="d-mono" x="86" y="90" style="white-space:pre">df["amount"] *= 1.2  # add VAT</text>
+              <text class="d-mono" x="20" y="132">In [5]</text>
+              <rect class="d-box" x="76" y="116" width="300" height="26" rx="4"/>
+              <text class="d-mono" x="86" y="134">total = df["amount"].sum()</text>
+              <text class="d-mono" x="20" y="176">In [6]</text>
+              <rect class="d-box" x="76" y="160" width="300" height="26" rx="4"/>
+              <text class="d-mono" x="86" y="178">print(f"Revenue: {total:,.0f}")</text>
+              <text class="d-mono d-text-signal" x="86" y="206">Revenue: 172,800</text>
+              <text class="d-label d-text-signal" x="210" y="206">ran cell 2 three times (counts 2, 3, 4)</text>
+              <line class="d-line-signal" x1="380" y1="86" x2="440" y2="86" marker-end="url(#notebooks-arrow)"/>
+              <rect class="d-accent" x="444" y="28" width="180" height="160" rx="10"/>
+              <text class="d-title" x="534" y="52" text-anchor="middle">Kernel memory</text>
+              <text class="d-mono" x="458" y="82">df</text>
+              <text class="d-label" x="490" y="82">1,000 rows</text>
+              <text class="d-label d-text-signal" x="490" y="100">amount × 1.2³</text>
+              <text class="d-mono" x="458" y="130">total</text>
+              <text class="d-label d-text-signal" x="504" y="130">172,800</text>
+              <text class="d-label" x="458" y="160">should be 120,000</text>
+              <text class="d-label" x="458" y="176">(100,000 × 1.2)</text>
+            </svg>
+          </div>
+          <figcaption>Nothing on the page is wrong line by line, yet the revenue is 44% too high, because the VAT cell ran three times. Only the kernel knows; the execution counts are the clue.</figcaption>
+        </figure>
+
+        <p>Run the cells below in any order you like. Rerun the VAT cell, run the total before the VAT, or print before computing anything, and watch the kernel's memory.</p>
+
+        <div class="widget" id="py-nb-demo">
+          <div class="widget-head">
+            <span class="widget-title">Notebook execution order</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <button class="btn" type="button" id="py-nb-run1">Run cell 1</button>
+            <button class="btn" type="button" id="py-nb-run2">Run cell 2</button>
+            <button class="btn" type="button" id="py-nb-run3">Run cell 3</button>
+            <button class="btn" type="button" id="py-nb-run4">Run cell 4</button>
+            <button class="btn" type="button" id="py-nb-restart">Restart kernel</button>
+            <button class="btn primary" type="button" id="py-nb-runall">Restart &amp; run all</button>
+            <output id="py-nb-out">next count: 1</output>
+          </div>
+          <svg id="py-nb-svg" viewBox="0 0 600 270" role="img" aria-label="Four notebook cells with execution counts and outputs, and a kernel memory panel listing the variables that currently exist."></svg>
+          <p class="readout" id="py-nb-readout"></p>
+        </div>
+
+        <h3>Make it reproducible</h3>
+        <p>Reproducible means someone else, on another day, gets the same numbers from the same inputs. Four habits get you most of the way, and a scripted "restart and run all" proves it.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="A reproducibility loop: restart the kernel, run all cells top to bottom, compare the key numbers with the last run, then commit. Supporting habits: pinned environment, relative paths, read-only raw data and fixed random seeds.">
+              <defs>
+                <marker id="notebooks-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="130" height="50" rx="8"/>
+              <text class="d-title" x="85" y="60" text-anchor="middle">Restart kernel</text>
+              <line class="d-line-accent" x1="150" y1="55" x2="186" y2="55" marker-end="url(#notebooks-arrow-a)"/>
+              <rect class="d-accent" x="188" y="30" width="130" height="50" rx="8"/>
+              <text class="d-title" x="253" y="52" text-anchor="middle">Run all</text>
+              <text class="d-label" x="253" y="70" text-anchor="middle">top to bottom</text>
+              <line class="d-line-accent" x1="318" y1="55" x2="354" y2="55" marker-end="url(#notebooks-arrow-a)"/>
+              <rect class="d-box" x="356" y="30" width="130" height="50" rx="8"/>
+              <text class="d-title" x="421" y="52" text-anchor="middle">Same numbers?</text>
+              <text class="d-label" x="421" y="70" text-anchor="middle">assert key totals</text>
+              <line class="d-line-accent" x1="486" y1="55" x2="522" y2="55" marker-end="url(#notebooks-arrow-a)"/>
+              <rect class="d-good" x="524" y="30" width="100" height="50" rx="8"/>
+              <text class="d-title" x="574" y="60" text-anchor="middle">Commit</text>
+              <rect class="d-fill" x="20" y="110" width="140" height="90" rx="8"/>
+              <text class="d-title" x="90" y="134" text-anchor="middle">Environment</text>
+              <text class="d-label" x="90" y="156" text-anchor="middle">requirements.txt</text>
+              <text class="d-label" x="90" y="174" text-anchor="middle">pinned versions</text>
+              <rect class="d-fill" x="175" y="110" width="140" height="90" rx="8"/>
+              <text class="d-title" x="245" y="134" text-anchor="middle">Paths</text>
+              <text class="d-label" x="245" y="156" text-anchor="middle">relative to project,</text>
+              <text class="d-label" x="245" y="174" text-anchor="middle">not C:\Users\me</text>
+              <rect class="d-fill" x="330" y="110" width="140" height="90" rx="8"/>
+              <text class="d-title" x="400" y="134" text-anchor="middle">Raw data</text>
+              <text class="d-label" x="400" y="156" text-anchor="middle">read-only; write</text>
+              <text class="d-label" x="400" y="174" text-anchor="middle">results elsewhere</text>
+              <rect class="d-fill" x="485" y="110" width="140" height="90" rx="8"/>
+              <text class="d-title" x="555" y="134" text-anchor="middle">Randomness</text>
+              <text class="d-label" x="555" y="156" text-anchor="middle">fixed seeds for</text>
+              <text class="d-label" x="555" y="174" text-anchor="middle">samples and splits</text>
+            </svg>
+          </div>
+          <figcaption>The audit loop on top, the habits that make it pass underneath. If a restart-and-run-all changes a number, find out why before anyone sees it.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># first cell: everything the notebook depends on, in one place</span>
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+DATA = Path("data/raw")              <span class="c"># relative to the project, never your home folder</span>
+VAT_RATE = 0.20
+rng = np.random.default_rng(42)      <span class="c"># fixed seed: the same sample every run</span>
+
+<span class="c"># never modify a column in place twice: derive a new one instead</span>
+df = pd.read_csv(DATA / "orders.csv")
+df = df.assign(amount_gross=df["amount"] * (1 + VAT_RATE))   <span class="c"># safe to rerun</span>
+
+<span class="c"># from a terminal: rerun the whole notebook in a fresh kernel</span>
+<span class="c">#   pip freeze &gt; requirements.txt</span>
+<span class="c">#   jupyter nbconvert --to notebook --execute report.ipynb</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>The kernel remembers everything you ran, in the order you ran it, including deleted cells.</li>
+            <li>Execution counts that jump or go backwards mean the page doesn't describe the state.</li>
+            <li>Cells that modify data in place are not safe to rerun; derive new columns instead.</li>
+            <li>"Restart and run all" before sharing is a fast reproducibility test.</li>
+            <li>Pin the environment, use relative paths, keep raw data read-only and fix seeds.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Deleting a cell that defined a variable, which keeps working until the next restart.</li>
+            <li>Sharing a notebook whose outputs came from an older version of the code.</li>
+            <li>Hard-coding absolute file paths that only exist on your laptop.</li>
+            <li>Overwriting the raw export with cleaned data, so you can never redo the cleaning.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="notebooks-1"><span>Read execution counts and say whether the outputs can be trusted</span></label></li>
+          <li><label><input type="checkbox" data-key="notebooks-2"><span>Rewrite an in-place cell so it gives the same result when rerun</span></label></li>
+          <li><label><input type="checkbox" data-key="notebooks-3"><span>Set up a first cell with imports, paths, constants and a seed</span></label></li>
+          <li><label><input type="checkbox" data-key="notebooks-4"><span>Rerun a notebook from a fresh kernel from the command line</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://jupyter.org/">Project Jupyter</a></li>
+          <li><span class="kind">Book</span><a href="https://wesmckinney.com/book/">Python for Data Analysis, appendix B: more on IPython</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="reusable-code">
+        <header class="topic-head">
+          <p class="eyebrow">04.6 · From cells to tools</p>
+          <h2>Writing reusable analysis code</h2>
+        </header>
+
+        <p class="lead">The first time you answer a question, a notebook cell is fine. The third time you copy that cell and change one word, you have three versions to keep in sync. Turning the repeated block into a <strong>function</strong> with parameters gives you one place to read, test and fix, and a report you can rerun on next week's file in seconds.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Most analyst work is recurring: weekly KPIs, monthly reviews, the same cut for a new region. Reusable functions cut that work to a single call, and they make your numbers consistent because every report runs the same logic.</p>
+        </div>
+
+        <h3>Copy-paste versus a function</h3>
+        <p>Look for the parts that change between copies: a region name, a threshold, a date range. Those become <strong>parameters</strong>. Everything else becomes the function body. A bug fixed in the body is fixed for every report at once.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="Before: three copy-pasted blocks for North, South and West, one of which has a bug using greater-than instead of greater-or-equal. After: one function revenue_report with region and min_total parameters, called three times.">
+              <defs>
+                <marker id="reusable-code-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="22">Before: 3 copies</text>
+              <rect class="d-box" x="20" y="32" width="250" height="56" rx="6"/>
+              <text class="d-mono" x="30" y="52">north = df[df.region == "North"]</text>
+              <text class="d-mono" x="30" y="72">north[north.total &gt;= 100]…</text>
+              <rect class="d-box" x="20" y="96" width="250" height="56" rx="6"/>
+              <text class="d-mono" x="30" y="116">south = df[df.region == "South"]</text>
+              <text class="d-mono" x="30" y="136">south[south.total &gt;= 100]…</text>
+              <rect class="d-signal" x="20" y="160" width="250" height="56" rx="6"/>
+              <text class="d-mono" x="30" y="180">west = df[df.region == "West"]</text>
+              <text class="d-mono d-text-signal" x="30" y="200">west[west.total &gt; 100]…</text>
+              <text class="d-label d-text-signal" x="20" y="234">a copy drifted: &gt; instead of &gt;=</text>
+              <line class="d-line-accent" x1="282" y1="124" x2="330" y2="124" marker-end="url(#reusable-code-arrow)"/>
+              <text class="d-label" x="306" y="114" text-anchor="middle">refactor</text>
+              <text class="d-title" x="340" y="22">After: 1 function, 3 calls</text>
+              <rect class="d-accent" x="340" y="32" width="282" height="108" rx="6"/>
+              <text class="d-mono" x="350" y="54">def revenue_report(df, region,</text>
+              <text class="d-mono" x="350" y="72" style="white-space:pre">                   min_total=100):</text>
+              <text class="d-mono" x="358" y="94">part = df[df.region == region]</text>
+              <text class="d-mono" x="358" y="112">part = part[part.total &gt;= min_total]</text>
+              <text class="d-mono" x="358" y="130">return part…</text>
+              <rect class="d-good" x="340" y="152" width="282" height="64" rx="6"/>
+              <text class="d-mono" x="350" y="172">for r in ["North", "South", "West"]:</text>
+              <text class="d-mono" x="366" y="194">revenue_report(df, r)</text>
+              <text class="d-label" x="340" y="234">fix once, every report changes</text>
+            </svg>
+          </div>
+          <figcaption>Three copies drift apart: the West block uses <code>&gt;</code> where the others use <code>&gt;=</code>. A function with parameters has one body, so it cannot drift.</figcaption>
+        </figure>
+
+        <p>Drag the sliders. The left panel counts lines of code as you add reports; the right panel runs the function with your parameters on a small customer table.</p>
+
+        <div class="widget" id="py-refactor-demo">
+          <div class="widget-head">
+            <span class="widget-title">Refactor into a function</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="py-ref-n">Reports needed <input type="range" id="py-ref-n" min="1" max="12" step="1" value="3"><output id="py-ref-n-out">3</output></label>
+            <label for="py-ref-region">region= <select id="py-ref-region"><option value="North" selected>"North"</option><option value="South">"South"</option><option value="West">"West"</option></select></label>
+            <label for="py-ref-min">min_total= <input type="range" id="py-ref-min" min="0" max="500" step="10" value="0"><output id="py-ref-min-out">0</output></label>
+            <label for="py-ref-top">top_n= <input type="range" id="py-ref-top" min="1" max="4" step="1" value="3"><output id="py-ref-top-out">3</output></label>
+          </div>
+          <svg id="py-ref-svg" viewBox="0 0 600 270" role="img" aria-label="Left: lines of code for copy-paste versus a function as the number of reports grows. Right: the function call and a bar chart of the top customers it returns."></svg>
+          <p class="readout" id="py-ref-readout"></p>
+        </div>
+
+        <h3>From notebook to module</h3>
+        <p>Once functions settle, move them into a <code>.py</code> file and import them. The notebook shrinks to a short story of calls and charts, the functions can be tested, and a scheduler can run the same code without a notebook at all.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="A project layout: data/raw holds read-only exports, src/analysis.py holds the functions, notebooks/report.ipynb and a scheduled job both import them, and tests/test_analysis.py checks them.">
+              <defs>
+                <marker id="reusable-code-arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="reusable-code-arrow-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-mono" x="20" y="28">sales-report/</text>
+              <text class="d-mono" x="36" y="52">data/raw/</text><text class="d-label" x="130" y="52">read-only exports</text>
+              <text class="d-mono" x="36" y="76">src/analysis.py</text><text class="d-label" x="170" y="76">functions</text>
+              <text class="d-mono" x="36" y="100">notebooks/report.ipynb</text>
+              <text class="d-mono" x="36" y="124">tests/test_analysis.py</text>
+              <text class="d-mono" x="36" y="148">requirements.txt</text>
+              <line class="d-grid" x1="28" y1="34" x2="28" y2="148"/>
+              <rect class="d-fill" x="330" y="20" width="130" height="44" rx="8"/>
+              <text class="d-title" x="395" y="47" text-anchor="middle">data/raw</text>
+              <line class="d-line-accent" x1="395" y1="64" x2="395" y2="92" marker-end="url(#reusable-code-arrow-b)"/>
+              <text class="d-label" x="402" y="82">load</text>
+              <rect class="d-accent" x="320" y="94" width="150" height="50" rx="8"/>
+              <text class="d-title" x="395" y="116" text-anchor="middle">analysis.py</text>
+              <text class="d-label" x="395" y="134" text-anchor="middle">load, clean, report</text>
+              <line class="d-line-accent" x1="470" y1="110" x2="508" y2="70" marker-end="url(#reusable-code-arrow-b)"/>
+              <line class="d-line-accent" x1="470" y1="128" x2="508" y2="168" marker-end="url(#reusable-code-arrow-b)"/>
+              <text class="d-label" x="494" y="122">import</text>
+              <rect class="d-box" x="510" y="44" width="120" height="44" rx="8"/>
+              <text class="d-title" x="570" y="71" text-anchor="middle">Notebook</text>
+              <rect class="d-box" x="510" y="150" width="120" height="44" rx="8"/>
+              <text class="d-title" x="570" y="177" text-anchor="middle">Monday job</text>
+              <rect class="d-good" x="320" y="170" width="150" height="40" rx="8"/>
+              <text class="d-title" x="395" y="195" text-anchor="middle">tests</text>
+              <line class="d-line d-dash" x1="395" y1="170" x2="395" y2="146" marker-end="url(#reusable-code-arrow-c)"/>
+              <text class="d-label" x="20" y="190">The notebook tells the story;</text>
+              <text class="d-label" x="20" y="208">the module does the work.</text>
+            </svg>
+          </div>
+          <figcaption>A small project layout. One module of functions feeds both the exploratory notebook and the scheduled report, and a test file checks the functions on a tiny known table.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># src/analysis.py</span>
+import pandas as pd
+
+def revenue_report(df: pd.DataFrame, region: str, min_total: float = 100, top_n: int = 3) -&gt; pd.DataFrame:
+    <span class="s">"""Top customers in one region by total paid revenue.
+
+    Customers below min_total are dropped. Returns columns customer, total.
+    """</span>
+    totals = (
+        df.loc[(df["region"] == region) &amp; (df["status"] == "paid")]
+          .groupby("customer", as_index=False)["amount"].sum()
+          .rename(columns={"amount": "total"})
+    )
+    return (totals.loc[totals["total"] &gt;= min_total]
+                  .nlargest(top_n, "total")
+                  .reset_index(drop=True))
+
+<span class="c"># tests/test_analysis.py  (run with: pytest)</span>
+def test_min_total_is_inclusive():
+    df = pd.DataFrame({"region": ["West"] * 2, "status": ["paid"] * 2,
+                       "customer": ["Ivy", "Jo"], "amount": [100.0, 99.0]})
+    out = revenue_report(df, "West", min_total=100)
+    assert out["customer"].tolist() == ["Ivy"]</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Copy the code a second time? Make it a function the third time at the latest.</li>
+            <li>Whatever differs between copies becomes a parameter, ideally with a sensible default.</li>
+            <li>Functions should take a DataFrame and return a new one, without changing the input.</li>
+            <li>A docstring and a tiny test document what the function promises.</li>
+            <li>Move stable functions into a module that notebooks and scheduled jobs both import.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Functions that read global variables from the notebook instead of taking parameters.</li>
+            <li>Mutating the input DataFrame inside a function, so calling it twice changes results.</li>
+            <li>One giant function that loads, cleans, plots and emails; keep each step small.</li>
+            <li>Abstracting too early: write it once plainly, refactor when the second copy appears.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>While you develop a module in a notebook, run <code>%load_ext autoreload</code> and <code>%autoreload 2</code> so edits to <code>analysis.py</code> are picked up without restarting the kernel.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="reusable-code-1"><span>Turn three copied blocks into one function with parameters and defaults</span></label></li>
+          <li><label><input type="checkbox" data-key="reusable-code-2"><span>Write a docstring that says what goes in and what comes out</span></label></li>
+          <li><label><input type="checkbox" data-key="reusable-code-3"><span>Write a pytest test on a three-row DataFrame</span></label></li>
+          <li><label><input type="checkbox" data-key="reusable-code-4"><span>Import your own module from a notebook and rerun a report on a new file</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.python.org/3/tutorial/">Python tutorial: defining functions and modules</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.pytest.org/">pytest documentation</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Explore a public CSV</h4><p>Load any public dataset with a date and a category column into pandas. Fix the dtypes, answer three questions with filters, groupby and sort, and present each answer as a small table in a notebook that passes restart-and-run-all.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Orders and customers report</h4><p>Merge an orders table with a customers table using <code>validate</code> and <code>indicator</code>, report unmatched rows, and build a region-by-month revenue grid with <code>pivot_table</code>. Explain every change in row count.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>A rerunnable weekly report</h4><p>Move your load, clean and report steps into <code>analysis.py</code> with docstrings and three pytest tests. Run it from the command line on two different weekly files and show that only the inputs changed.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Read and write lists, dicts and comprehensions without looking anything up</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Predict NumPy result shapes and pick the right axis</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Load, filter, select, group and sort a DataFrame in one readable chain</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Merge tables safely and move data between long and wide shapes</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Share a notebook that gives the same numbers after restart-and-run-all</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Turn a repeated analysis into a tested function in a module</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 04. Shared helpers first, then one IIFE per widget. */
+var PY04 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor, extra) {
+    var a = { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start", style: "white-space:pre" };
+    if (extra) for (var k in extra) a[k] = extra[k];
+    var t = svg("text", a, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function fmt(n) { return n.toLocaleString("en-US", { maximumFractionDigits: 0 }); }
+  function pyNum(x) { var r = Math.round(x * 100) / 100; return r % 1 === 0 ? r.toFixed(1) : String(r); }
+  var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return { svg: svg, text: text, clear: clear, fmt: fmt, pyNum: pyNum, REDUCED: REDUCED };
+})();
+
+/* ---------- 04.1 comprehension stepper ---------- */
+(function () {
+  if (!document.getElementById("py-comp-demo")) return;
+  var H = PY04, S = H.svg, T = H.text;
+  var plot = document.getElementById("py-comp-svg"), readout = document.getElementById("py-comp-readout");
+  var kindEl = document.getElementById("py-comp-kind"), exprEl = document.getElementById("py-comp-expr"), filtEl = document.getElementById("py-comp-filter");
+  var ORD = [
+    { id: 101, c: "Ana", a: 42.0, s: "paid" }, { id: 102, c: "Ben", a: 18.5, s: "refunded" },
+    { id: 103, c: "Ana", a: 75.0, s: "paid" }, { id: 104, c: "Cy", a: 120.0, s: "pending" },
+    { id: 105, c: "Ben", a: 64.0, s: "paid" }, { id: 106, c: "Dee", a: 9.9, s: "paid" }
+  ];
+  var EXPR = { amount: 'o["amount"]', vat: 'round(o["amount"] * 1.2, 2)', customer: 'o["customer"]' };
+  var FILT = { none: "", paid: ' if o["status"] == "paid"', big: ' if o["amount"] > 50' };
+  var step = 0, timer = null;
+  function val(o) { var e = exprEl.value; return e === "customer" ? "'" + o.c + "'" : H.pyNum(e === "vat" ? o.a * 1.2 : o.a); }
+  function keep(o) { var f = filtEl.value; return f === "paid" ? o.s === "paid" : f === "big" ? o.a > 50 : true; }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+  function draw() {
+    H.clear(plot);
+    var dict = kindEl.value === "dict";
+    var open = dict ? '{o["customer"]: ' : "[", close = dict ? "}" : "]";
+    T(plot, 20, 22, "result = " + open + EXPR[exprEl.value], "d-mono", "start", { "font-size": 11 });
+    T(plot, 20, 40, "          for o in orders" + FILT[filtEl.value] + close, "d-mono", "start", { "font-size": 11 });
+    T(plot, 20, 66, "orders", "d-title");
+    T(plot, 400, 66, dict ? "result (dict)" : "result (list)", "d-title");
+    T(plot, 28, 84, "id   customer  amount  status", "d-label", "start", { "font-family": "var(--font-mono)" });
+    var kept = 0, out = [], keys = {}, replaced = [];
+    ORD.forEach(function (o, i) {
+      var y = 92 + i * 30, done = i < step, cur = i === step - 1;
+      var k = done && keep(o);
+      S("rect", { x: 20, y: y, width: 250, height: 26, rx: 5, "class": cur ? "d-accent" : "d-box", opacity: done && !k ? 0.45 : 1 }, plot);
+      T(plot, 28, y + 17, String(o.id) + "  " + (o.c + "     ").slice(0, 6) + "  " + ("     " + H.pyNum(o.a)).slice(-6) + "  " + o.s, "d-mono", "start", { "font-size": 11, opacity: done && !k ? 0.55 : 1 });
+      if (done) {
+        if (k) {
+          kept++;
+          var v = val(o);
+          T(plot, 280, y + 17, "keep → " + v, "d-label d-text-good");
+          if (dict) {
+            if (keys[o.c] != null) replaced.push(o.c + " (was " + keys[o.c] + ")");
+            keys[o.c] = v;
+          } else out.push(v);
+        } else T(plot, 280, y + 17, "skip (filter)", "d-label d-text-signal");
+      }
+    });
+    var lines = dict ? Object.keys(keys).map(function (c) { return "'" + c + "': " + keys[c]; }) : out;
+    S("rect", { x: 400, y: 76, width: 180, height: 196, rx: 8, "class": step === ORD.length ? "d-good" : "d-box" }, plot);
+    T(plot, 410, 98, dict ? "{" : "[", "d-mono");
+    lines.forEach(function (l, i) { T(plot, 424, 118 + i * 20, l + (i < lines.length - 1 ? "," : ""), "d-mono", "start", { "font-size": 11.5 }); });
+    T(plot, 410, 118 + lines.length * 20, dict ? "}" : "]", "d-mono");
+    if (replaced.length) T(plot, 410, 264, "overwritten: " + replaced.join(", "), "d-label d-text-signal", "start", { "font-size": 10.5 });
+    var n = lines.length;
+    var msg = "Step " + step + " of " + ORD.length + " · kept " + kept + " · result has " + n + (n === 1 ? " entry" : " entries");
+    if (step === 0) msg += " · press Step to evaluate the first order";
+    if (step === ORD.length) msg += " · done";
+    if (replaced.length) msg += " · a repeated key replaced an earlier value";
+    readout.textContent = msg;
+  }
+  function next() { if (step < ORD.length) { step++; draw(); } if (step >= ORD.length) stop(); }
+  document.getElementById("py-comp-step").addEventListener("click", function () { stop(); next(); });
+  document.getElementById("py-comp-run").addEventListener("click", function () {
+    stop();
+    if (step >= ORD.length) step = 0;
+    if (H.REDUCED) { step = ORD.length; draw(); return; }
+    timer = setInterval(next, 420); next();
+  });
+  document.getElementById("py-comp-reset").addEventListener("click", function () { stop(); step = 0; draw(); });
+  [kindEl, exprEl, filtEl].forEach(function (el) { el.addEventListener("change", function () { stop(); step = 0; draw(); }); });
+  draw();
+})();
+
+/* ---------- 04.2 broadcasting shapes ---------- */
+(function () {
+  if (!document.getElementById("py-bcast-demo")) return;
+  var H = PY04, S = H.svg, T = H.text;
+  var plot = document.getElementById("py-bcast-svg"), readout = document.getElementById("py-bcast-readout"), out = document.getElementById("py-bcast-out");
+  var aEl = document.getElementById("py-bcast-a"), bEl = document.getElementById("py-bcast-b");
+  var UA = [[12, 15, 11, 18], [8, 9, 10, 7], [20, 22, 19, 25]];
+  var PB = [[2, 3, 2, 4], [1, 2, 1, 3], [3, 1, 2, 2]];
+  function shape(v) { return v.split(",").map(Number); }
+  function sstr(s) { return s.length === 1 ? "(" + s[0] + ",)" : "(" + s.join(", ") + ")"; }
+  function as2(s) { return s.length === 1 ? [1, s[0]] : s; }
+  function values(base, s) { var d = as2(s), m = []; for (var i = 0; i < d[0]; i++) { m.push(base[i].slice(0, d[1])); } return m; }
+  function broadcast(sa, sb) {
+    var n = Math.max(sa.length, sb.length), a = sa.slice(), b = sb.slice(), r = [];
+    while (a.length < n) a.unshift(1);
+    while (b.length < n) b.unshift(1);
+    for (var i = 0; i < n; i++) {
+      if (a[i] === b[i] || a[i] === 1 || b[i] === 1) r.push(Math.max(a[i], b[i]));
+      else return { err: true, a: a, b: b };
+    }
+    return { shape: r, a: a, b: b };
+  }
+  var C = 32;
+  function grid(x, y, vals, rshape, cls, title) {
+    var r = rshape ? as2(rshape) : [vals.length, vals[0].length];
+    for (var i = 0; i < r[0]; i++) {
+      for (var j = 0; j < r[1]; j++) {
+        var real = i < vals.length && j < vals[0].length;
+        var v = vals[Math.min(i, vals.length - 1)][Math.min(j, vals[0].length - 1)];
+        S("rect", { x: x + j * C, y: y + i * C, width: C - 2, height: C - 2, rx: 3, "class": real ? cls : "d-box d-dash", opacity: real ? 1 : 0.7 }, plot);
+        T(plot, x + j * C + (C - 2) / 2, y + i * C + 20, String(v), "d-mono", "middle", { "font-size": 12, opacity: real ? 1 : 0.5 });
+      }
+    }
+    T(plot, x, y + 3 * C + 16, title, "d-label");
+  }
+  function draw() {
+    H.clear(plot);
+    var sa = shape(aEl.value), sb = shape(bEl.value), res = broadcast(sa, sb);
+    var A = values(UA, sa), B = values(PB, sb);
+    T(plot, 20, 20, "A " + sstr(sa) + "  *  B " + sstr(sb), "d-mono");
+    var y0 = 40;
+    grid(20, y0, A, res.err ? null : res.shape, "d-box", "A " + sstr(sa) + " units");
+    T(plot, 166, y0 + 52, "×", "d-title", "middle");
+    grid(186, y0, B, res.err ? null : res.shape, "d-accent", "B " + sstr(sb));
+    T(plot, 334, y0 + 52, "=", "d-title", "middle");
+    var msg;
+    if (res.err) {
+      S("rect", { x: 352, y: y0, width: 236, height: 92, rx: 8, "class": "d-signal" }, plot);
+      T(plot, 362, y0 + 28, "ValueError: operands could not", "d-mono d-text-signal", "start", { "font-size": 11 });
+      T(plot, 362, y0 + 48, "be broadcast together with", "d-mono d-text-signal", "start", { "font-size": 11 });
+      T(plot, 362, y0 + 68, "shapes " + sstr(sa).replace(/ /g, "") + " " + sstr(sb).replace(/ /g, ""), "d-mono d-text-signal", "start", { "font-size": 11 });
+      out.textContent = "error";
+      msg = "A " + sstr(sa) + " * B " + sstr(sb) + " → error: after right-aligning, a pair of sizes differs and neither is 1.";
+    } else {
+      var rs = as2(res.shape), R = [];
+      for (var i = 0; i < rs[0]; i++) { R.push([]); for (var j = 0; j < rs[1]; j++) { R[i].push(A[Math.min(i, A.length - 1)][Math.min(j, A[0].length - 1)] * B[Math.min(i, B.length - 1)][Math.min(j, B[0].length - 1)]); } }
+      grid(354, y0, R, null, "d-good", "result " + sstr(res.shape));
+      var str = [];
+      if (as2(sa).join() !== rs.join()) str.push("A");
+      if (as2(sb).join() !== rs.join()) str.push("B");
+      out.textContent = "→ " + sstr(res.shape);
+      msg = "A " + sstr(sa) + " * B " + sstr(sb) + " → result " + sstr(res.shape) + " · " + (str.length ? "stretched: " + str.join(" and ") + " (dashed cells are virtual copies)" : "no stretching needed");
+    }
+    // right-aligned shape table
+    var ty = 176, cols = [530, 570];
+    T(plot, 20, ty + 14, "Right-align the shapes, then compare each column.", "d-label");
+    [["A", res.a], ["B", res.b], ["result", res.err ? null : res.shape]].forEach(function (row, k) {
+      var y = ty + 14 + k * 18;
+      T(plot, 440, y, row[0], "d-mono", "start", { "font-size": 11 });
+      if (!row[1]) { T(plot, cols[1], y, "✗", "d-mono d-text-signal", "middle"); return; }
+      var orig = row[0] === "A" ? sa : row[0] === "B" ? sb : row[1];
+      row[1].forEach(function (d, j) {
+        var padded = row[0] !== "result" && j < row[1].length - orig.length;
+        T(plot, cols[j + (2 - row[1].length)], y, padded ? "(1)" : String(d), "d-mono" + (row[0] === "result" ? " d-text-good" : ""), "middle", { "font-size": 11 });
+      });
+    });
+    T(plot, 20, ty + 32, "Each pair must be equal, or one of them 1.", "d-label");
+    T(plot, 20, ty + 50, "(1) = a missing leading dimension, treated as size 1.", "d-label");
+    readout.textContent = msg;
+  }
+  aEl.addEventListener("change", draw); bEl.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 04.3 DataFrame operations ---------- */
+(function () {
+  if (!document.getElementById("py-df-demo")) return;
+  var H = PY04, S = H.svg, T = H.text;
+  var plot = document.getElementById("py-df-svg"), readout = document.getElementById("py-df-readout");
+  var stEl = document.getElementById("py-df-status"), minEl = document.getElementById("py-df-min"), minOut = document.getElementById("py-df-min-out");
+  var colsEl = document.getElementById("py-df-cols"), sortEl = document.getElementById("py-df-sort");
+  var ROWS = [
+    [1001, "Ana", "North", 42.0, "paid"], [1002, "Ben", "South", 18.5, "refunded"], [1003, "Ana", "North", 75.0, "paid"],
+    [1004, "Cy", "West", 120.0, "pending"], [1005, "Ben", "South", 64.0, "paid"], [1006, "Dee", "West", 9.9, "paid"],
+    [1007, "Eli", "North", 88.0, "paid"], [1008, "Fay", "South", 55.0, "refunded"]
+  ];
+  var COLS = [["order_id", 52], ["customer", 58], ["region", 50], ["amount", 50], ["status", 62]];
+  var SEL = { all: [0, 1, 2, 3, 4], ca: [1, 3], ra: [2, 3] };
+  function cell(r, c) { return c === 3 ? H.pyNum(r[3]) : String(r[c]); }
+  function draw() {
+    H.clear(plot);
+    var st = stEl.value, mn = parseFloat(minEl.value), sel = SEL[colsEl.value], so = sortEl.value;
+    minOut.textContent = String(mn);
+    var conds = [];
+    if (st !== "any") conds.push('(df["status"] == "' + st + '")');
+    if (mn > 0) conds.push('(df["amount"] >= ' + mn + ")");
+    var lines = [conds.length ? "result = df[" + conds.join(" & ") + "]" : "result = df"];
+    if (colsEl.value !== "all") lines.push("result = result[[" + sel.map(function (c) { return '"' + COLS[c][0] + '"'; }).join(", ") + "]]");
+    if (so === "desc") lines.push('result = result.sort_values("amount", ascending=False)');
+    if (so === "asc") lines.push('result = result.sort_values("amount")');
+    if (so === "cust") lines.push('result = result.sort_values("customer")');
+    lines.forEach(function (l, i) { T(plot, 14, 16 + i * 16, l, "d-mono", "start", { "font-size": 11 }); });
+    function pass(r) { return (st === "any" || r[4] === st) && r[3] >= mn; }
+    var res = ROWS.filter(pass);
+    if (so === "desc") res.sort(function (a, b) { return b[3] - a[3]; });
+    if (so === "asc") res.sort(function (a, b) { return a[3] - b[3]; });
+    if (so === "cust") res.sort(function (a, b) { return a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0; });
+    var top = 78, RH = 22;
+    // left: original df with faded rows/cols
+    T(plot, 10, top - 8, "df · 8 rows × 5 columns", "d-title", "start", { "font-size": 12.5 });
+    var x = 10;
+    COLS.forEach(function (c, ci) {
+      var on = sel.indexOf(ci) >= 0;
+      S("rect", { x: x, y: top, width: c[1] - 2, height: RH - 2, rx: 3, "class": "d-fill", opacity: on ? 1 : 0.4 }, plot);
+      T(plot, x + 4, top + 14, c[0], "d-label", "start", { "font-size": 10.5, opacity: on ? 1 : 0.4 });
+      ROWS.forEach(function (r, ri) {
+        var keep = pass(r) && on;
+        T(plot, x + 4, top + RH * (ri + 1) + 15, cell(r, ci), "d-mono", "start", { "font-size": 10.5, opacity: keep ? 1 : 0.28 });
+      });
+      x += c[1];
+    });
+    ROWS.forEach(function (r, ri) {
+      if (!pass(r)) S("line", { x1: 10, x2: x - 4, y1: top + RH * (ri + 1) + 11, y2: top + RH * (ri + 1) + 11, "class": "d-line-signal", opacity: 0.45 }, plot);
+    });
+    // arrow
+    S("path", { d: "M282 " + (top + 90) + " h14", "class": "d-line-accent" }, plot);
+    S("path", { d: "M294 " + (top + 85) + " l6 5 l-6 5 z", "class": "d-head-accent" }, plot);
+    // right: result
+    T(plot, 312, top - 8, "result · " + res.length + " rows × " + sel.length + " columns", "d-title", "start", { "font-size": 12.5 });
+    var rw = sel.reduce(function (t, ci) { return t + COLS[ci][1]; }, 0);
+    S("rect", { x: 310, y: top + RH - 1, width: rw, height: Math.max(RH, RH * res.length), rx: 4, "class": "d-good", "fill-opacity": 0.35 }, plot);
+    x = 312;
+    sel.forEach(function (ci) {
+      var c = COLS[ci], w = c[1];
+      S("rect", { x: x, y: top, width: w - 2, height: RH - 2, rx: 3, "class": ci === 3 && so !== "none" && so !== "cust" || ci === 1 && so === "cust" ? "d-accent" : "d-fill" }, plot);
+      T(plot, x + 4, top + 14, c[0], "d-label", "start", { "font-size": 10.5 });
+      res.forEach(function (r, ri) { T(plot, x + 4, top + RH * (ri + 1) + 15, cell(r, ci), "d-mono", "start", { "font-size": 10.5 }); });
+      x += w;
+    });
+    if (!res.length) T(plot, 316, top + RH + 15, "empty DataFrame", "d-label d-text-signal");
+    var sortTxt = { none: "original order", desc: "sorted by amount, largest first", asc: "sorted by amount, smallest first", cust: "sorted by customer" }[so];
+    var msg = "result: " + res.length + " rows × " + sel.length + " columns · filter keeps " + res.length + " of 8 rows · " + sortTxt;
+    if (res.length) msg += " · top row: " + res[0][1] + " " + H.pyNum(res[0][3]);
+    readout.textContent = msg;
+  }
+  [stEl, colsEl, sortEl].forEach(function (el) { el.addEventListener("change", draw); });
+  minEl.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---------- 04.4a merge visualizer ---------- */
+(function () {
+  if (!document.getElementById("py-merge-demo")) return;
+  var H = PY04, S = H.svg, T = H.text;
+  var plot = document.getElementById("py-merge-svg"), readout = document.getElementById("py-merge-readout"), out = document.getElementById("py-merge-out");
+  var howEl = document.getElementById("py-merge-how"), dupEl = document.getElementById("py-merge-dup");
+  var ORD = [["o1", 1, 42.0], ["o2", 2, 18.5], ["o3", 1, 75.0], ["o4", 3, 120.0], ["o5", 9, 64.0]];
+  function customers() {
+    var c = [[1, "Ana", "North"], [2, "Ben", "South"], [3, "Cy", "West"], [4, "Dee", "West"]];
+    if (dupEl.checked) c.splice(1, 0, [1, "Ana", "East"]);
+    return c;
+  }
+  function merge(how, CU) {
+    var rows = [];
+    if (how === "right") {
+      CU.forEach(function (c) {
+        var m = ORD.filter(function (o) { return o[1] === c[0]; });
+        if (m.length) m.forEach(function (o) { rows.push([o[0], c[0], o[2], c[1], c[2], "both"]); });
+        else rows.push([null, c[0], null, c[1], c[2], "right_only"]);
+      });
+      return rows;
+    }
+    ORD.forEach(function (o) {
+      var m = CU.filter(function (c) { return c[0] === o[1]; });
+      if (m.length) m.forEach(function (c) { rows.push([o[0], o[1], o[2], c[1], c[2], "both"]); });
+      else if (how !== "inner") rows.push([o[0], o[1], o[2], null, null, "left_only"]);
+    });
+    if (how === "outer") {
+      CU.forEach(function (c) { if (!ORD.some(function (o) { return o[1] === c[0]; })) rows.push([null, c[0], null, c[1], c[2], "right_only"]); });
+      rows = rows.map(function (r, i) { return [r, i]; }).sort(function (a, b) { return a[0][1] - b[0][1] || a[1] - b[1]; }).map(function (p) { return p[0]; });
+    }
+    return rows;
+  }
+  function draw() {
+    H.clear(plot);
+    var how = howEl.value, CU = customers(), rows = merge(how, CU), RH = 18;
+    // orders table
+    T(plot, 20, 18, "orders (5 rows)", "d-title", "start", { "font-size": 12.5 });
+    var oc = [["order_id", 56], ["cust_id", 52], ["amount", 52]];
+    var ox = 20, cx = 400;
+    oc.forEach(function (c, i) { var x = ox + [0, 56, 108][i]; S("rect", { x: x, y: 26, width: c[1] - 2, height: RH - 2, rx: 3, "class": "d-fill" }, plot); T(plot, x + 4, 38, c[0], "d-label", "start", { "font-size": 10.5 }); });
+    ORD.forEach(function (o, i) {
+      var y = 26 + RH * (i + 1), matched = CU.some(function (c) { return c[0] === o[1]; });
+      if (!matched) S("rect", { x: ox - 2, y: y - 1, width: 164, height: RH, rx: 3, "class": "d-signal", "fill-opacity": 0.5 }, plot);
+      [o[0], String(o[1]), H.pyNum(o[2])].forEach(function (v, k) { T(plot, ox + [0, 56, 108][k] + 4, y + 12, v, "d-mono", "start", { "font-size": 10.5 }); });
+    });
+    T(plot, cx, 18, "customers (" + CU.length + " rows)", "d-title", "start", { "font-size": 12.5 });
+    [["cust_id", 52], ["name", 50], ["region", 60]].forEach(function (c, i) { var x = cx + [0, 52, 102][i]; S("rect", { x: x, y: 26, width: c[1] - 2, height: RH - 2, rx: 3, "class": "d-fill" }, plot); T(plot, x + 4, 38, c[0], "d-label", "start", { "font-size": 10.5 }); });
+    var seen = {};
+    CU.forEach(function (c, i) {
+      var y = 26 + RH * (i + 1), has = ORD.some(function (o) { return o[1] === c[0]; });
+      var dup = seen[c[0]]; seen[c[0]] = true;
+      if (!has) S("rect", { x: cx - 2, y: y - 1, width: 164, height: RH, rx: 3, "class": "d-signal", "fill-opacity": 0.5 }, plot);
+      if (dup) S("rect", { x: cx - 2, y: y - 1, width: 164, height: RH, rx: 3, "class": "d-accent", "fill-opacity": 0.6 }, plot);
+      [String(c[0]), c[1], c[2]].forEach(function (v, k) { T(plot, cx + [0, 52, 102][k] + 4, y + 12, v, "d-mono", "start", { "font-size": 10.5 }); });
+    });
+    // key lines
+    ORD.forEach(function (o, i) {
+      CU.forEach(function (c, j) {
+        if (c[0] === o[1]) S("line", { x1: ox + 162, y1: 26 + RH * (i + 1) + 8, x2: cx - 4, y2: 26 + RH * (j + 1) + 8, "class": "d-line-accent", opacity: 0.75 }, plot);
+      });
+    });
+    T(plot, 280, 150, 'on="cust_id"', "d-label", "middle");
+    // result
+    var ry = 176;
+    T(plot, 20, ry - 6, 'orders.merge(customers, on="cust_id", how="' + how + '", indicator=True)', "d-mono", "start", { "font-size": 11 });
+    var rc = [["order_id", 60], ["cust_id", 56], ["amount", 58], ["name", 50], ["region", 58], ["_merge", 86]], xs = [], acc = 20;
+    rc.forEach(function (c) { xs.push(acc); acc += c[1]; });
+    rc.forEach(function (c, i) { S("rect", { x: xs[i], y: ry, width: c[1] - 2, height: RH - 2, rx: 3, "class": "d-fill" }, plot); T(plot, xs[i] + 4, ry + 12, c[0], "d-label", "start", { "font-size": 10.5 }); });
+    var cnt = { both: 0, left_only: 0, right_only: 0 };
+    rows.forEach(function (r, i) {
+      var y = ry + RH * (i + 1);
+      cnt[r[5]]++;
+      r.forEach(function (v, k) {
+        var s = v === null ? "NaN" : k === 2 ? H.pyNum(v) : String(v);
+        T(plot, xs[k] + 4, y + 12, s, v === null ? "d-mono d-text-signal" : k === 5 && v !== "both" ? "d-mono d-text-signal" : "d-mono", "start", { "font-size": 10.5 });
+      });
+    });
+    T(plot, 450, ry + 30, rows.length + " rows", "d-title", "start", { "font-size": 22 });
+    T(plot, 450, ry + 52, "from 5 orders", "d-label");
+    if (rows.length > (how === "inner" ? 4 : how === "outer" ? 6 : 5)) {
+      T(plot, 450, ry + 76, "fan-out: customer 1", "d-label d-text-signal");
+      T(plot, 450, ry + 92, "matched twice, so its", "d-label d-text-signal");
+      T(plot, 450, ry + 108, "orders were duplicated", "d-label d-text-signal");
+      T(plot, 450, ry + 128, 'validate="m:1" would raise', "d-label");
+    }
+    out.textContent = rows.length + " rows";
+    var msg = 'how="' + how + '" → ' + rows.length + " rows from 5 orders · both " + cnt.both + ", left_only " + cnt.left_only + ", right_only " + cnt.right_only;
+    if (dupEl.checked) msg += " · duplicate key: orders for customer 1 appear twice, so revenue would be overstated";
+    readout.textContent = msg;
+  }
+  howEl.addEventListener("change", draw); dupEl.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 04.4b pivot and melt ---------- */
+(function () {
+  if (!document.getElementById("py-reshape-demo")) return;
+  var H = PY04, S = H.svg, T = H.text;
+  var plot = document.getElementById("py-reshape-svg"), readout = document.getElementById("py-reshape-readout"), out = document.getElementById("py-reshape-out");
+  var opEl = document.getElementById("py-reshape-op"), dupEl = document.getElementById("py-reshape-dup");
+  var MONTHS = ["Jan", "Feb", "Mar"], MCOL = { Jan: "var(--t2)", Feb: "var(--t3)", Mar: "var(--t4)" };
+  function longRows() {
+    var r = [["North", "Jan", 120], ["North", "Feb", 135], ["North", "Mar", 150], ["South", "Jan", 90], ["South", "Feb", 80], ["South", "Mar", 110]];
+    if (dupEl.checked) r.push(["North", "Feb", 15]);
+    return r;
+  }
+  function wideOf(rows) {
+    var w = { North: {}, South: {} };
+    rows.forEach(function (r) { w[r[0]][r[1]] = (w[r[0]][r[1]] || 0) + r[2]; });
+    return w;
+  }
+  var RH = 22;
+  function drawLong(x, rows, hiDup) {
+    var cw = [60, 52, 64], hd = ["region", "month", "revenue"];
+    hd.forEach(function (h, i) { var cx = x + [0, 60, 112][i]; S("rect", { x: cx, y: 34, width: cw[i] - 2, height: RH - 2, rx: 3, "class": "d-fill" }, plot); T(plot, cx + 4, 49, h, "d-label", "start", { "font-size": 10.5 }); });
+    rows.forEach(function (r, i) {
+      var y = 34 + RH * (i + 1);
+      S("rect", { x: x + 60, y: y, width: 50, height: RH - 2, rx: 3, style: "fill:" + MCOL[r[1]] + ";fill-opacity:.22" }, plot);
+      if (hiDup && i === 6) S("rect", { x: x - 2, y: y - 1, width: 180, height: RH, rx: 3, "class": "d-signal", "fill-opacity": 0.4 }, plot);
+      [r[0], r[1], String(r[2])].forEach(function (v, k) { T(plot, x + [0, 60, 112][k] + 4, y + 15, v, "d-mono", "start", { "font-size": 11 }); });
+    });
+  }
+  function drawWide(x, w) {
+    var hd = ["region"].concat(MONTHS);
+    hd.forEach(function (h, i) {
+      var cx = x + (i === 0 ? 0 : 60 + (i - 1) * 50), cw = i === 0 ? 58 : 48;
+      S("rect", { x: cx, y: 34, width: cw, height: RH - 2, rx: 3, "class": "d-fill", style: i ? "fill:" + MCOL[h] + ";fill-opacity:.3" : "" }, plot);
+      T(plot, cx + 4, 49, h, "d-label", "start", { "font-size": 10.5 });
+    });
+    ["North", "South"].forEach(function (rg, ri) {
+      var y = 34 + RH * (ri + 1);
+      T(plot, x + 4, y + 15, rg, "d-mono", "start", { "font-size": 11 });
+      MONTHS.forEach(function (m, mi) {
+        var cx = x + 60 + mi * 50;
+        S("rect", { x: cx, y: y, width: 48, height: RH - 2, rx: 3, style: "fill:" + MCOL[m] + ";fill-opacity:.22" }, plot);
+        T(plot, cx + 4, y + 15, String(w[rg][m]), "d-mono", "start", { "font-size": 11 });
+      });
+    });
+  }
+  function arrow(x1, x2, y, cls) {
+    S("line", { x1: x1, y1: y, x2: x2 - 6, y2: y, "class": cls }, plot);
+    S("path", { d: "M" + (x2 - 8) + " " + (y - 5) + " l8 5 l-8 5 z", "class": cls === "d-line-signal" ? "d-head-signal" : "d-head-accent" }, plot);
+  }
+  function draw() {
+    H.clear(plot);
+    var op = opEl.value, rows = longRows(), msg;
+    if (op === "melt") {
+      var w = wideOf(rows);
+      T(plot, 16, 22, "wide (2 × 4 with region)", "d-title", "start", { "font-size": 12.5 });
+      drawWide(16, w);
+      arrow(236, 380, 110, "d-line-accent");
+      T(plot, 308, 84, 'wide.melt(id_vars="region",', "d-mono", "middle", { "font-size": 10.5 });
+      T(plot, 308, 98, 'var_name="month",', "d-mono", "middle", { "font-size": 10.5 });
+      T(plot, 308, 132, 'value_name="revenue")', "d-mono", "middle", { "font-size": 10.5 });
+      var L = [];
+      MONTHS.forEach(function (m) { ["North", "South"].forEach(function (rg) { L.push([rg, m, w[rg][m]]); }); });
+      T(plot, 400, 22, "long · 6 rows × 3 columns", "d-title", "start", { "font-size": 12.5 });
+      drawLong(400, L, false);
+      out.textContent = "6 × 3";
+      msg = "melt → 6 × 3 long table: each month header became a value in the month column" + (dupEl.checked ? " (the wide input already summed North / Feb to 150)" : "");
+    } else {
+      T(plot, 16, 22, "long · " + rows.length + " rows", "d-title", "start", { "font-size": 12.5 });
+      drawLong(16, rows, dupEl.checked);
+      var fn = op === "pivot" ? "long.pivot(" : "long.pivot_table(";
+      arrow(200, 368, 110, op === "pivot" && dupEl.checked ? "d-line-signal" : "d-line-accent");
+      T(plot, 284, 70, fn, "d-mono", "middle", { "font-size": 10.5 });
+      T(plot, 284, 84, 'index="region",', "d-mono", "middle", { "font-size": 10.5 });
+      T(plot, 284, 98, 'columns="month",', "d-mono", "middle", { "font-size": 10.5 });
+      T(plot, 284, 132, 'values="revenue"' + (op === "pivot" ? ")" : ","), "d-mono", "middle", { "font-size": 10.5 });
+      if (op !== "pivot") T(plot, 284, 146, 'aggfunc="sum")', "d-mono", "middle", { "font-size": 10.5 });
+      if (op === "pivot" && dupEl.checked) {
+        S("rect", { x: 376, y: 34, width: 212, height: 96, rx: 8, "class": "d-signal" }, plot);
+        T(plot, 386, 58, "ValueError: Index contains", "d-mono d-text-signal", "start", { "font-size": 11 });
+        T(plot, 386, 76, "duplicate entries, cannot", "d-mono d-text-signal", "start", { "font-size": 11 });
+        T(plot, 386, 94, "reshape", "d-mono d-text-signal", "start", { "font-size": 11 });
+        T(plot, 386, 118, "two rows for North / Feb", "d-label");
+        out.textContent = "error";
+        msg = "pivot → ValueError: two rows want the same North / Feb cell, and pivot does not aggregate";
+      } else {
+        var wd = wideOf(rows);
+        T(plot, 376, 22, "wide · 2 × 3 (+ region index)", "d-title", "start", { "font-size": 12.5 });
+        drawWide(376, wd);
+        if (dupEl.checked) T(plot, 376, 124, "North / Feb = 135 + 15 = 150", "d-label d-text-good");
+        out.textContent = "2 × 3";
+        msg = op + " → 2 × 3 wide table (2 regions × 3 months)" + (dupEl.checked ? " · the duplicate North / Feb rows were summed to 150" : "");
+      }
+    }
+    T(plot, 16, 250, "Cell colour follows the month: watch where each value lands.", "d-label");
+    readout.textContent = msg;
+  }
+  opEl.addEventListener("change", draw); dupEl.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 04.5 notebook execution order ---------- */
+(function () {
+  var w = document.getElementById("py-nb-demo");
+  if (!w) return;
+  var H = PY04, S = H.svg, T = H.text;
+  var plot = document.getElementById("py-nb-svg"), readout = document.getElementById("py-nb-readout"), out = document.getElementById("py-nb-out");
+  var CODE = [
+    ['df = pd.read_csv("orders.csv")', "len(df)"],
+    ['df["amount"] = df["amount"] * 1.2', "# add 20% VAT"],
+    ['total = df["amount"].sum()'],
+    ['print(f"Revenue: {total:,.0f}")']
+  ];
+  var BASE = 100000, RIGHT = 120000;
+  var st;
+  function fresh() { return { next: 1, df: null, total: null, log: [], printed: null, err: null }; }
+  var cells = [0, 1, 2, 3].map(function () { return { count: null, out: "", err: false, stale: false }; });
+  st = fresh();
+  function run(i) {
+    var c = cells[i];
+    c.count = st.next++; c.stale = false; c.err = false; c.out = ""; st.err = null;
+    st.log.push(i);
+    if (i === 0) { st.df = { vat: 0 }; c.out = "1000"; }
+    else if (i === 1) { if (!st.df) { c.err = true; c.out = "NameError: name 'df' is not defined"; } else st.df.vat++; }
+    else if (i === 2) { if (!st.df) { c.err = true; c.out = "NameError: name 'df' is not defined"; } else st.total = BASE * Math.pow(1.2, st.df.vat); }
+    else { if (st.total === null) { c.err = true; c.out = "NameError: name 'total' is not defined"; } else { c.out = "Revenue: " + H.fmt(st.total); st.printed = st.total; if (Math.round(st.total) !== RIGHT) w.setAttribute("data-saw-wrong", "1"); } }
+    if (c.err) st.err = c.out;
+  }
+  function restart() { st = fresh(); cells.forEach(function (c) { if (c.count !== null) c.stale = true; }); }
+  function draw() {
+    H.clear(plot);
+    cells.forEach(function (c, i) {
+      var y = 10 + i * 64;
+      T(plot, 12, y + 20, "In [" + (c.count === null ? " " : c.count) + "]", "d-mono" + (c.stale ? "" : ""), "start", { "font-size": 11, opacity: c.stale ? 0.45 : 1 });
+      S("rect", { x: 62, y: y + 4, width: 330, height: CODE[i].length > 1 ? 36 : 22, rx: 4, "class": st.log.length && st.log[st.log.length - 1] === i ? "d-accent" : "d-box" }, plot);
+      CODE[i].forEach(function (l, k) { T(plot, 70, y + 19 + k * 15, l, l.charAt(0) === "#" ? "d-label" : "d-mono", "start", { "font-size": 11 }); });
+      if (c.out) T(plot, 70, y + (CODE[i].length > 1 ? 56 : 42), c.out + (c.stale ? "   (stale output)" : ""), c.err ? "d-mono d-text-signal" : "d-mono d-text-good", "start", { "font-size": 11, opacity: c.stale ? 0.45 : 1 });
+    });
+    S("rect", { x: 410, y: 10, width: 180, height: 246, rx: 10, "class": "d-fill" }, plot);
+    T(plot, 500, 34, "Kernel memory", "d-title", "middle");
+    T(plot, 422, 64, "df", "d-mono");
+    if (st.df) { T(plot, 460, 64, "1,000 rows", "d-label"); T(plot, 460, 82, "amount × 1.2" + (st.df.vat === 1 ? "" : st.df.vat === 0 ? " (none yet)" : "^" + st.df.vat), st.df.vat > 1 ? "d-label d-text-signal" : "d-label"); }
+    else T(plot, 460, 64, "not defined", "d-label");
+    T(plot, 422, 114, "total", "d-mono");
+    if (st.total !== null) T(plot, 470, 114, H.fmt(st.total), Math.round(st.total) === RIGHT ? "d-label d-text-good" : "d-label d-text-signal");
+    else T(plot, 470, 114, "not defined", "d-label");
+    T(plot, 422, 150, "run order since restart:", "d-label");
+    T(plot, 422, 168, st.log.length ? st.log.map(function (i) { return i + 1; }).join(" → ") : "(nothing yet)", "d-mono", "start", { "font-size": 11 });
+    T(plot, 422, 204, "correct total:", "d-label");
+    T(plot, 422, 222, "100,000 × 1.2 = 120,000", "d-mono", "start", { "font-size": 10.5 });
+    out.textContent = "next count: " + st.next;
+    var clean = st.log.length === 4 && st.log.join() === "0,1,2,3";
+    var msg;
+    if (st.printed === null) msg = "Nothing printed in this kernel session yet" + (st.err ? " · last cell raised " + st.err.split(":")[0] : "");
+    else {
+      var ok = Math.round(st.printed) === RIGHT;
+      msg = "Printed revenue " + H.fmt(st.printed) + (ok ? " · correct" : " · WRONG, should be 120,000") + " · VAT applied " + (st.df ? st.df.vat : 0) + "×";
+      msg += clean ? " · clean run: counts 1 to 4 in order" : " · run order: " + st.log.map(function (i) { return i + 1; }).join(",");
+    }
+    readout.textContent = msg;
+  }
+  [1, 2, 3, 4].forEach(function (n) { document.getElementById("py-nb-run" + n).addEventListener("click", function () { run(n - 1); draw(); }); });
+  document.getElementById("py-nb-restart").addEventListener("click", function () { restart(); draw(); });
+  document.getElementById("py-nb-runall").addEventListener("click", function () { restart(); [0, 1, 2, 3].forEach(run); draw(); });
+  draw();
+})();
+
+/* ---------- 04.6 refactor into a function ---------- */
+(function () {
+  if (!document.getElementById("py-refactor-demo")) return;
+  var H = PY04, S = H.svg, T = H.text;
+  var plot = document.getElementById("py-ref-svg"), readout = document.getElementById("py-ref-readout");
+  var nEl = document.getElementById("py-ref-n"), rEl = document.getElementById("py-ref-region"), mEl = document.getElementById("py-ref-min"), tEl = document.getElementById("py-ref-top");
+  var DATA = {
+    North: [["Ana", 420], ["Ben", 310], ["Cy", 150], ["Dee", 90]],
+    South: [["Eli", 510], ["Fay", 260], ["Gus", 240], ["Hal", 60]],
+    West: [["Ivy", 380], ["Jo", 330], ["Kai", 120], ["Lu", 45]]
+  };
+  var PER = 7, DEF = 8;
+  function draw() {
+    H.clear(plot);
+    var n = parseInt(nEl.value, 10), region = rEl.value, mn = parseInt(mEl.value, 10), top = parseInt(tEl.value, 10);
+    document.getElementById("py-ref-n-out").textContent = n;
+    document.getElementById("py-ref-min-out").textContent = mn;
+    document.getElementById("py-ref-top-out").textContent = top;
+    // left: lines of code chart
+    var X0 = 44, X1 = 270, Y0 = 220, Y1 = 40, YMAX = 90;
+    function px(k) { return X0 + (k - 1) * (X1 - X0) / 11; }
+    function py(v) { return Y0 - (Y0 - Y1) * v / YMAX; }
+    T(plot, 20, 20, "Lines of code", "d-title", "start", { "font-size": 12.5 });
+    S("line", { x1: X0, y1: Y0, x2: X1, y2: Y0, "class": "d-line" }, plot);
+    S("line", { x1: X0, y1: Y0, x2: X0, y2: Y1, "class": "d-line" }, plot);
+    [0, 30, 60, 90].forEach(function (v) { T(plot, X0 - 6, py(v) + 4, String(v), "d-label", "end", { "font-size": 10 }); if (v) S("line", { x1: X0, x2: X1, y1: py(v), y2: py(v), "class": "d-grid" }, plot); });
+    T(plot, X0, Y0 + 16, "1", "d-label", "middle", { "font-size": 10 });
+    T(plot, X1, Y0 + 16, "12 reports", "d-label", "end", { "font-size": 10 });
+    var pc = "", pf = "";
+    for (var k = 1; k <= 12; k++) { pc += (k === 1 ? "M" : "L") + px(k).toFixed(1) + "," + py(PER * k).toFixed(1); pf += (k === 1 ? "M" : "L") + px(k).toFixed(1) + "," + py(DEF + k).toFixed(1); }
+    S("path", { d: pc, "class": "d-line-signal" }, plot);
+    S("path", { d: pf, "class": "d-line-accent" }, plot);
+    S("line", { x1: px(n), x2: px(n), y1: Y0, y2: Y1, "class": "d-line d-dash" }, plot);
+    S("circle", { cx: px(n), cy: py(PER * n), r: 4.5, "class": "d-dot-signal" }, plot);
+    S("circle", { cx: px(n), cy: py(DEF + n), r: 4.5, "class": "d-dot" }, plot);
+    var lx = n > 7 ? px(n) - 8 : px(n) + 8, an = n > 7 ? "end" : "start";
+    T(plot, lx, py(PER * n) - 6, "copy-paste " + PER * n, "d-label d-text-signal", an);
+    T(plot, lx, py(DEF + n) + 16, "function " + (DEF + n), "d-label d-text-accent", an);
+    // right: the call and its result
+    T(plot, 310, 20, "revenue_report(df, \"" + region + "\",", "d-mono", "start", { "font-size": 11 });
+    T(plot, 310, 36, "    min_total=" + mn + ", top_n=" + top + ")", "d-mono", "start", { "font-size": 11 });
+    var rows = DATA[region].slice().sort(function (a, b) { return b[1] - a[1]; });
+    var kept = [], BX = 360, BW = 200, MAX = 520;
+    rows.forEach(function (r, i) {
+      var y = 60 + i * 38, pass = r[1] >= mn, inTop = pass && kept.length < top;
+      if (inTop) kept.push(r);
+      var wpx = Math.max(3, BW * r[1] / MAX);
+      S("rect", { x: BX, y: y, width: wpx, height: 22, rx: 4, "class": inTop ? "d-accent" : "d-box d-dash", opacity: inTop ? 1 : 0.6 }, plot);
+      T(plot, BX - 8, y + 15, r[0], "d-mono", "end", { "font-size": 11, opacity: inTop ? 1 : 0.5 });
+      T(plot, BX + wpx + 6, y + 15, String(r[1]), "d-label", "start", { opacity: inTop ? 1 : 0.6 });
+      if (!inTop) T(plot, BX + 6, y + 34, pass ? "cut by top_n" : "below min_total", "d-label d-text-signal", "start", { "font-size": 10 });
+    });
+    var mx = BX + BW * Math.min(mn, MAX) / MAX;
+    S("line", { x1: mx, x2: mx, y1: 52, y2: 212, "class": "d-line-signal d-dash" }, plot);
+    T(plot, mx, 226, "min_total", "d-label d-text-signal", "middle", { "font-size": 10 });
+    T(plot, 310, 252, "returned " + kept.length + " rows", "d-title", "start", { "font-size": 12.5 });
+    var msg = n + " report" + (n === 1 ? "" : "s") + ": copy-paste " + PER * n + " lines, function " + (DEF + n) + " lines · " + n + " place" + (n === 1 ? "" : "s") + " to fix a bug vs 1 · revenue_report returned " + kept.length + " rows" + (kept.length ? ": " + kept.map(function (r) { return r[0] + " " + r[1]; }).join(", ") : "");
+    readout.textContent = msg;
+  }
+  [nEl, mEl, tEl].forEach(function (el) { el.addEventListener("input", draw); });
+  rEl.addEventListener("change", draw);
+  draw();
+})();
+</script>
+</body>
+</html>

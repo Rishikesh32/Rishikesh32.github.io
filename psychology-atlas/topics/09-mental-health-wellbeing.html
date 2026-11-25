@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mental Health &amp; Well-being · Psychology Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="wellbeing">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="13" cy="13" r="8" fill="none" stroke="var(--accent-ink)" stroke-width="2"/>
+        <circle cx="13" cy="13" r="3.5" fill="var(--accent-ink)"/>
+      </svg>
+      Psychology Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Mental Health &amp; Well-being</h1>
+    <p class="lede">Mental health is not merely the absence of illness; it is the presence of psychological resilience, emotional flexibility, and human flourishing. This area examines cognitive distortions (CBT), somatic nervous system regulation (the parasympathetic brake), growth mindsets, and Martin Seligman's PERMA framework for long-term well-being.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Resilience is a skill that can be cultivated through deliberate cognitive and somatic practices. The diagram below illustrates how identifying cognitive distortions, deploying somatic breath regulation, building psychological flexibility, and anchoring in positive psychology (PERMA) support lifelong mental health.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 180" role="img" aria-label="Well-being pipeline: Cognitive Reappraisal to Somatic Regulation to Growth & Self-Compassion to PERMA Flourishing.">
+              <rect class="d-accent" x="20" y="45" width="160" height="60" rx="8"/>
+              <text class="d-title" x="100" y="70" text-anchor="middle">CBT Reappraisal</text>
+              <text class="d-label" x="100" y="88" text-anchor="middle">Challenge Distortions</text>
+
+              <line class="d-line-accent" x1="180" y1="75" x2="210" y2="75"/>
+
+              <rect class="d-box" x="210" y="45" width="160" height="60" rx="8"/>
+              <text class="d-title" x="290" y="70" text-anchor="middle">Somatic Regulation</text>
+              <text class="d-label" x="290" y="88" text-anchor="middle">Parasympathetic Sigh</text>
+
+              <line class="d-line-accent" x1="370" y1="75" x2="400" y2="75"/>
+
+              <rect class="d-box" x="400" y="45" width="160" height="60" rx="8"/>
+              <text class="d-title" x="480" y="70" text-anchor="middle">Resilience &amp; ACT</text>
+              <text class="d-label" x="480" y="88" text-anchor="middle">Psychological Flexibility</text>
+
+              <line class="d-line-accent" x1="560" y1="75" x2="590" y2="75"/>
+
+              <rect class="d-good" x="590" y="45" width="150" height="60" rx="8"/>
+              <text class="d-title" x="665" y="70" text-anchor="middle">PERMA Well-Being</text>
+              <text class="d-label" x="665" y="88" text-anchor="middle">Meaning &amp; Connection</text>
+
+              <rect class="d-fill" x="20" y="125" width="720" height="45" rx="6"/>
+              <text class="d-label" x="380" y="152" text-anchor="middle">Epictetus' Principle: People are disturbed not by things that happen, but by the view which they take of them.</text>
+            </svg>
+          </div>
+          <figcaption>The foundations of psychological health: cognitive awareness, autonomic nervous system regulation, self-compassion, and purposeful living.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="stress-anxiety">
+        <header class="topic-head">
+          <p class="eyebrow">09.1 · Deconstructing distress</p>
+          <h2>Stress, anxiety &amp; depression</h2>
+        </header>
+
+        <p class="lead">Anxiety is a future-oriented emotional state characterized by apprehension, muscle tension, and vigilance. Cognitive Behavioral Therapy (CBT), founded by Dr. Aaron Beck, revealed that emotional distress is primarily mediated by automatic cognitive distortions.</p>
+
+        <h3>Common Cognitive Distortions</h3>
+        <ul>
+          <li><strong>Catastrophizing:</strong> Projecting worst-case scenarios and treating them as guaranteed certainties (<em>"If this release fails, my career is completely over"</em>).</li>
+          <li><strong>All-or-Nothing (Black-and-White) Thinking:</strong> Evaluating situations in extremes (<em>"Unless this presentation is flawless, I am an utter failure"</em>).</li>
+          <li><strong>Mind Reading:</strong> Assuming you know what others think without evidence (<em>"My boss hasn't replied; they must be furious with me"</em>).</li>
+          <li><strong>Emotional Reasoning:</strong> Treating feelings as factual truth (<em>"I feel overwhelmed, so this problem must be impossible to solve"</em>).</li>
+        </ul>
+
+        <h3>The Autonomic Nervous System</h3>
+        <p>The human nervous system balances two opposing branches:</p>
+        <ul>
+          <li><strong>Sympathetic Nervous System (The Accelerator):</strong> The fight-or-flight response. Elevates heart rate, dilates pupils, mobilizes glucose, and increases cortisol and adrenaline.</li>
+          <li><strong>Parasympathetic Nervous System (The Brake):</strong> The rest-and-digest system mediated by the vagus nerve. Slows breathing, reduces blood pressure, aids cellular repair, and restores calm.</li>
+        </ul>
+      </section>
+
+      <section class="topic" id="coping">
+        <header class="topic-head">
+          <p class="eyebrow">09.2 · Active emotional regulation</p>
+          <h2>Coping strategies</h2>
+        </header>
+
+        <p class="lead">Psychologists Richard Lazarus and Susan Folkman established the transactional model of stress, proving that human coping falls into two primary strategies depending on locus of control.</p>
+
+        <h3>Problem-Focused vs Emotion-Focused Coping</h3>
+        <ul>
+          <li><strong>Problem-Focused Coping:</strong> Aimed directly at altering the external stressor (e.g. creating a debt repayment plan, renegotiating project deadlines, learning a missing technical skill). Ideal when the stressor is controllable.</li>
+          <li><strong>Emotion-Focused Coping:</strong> Aimed at regulating your internal emotional reaction to an unchangeable stressor (e.g. mindfulness, cognitive reappraisal, acceptance, talking with friends). Crucial when events cannot be altered.</li>
+        </ul>
+
+        <div class="callout why">
+          <h4>Cognitive Reappraisal in Real-Time</h4>
+          <p>Cognitive reappraisal involves consciously reframing an emotional event. When facing unexpected layoffs or project cancellations, ask: <em>"What does this make possible?"</em> or <em>"What hidden capability can I cultivate through this challenge?"</em> Neuroimaging confirms that reappraisal down-regulates amygdala reactivity within seconds.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="resilience">
+        <header class="topic-head">
+          <p class="eyebrow">09.3 · Bouncing forward</p>
+          <h2>Building resilience</h2>
+        </header>
+
+        <p class="lead">Resilience is not callous stoicism or emotional numbness; it is the capacity to endure setbacks, process difficulty adaptively, and integrate experiences into greater wisdom and strength.</p>
+
+        <h3>Psychological Flexibility (ACT)</h3>
+        <p>Acceptance and Commitment Therapy (ACT), developed by Steven Hayes, focuses on <strong>psychological flexibility</strong>: the willingness to experience unpleasant internal thoughts and emotions without struggling against them, while committing to actions aligned with personal values.</p>
+
+        <h3>Self-Compassion (Kristin Neff)</h3>
+        <p>High performers often treat themselves with brutal inner criticism. Dr. Kristin Neff proved that <strong>self-compassion</strong> predicts higher emotional resilience and faster recovery than self-esteem:</p>
+        <ul>
+          <li><strong>Self-Kindness vs Self-Judgment:</strong> Speaking to yourself during failure with the same warmth and understanding you would offer a close friend.</li>
+          <li><strong>Common Humanity vs Isolation:</strong> Recognizing that imperfection, error, and struggle are universal components of the shared human experience.</li>
+          <li><strong>Mindfulness vs Over-Identification:</strong> Holding painful emotions in balanced awareness without exaggerating or suppressing them.</li>
+        </ul>
+      </section>
+
+      <section class="topic" id="wellbeing">
+        <header class="topic-head">
+          <p class="eyebrow">09.4 · The architecture of flourishing</p>
+          <h2>Well-being practices</h2>
+        </header>
+
+        <p class="lead">Positive psychology investigates not just how to relieve misery, but how to enable individuals and communities to flourish with vitality, joy, and profound meaning.</p>
+
+        <h3>Seligman's PERMA Model</h3>
+        <p>Dr. Martin Seligman identified five essential pillars of authentic human flourishing:</p>
+        <ol>
+          <li><strong>P - Positive Emotion:</strong> Experiencing gratitude, hope, joy, and peace in daily moments.</li>
+          <li><strong>E - Engagement:</strong> Regularly losing oneself in deep flow states through absorption in challenging, rewarding tasks.</li>
+          <li><strong>R - Relationships:</strong> Nurturing deep, authentic, mutual social bonds (the single strongest predictor of longevity in the 85-year Harvard Study).</li>
+          <li><strong>M - Meaning:</strong> Belonging to and serving something larger than the individual ego.</li>
+          <li><strong>A - Accomplishment:</strong> Pursuing mastery, competence, and goals for their own intrinsic satisfaction.</li>
+        </ol>
+
+        <div class="callout why">
+          <h4>The Physiological Sigh Protocol</h4>
+          <p>Discovered by neurobiologists and popularized by Dr. Andrew Huberman, the <strong>physiological sigh</strong> is the fastest real-time tool to down-regulate autonomic nervous system arousal: take two quick sharp inhales through the nose (the second to re-inflate collapsed alveoli in the lungs), followed by a slow, extended exhale through the mouth. Performing 2–3 cycles resets vagal tone in under 30 seconds.</p>
+        </div>
+      </section>
+
+      <div data-fill="pager"></div>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2056 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Regression &amp; statistical modeling · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="regression">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Regression &amp; statistical modeling</h1>
+    <p class="lede">Regression turns "what drives this number?" into a model you can read: each coefficient says how much the outcome moves when one input changes and the others stay put. You will fit lines, read coefficients in dollars and percent, check whether the model can be trusted, predict yes/no outcomes and pick between competing models without fooling yourself.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every regression project in this area uses one running example: an online store's <code>orders</code> table, with order value, number of items, discount, customer tenure and device. You start by fitting a straight line (10.1), learn to read what its coefficients mean (10.2), and check the residuals to see whether the model can be trusted (10.3). When the outcome is yes or no, you switch to logistic regression (10.4). Then you engineer features and watch for overfitting (10.5), and finally compare candidate models on data they have not seen (10.6).</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 240" role="img" aria-label="The regression workflow: a business question leads to fitting a line, interpreting coefficients and checking residuals; diagnostics send you to feature work, then model comparison and an answer. A yes/no outcome branches to logistic regression.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="30" width="160" height="56" rx="8"/>
+              <text class="d-title" x="90" y="54" text-anchor="middle">Question</text>
+              <text class="d-label" x="90" y="72" text-anchor="middle">what drives order value?</text>
+              <line class="d-line-accent" x1="170" y1="58" x2="198" y2="58" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="200" y="30" width="160" height="56" rx="8"/>
+              <text class="d-title" x="280" y="54" text-anchor="middle">Fit a line · 10.1</text>
+              <text class="d-label" x="280" y="72" text-anchor="middle">least squares</text>
+              <line class="d-line-accent" x1="360" y1="58" x2="388" y2="58" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="390" y="30" width="160" height="56" rx="8"/>
+              <text class="d-title" x="470" y="54" text-anchor="middle">Interpret · 10.2</text>
+              <text class="d-label" x="470" y="72" text-anchor="middle">units, controls, logs</text>
+              <line class="d-line-accent" x1="550" y1="58" x2="578" y2="58" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-signal" x="580" y="30" width="160" height="56" rx="8"/>
+              <text class="d-title" x="660" y="54" text-anchor="middle">Diagnose · 10.3</text>
+              <text class="d-label" x="660" y="72" text-anchor="middle">residual plots</text>
+              <path class="d-line-signal d-dash" d="M660 86 V118 H280 V148" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="470" y="112" text-anchor="middle">wrong shape or spread: transform, add features</text>
+              <path class="d-line d-dash" d="M90 86 V148" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="96" y="124">0/1 outcome</text>
+              <rect class="d-box" x="10" y="150" width="160" height="56" rx="8"/>
+              <text class="d-title" x="90" y="174" text-anchor="middle">Logistic · 10.4</text>
+              <text class="d-label" x="90" y="192" text-anchor="middle">probabilities, odds</text>
+              <line class="d-line" x1="170" y1="178" x2="198" y2="178" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="200" y="150" width="160" height="56" rx="8"/>
+              <text class="d-title" x="280" y="174" text-anchor="middle">Features · 10.5</text>
+              <text class="d-label" x="280" y="192" text-anchor="middle">dummies, interactions</text>
+              <line class="d-line-accent" x1="360" y1="178" x2="388" y2="178" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="390" y="150" width="160" height="56" rx="8"/>
+              <text class="d-title" x="470" y="174" text-anchor="middle">Compare · 10.6</text>
+              <text class="d-label" x="470" y="192" text-anchor="middle">adj. R², AIC, CV</text>
+              <line class="d-line-accent" x1="550" y1="178" x2="578" y2="178" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-good" x="580" y="150" width="160" height="56" rx="8"/>
+              <text class="d-title" x="660" y="174" text-anchor="middle">Answer</text>
+              <text class="d-label" x="660" y="192" text-anchor="middle">effect sizes + caveats</text>
+              <text class="d-label" x="380" y="232" text-anchor="middle">Every step uses the same example: the store's orders table</text>
+            </svg>
+          </div>
+          <figcaption>The regression workflow. You fit, interpret and diagnose; diagnostics push you into feature work and model comparison before you answer. Yes/no outcomes branch to logistic regression.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="linear">
+        <header class="topic-head">
+          <p class="eyebrow">10.1 · The best straight line</p>
+          <h2>Linear regression</h2>
+        </header>
+
+        <p class="lead">Linear regression draws the straight line through a cloud of points that makes the vertical misses as small as possible. For the store's orders it answers questions like "how much bigger is an order, on average, for each extra item in the basket?" with one number you can read in dollars.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Most "what drives X?" questions (order value, support handle time, campaign revenue) start with a regression. It gives a size for each driver, a measure of uncertainty and a baseline forecast, and every fancier model you meet later is judged against it.</p>
+        </div>
+
+        <h3>The line and its misses</h3>
+        <p>The model is \(\hat{y} = \beta_0 + \beta_1 x\): an <strong>intercept</strong> \(\beta_0\) (the prediction when \(x = 0\)) plus a <strong>slope</strong> \(\beta_1\) (the change in \(\hat{y}\) per one-unit change in \(x\)). For each order, the <strong>residual</strong> \(e_i = y_i - \hat{y}_i\) is how far the real value sits above or below the line.</p>
+        <p>Ordinary least squares (OLS) picks the one line that minimizes the <strong>sum of squared errors</strong> (SSE). Squaring makes misses above and below count the same and punishes big misses much more than small ones.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="Eight orders plotted as items against order value with the least-squares line. Dashed residual sticks join each point to the line, and one residual is drawn as a square. On the right the eight squared residuals are stacked to show they add up to an SSE of 688.">
+              <line class="d-grid" x1="60" y1="145" x2="402" y2="145"/>
+              <line class="d-grid" x1="60" y1="70" x2="402" y2="70"/>
+              <line class="d-line" x1="60" y1="220" x2="402" y2="220"/>
+              <line class="d-line" x1="60" y1="20" x2="60" y2="220"/>
+              <text class="d-label" x="52" y="224" text-anchor="end">$0</text>
+              <text class="d-label" x="52" y="149" text-anchor="end">$50</text>
+              <text class="d-label" x="52" y="74" text-anchor="end">$100</text>
+              <text class="d-label" x="98" y="236" text-anchor="middle">1</text>
+              <text class="d-label" x="174" y="236" text-anchor="middle">3</text>
+              <text class="d-label" x="250" y="236" text-anchor="middle">5</text>
+              <text class="d-label" x="326" y="236" text-anchor="middle">7</text>
+              <text class="d-label" x="402" y="236" text-anchor="end">items in basket</text>
+              <line class="d-line-accent" x1="60" y1="201.4" x2="402" y2="37.3"/>
+              <line class="d-line-signal d-dash" x1="98" y1="187" x2="98" y2="183.1"/>
+              <line class="d-line-signal d-dash" x1="136" y1="152.5" x2="136" y2="164.9"/>
+              <line class="d-line-signal d-dash" x1="174" y1="158.5" x2="174" y2="146.7"/>
+              <line class="d-line-signal d-dash" x1="212" y1="115" x2="212" y2="128.4"/>
+              <line class="d-line-signal d-dash" x1="250" y1="127" x2="250" y2="110.2"/>
+              <line class="d-line-signal d-dash" x1="288" y1="77.5" x2="288" y2="92"/>
+              <line class="d-line-signal d-dash" x1="326" y1="94" x2="326" y2="73.7"/>
+              <line class="d-line-signal d-dash" x1="364" y1="43" x2="364" y2="55.5"/>
+              <rect class="d-signal" x="326" y="73.7" width="20.3" height="20.3" fill-opacity="0.35"/>
+              <circle class="d-dot" cx="98" cy="187" r="5"/><circle class="d-dot" cx="136" cy="152.5" r="5"/>
+              <circle class="d-dot" cx="174" cy="158.5" r="5"/><circle class="d-dot" cx="212" cy="115" r="5"/>
+              <circle class="d-dot" cx="250" cy="127" r="5"/><circle class="d-dot" cx="288" cy="77.5" r="5"/>
+              <circle class="d-dot" cx="326" cy="94" r="5"/><circle class="d-dot" cx="364" cy="43" r="5"/>
+              <text class="d-mono d-text-accent" x="72" y="34">ŷ = 12.43 + 12.15 · items</text>
+              <text class="d-label d-text-signal" x="352" y="112">e₇ = 84 − 97.5 = −13.5</text>
+              <text class="d-label d-text-signal" x="352" y="126">e₇² = 182</text>
+              <text class="d-title" x="540" y="30" text-anchor="middle">Squared misses</text>
+              <rect class="d-signal" x="470" y="211" width="9" height="9" fill-opacity="0.5"/>
+              <rect class="d-signal" x="482" y="200" width="20" height="20" fill-opacity="0.5"/>
+              <rect class="d-signal" x="505" y="202" width="18" height="18" fill-opacity="0.5"/>
+              <rect class="d-signal" x="526" y="199" width="21" height="21" fill-opacity="0.5"/>
+              <rect class="d-signal" x="550" y="193" width="27" height="27" fill-opacity="0.5"/>
+              <rect class="d-signal" x="580" y="198" width="22" height="22" fill-opacity="0.5"/>
+              <rect class="d-signal" x="470" y="157" width="32" height="32" fill-opacity="0.5"/>
+              <rect class="d-signal" x="505" y="170" width="19" height="19" fill-opacity="0.5"/>
+              <text class="d-label" x="470" y="62">e² per order:</text>
+              <text class="d-mono" x="470" y="80">7, 68, 62, 80,</text>
+              <text class="d-mono" x="470" y="96">125, 93, 182, 69</text>
+              <text class="d-mono d-text-signal" x="470" y="130">SSE = 688</text>
+              <text class="d-label" x="470" y="146">no other line does better</text>
+            </svg>
+          </div>
+          <figcaption>Eight example orders. The least-squares line misses order 7 by −$13.5; squaring every miss and adding them gives SSE = 688, the smallest total any straight line can reach on these points.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \hat{\beta}_1 = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}, \qquad \hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x} \]
+          <span class="formula-note">The slope is the covariance of \(x\) and \(y\) divided by the variance of \(x\). The line always passes through the point of means \((\bar{x}, \bar{y})\), here (4.5 items, $67.13).</span>
+        </div>
+
+        <div class="widget" id="lin-demo">
+          <div class="widget-head">
+            <span class="widget-title">Beat least squares (you can't)</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="lin-slope">Your slope ($/item) <input type="range" id="lin-slope" min="0" max="25" step="0.05" value="6"><output id="lin-slope-out">6.00</output></label>
+            <label for="lin-int">Your intercept ($) <input type="range" id="lin-int" min="-20" max="60" step="0.25" value="30"><output id="lin-int-out">30.00</output></label>
+            <label for="lin-sq"><input type="checkbox" id="lin-sq" checked> Show squared errors</label>
+            <button class="btn" type="button" id="lin-reset">Reset points</button>
+          </div>
+          <svg id="lin-plot" viewBox="0 0 600 320" role="img" aria-label="Eight draggable order points, the least-squares line in accent colour and your own line in signal colour, with squares showing your squared errors."></svg>
+          <p class="readout" id="lin-readout"></p>
+        </div>
+        <p>Move your line with the sliders and watch your SSE. Then drag a point: drag the 8-item order down to $20 and the least-squares line tilts hard, because one big squared miss outweighs many small ones. That sensitivity is why outliers deserve a look before you trust a slope.</p>
+
+        <h3>How good is the fit? R²</h3>
+        <p>Compare the line to the laziest model, which predicts the mean order value for everyone. Its total squared miss is the <strong>total sum of squares</strong> (SST). The line removes part of it (SSR, the explained part) and leaves the rest as SSE. \(R^2\) is the share removed.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 170" role="img" aria-label="A bar for the total sum of squares, 6,893, split into an explained part of 6,205 and a residual part of 688, so R squared equals 0.90.">
+              <text class="d-label" x="40" y="26">Mean-only model: predict $67.13 for every order</text>
+              <rect class="d-box" x="40" y="34" width="560" height="28" rx="4"/>
+              <text class="d-mono" x="320" y="53" text-anchor="middle">SST = 6,893</text>
+              <line class="d-line" x1="40" y1="70" x2="40" y2="84"/>
+              <line class="d-line" x1="600" y1="70" x2="600" y2="84"/>
+              <text class="d-label" x="40" y="100">With the line: the same total splits in two</text>
+              <rect class="d-accent" x="40" y="108" width="504" height="28" rx="4"/>
+              <text class="d-mono" x="292" y="127" text-anchor="middle">explained SSR = 6,205</text>
+              <rect class="d-signal" x="546" y="108" width="54" height="28" rx="4"/>
+              <text class="d-mono" x="573" y="127" text-anchor="middle">688</text>
+              <text class="d-label d-text-signal" x="600" y="152" text-anchor="end">SSE (left over)</text>
+              <text class="d-mono d-text-accent" x="40" y="160">R² = 6,205 / 6,893 = 0.90</text>
+            </svg>
+          </div>
+          <figcaption>R² = 1 − SSE/SST. On the eight orders, the line explains 90% of the variation in order value around its mean.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ R^2 = 1 - \frac{\text{SSE}}{\text{SST}} = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2} \]
+          <span class="formula-note">With one predictor, \(R^2\) equals the squared correlation \(r^2\). It says how much variation the line accounts for, not whether the line is the right shape or whether \(x\) causes \(y\).</span>
+        </div>
+
+        <h3>More than one predictor</h3>
+        <p><strong>Multiple regression</strong> adds predictors: \(\hat{y} = \beta_0 + \beta_1 x_1 + \dots + \beta_p x_p\). The fitting rule stays the same (minimize SSE), and in matrix form the solution is \(\hat{\beta} = (X^\top X)^{-1} X^\top y\). Software does this for you. Your job is choosing the columns and reading the output.</p>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+import statsmodels.formula.api as smf
+
+orders = pd.read_csv("orders.csv")   <span class="c"># order_id, order_value, items, discount_pct, tenure_months, device</span>
+
+model = smf.ols("order_value ~ items", data=orders).fit()
+print(model.params)        <span class="c"># Intercept and slope (12.43 and 12.15 on the 8-order example)</span>
+print(model.rsquared)      <span class="c"># share of variance explained</span>
+
+orders["fitted"] = model.fittedvalues
+orders["resid"] = model.resid          <span class="c"># y minus y-hat, used for diagnostics in 10.3</span>
+
+<span class="c"># multiple regression: same call, more columns</span>
+multi = smf.ols("order_value ~ items + discount_pct + tenure_months", data=orders).fit()
+print(multi.summary())</code></pre>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- PostgreSQL has least-squares aggregates built in (one predictor only)</span>
+SELECT regr_slope(order_value, items)     AS slope,
+       regr_intercept(order_value, items) AS intercept,
+       regr_r2(order_value, items)        AS r_squared,
+       regr_count(order_value, items)     AS n
+FROM orders
+WHERE order_date &gt;= DATE '2026-01-01';</code></pre>
+
+        <div class="grid-2">
+          <div class="card"><h4>Explaining</h4><p>You care about the coefficients: "an extra item adds about $12". You need sensible controls, honest standard errors and residual checks (10.2, 10.3).</p></div>
+          <div class="card"><h4>Predicting</h4><p>You care about error on new orders: "forecast next month's basket size". You judge the model on held-out data, not on R² (10.5, 10.6).</p></div>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>OLS picks the coefficients that minimize the sum of squared residuals.</li>
+            <li>The slope is the average change in \(\hat{y}\) per one-unit change in \(x\); the line passes through \((\bar{x}, \bar{y})\).</li>
+            <li>R² is the share of variation around the mean that the model explains.</li>
+            <li>Squared errors make OLS sensitive to outliers and extreme points.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reading a high R² as proof that the model is right or that \(x\) causes \(y\).</li>
+            <li>Interpreting the intercept when \(x = 0\) never happens (no order has zero items).</li>
+            <li>Predicting far outside the range of \(x\) you fitted on.</li>
+            <li>Never plotting the data, so one extreme order silently drives the slope.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="linear-1"><span>Compute a slope and intercept by hand for five points</span></label></li>
+          <li><label><input type="checkbox" data-key="linear-2"><span>Explain what a residual is and why OLS squares it</span></label></li>
+          <li><label><input type="checkbox" data-key="linear-3"><span>Compute R² from SSE and SST and say what it does not tell you</span></label></li>
+          <li><label><input type="checkbox" data-key="linear-4"><span>Fit a regression with statsmodels and with PostgreSQL's regr_ functions</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning (free PDF), chapter 3</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.statsmodels.org/stable/index.html">statsmodels documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.postgresql.org/docs/current/functions-aggregate.html">PostgreSQL aggregate functions (regr_slope and friends)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="interpreting">
+        <header class="topic-head">
+          <p class="eyebrow">10.2 · What the numbers mean</p>
+          <h2>Interpreting coefficients</h2>
+        </header>
+
+        <p class="lead">A coefficient is the change in the predicted outcome for a one-unit change in one predictor, <em>holding the other predictors in the model fixed</em>. Three things decide what that sentence really says: the units of each variable, which controls are in the model, and whether you logged anything.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Stakeholders will quote your coefficient in a meeting. "Discounts lower order value by $0.49 a point" and "discounts raise it by $0.37" can both come from the same table, depending on the controls. Reading coefficients correctly is the difference between a useful answer and a confident wrong one.</p>
+        </div>
+
+        <h3>Reading a regression table</h3>
+        <p>Here is a fit on 500 example orders with four predictors. Each row is one coefficient with its <strong>standard error</strong> (how much it would wobble across samples), a p-value and a 95% confidence interval. The interval is the most useful column: it gives a plausible range for the effect in real units.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 270" role="img" aria-label="An annotated regression table for order value with rows for intercept, items, discount, tenure and mobile device, each with coefficient, standard error, p-value and 95 percent interval. Callouts explain the items row in dollars per item, the discount row's interval and the mobile row as a difference from desktop.">
+              <defs>
+                <marker id="interpreting-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="10" y="10" width="400" height="180" rx="6"/>
+              <text class="d-label" x="22" y="30">order_value ~ items + discount_pct + tenure + C(device)</text>
+              <line class="d-grid" x1="10" y1="40" x2="410" y2="40"/>
+              <text class="d-label" x="22" y="58">term</text>
+              <text class="d-label" x="200" y="58" text-anchor="end">coef</text>
+              <text class="d-label" x="256" y="58" text-anchor="end">std err</text>
+              <text class="d-label" x="306" y="58" text-anchor="end">P&gt;|t|</text>
+              <text class="d-label" x="398" y="58" text-anchor="end">[0.025  0.975]</text>
+              <line class="d-grid" x1="10" y1="66" x2="410" y2="66"/>
+              <text class="d-mono" x="22" y="86">Intercept</text>
+              <text class="d-mono" x="200" y="86" text-anchor="end">15.85</text>
+              <text class="d-mono" x="256" y="86" text-anchor="end">1.54</text>
+              <text class="d-mono" x="306" y="86" text-anchor="end">0.000</text>
+              <text class="d-mono" x="398" y="86" text-anchor="end">12.82  18.89</text>
+              <rect class="d-accent" x="16" y="94" width="388" height="22" rx="4" fill-opacity="0.5"/>
+              <text class="d-mono" x="22" y="110">items</text>
+              <text class="d-mono" x="200" y="110" text-anchor="end">9.68</text>
+              <text class="d-mono" x="256" y="110" text-anchor="end">0.31</text>
+              <text class="d-mono" x="306" y="110" text-anchor="end">0.000</text>
+              <text class="d-mono" x="398" y="110" text-anchor="end">9.08  10.28</text>
+              <text class="d-mono" x="22" y="134">discount_pct</text>
+              <text class="d-mono" x="200" y="134" text-anchor="end">0.37</text>
+              <text class="d-mono" x="256" y="134" text-anchor="end">0.09</text>
+              <text class="d-mono" x="306" y="134" text-anchor="end">0.000</text>
+              <text class="d-mono" x="398" y="134" text-anchor="end">0.20  0.54</text>
+              <text class="d-mono" x="22" y="158">tenure_months</text>
+              <text class="d-mono" x="200" y="158" text-anchor="end">1.29</text>
+              <text class="d-mono" x="256" y="158" text-anchor="end">0.06</text>
+              <text class="d-mono" x="306" y="158" text-anchor="end">0.000</text>
+              <text class="d-mono" x="398" y="158" text-anchor="end">1.18  1.40</text>
+              <text class="d-mono" x="22" y="182">device[mobile]</text>
+              <text class="d-mono" x="200" y="182" text-anchor="end">−6.98</text>
+              <text class="d-mono" x="256" y="182" text-anchor="end">1.18</text>
+              <text class="d-mono" x="306" y="182" text-anchor="end">0.000</text>
+              <text class="d-mono" x="398" y="182" text-anchor="end">−9.30  −4.67</text>
+              <line class="d-line-accent" x1="412" y1="105" x2="444" y2="72" marker-end="url(#interpreting-arrow)"/>
+              <text class="d-label" x="450" y="60">+$9.68 per extra item,</text>
+              <text class="d-label" x="450" y="75">same discount, tenure</text>
+              <text class="d-label" x="450" y="90">and device</text>
+              <line class="d-line-accent" x1="412" y1="131" x2="444" y2="131" marker-end="url(#interpreting-arrow)"/>
+              <text class="d-label" x="450" y="128">+$0.37 per discount point;</text>
+              <text class="d-label" x="450" y="143">interval excludes 0</text>
+              <line class="d-line-accent" x1="412" y1="180" x2="444" y2="196" marker-end="url(#interpreting-arrow)"/>
+              <text class="d-label" x="450" y="196">mobile orders are $6.98</text>
+              <text class="d-label" x="450" y="211">smaller than desktop</text>
+              <text class="d-label" x="450" y="226">(the reference level)</text>
+              <text class="d-label" x="10" y="214">R² = 0.754 · n = 500 example orders · df = 495</text>
+              <text class="d-label" x="10" y="232">Interval = coef ± 1.965 × std err</text>
+              <text class="d-label" x="10" y="250">Intercept: a 0-item, 0-month desktop order (not meaningful)</text>
+            </svg>
+          </div>
+          <figcaption>Read a row as "one more unit of this, everything else in the model unchanged". A dummy such as device[mobile] compares against the left-out reference level, desktop.</figcaption>
+        </figure>
+
+        <h3>Controls change the answer</h3>
+        <p>Regress order value on discount alone and you get <strong>−$0.49 per discount point</strong>. It looks like discounts shrink baskets. The trouble is that discount codes mostly go to new customers, and new customers spend less anyway. Tenure is a <strong>confounder</strong>: it drives both who gets a discount and how much they spend.</p>
+        <p>Add tenure and basket size as controls and the coefficient flips to <strong>+$0.37</strong>. Now it compares orders from customers with the same tenure, items and device. This is called <strong>omitted variable bias</strong>: leave out a variable that affects the outcome and is correlated with your predictor, and the predictor absorbs its effect.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Tenure points to both discount and order value. New customers get more discounts and spend less, so discount alone shows a negative coefficient of minus 0.49 dollars, while controlling for tenure, items and device gives plus 0.37 dollars.">
+              <defs>
+                <marker id="interpreting-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="interpreting-arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-signal" x="150" y="14" width="140" height="44" rx="8"/>
+              <text class="d-title" x="220" y="41" text-anchor="middle">Tenure</text>
+              <rect class="d-box" x="20" y="150" width="140" height="44" rx="8"/>
+              <text class="d-title" x="90" y="177" text-anchor="middle">Discount</text>
+              <rect class="d-box" x="280" y="150" width="140" height="44" rx="8"/>
+              <text class="d-title" x="350" y="177" text-anchor="middle">Order value</text>
+              <line class="d-line" x1="190" y1="58" x2="110" y2="146" marker-end="url(#interpreting-arrow2)"/>
+              <text class="d-label" x="60" y="96">new customers</text>
+              <text class="d-label" x="60" y="110">get more codes</text>
+              <line class="d-line" x1="250" y1="58" x2="330" y2="146" marker-end="url(#interpreting-arrow2)"/>
+              <text class="d-label" x="300" y="96">loyal customers</text>
+              <text class="d-label" x="300" y="110">spend more</text>
+              <line class="d-line-accent" x1="160" y1="172" x2="276" y2="172" marker-end="url(#interpreting-arrow3)"/>
+              <text class="d-label d-text-accent" x="218" y="164" text-anchor="middle">effect?</text>
+              <rect class="d-fill" x="450" y="30" width="176" height="74" rx="8"/>
+              <text class="d-label" x="462" y="52">discount only</text>
+              <text class="d-mono d-text-signal" x="462" y="74">−$0.49 / point</text>
+              <text class="d-label" x="462" y="94">CI [−0.80, −0.19]</text>
+              <rect class="d-fill" x="450" y="120" width="176" height="74" rx="8"/>
+              <text class="d-label" x="462" y="142">+ tenure, items, device</text>
+              <text class="d-mono d-text-good" x="462" y="164">+$0.37 / point</text>
+              <text class="d-label" x="462" y="184">CI [0.20, 0.54]</text>
+              <text class="d-label" x="20" y="214">Same 500 example orders, two models, opposite signs.</text>
+            </svg>
+          </div>
+          <figcaption>A confounder (tenure) pushes on both the predictor and the outcome. Leaving it out makes discounts look harmful; controlling for it compares like with like.</figcaption>
+        </figure>
+
+        <p>Controls are not free. Never control for something your predictor causes (a <strong>mediator</strong>, such as "items added after seeing the discount banner"), because that removes part of the effect you want to measure. And even a well-controlled coefficient is an association. To know what a discount <em>causes</em>, you run an experiment (Area 09).</p>
+
+        <h3>Units and log transforms</h3>
+        <p>Order values are right-skewed and effects are often proportional: an extra item adds more to a $200 basket than to a $20 one. Taking logs turns those proportional effects into straight lines and lets you read coefficients as percentages.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Read \(\beta\) as</th><th>Example (500 orders, with controls)</th></tr></thead>
+            <tbody>
+              <tr><td>level-level: \(y \sim x\)</td><td>+1 unit of \(x\) → \(+\beta\) units of \(y\)</td><td>+1 item → +$9.68</td></tr>
+              <tr><td>log-level: \(\ln y \sim x\)</td><td>+1 unit of \(x\) → about \(100\beta\%\) change in \(y\) (exactly \(e^{\beta}-1\))</td><td>\(\beta = 0.145\): +1 item → +15.6%</td></tr>
+              <tr><td>level-log: \(y \sim \ln x\)</td><td>+1% in \(x\) → \(+\beta/100\) units of \(y\)</td><td>\(\beta = 24.8\): +1% items → +$0.25</td></tr>
+              <tr><td>log-log: \(\ln y \sim \ln x\)</td><td>+1% in \(x\) → \(+\beta\%\) in \(y\) (an <strong>elasticity</strong>)</td><td>\(\beta = 0.39\): +10% items → about +3.9%</td></tr>
+              <tr><td>dummy: \(y \sim\) C(device)</td><td>difference from the reference level</td><td>mobile vs desktop: −$6.98</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="formula">
+          \[ \ln(\text{value}) = \beta_0 + \beta_1\,\text{items} + \dots \quad\Rightarrow\quad \frac{\text{value}(\text{items}+1)}{\text{value}(\text{items})} = e^{\beta_1} \]
+          <span class="formula-note">With \(\beta_1 = 0.145\), \(e^{0.145} = 1.156\): one more item multiplies the expected order value by 1.156, a 15.6% increase. The "\(100\beta\%\)" shortcut works only for small \(\beta\) (below about 0.1).</span>
+        </div>
+
+        <div class="widget" id="coef-demo">
+          <div class="widget-head">
+            <span class="widget-title">Coefficient interpreter</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="coef-x">Predictor
+              <select id="coef-x">
+                <option value="discount" selected>discount_pct</option>
+                <option value="items">items</option>
+                <option value="tenure">tenure_months</option>
+                <option value="mobile">device = mobile</option>
+              </select></label>
+            <label for="coef-y">Outcome
+              <select id="coef-y">
+                <option value="level" selected>order_value ($)</option>
+                <option value="log">log(order_value)</option>
+              </select></label>
+            <label for="coef-logx"><input type="checkbox" id="coef-logx"> log(predictor)</label>
+          </div>
+          <div class="widget-controls">
+            <span>Control for:</span>
+            <label for="coef-c-items"><input type="checkbox" id="coef-c-items"> items</label>
+            <label for="coef-c-tenure"><input type="checkbox" id="coef-c-tenure"> tenure</label>
+            <label for="coef-c-discount"><input type="checkbox" id="coef-c-discount"> discount</label>
+            <label for="coef-c-mobile"><input type="checkbox" id="coef-c-mobile"> device</label>
+          </div>
+          <svg id="coef-plot" viewBox="0 0 600 300" role="img" aria-label="Scatter of 500 example orders against the chosen predictor with the fitted effect line, and below it the coefficient with its 95 percent confidence interval on an axis through zero."></svg>
+          <p class="readout" id="coef-readout"></p>
+          <p id="coef-sentence"></p>
+        </div>
+        <p>Start with discount and no controls, then add controls one at a time. Which single control moves the discount coefficient most? Then switch the outcome to log and read the same effect as a percentage.</p>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+import statsmodels.formula.api as smf
+
+level = smf.ols("order_value ~ items + discount_pct + tenure_months + C(device)",
+                data=orders).fit()
+print(level.params["discount_pct"], level.conf_int().loc["discount_pct"].values)
+
+<span class="c"># log outcome: coefficients become (approximate) percentage effects</span>
+logm = smf.ols("np.log(order_value) ~ items + discount_pct + tenure_months + C(device)",
+               data=orders).fit()
+pct = (np.exp(logm.params) - 1) * 100        <span class="c"># exact % change per one-unit increase</span>
+print(pct.round(1))                           <span class="c"># items ≈ 15.6, discount_pct ≈ 0.6 in the example</span>
+
+<span class="c"># log-log: the items coefficient is an elasticity</span>
+elastic = smf.ols("np.log(order_value) ~ np.log(items) + tenure_months", data=orders).fit()</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A coefficient is a "one more unit, others held fixed" comparison, in the units of \(y\) per unit of \(x\).</li>
+            <li>Adding or dropping a correlated control can change a coefficient's size and even its sign.</li>
+            <li>Log outcome: \(e^{\beta} - 1\) is the percentage change. Log-log: \(\beta\) is an elasticity.</li>
+            <li>Dummy coefficients are differences from the reference category.</li>
+            <li>Report the confidence interval, not just the point estimate or the p-value.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Saying "discounts cause bigger orders" from an observational regression.</li>
+            <li>Comparing raw coefficient sizes across predictors measured in different units.</li>
+            <li>Controlling for a mediator and then concluding the treatment "has no effect".</li>
+            <li>Using \(100\beta\%\) for a large log coefficient (0.7 is +101%, not +70%).</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="interpreting-1"><span>Translate a coefficient and its interval into one plain sentence with units</span></label></li>
+          <li><label><input type="checkbox" data-key="interpreting-2"><span>Explain omitted variable bias with a confounder from your own data</span></label></li>
+          <li><label><input type="checkbox" data-key="interpreting-3"><span>Convert log-level and log-log coefficients into percentage effects</span></label></li>
+          <li><label><input type="checkbox" data-key="interpreting-4"><span>Name the reference level of a categorical predictor and read its dummies</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning, section 3.2</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.statsmodels.org/stable/example_formulas.html">statsmodels: fitting models using R-style formulas</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="diagnostics">
+        <header class="topic-head">
+          <p class="eyebrow">10.3 · Can you trust it?</p>
+          <h2>Assumptions &amp; diagnostics</h2>
+        </header>
+
+        <p class="lead">OLS will fit a line to anything. Whether the coefficients, intervals and p-values mean what they claim depends on a few assumptions about the residuals. The quickest way to check them is to plot the residuals and look for any pattern at all.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>A curved relationship fitted with a straight line gives wrong effects at both ends. Uneven spread makes your confidence intervals too narrow, so you report "significant" drivers that are not. Five minutes of residual plots before you present saves the awkward follow-up meeting.</p>
+        </div>
+
+        <h3>What the model assumes</h3>
+        <p>A useful memory aid is <strong>LINE</strong>. Each assumption fails in a recognisable way, and most failures show up in one plot: residuals against fitted values. A healthy plot is a shapeless horizontal band around zero.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Assumption</th><th>What goes wrong if it fails</th><th>How to check</th><th>Usual fix</th></tr></thead>
+            <tbody>
+              <tr><td><strong>L</strong>inearity</td><td>Biased coefficients and predictions</td><td>Curve in residuals vs fitted</td><td>Transform, add \(x^2\) or splines</td></tr>
+              <tr><td><strong>I</strong>ndependence</td><td>Standard errors too small</td><td>Residuals over time; repeated customers</td><td>Clustered SEs, time-series models</td></tr>
+              <tr><td><strong>N</strong>ormal errors</td><td>Small-sample intervals off (large n is forgiving)</td><td>Q-Q plot of residuals</td><td>Log the outcome, bootstrap</td></tr>
+              <tr><td><strong>E</strong>qual variance</td><td>Intervals too narrow or too wide</td><td>Funnel in residuals vs fitted</td><td>Log the outcome, robust (HC3) SEs</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 196" role="img" aria-label="Four residual-versus-fitted plots: a healthy even band, a funnel where spread grows with the fitted value, a U-shaped curve showing a missed non-linear pattern, and a band with one point far above the rest.">
+              <rect class="d-box" x="15" y="36" width="140" height="128" rx="6"/>
+              <line class="d-line d-dash" x1="15" y1="100" x2="155" y2="100"/>
+              <text class="d-title" x="85" y="26" text-anchor="middle">Healthy</text>
+              <text class="d-label d-text-good" x="85" y="182" text-anchor="middle">even band, no shape</text>
+              <circle class="d-dot" cx="27.7" cy="99.4" r="3"/>
+              <circle class="d-dot" cx="33.2" cy="93.5" r="3"/>
+              <circle class="d-dot" cx="38.6" cy="106.5" r="3"/>
+              <circle class="d-dot" cx="44.1" cy="95.1" r="3"/>
+              <circle class="d-dot" cx="49.5" cy="87.0" r="3"/>
+              <circle class="d-dot" cx="55.0" cy="94.2" r="3"/>
+              <circle class="d-dot" cx="60.5" cy="78.1" r="3"/>
+              <circle class="d-dot" cx="65.9" cy="112.4" r="3"/>
+              <circle class="d-dot" cx="71.4" cy="99.1" r="3"/>
+              <circle class="d-dot" cx="76.8" cy="109.9" r="3"/>
+              <circle class="d-dot" cx="82.3" cy="111.0" r="3"/>
+              <circle class="d-dot" cx="87.7" cy="102.6" r="3"/>
+              <circle class="d-dot" cx="93.2" cy="96.9" r="3"/>
+              <circle class="d-dot" cx="98.6" cy="94.1" r="3"/>
+              <circle class="d-dot" cx="104.1" cy="92.9" r="3"/>
+              <circle class="d-dot" cx="109.5" cy="68.7" r="3"/>
+              <circle class="d-dot" cx="115.0" cy="87.9" r="3"/>
+              <circle class="d-dot" cx="120.5" cy="122.3" r="3"/>
+              <circle class="d-dot" cx="125.9" cy="97.1" r="3"/>
+              <circle class="d-dot" cx="131.4" cy="108.7" r="3"/>
+              <circle class="d-dot" cx="136.8" cy="107.2" r="3"/>
+              <circle class="d-dot" cx="142.3" cy="81.7" r="3"/>
+              <rect class="d-box" x="172" y="36" width="140" height="128" rx="6"/>
+              <line class="d-line d-dash" x1="172" y1="100" x2="312" y2="100"/>
+              <text class="d-title" x="242" y="26" text-anchor="middle">Funnel</text>
+              <text class="d-label d-text-signal" x="242" y="182" text-anchor="middle">spread grows</text>
+              <circle class="d-dot" cx="184.7" cy="100.9" r="3"/>
+              <circle class="d-dot" cx="190.2" cy="111.2" r="3"/>
+              <circle class="d-dot" cx="195.6" cy="97.7" r="3"/>
+              <circle class="d-dot" cx="201.1" cy="102.7" r="3"/>
+              <circle class="d-dot" cx="206.5" cy="113.1" r="3"/>
+              <circle class="d-dot" cx="212.0" cy="112.0" r="3"/>
+              <circle class="d-dot" cx="217.5" cy="109.3" r="3"/>
+              <circle class="d-dot" cx="222.9" cy="100.4" r="3"/>
+              <circle class="d-dot" cx="228.4" cy="107.9" r="3"/>
+              <circle class="d-dot" cx="233.8" cy="98.6" r="3"/>
+              <circle class="d-dot" cx="239.3" cy="59.4" r="3"/>
+              <circle class="d-dot" cx="244.7" cy="119.1" r="3"/>
+              <circle class="d-dot" cx="250.2" cy="120.8" r="3"/>
+              <circle class="d-dot" cx="255.6" cy="106.9" r="3"/>
+              <circle class="d-dot" cx="261.1" cy="67.8" r="3"/>
+              <circle class="d-dot" cx="266.5" cy="122.0" r="3"/>
+              <circle class="d-dot" cx="272.0" cy="52.7" r="3"/>
+              <circle class="d-dot" cx="277.5" cy="145.5" r="3"/>
+              <circle class="d-dot" cx="282.9" cy="137.8" r="3"/>
+              <circle class="d-dot" cx="288.4" cy="102.1" r="3"/>
+              <circle class="d-dot" cx="293.8" cy="134.8" r="3"/>
+              <circle class="d-dot" cx="299.3" cy="126.0" r="3"/>
+              <rect class="d-box" x="329" y="36" width="140" height="128" rx="6"/>
+              <line class="d-line d-dash" x1="329" y1="100" x2="469" y2="100"/>
+              <text class="d-title" x="399" y="26" text-anchor="middle">Curve</text>
+              <text class="d-label d-text-signal" x="399" y="182" text-anchor="middle">U-shape left over</text>
+              <circle class="d-dot" cx="341.7" cy="71.7" r="3"/>
+              <circle class="d-dot" cx="347.2" cy="77.8" r="3"/>
+              <circle class="d-dot" cx="352.6" cy="87.6" r="3"/>
+              <circle class="d-dot" cx="358.1" cy="95.5" r="3"/>
+              <circle class="d-dot" cx="363.5" cy="92.6" r="3"/>
+              <circle class="d-dot" cx="369.0" cy="101.7" r="3"/>
+              <circle class="d-dot" cx="374.5" cy="108.6" r="3"/>
+              <circle class="d-dot" cx="379.9" cy="104.4" r="3"/>
+              <circle class="d-dot" cx="385.4" cy="117.2" r="3"/>
+              <circle class="d-dot" cx="390.8" cy="113.3" r="3"/>
+              <circle class="d-dot" cx="396.3" cy="111.6" r="3"/>
+              <circle class="d-dot" cx="401.7" cy="115.0" r="3"/>
+              <circle class="d-dot" cx="407.2" cy="117.0" r="3"/>
+              <circle class="d-dot" cx="412.6" cy="110.9" r="3"/>
+              <circle class="d-dot" cx="418.1" cy="113.1" r="3"/>
+              <circle class="d-dot" cx="423.5" cy="110.4" r="3"/>
+              <circle class="d-dot" cx="429.0" cy="108.9" r="3"/>
+              <circle class="d-dot" cx="434.5" cy="92.8" r="3"/>
+              <circle class="d-dot" cx="439.9" cy="96.8" r="3"/>
+              <circle class="d-dot" cx="445.4" cy="82.4" r="3"/>
+              <circle class="d-dot" cx="450.8" cy="79.5" r="3"/>
+              <circle class="d-dot" cx="456.3" cy="75.3" r="3"/>
+              <rect class="d-box" x="486" y="36" width="140" height="128" rx="6"/>
+              <line class="d-line d-dash" x1="486" y1="100" x2="626" y2="100"/>
+              <text class="d-title" x="556" y="26" text-anchor="middle">Outlier</text>
+              <text class="d-label d-text-signal" x="556" y="182" text-anchor="middle">one point far away</text>
+              <circle class="d-dot" cx="498.7" cy="92.7" r="3"/>
+              <circle class="d-dot" cx="504.2" cy="97.0" r="3"/>
+              <circle class="d-dot" cx="509.6" cy="98.6" r="3"/>
+              <circle class="d-dot" cx="515.1" cy="115.1" r="3"/>
+              <circle class="d-dot" cx="520.5" cy="99.2" r="3"/>
+              <circle class="d-dot" cx="526.0" cy="90.2" r="3"/>
+              <circle class="d-dot" cx="531.5" cy="94.6" r="3"/>
+              <circle class="d-dot" cx="536.9" cy="89.0" r="3"/>
+              <circle class="d-dot" cx="542.4" cy="83.6" r="3"/>
+              <circle class="d-dot" cx="547.8" cy="95.5" r="3"/>
+              <circle class="d-dot" cx="553.3" cy="78.3" r="3"/>
+              <circle class="d-dot" cx="558.7" cy="116.6" r="3"/>
+              <circle class="d-dot" cx="564.2" cy="102.6" r="3"/>
+              <circle class="d-dot" cx="569.6" cy="127.8" r="3"/>
+              <circle class="d-dot" cx="575.1" cy="91.0" r="3"/>
+              <circle class="d-dot" cx="580.5" cy="99.0" r="3"/>
+              <circle class="d-dot" cx="586.0" cy="81.4" r="3"/>
+              <circle class="d-dot" cx="591.5" cy="104.0" r="3"/>
+              <circle class="d-dot" cx="596.9" cy="122.3" r="3"/>
+              <circle class="d-dot" cx="602.4" cy="85.9" r="3"/>
+              <circle class="d-dot" cx="607.8" cy="114.8" r="3"/>
+              <circle class="d-dot" cx="613.3" cy="113.9" r="3"/>
+              <circle class="d-dot-signal" cx="581" cy="46" r="4.5"/>
+              <text class="d-label" x="574" y="50" text-anchor="end">e = +4 SD</text>
+
+            </svg>
+          </div>
+          <figcaption>Residuals (vertical) against fitted values (horizontal). Only the first plot is healthy. A funnel means unequal variance, a curve means the straight line is the wrong shape, and a lone far point needs investigating.</figcaption>
+        </figure>
+
+        <div class="widget" id="resid-demo">
+          <div class="widget-head">
+            <span class="widget-title">Residual plot clinic</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="resid-data">Dataset
+              <select id="resid-data">
+                <option value="healthy">Healthy</option>
+                <option value="funnel" selected>Funnel: bigger baskets vary more</option>
+                <option value="curve">Curve: value grows faster than items</option>
+              </select></label>
+            <label for="resid-fix">Fix
+              <select id="resid-fix">
+                <option value="none" selected>None (plain OLS)</option>
+                <option value="log">Model log(order value)</option>
+                <option value="square">Add items² term</option>
+                <option value="robust">Robust (HC3) standard errors</option>
+              </select></label>
+          </div>
+          <svg id="resid-plot" viewBox="0 0 600 260" role="img" aria-label="Left: 60 example orders with the fitted model. Right: the residuals plotted against fitted values with a zero line."></svg>
+          <p class="readout" id="resid-readout"></p>
+        </div>
+        <p>The readout measures two things: the <em>spread ratio</em> (residual size in the top third of fitted values divided by the bottom third; near 1 is healthy) and a <em>curvature score</em> (how much of the residual variation a U-shape explains; near 0 is healthy). Try each fix on each dataset. Robust standard errors change the uncertainty, not the picture.</p>
+
+        <h3>Influential points</h3>
+        <p>Not every odd point matters equally. A point with an unusual \(x\) value has high <strong>leverage</strong>: it sits at the end of the seesaw and can tilt the whole line. <strong>Cook's distance</strong> combines leverage and residual size into one number per row. A common rule of thumb flags points above \(4/n\).</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Left: ten orders on a clear upward line and one bulk order with 15 items far to the right and low. The line through all points has slope 3.5 dollars per item; without the bulk order the slope is 9.6. Right: Cook's distance bars, tiny for ten points and 11.3 for the bulk order.">
+              <line class="d-line" x1="40" y1="200" x2="370" y2="200"/>
+              <line class="d-line" x1="40" y1="10" x2="40" y2="200"/>
+              <text class="d-label" x="370" y="216" text-anchor="end">items</text>
+              <text class="d-label" x="46" y="22">order value</text>
+              <line class="d-line-accent d-dash" x1="40" y1="167.9" x2="240" y2="14.5"/>
+              <line class="d-line-signal" x1="40" y1="130.1" x2="360" y2="40.8"/>
+              <circle class="d-dot" cx="60.0" cy="152.0" r="4.5"/>
+              <circle class="d-dot" cx="80.0" cy="132.8" r="4.5"/>
+              <circle class="d-dot" cx="90.0" cy="139.2" r="4.5"/>
+              <circle class="d-dot" cx="100.0" cy="116.8" r="4.5"/>
+              <circle class="d-dot" cx="120.0" cy="107.2" r="4.5"/>
+              <circle class="d-dot" cx="130.0" cy="94.4" r="4.5"/>
+              <circle class="d-dot" cx="140.0" cy="97.6" r="4.5"/>
+              <circle class="d-dot" cx="160.0" cy="72.0" r="4.5"/>
+              <circle class="d-dot" cx="180.0" cy="64.0" r="4.5"/>
+              <circle class="d-dot" cx="200.0" cy="43.2" r="4.5"/>
+              <circle class="d-dot-signal" cx="340" cy="88" r="6"/>
+              <text class="d-label d-text-signal" x="340" y="110" text-anchor="middle">bulk order</text>
+              <text class="d-label d-text-signal" x="340" y="124" text-anchor="middle">15 items</text>
+              <text class="d-mono d-text-accent" x="150" y="40">without it: 9.6 $/item</text>
+              <text class="d-mono d-text-signal" x="200" y="160">with it: 3.5 $/item</text>
+              <text class="d-title" x="420" y="22">Cook's distance</text>
+              <line class="d-line" x1="414" y1="200" x2="620" y2="200"/>
+              <line class="d-line d-dash" x1="414" y1="146" x2="620" y2="146"/>
+              <text class="d-label" x="416" y="140">4/n = 0.36</text>
+              <rect class="d-accent" x="420" y="173.0" width="12" height="27.0"/>
+              <rect class="d-accent" x="438" y="195.5" width="12" height="4.5"/>
+              <rect class="d-accent" x="456" y="189.5" width="12" height="10.5"/>
+              <rect class="d-accent" x="474" y="198.5" width="12" height="1.5"/>
+              <rect class="d-accent" x="492" y="198.5" width="12" height="1.5"/>
+              <rect class="d-accent" x="510" y="198.5" width="12" height="1.5"/>
+              <rect class="d-accent" x="528" y="198.5" width="12" height="1.5"/>
+              <rect class="d-accent" x="546" y="192.5" width="12" height="7.5"/>
+              <rect class="d-accent" x="564" y="189.5" width="12" height="10.5"/>
+              <rect class="d-accent" x="582" y="164.0" width="12" height="36.0"/>
+              <rect class="d-signal" x="600" y="40" width="12" height="160"/>
+              <text class="d-label d-text-signal" x="606" y="34" text-anchor="middle">11.3</text>
+              <text class="d-label" x="420" y="216">10 typical orders</text>
+              <text class="d-label" x="612" y="216" text-anchor="end">bulk</text>
+            </svg>
+          </div>
+          <figcaption>One wholesale-style order with 15 items cuts the slope from $9.6 to $3.5 per item. Its Cook's distance (11.3) dwarfs the rest. Investigate it; do not silently delete it.</figcaption>
+        </figure>
+
+        <h3>Multicollinearity</h3>
+        <p>When two predictors move together (items and basket weight, say), the model cannot tell their effects apart. Predictions stay fine, but the individual coefficients get huge standard errors and can flip sign between samples. The <strong>variance inflation factor</strong> measures it: regress predictor \(j\) on the others and compute \(\text{VIF}_j = 1/(1-R_j^2)\). Values above about 5 to 10 deserve attention.</p>
+
+        <pre class="code" data-lang="python"><code>import statsmodels.formula.api as smf
+from statsmodels.stats.diagnostic import het_breuschpagan
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+import matplotlib.pyplot as plt
+
+m = smf.ols("order_value ~ items + discount_pct + tenure_months", data=orders).fit()
+
+plt.scatter(m.fittedvalues, m.resid, s=8); plt.axhline(0, color="grey")   <span class="c"># look first</span>
+lm_stat, lm_p, f_stat, f_p = het_breuschpagan(m.resid, m.model.exog)    <span class="c"># small p: unequal variance</span>
+
+cooks = m.get_influence().cooks_distance[0]
+print(orders.loc[cooks &gt; 4 / len(orders), ["order_id", "items", "order_value"]])
+
+X = m.model.exog                                     <span class="c"># includes the intercept column</span>
+print([variance_inflation_factor(X, i) for i in range(1, X.shape[1])])
+
+robust = m.get_robustcov_results(cov_type="HC3")      <span class="c"># same coefficients, honest SEs</span>
+print(robust.summary())</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Plot residuals against fitted values for every model; a shapeless band is the goal.</li>
+            <li>A curve means the model's shape is wrong: transform or add terms.</li>
+            <li>A funnel means unequal variance: log the outcome or use robust standard errors.</li>
+            <li>High-leverage points can tilt the line; Cook's distance finds them.</li>
+            <li>Correlated predictors inflate standard errors; check VIF.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Checking whether the raw outcome is normal. The assumption is about the residuals.</li>
+            <li>Deleting outliers to improve R² without finding out what they are.</li>
+            <li>Treating many orders from the same customer as independent rows.</li>
+            <li>Dropping a predictor because its p-value rose when a correlated one was added.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="diagnostics-1"><span>Diagnose a funnel, a curve and an outlier from residual plots</span></label></li>
+          <li><label><input type="checkbox" data-key="diagnostics-2"><span>Pick a fix for each LINE assumption failure</span></label></li>
+          <li><label><input type="checkbox" data-key="diagnostics-3"><span>Find influential rows with Cook's distance and explain them</span></label></li>
+          <li><label><input type="checkbox" data-key="diagnostics-4"><span>Compute VIFs and explain what a VIF of 8 means</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning, section 3.3.3 (potential problems)</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.statsmodels.org/stable/index.html">statsmodels documentation (regression diagnostics)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="logistic">
+        <header class="topic-head">
+          <p class="eyebrow">10.4 · Yes or no outcomes</p>
+          <h2>Logistic regression</h2>
+        </header>
+
+        <p class="lead">When the outcome is yes or no (did the session end in a purchase, did the customer churn, was the order returned), you want a probability between 0 and 1. Logistic regression fits a straight line on the <strong>log-odds</strong> scale and bends it through an S-shaped curve so every prediction stays a valid probability.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Conversion, churn, repeat purchase and fraud flags are all binary. Logistic regression gives you a probability per customer, an odds ratio per driver that stakeholders can understand, and a model you can explain line by line, which is why it remains the default before any machine learning.</p>
+        </div>
+
+        <h3>Why not a straight line?</h3>
+        <p>Here are 80 example store sessions: pages viewed against whether the visitor bought (1) or not (0). A straight line through 0/1 data (a <strong>linear probability model</strong>) eventually predicts probabilities below 0 or above 1. The logistic curve flattens out at both ends instead.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="80 example sessions plotted as pages viewed against purchased, stacked at 0 and 1. A straight line crosses above 1 by 25 pages; the logistic S-curve stays between 0 and 1 and passes 0.5 at about 10.5 pages.">
+              <line class="d-grid" x1="40" y1="50" x2="600" y2="50"/>
+              <line class="d-line" x1="40" y1="190" x2="600" y2="190"/>
+              <line class="d-line" x1="40" y1="10" x2="40" y2="230"/>
+              <line class="d-grid" x1="40" y1="120" x2="600" y2="120"/>
+              <text class="d-label" x="32" y="54" text-anchor="end">1</text>
+              <text class="d-label" x="32" y="124" text-anchor="end">0.5</text>
+              <text class="d-label" x="32" y="194" text-anchor="end">0</text>
+              <text class="d-label" x="150" y="244" text-anchor="middle">5</text>
+              <text class="d-label" x="260" y="244" text-anchor="middle">10</text>
+              <text class="d-label" x="370" y="244" text-anchor="middle">15</text>
+              <text class="d-label" x="480" y="244" text-anchor="middle">20</text>
+              <text class="d-label" x="600" y="244" text-anchor="end">pages viewed</text>
+              <circle class="d-dot" cx="282" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="282" cy="40" r="2.6"/>
+              <circle class="d-dot" cx="326" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="326" cy="40" r="2.6"/>
+              <circle class="d-dot" cx="326" cy="36" r="2.6"/>
+              <circle class="d-dot" cx="326" cy="32" r="2.6"/>
+              <circle class="d-dot" cx="326" cy="28" r="2.6"/>
+              <circle class="d-dot" cx="326" cy="24" r="2.6"/>
+              <circle class="d-dot" cx="436" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="436" cy="40" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="200" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="204" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="208" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="212" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="216" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="220" r="2.6"/>
+              <circle class="d-dot-muted" cx="84" cy="224" r="2.6"/>
+              <circle class="d-dot-muted" cx="260" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="260" cy="200" r="2.6"/>
+              <circle class="d-dot-muted" cx="260" cy="204" r="2.6"/>
+              <circle class="d-dot-muted" cx="238" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="238" cy="200" r="2.6"/>
+              <circle class="d-dot-muted" cx="238" cy="204" r="2.6"/>
+              <circle class="d-dot-muted" cx="238" cy="208" r="2.6"/>
+              <circle class="d-dot-muted" cx="238" cy="212" r="2.6"/>
+              <circle class="d-dot-muted" cx="238" cy="216" r="2.6"/>
+              <circle class="d-dot-muted" cx="238" cy="220" r="2.6"/>
+              <circle class="d-dot" cx="348" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="348" cy="40" r="2.6"/>
+              <circle class="d-dot-muted" cx="128" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="128" cy="200" r="2.6"/>
+              <circle class="d-dot-muted" cx="128" cy="204" r="2.6"/>
+              <circle class="d-dot-muted" cx="216" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="216" cy="200" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="40" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="36" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="32" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="28" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="24" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="20" r="2.6"/>
+              <circle class="d-dot" cx="304" cy="16" r="2.6"/>
+              <circle class="d-dot" cx="414" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="414" cy="40" r="2.6"/>
+              <circle class="d-dot" cx="414" cy="36" r="2.6"/>
+              <circle class="d-dot-muted" cx="194" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="194" cy="200" r="2.6"/>
+              <circle class="d-dot-muted" cx="194" cy="204" r="2.6"/>
+              <circle class="d-dot-muted" cx="194" cy="208" r="2.6"/>
+              <circle class="d-dot-muted" cx="194" cy="212" r="2.6"/>
+              <circle class="d-dot" cx="172" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="172" cy="40" r="2.6"/>
+              <circle class="d-dot-muted" cx="370" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="370" cy="200" r="2.6"/>
+              <circle class="d-dot" cx="370" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="370" cy="40" r="2.6"/>
+              <circle class="d-dot" cx="370" cy="36" r="2.6"/>
+              <circle class="d-dot" cx="370" cy="32" r="2.6"/>
+              <circle class="d-dot" cx="370" cy="28" r="2.6"/>
+              <circle class="d-dot" cx="216" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="216" cy="40" r="2.6"/>
+              <circle class="d-dot-muted" cx="172" cy="196" r="2.6"/>
+              <circle class="d-dot" cx="480" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="480" cy="40" r="2.6"/>
+              <circle class="d-dot" cx="480" cy="36" r="2.6"/>
+              <circle class="d-dot" cx="260" cy="44" r="2.6"/>
+              <circle class="d-dot-muted" cx="62" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="62" cy="200" r="2.6"/>
+              <circle class="d-dot-muted" cx="106" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="106" cy="200" r="2.6"/>
+              <circle class="d-dot" cx="106" cy="44" r="2.6"/>
+              <circle class="d-dot-muted" cx="436" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="348" cy="196" r="2.6"/>
+              <circle class="d-dot" cx="458" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="392" cy="44" r="2.6"/>
+              <circle class="d-dot" cx="392" cy="40" r="2.6"/>
+              <circle class="d-dot-muted" cx="414" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="304" cy="196" r="2.6"/>
+              <circle class="d-dot-muted" cx="458" cy="196" r="2.6"/>
+              <path class="d-line-accent" d="M40.0,183.5 L51.0,182.6 L62.0,181.5 L73.0,180.3 L84.0,178.9 L95.0,177.3 L106.0,175.6 L117.0,173.6 L128.0,171.4 L139.0,169.0 L150.0,166.3 L161.0,163.3 L172.0,160.0 L183.0,156.5 L194.0,152.7 L205.0,148.6 L216.0,144.3 L227.0,139.8 L238.0,135.1 L249.0,130.2 L260.0,125.2 L271.0,120.2 L282.0,115.1 L293.0,110.2 L304.0,105.3 L315.0,100.5 L326.0,96.0 L337.0,91.7 L348.0,87.6 L359.0,83.7 L370.0,80.2 L381.0,76.9 L392.0,73.9 L403.0,71.2 L414.0,68.7 L425.0,66.5 L436.0,64.5 L447.0,62.8 L458.0,61.2 L469.0,59.8 L480.0,58.6 L491.0,57.5 L502.0,56.5 L513.0,55.7 L524.0,54.9 L535.0,54.3 L546.0,53.7 L557.0,53.3 L568.0,52.8 L579.0,52.5 L590.0,52.1"/>
+
+              <line class="d-line-signal d-dash" x1="40" y1="197.9" x2="590" y2="10.9"/>
+              <text class="d-label d-text-signal" x="584" y="28" text-anchor="end">straight line: 1.28 at 25 pages</text>
+              <text class="d-label d-text-accent" x="584" y="76" text-anchor="end">logistic: 0.985 at 25 pages</text>
+              <circle class="d-dot-good" cx="271" cy="120" r="5"/>
+              <text class="d-label" x="280" y="136">p = 0.5 at 10.5 pages</text>
+            </svg>
+          </div>
+          <figcaption>Buyers stack at 1, non-buyers at 0. The fitted logistic curve, \(\beta_0 = -3.03\) and \(\beta_1 = 0.288\), crosses 50% at \(3.03 / 0.288 \approx 10.5\) pages and never leaves the 0 to 1 range.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \ln\frac{p}{1-p} = \beta_0 + \beta_1 x \quad\Longleftrightarrow\quad p = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x)}} \]
+          <span class="formula-note">\(p/(1-p)\) is the <strong>odds</strong>. The model is linear in the log-odds, so each extra unit of \(x\) adds \(\beta_1\) to the log-odds and multiplies the odds by \(e^{\beta_1}\), the <strong>odds ratio</strong>.</span>
+        </div>
+
+        <h3>Three scales for the same prediction</h3>
+        <p>Coefficients live on the log-odds scale, which nobody thinks in. Convert them. With \(\beta_1 = 0.288\), each extra page multiplies the odds of buying by \(e^{0.288} = 1.33\), a 33% increase in the <em>odds</em>. That is not a 33% increase in probability: how much the probability moves depends on where you start.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Three aligned scales. Probability 0.2, 0.5 and 0.8 correspond to odds 0.25, 1 and 4 and to log-odds minus 1.39, 0 and plus 1.39. One extra page adds 0.288 to the log-odds and multiplies the odds by 1.33, moving a session from 0.46 to 0.53.">
+              <defs>
+                <marker id="logistic-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="44">Probability</text>
+              <line class="d-line" x1="150" y1="40" x2="610" y2="40"/>
+              <text class="d-label" x="150" y="28" text-anchor="middle">0</text>
+              <text class="d-label" x="610" y="28" text-anchor="middle">1</text>
+              <circle class="d-dot-muted" cx="242" cy="40" r="5"/><text class="d-mono" x="242" y="62" text-anchor="middle">0.2</text>
+              <circle class="d-dot" cx="380" cy="40" r="5"/><text class="d-mono" x="380" y="62" text-anchor="middle">0.5</text>
+              <circle class="d-dot-muted" cx="518" cy="40" r="5"/><text class="d-mono" x="518" y="62" text-anchor="middle">0.8</text>
+              <text class="d-title" x="20" y="114">Odds p/(1−p)</text>
+              <line class="d-line" x1="150" y1="110" x2="610" y2="110"/>
+              <circle class="d-dot-muted" cx="242" cy="110" r="5"/><text class="d-mono" x="242" y="132" text-anchor="middle">0.25</text>
+              <circle class="d-dot" cx="380" cy="110" r="5"/><text class="d-mono" x="380" y="132" text-anchor="middle">1</text>
+              <circle class="d-dot-muted" cx="518" cy="110" r="5"/><text class="d-mono" x="518" y="132" text-anchor="middle">4</text>
+              <text class="d-label" x="610" y="98" text-anchor="end">0 to ∞</text>
+              <text class="d-title" x="20" y="184">Log-odds</text>
+              <line class="d-line" x1="150" y1="180" x2="610" y2="180"/>
+              <circle class="d-dot-muted" cx="242" cy="180" r="5"/><text class="d-mono" x="242" y="202" text-anchor="middle">−1.39</text>
+              <circle class="d-dot" cx="380" cy="180" r="5"/><text class="d-mono" x="380" y="202" text-anchor="middle">0</text>
+              <circle class="d-dot-muted" cx="518" cy="180" r="5"/><text class="d-mono" x="518" y="202" text-anchor="middle">+1.39</text>
+              <text class="d-label" x="610" y="168" text-anchor="end">−∞ to +∞</text>
+              <line class="d-line d-dash" x1="242" y1="46" x2="242" y2="174"/>
+              <line class="d-line d-dash" x1="380" y1="46" x2="380" y2="174"/>
+              <line class="d-line d-dash" x1="518" y1="46" x2="518" y2="174"/>
+              <text class="d-label d-text-accent" x="20" y="222">+1 page: log-odds +0.288 → odds ×1.33 → e.g. p 0.46 → 0.53 (odds 0.86 → 1.14)</text>
+            </svg>
+          </div>
+          <figcaption>The same prediction on three scales. Odds ratios are constant multipliers; changes in probability are not, so report both a ratio and an example in probability terms.</figcaption>
+        </figure>
+
+        <div class="widget" id="logit-demo">
+          <div class="widget-head">
+            <span class="widget-title">Logistic curve, threshold and odds ratio</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="logit-b0">β₀ <input type="range" id="logit-b0" min="-6" max="2" step="0.05" value="-1"><output id="logit-b0-out">-1.00</output></label>
+            <label for="logit-b1">β₁ <input type="range" id="logit-b1" min="0" max="1" step="0.005" value="0.1"><output id="logit-b1-out">0.100</output></label>
+            <label for="logit-thr">Threshold <input type="range" id="logit-thr" min="0.05" max="0.95" step="0.05" value="0.5"><output id="logit-thr-out">0.50</output></label>
+            <button class="btn primary" type="button" id="logit-fit">Fit by maximum likelihood</button>
+          </div>
+          <svg id="logit-plot" viewBox="0 0 600 290" role="img" aria-label="80 example sessions at 0 and 1 along pages viewed, the logistic curve set by the sliders, and the threshold line with the sessions predicted as buyers shaded."></svg>
+          <p class="readout" id="logit-readout"></p>
+        </div>
+        <p>Move \(\beta_1\) and watch the odds ratio. Press <em>Fit</em> to let the computer find the coefficients with the lowest log loss, the average of \(-\ln p\) for buyers and \(-\ln(1-p)\) for non-buyers. Then slide the threshold: it does not change the model, only which sessions you act on.</p>
+
+        <h3>From probabilities to decisions</h3>
+        <p>To act (send a coupon, flag for review) you pick a <strong>threshold</strong>. Above it you predict "yes". Lowering it catches more real buyers (higher <strong>recall</strong>) at the cost of more false alarms (lower <strong>precision</strong>). The right threshold depends on what each mistake costs, not on 0.5 by default. Area 12 covers ROC curves and calibration in depth.</p>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+import statsmodels.formula.api as smf
+
+<span class="c"># sessions: one row per visit, purchased is 0/1</span>
+logit = smf.logit("purchased ~ pages_viewed + C(device)", data=sessions).fit()
+print(logit.summary())
+
+odds_ratios = np.exp(logit.params)              <span class="c"># pages_viewed ≈ 1.33 in the example</span>
+ci = np.exp(logit.conf_int())                   <span class="c"># interval for each odds ratio</span>
+
+sessions["p_buy"] = logit.predict(sessions)     <span class="c"># probabilities, always in (0, 1)</span>
+sessions["flag"] = sessions["p_buy"] &gt;= 0.3    <span class="c"># threshold chosen from costs</span>
+
+<span class="c"># average marginal effect: change in probability per extra page, in points</span>
+print(logit.get_margeff().summary())</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Logistic regression is a linear model for the log-odds, squashed into a probability by the sigmoid.</li>
+            <li>\(e^{\beta}\) is the odds ratio: the multiplier on the odds for one more unit of \(x\).</li>
+            <li>The same odds ratio moves probabilities by different amounts depending on the starting point.</li>
+            <li>Coefficients are fitted by maximum likelihood (minimum log loss), not least squares.</li>
+            <li>The threshold is a business decision applied after the model, trading precision for recall.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reading an odds ratio of 1.33 as "33% more likely". It is 33% higher odds.</li>
+            <li>Fitting ordinary linear regression to a 0/1 outcome and reporting probabilities above 1.</li>
+            <li>Judging the model by accuracy when only 3% of sessions convert.</li>
+            <li>Using 0.5 as the threshold without asking what false positives and false negatives cost.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="logistic-1"><span>Convert a probability to odds and log-odds and back</span></label></li>
+          <li><label><input type="checkbox" data-key="logistic-2"><span>Turn a logistic coefficient into an odds ratio and a plain-language sentence</span></label></li>
+          <li><label><input type="checkbox" data-key="logistic-3"><span>Compute a predicted probability by hand from \(\beta_0\), \(\beta_1\) and \(x\)</span></label></li>
+          <li><label><input type="checkbox" data-key="logistic-4"><span>Choose a threshold from the costs of each type of mistake</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning, chapter 4</a></li>
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/linear_model.html">scikit-learn: Linear models (including logistic regression)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="model-features">
+        <header class="topic-head">
+          <p class="eyebrow">10.5 · Shaping the inputs</p>
+          <h2>Features, interactions &amp; overfitting</h2>
+        </header>
+
+        <p class="lead">A regression only knows the columns you give it. Turning categories into dummies, letting one effect depend on another and adding curves all make the model more flexible. Past a point, extra flexibility starts fitting noise, and the model gets worse on orders it has not seen.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>"Do discounts work better on mobile?" is an interaction question. "Does spend level off for loyal customers?" is a curve question. Knowing how to encode both, and how to tell a real pattern from an overfit one, is most of the craft in applied regression.</p>
+        </div>
+
+        <h3>Categories become dummy columns</h3>
+        <p>A text column such as <code>device</code> cannot enter a formula directly. <strong>One-hot</strong> (dummy) encoding makes one 0/1 column per category and leaves one category out as the <strong>reference</strong>. Each dummy coefficient is then the difference from that reference. Keep all \(k\) dummies plus an intercept and the columns become perfectly collinear (the "dummy variable trap").</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="A device column with values desktop, mobile, tablet and mobile is encoded into two dummy columns, is_mobile and is_tablet. Desktop rows are zeros in both because desktop is the reference level.">
+              <defs>
+                <marker id="model-features-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="40" y="30" width="150" height="150" rx="6"/>
+              <text class="d-title" x="115" y="52" text-anchor="middle">device</text>
+              <line class="d-grid" x1="40" y1="62" x2="190" y2="62"/>
+              <text class="d-mono" x="115" y="86" text-anchor="middle">desktop</text>
+              <text class="d-mono" x="115" y="112" text-anchor="middle">mobile</text>
+              <text class="d-mono" x="115" y="138" text-anchor="middle">tablet</text>
+              <text class="d-mono" x="115" y="164" text-anchor="middle">mobile</text>
+              <line class="d-line-accent" x1="200" y1="105" x2="276" y2="105" marker-end="url(#model-features-arrow)"/>
+              <text class="d-label d-text-accent" x="238" y="96" text-anchor="middle">C(device)</text>
+              <rect class="d-box" x="290" y="30" width="220" height="150" rx="6"/>
+              <text class="d-title" x="345" y="52" text-anchor="middle">is_mobile</text>
+              <text class="d-title" x="455" y="52" text-anchor="middle">is_tablet</text>
+              <line class="d-grid" x1="290" y1="62" x2="510" y2="62"/>
+              <line class="d-grid" x1="400" y1="30" x2="400" y2="180"/>
+              <rect class="d-fill" x="292" y="70" width="216" height="24"/>
+              <text class="d-mono" x="345" y="86" text-anchor="middle">0</text><text class="d-mono" x="455" y="86" text-anchor="middle">0</text>
+              <text class="d-mono" x="345" y="112" text-anchor="middle">1</text><text class="d-mono" x="455" y="112" text-anchor="middle">0</text>
+              <text class="d-mono" x="345" y="138" text-anchor="middle">0</text><text class="d-mono" x="455" y="138" text-anchor="middle">1</text>
+              <text class="d-mono" x="345" y="164" text-anchor="middle">1</text><text class="d-mono" x="455" y="164" text-anchor="middle">0</text>
+              <text class="d-label" x="522" y="86">desktop =</text>
+              <text class="d-label" x="522" y="100">reference</text>
+              <text class="d-label" x="290" y="196">3 categories → 2 columns; each coefficient is "vs desktop"</text>
+            </svg>
+          </div>
+          <figcaption>One-hot encoding with desktop as the reference. A desktop order is all zeros, so the intercept describes desktop and each dummy adds the difference for its device.</figcaption>
+        </figure>
+
+        <h3>Interactions: when one effect depends on another</h3>
+        <p>Without an interaction, the model forces the discount effect to be the same on every device. Adding the product term <code>discount_pct × is_mobile</code> lets each device have its own slope. The interaction coefficient is the <em>difference</em> between the two slopes.</p>
+
+        <div class="formula">
+          \[ \widehat{\text{value}} = \beta_0 + \beta_1\,\text{disc} + \beta_2\,\text{mobile} + \beta_3\,(\text{disc} \times \text{mobile}) \]
+          <span class="formula-note">Desktop slope: \(\beta_1\). Mobile slope: \(\beta_1 + \beta_3\). With an interaction in the model, \(\beta_1\) alone no longer means "the" discount effect.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Order value against discount for desktop and mobile. Without an interaction the two lines are parallel; with an interaction desktop rises by 0.60 dollars per point and mobile by only 0.10.">
+              <rect class="d-box" x="20" y="20" width="290" height="170" rx="6"/>
+              <text class="d-title" x="165" y="14" text-anchor="middle">No interaction: parallel</text>
+              <line class="d-line-accent" x1="40" y1="120" x2="290" y2="70"/>
+              <line class="d-line-signal" x1="40" y1="150" x2="290" y2="100"/>
+              <text class="d-label d-text-accent" x="290" y="62" text-anchor="end">desktop</text>
+              <text class="d-label d-text-signal" x="290" y="118" text-anchor="end">mobile</text>
+              <text class="d-label" x="165" y="182" text-anchor="middle">discount % →</text>
+              <text class="d-mono" x="40" y="44">same slope forced</text>
+              <rect class="d-box" x="330" y="20" width="290" height="170" rx="6"/>
+              <text class="d-title" x="475" y="14" text-anchor="middle">With interaction: own slopes</text>
+              <line class="d-line-accent" x1="350" y1="135" x2="600" y2="50"/>
+              <line class="d-line-signal" x1="350" y1="140" x2="600" y2="126"/>
+              <text class="d-label d-text-accent" x="600" y="42" text-anchor="end">desktop +$0.60 / pt</text>
+              <text class="d-label d-text-signal" x="600" y="146" text-anchor="end">mobile +$0.10 / pt</text>
+              <text class="d-mono" x="350" y="44">β₃ = −0.50</text>
+              <text class="d-label" x="475" y="182" text-anchor="middle">discount % →</text>
+              <text class="d-label" x="20" y="212">Illustrative numbers. The interaction coefficient is the gap between the two slopes.</text>
+            </svg>
+          </div>
+          <figcaption>An interaction lets the discount slope differ by device. Here (illustrative) discounts lift desktop orders by $0.60 per point but mobile orders by only $0.10, so \(\beta_3 = 0.10 - 0.60 = -0.50\).</figcaption>
+        </figure>
+
+        <h3>Curves and the overfitting trap</h3>
+        <p>Spend often rises quickly for new customers and levels off. A straight line in tenure misses that bend; adding \(\text{tenure}^2\) (a polynomial term), a log or a spline captures it. Each added term gives the model more freedom. Training error always falls as you add terms, but error on new data falls, bottoms out, then climbs. That climb is <strong>overfitting</strong>: the model memorises noise.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="The same 14 customers' average order value against tenure fitted with polynomials of degree 1, 2 and 10. Degree 1 misses the bend, degree 2 follows the trend and degree 10 wiggles through the noise.">
+              <rect class="d-box" x="15" y="30" width="190" height="140" rx="6"/>
+              <text class="d-title" x="110.0" y="20" text-anchor="middle">Degree 1: underfit</text>
+              <path class="d-line-accent" d="M23.0,106.8 L24.5,106.5 L25.9,106.1 L27.4,105.7 L28.8,105.4 L30.3,105.0 L31.8,104.7 L33.2,104.3 L34.7,103.9 L36.2,103.6 L37.6,103.2 L39.1,102.8 L40.5,102.5 L42.0,102.1 L43.5,101.8 L44.9,101.4 L46.4,101.0 L47.9,100.7 L49.3,100.3 L50.8,100.0 L52.2,99.6 L53.7,99.2 L55.2,98.9 L56.6,98.5 L58.1,98.1 L59.6,97.8 L61.0,97.4 L62.5,97.1 L63.9,96.7 L65.4,96.3 L66.9,96.0 L68.3,95.6 L69.8,95.2 L71.3,94.9 L72.7,94.5 L74.2,94.2 L75.6,93.8 L77.1,93.4 L78.6,93.1 L80.0,92.7 L81.5,92.4 L82.9,92.0 L84.4,91.6 L85.9,91.3 L87.3,90.9 L88.8,90.5 L90.3,90.2 L91.7,89.8 L93.2,89.5 L94.6,89.1 L96.1,88.7 L97.6,88.4 L99.0,88.0 L100.5,87.7 L102.0,87.3 L103.4,86.9 L104.9,86.6 L106.3,86.2 L107.8,85.8 L109.3,85.5 L110.7,85.1 L112.2,84.8 L113.7,84.4 L115.1,84.0 L116.6,83.7 L118.0,83.3 L119.5,82.9 L121.0,82.6 L122.4,82.2 L123.9,81.9 L125.4,81.5 L126.8,81.1 L128.3,80.8 L129.7,80.4 L131.2,80.1 L132.7,79.7 L134.1,79.3 L135.6,79.0 L137.1,78.6 L138.5,78.2 L140.0,77.9 L141.4,77.5 L142.9,77.2 L144.4,76.8 L145.8,76.4 L147.3,76.1 L148.7,75.7 L150.2,75.4 L151.7,75.0 L153.1,74.6 L154.6,74.3 L156.1,73.9 L157.5,73.5 L159.0,73.2 L160.4,72.8 L161.9,72.5 L163.4,72.1 L164.8,71.7 L166.3,71.4 L167.8,71.0 L169.2,70.7 L170.7,70.3 L172.1,69.9 L173.6,69.6 L175.1,69.2 L176.5,68.8 L178.0,68.5 L179.5,68.1 L180.9,67.8 L182.4,67.4 L183.8,67.0 L185.3,66.7 L186.8,66.3 L188.2,65.9 L189.7,65.6 L191.2,65.2 L192.6,64.9 L194.1,64.5 L195.5,64.1 L197.0,63.8"/>
+              <circle class="d-dot-muted" cx="28.2" cy="117.1" r="3.5"/>
+              <circle class="d-dot-muted" cx="32.0" cy="100.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="44.9" cy="105.0" r="3.5"/>
+              <circle class="d-dot-muted" cx="59.1" cy="98.6" r="3.5"/>
+              <circle class="d-dot-muted" cx="71.5" cy="93.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="73.6" cy="104.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="99.7" cy="65.5" r="3.5"/>
+              <circle class="d-dot-muted" cx="102.5" cy="90.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="111.9" cy="90.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="118.8" cy="77.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="136.0" cy="54.9" r="3.5"/>
+              <circle class="d-dot-muted" cx="146.2" cy="69.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="178.4" cy="84.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="179.0" cy="80.5" r="3.5"/>
+              <text class="d-label d-text-signal" x="110.0" y="188" text-anchor="middle">misses the bend</text>
+              <rect class="d-box" x="225" y="30" width="190" height="140" rx="6"/>
+              <text class="d-title" x="320.0" y="20" text-anchor="middle">Degree 2: about right</text>
+              <path class="d-line-accent" d="M233.0,118.2 L234.5,117.2 L235.9,116.2 L237.4,115.2 L238.8,114.2 L240.3,113.3 L241.8,112.3 L243.2,111.4 L244.7,110.5 L246.2,109.6 L247.6,108.7 L249.1,107.8 L250.5,106.9 L252.0,106.0 L253.5,105.2 L254.9,104.3 L256.4,103.5 L257.9,102.7 L259.3,101.9 L260.8,101.1 L262.2,100.3 L263.7,99.6 L265.2,98.8 L266.6,98.1 L268.1,97.3 L269.6,96.6 L271.0,95.9 L272.5,95.2 L273.9,94.5 L275.4,93.8 L276.9,93.2 L278.3,92.5 L279.8,91.9 L281.3,91.3 L282.7,90.7 L284.2,90.1 L285.6,89.5 L287.1,88.9 L288.6,88.3 L290.0,87.8 L291.5,87.2 L292.9,86.7 L294.4,86.2 L295.9,85.7 L297.3,85.2 L298.8,84.7 L300.3,84.2 L301.7,83.8 L303.2,83.3 L304.6,82.9 L306.1,82.4 L307.6,82.0 L309.0,81.6 L310.5,81.2 L312.0,80.9 L313.4,80.5 L314.9,80.1 L316.3,79.8 L317.8,79.5 L319.3,79.2 L320.7,78.8 L322.2,78.6 L323.7,78.3 L325.1,78.0 L326.6,77.7 L328.0,77.5 L329.5,77.3 L331.0,77.0 L332.4,76.8 L333.9,76.6 L335.4,76.4 L336.8,76.3 L338.3,76.1 L339.7,75.9 L341.2,75.8 L342.7,75.7 L344.1,75.5 L345.6,75.4 L347.1,75.3 L348.5,75.3 L350.0,75.2 L351.4,75.1 L352.9,75.1 L354.4,75.1 L355.8,75.0 L357.3,75.0 L358.7,75.0 L360.2,75.0 L361.7,75.1 L363.1,75.1 L364.6,75.1 L366.1,75.2 L367.5,75.3 L369.0,75.4 L370.4,75.4 L371.9,75.6 L373.4,75.7 L374.8,75.8 L376.3,75.9 L377.8,76.1 L379.2,76.3 L380.7,76.4 L382.1,76.6 L383.6,76.8 L385.1,77.0 L386.5,77.3 L388.0,77.5 L389.5,77.8 L390.9,78.0 L392.4,78.3 L393.8,78.6 L395.3,78.9 L396.8,79.2 L398.2,79.5 L399.7,79.8 L401.2,80.2 L402.6,80.5 L404.1,80.9 L405.5,81.3 L407.0,81.7"/>
+              <circle class="d-dot-muted" cx="238.2" cy="117.1" r="3.5"/>
+              <circle class="d-dot-muted" cx="242.0" cy="100.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="254.9" cy="105.0" r="3.5"/>
+              <circle class="d-dot-muted" cx="269.1" cy="98.6" r="3.5"/>
+              <circle class="d-dot-muted" cx="281.5" cy="93.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="283.6" cy="104.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="309.7" cy="65.5" r="3.5"/>
+              <circle class="d-dot-muted" cx="312.5" cy="90.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="321.9" cy="90.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="328.8" cy="77.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="346.0" cy="54.9" r="3.5"/>
+              <circle class="d-dot-muted" cx="356.2" cy="69.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="388.4" cy="84.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="389.0" cy="80.5" r="3.5"/>
+              <text class="d-label d-text-good" x="320.0" y="188" text-anchor="middle">follows the trend</text>
+              <rect class="d-box" x="435" y="30" width="190" height="140" rx="6"/>
+              <text class="d-title" x="530.0" y="20" text-anchor="middle">Degree 10: overfit</text>
+              <path class="d-line-accent" d="M443.0,170.0 L444.5,170.0 L445.9,146.7 L447.4,125.1 L448.8,111.9 L450.3,104.7 L451.8,101.3 L453.2,100.4 L454.7,100.8 L456.2,101.9 L457.6,103.0 L459.1,104.0 L460.5,104.7 L462.0,104.9 L463.5,104.8 L464.9,104.4 L466.4,103.8 L467.9,103.0 L469.3,102.2 L470.8,101.4 L472.2,100.7 L473.7,100.1 L475.2,99.7 L476.6,99.4 L478.1,99.3 L479.6,99.3 L481.0,99.4 L482.5,99.5 L483.9,99.7 L485.4,99.8 L486.9,99.8 L488.3,99.7 L489.8,99.4 L491.3,99.0 L492.7,98.3 L494.2,97.4 L495.6,96.4 L497.1,95.1 L498.6,93.7 L500.0,92.1 L501.5,90.4 L502.9,88.7 L504.4,87.0 L505.9,85.3 L507.3,83.7 L508.8,82.2 L510.3,80.9 L511.7,79.8 L513.2,79.0 L514.6,78.4 L516.1,78.1 L517.6,78.1 L519.0,78.3 L520.5,78.7 L522.0,79.4 L523.4,80.2 L524.9,81.1 L526.3,82.0 L527.8,83.0 L529.3,83.9 L530.7,84.6 L532.2,85.2 L533.7,85.4 L535.1,85.3 L536.6,84.9 L538.0,84.1 L539.5,82.8 L541.0,81.1 L542.4,79.0 L543.9,76.5 L545.4,73.7 L546.8,70.6 L548.3,67.4 L549.7,64.1 L551.2,60.9 L552.7,58.0 L554.1,55.4 L555.6,53.4 L557.1,52.2 L558.5,51.8 L560.0,52.5 L561.4,54.5 L562.9,57.7 L564.4,62.4 L565.8,68.5 L567.3,76.1 L568.7,85.1 L570.2,95.5 L571.7,107.0 L573.1,119.4 L574.6,132.4 L576.1,145.6 L577.5,158.6 L579.0,170.0 L580.4,170.0 L581.9,170.0 L583.4,170.0 L584.8,170.0 L586.3,170.0 L587.8,170.0 L589.2,170.0 L590.7,170.0 L592.1,160.6 L593.6,141.9 L595.1,121.9 L596.5,102.6 L598.0,87.1 L599.5,79.3 L600.9,84.8 L602.4,110.4 L603.8,164.6 L605.3,170.0 L606.8,170.0 L608.2,170.0 L609.7,170.0 L611.2,170.0 L612.6,170.0 L614.1,170.0 L615.5,170.0 L617.0,170.0"/>
+              <circle class="d-dot-muted" cx="448.2" cy="117.1" r="3.5"/>
+              <circle class="d-dot-muted" cx="452.0" cy="100.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="464.9" cy="105.0" r="3.5"/>
+              <circle class="d-dot-muted" cx="479.1" cy="98.6" r="3.5"/>
+              <circle class="d-dot-muted" cx="491.5" cy="93.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="493.6" cy="104.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="519.7" cy="65.5" r="3.5"/>
+              <circle class="d-dot-muted" cx="522.5" cy="90.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="531.9" cy="90.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="538.8" cy="77.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="556.0" cy="54.9" r="3.5"/>
+              <circle class="d-dot-muted" cx="566.2" cy="69.8" r="3.5"/>
+              <circle class="d-dot-muted" cx="598.4" cy="84.4" r="3.5"/>
+              <circle class="d-dot-muted" cx="599.0" cy="80.5" r="3.5"/>
+              <text class="d-label d-text-signal" x="530.0" y="188" text-anchor="middle">chases the noise</text>
+
+            </svg>
+          </div>
+          <figcaption>Average order value against tenure (months) for 14 example customers. More flexibility is not always better: degree 10 hits the training points but would predict nonsense for the next customer.</figcaption>
+        </figure>
+
+        <div class="widget" id="poly-demo">
+          <div class="widget-head">
+            <span class="widget-title">Polynomial degree vs train and validation error</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="poly-deg">Polynomial degree <input type="range" id="poly-deg" min="1" max="12" step="1" value="1"><output id="poly-deg-out">1</output></label>
+            <label for="poly-val"><input type="checkbox" id="poly-val" checked> Show validation customers</label>
+          </div>
+          <svg id="poly-plot" viewBox="0 0 600 270" role="img" aria-label="Left: 17 training and 17 validation customers with the fitted polynomial. Right: training and validation RMSE for every degree with the current degree marked."></svg>
+          <p class="readout" id="poly-readout"></p>
+        </div>
+        <p>Training customers (filled) fit the curve; validation customers (hollow) are held back to judge it. Raise the degree and watch the two error curves on the right split apart. The degree you want is where <em>validation</em> error is lowest, not training error.</p>
+
+        <h3>Taming flexibility</h3>
+        <p>Three habits keep models honest. Hold out data (or cross-validate) and judge every change on it. Add terms because the residuals or the business logic ask for them, not because they are available. And when you have many predictors, use <strong>regularization</strong>: ridge regression shrinks all coefficients toward zero, and lasso can set weak ones exactly to zero.</p>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+import statsmodels.formula.api as smf
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn.linear_model import LinearRegression, RidgeCV
+from sklearn.model_selection import cross_val_score
+
+<span class="c"># dummies, an interaction and a curve, all in one formula</span>
+m = smf.ols("order_value ~ discount_pct * C(device, Treatment('desktop'))"
+            " + tenure_months + I(tenure_months ** 2)", data=orders).fit()
+
+<span class="c"># pick the polynomial degree by cross-validated error, not training error</span>
+X, y = orders[["tenure_months"]], orders["order_value"]
+for degree in range(1, 7):
+    pipe = make_pipeline(PolynomialFeatures(degree), StandardScaler(), LinearRegression())
+    rmse = -cross_val_score(pipe, X, y, cv=5, scoring="neg_root_mean_squared_error").mean()
+    print(degree, round(rmse, 2))
+
+<span class="c"># many features: let ridge shrink them, with the penalty chosen by CV</span>
+ridge = make_pipeline(StandardScaler(), RidgeCV(alphas=np.logspace(-3, 3, 13)))</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Categorical predictors enter as \(k-1\) dummy columns; coefficients compare to the reference level.</li>
+            <li>An interaction term lets one predictor's effect depend on another; its coefficient is the difference in slopes.</li>
+            <li>Polynomials, logs and splines let a linear model fit curves.</li>
+            <li>Training error always falls with flexibility; validation error shows when you start overfitting.</li>
+            <li>Regularization (ridge, lasso) trades a little bias for much less variance.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reading a main-effect coefficient as "the" effect when an interaction is in the model.</li>
+            <li>Adding a high-degree polynomial because it raises R².</li>
+            <li>Choosing features or the degree on the same data you report performance on.</li>
+            <li>Encoding categories as integers (desktop = 1, mobile = 2, tablet = 3), which invents an order.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="model-features-1"><span>Encode a categorical column and name its reference level</span></label></li>
+          <li><label><input type="checkbox" data-key="model-features-2"><span>Fit an interaction and state each group's slope from the coefficients</span></label></li>
+          <li><label><input type="checkbox" data-key="model-features-3"><span>Explain overfitting using a train vs validation error curve</span></label></li>
+          <li><label><input type="checkbox" data-key="model-features-4"><span>Choose a polynomial degree or ridge penalty by cross-validation</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning, chapters 3, 6 and 7</a></li>
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/linear_model.html">scikit-learn: Linear models (ridge and lasso)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="model-comparison">
+        <header class="topic-head">
+          <p class="eyebrow">10.6 · Picking a winner</p>
+          <h2>Comparing models</h2>
+        </header>
+
+        <p class="lead">You rarely have one model; you have five candidates with different features. Raw R² cannot choose between them, because adding any column, even a column of random numbers, never lowers it. You need measures that charge a price for complexity or test the model on rows it did not see.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>The model you present becomes "the" answer about what drives order value. Picking it by R² rewards whoever added the most columns. Adjusted R², AIC and cross-validation give you a defensible reason to prefer the simpler model, and a number to show when someone asks "why not add X?"</p>
+        </div>
+
+        <h3>Penalise complexity: adjusted R², AIC, BIC</h3>
+        <p><strong>Adjusted R²</strong> only rises when a new predictor improves the fit by more than chance alone would. <strong>AIC</strong> and <strong>BIC</strong> trade fit (via SSE) against the number of coefficients \(k\); lower is better, and only differences between models fitted to the same rows mean anything. BIC charges more per coefficient, so it prefers smaller models.</p>
+
+        <div class="formula">
+          \[ R^2_{\text{adj}} = 1 - (1 - R^2)\,\frac{n-1}{n-p-1}, \qquad \text{AIC} = n \ln\frac{\text{SSE}}{n} + 2k, \qquad \text{BIC} = n \ln\frac{\text{SSE}}{n} + k \ln n \]
+          <span class="formula-note">\(n\) rows, \(p\) predictors, \(k = p + 1\) coefficients including the intercept. The AIC and BIC shown are for linear regression with normal errors, up to a constant that cancels when you compare models. A rule of thumb: an AIC gap under 2 is a near tie.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 232" role="img" aria-label="Scoreboard of five nested models on 500 example orders. R squared is highest for the biggest model E, which adds three noise columns. Adjusted R squared, AIC and cross-validated RMSE all pick model B, which adds only items squared.">
+              <text class="d-label" x="20" y="28">model (500 example orders)</text>
+              <text class="d-title" x="300" y="28" text-anchor="middle">R² ↑</text>
+              <text class="d-title" x="390" y="28" text-anchor="middle">adj. R² ↑</text>
+              <text class="d-title" x="480" y="28" text-anchor="middle">AIC ↓</text>
+              <text class="d-title" x="570" y="28" text-anchor="middle">CV RMSE ↓</text>
+              <line class="d-grid" x1="14" y1="38" x2="626" y2="38"/>
+              <text class="d-mono" x="20" y="62">A  items, tenure, discount, device</text>
+              <text class="d-mono" x="300" y="62" text-anchor="middle">0.7540</text>
+              <text class="d-mono" x="390" y="62" text-anchor="middle">0.7520</text>
+              <text class="d-mono" x="480" y="62" text-anchor="middle">2573.0</text>
+              <text class="d-mono" x="570" y="62" text-anchor="middle">13.35</text>
+              <text class="d-mono" x="20" y="92">B  A + items²</text>
+              <text class="d-mono" x="300" y="92" text-anchor="middle">0.7707</text>
+              <rect class="d-good" x="352" y="76" width="76" height="22" rx="4"/>
+              <text class="d-mono" x="390" y="92" text-anchor="middle">0.7684</text>
+              <rect class="d-good" x="442" y="76" width="76" height="22" rx="4"/>
+              <text class="d-mono" x="480" y="92" text-anchor="middle">2539.9</text>
+              <rect class="d-good" x="532" y="76" width="76" height="22" rx="4"/>
+              <text class="d-mono" x="570" y="92" text-anchor="middle">12.86</text>
+              <text class="d-mono" x="20" y="122">C  B + day_of_month</text>
+              <text class="d-mono" x="300" y="122" text-anchor="middle">0.7709</text>
+              <text class="d-mono" x="390" y="122" text-anchor="middle">0.7681</text>
+              <text class="d-mono" x="480" y="122" text-anchor="middle">2541.4</text>
+              <text class="d-mono" x="570" y="122" text-anchor="middle">12.88</text>
+              <text class="d-mono" x="20" y="152">D  C + zip_digit</text>
+              <text class="d-mono" x="300" y="152" text-anchor="middle">0.7714</text>
+              <text class="d-mono" x="390" y="152" text-anchor="middle">0.7682</text>
+              <text class="d-mono" x="480" y="152" text-anchor="middle">2542.4</text>
+              <text class="d-mono" x="570" y="152" text-anchor="middle">12.93</text>
+              <text class="d-mono" x="20" y="182">E  D + email_opens</text>
+              <rect class="d-signal" x="262" y="166" width="76" height="22" rx="4"/>
+              <text class="d-mono" x="300" y="182" text-anchor="middle">0.7714</text>
+              <text class="d-mono" x="390" y="182" text-anchor="middle">0.7677</text>
+              <text class="d-mono" x="480" y="182" text-anchor="middle">2544.3</text>
+              <text class="d-mono" x="570" y="182" text-anchor="middle">12.95</text>
+              <text class="d-label d-text-signal" x="300" y="222" text-anchor="middle">R² always picks the biggest model</text>
+              <text class="d-label d-text-good" x="525" y="222" text-anchor="middle">the other three agree on B</text>
+            </svg>
+          </div>
+          <figcaption>Five nested models on the 500 example orders. Models C to E add columns that are pure noise (day of month, a zip digit, email opens). R² creeps up anyway; adjusted R², AIC and cross-validated error all prefer model B.</figcaption>
+        </figure>
+
+        <h3>Test on unseen rows: cross-validation</h3>
+        <p><strong>k-fold cross-validation</strong> splits the rows into \(k\) groups. Each group takes one turn as the validation set while the model is fitted on the other \(k-1\), and you average the \(k\) errors. Every row is used for validation exactly once, so the estimate is steadier than one train/test split, and it measures what you care about when predicting: error on new orders, in dollars.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Five-fold cross-validation: five rows of five blocks; in each row a different block is the validation fold and the other four train the model. The five validation RMSEs are averaged.">
+              <defs>
+                <marker id="model-comparison-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="80" y="26">train on 4 folds</text>
+              <text class="d-label d-text-signal" x="390" y="26" text-anchor="end">validate on 1</text>
+              <text class="d-label" x="20" y="55">Fold 1</text>
+              <rect class="d-signal" x="80" y="40" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="142" y="40" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="204" y="40" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="266" y="40" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="328" y="40" width="56" height="20" rx="3"/>
+              <line class="d-line-accent" x1="396" y1="50" x2="440" y2="50" marker-end="url(#model-comparison-arrow)"/>
+              <text class="d-label" x="20" y="85">Fold 2</text>
+              <rect class="d-accent" x="80" y="70" width="56" height="20" rx="3"/>
+              <rect class="d-signal" x="142" y="70" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="204" y="70" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="266" y="70" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="328" y="70" width="56" height="20" rx="3"/>
+              <line class="d-line-accent" x1="396" y1="80" x2="440" y2="80" marker-end="url(#model-comparison-arrow)"/>
+              <text class="d-label" x="20" y="115">Fold 3</text>
+              <rect class="d-accent" x="80" y="100" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="142" y="100" width="56" height="20" rx="3"/>
+              <rect class="d-signal" x="204" y="100" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="266" y="100" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="328" y="100" width="56" height="20" rx="3"/>
+              <line class="d-line-accent" x1="396" y1="110" x2="440" y2="110" marker-end="url(#model-comparison-arrow)"/>
+              <text class="d-label" x="20" y="145">Fold 4</text>
+              <rect class="d-accent" x="80" y="130" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="142" y="130" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="204" y="130" width="56" height="20" rx="3"/>
+              <rect class="d-signal" x="266" y="130" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="328" y="130" width="56" height="20" rx="3"/>
+              <line class="d-line-accent" x1="396" y1="140" x2="440" y2="140" marker-end="url(#model-comparison-arrow)"/>
+              <text class="d-label" x="20" y="175">Fold 5</text>
+              <rect class="d-accent" x="80" y="160" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="142" y="160" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="204" y="160" width="56" height="20" rx="3"/>
+              <rect class="d-accent" x="266" y="160" width="56" height="20" rx="3"/>
+              <rect class="d-signal" x="328" y="160" width="56" height="20" rx="3"/>
+              <line class="d-line-accent" x1="396" y1="170" x2="440" y2="170" marker-end="url(#model-comparison-arrow)"/>
+              <text class="d-mono" x="448" y="55">RMSE $13.1</text>
+              <text class="d-mono" x="448" y="85">RMSE $12.6</text>
+              <text class="d-mono" x="448" y="115">RMSE $13.4</text>
+              <text class="d-mono" x="448" y="145">RMSE $12.5</text>
+              <text class="d-mono" x="448" y="175">RMSE $12.7</text>
+              <line class="d-line" x1="440" y1="196" x2="560" y2="196"/>
+              <text class="d-mono d-text-good" x="448" y="190">mean ≈ $12.86</text>
+              <text class="d-label" x="80" y="200">Illustrative per-fold errors for model B</text>
+            </svg>
+          </div>
+          <figcaption>Five-fold cross-validation. Each fold is held out once; the average validation RMSE is the model's score. Fold-to-fold spread hints at how much that score could move.</figcaption>
+        </figure>
+
+        <div class="widget" id="cmp-demo">
+          <div class="widget-head">
+            <span class="widget-title">Model comparison bench</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <span>Predictors:</span>
+            <label for="cmp-f-items"><input type="checkbox" id="cmp-f-items" checked> items</label>
+            <label for="cmp-f-tenure"><input type="checkbox" id="cmp-f-tenure"> tenure</label>
+            <label for="cmp-f-discount"><input type="checkbox" id="cmp-f-discount"> discount</label>
+            <label for="cmp-f-mobile"><input type="checkbox" id="cmp-f-mobile"> device</label>
+            <label for="cmp-f-items2"><input type="checkbox" id="cmp-f-items2"> items²</label>
+            <label for="cmp-f-day"><input type="checkbox" id="cmp-f-day"> day_of_month</label>
+            <label for="cmp-f-zip"><input type="checkbox" id="cmp-f-zip"> zip_digit</label>
+            <label for="cmp-f-opens"><input type="checkbox" id="cmp-f-opens"> email_opens</label>
+          </div>
+          <svg id="cmp-plot" viewBox="0 0 600 250" role="img" aria-label="Four tracks for R squared, adjusted R squared, AIC and cross-validated RMSE. Each track spans the range over all 256 possible models; a dot marks the current model and a hollow ring the previous one."></svg>
+          <p class="readout" id="cmp-readout"></p>
+        </div>
+        <p>Each track spans the worst to best value over all 256 possible feature sets, with the better end on the right. Add the three noise columns to a good model: the R² dot nudges right while the other three slide left. Can you find the single best model by cross-validated error?</p>
+
+        <h3>Which measure when?</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Measure</th><th>Rewards</th><th>Use it when</th><th>Watch out</th></tr></thead>
+            <tbody>
+              <tr><td>R²</td><td>Fit only</td><td>Describing one model</td><td>Never use it to choose between models of different size</td></tr>
+              <tr><td>Adjusted R²</td><td>Fit, light penalty</td><td>Quick check of nested linear models</td><td>Still in-sample; weak penalty</td></tr>
+              <tr><td>AIC</td><td>Fit vs \(2k\)</td><td>Choosing among models on the same rows, aiming to predict</td><td>Only differences matter; same \(y\) and rows</td></tr>
+              <tr><td>BIC</td><td>Fit vs \(k \ln n\)</td><td>You want the smallest adequate explanatory model</td><td>Can underfit when effects are many and small</td></tr>
+              <tr><td>Cross-validated error</td><td>Prediction on unseen rows</td><td>Prediction is the goal; any model type</td><td>Time-ordered data needs time-based folds</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>For explanation, also ask whether the coefficients you care about are stable across reasonable models. If the discount effect is +$0.37 in every sensible specification, you can say so with confidence; if it swings with each choice, report that too. Keep a final test set untouched until the very end so the number you present was not used to choose the model.</p>
+
+        <pre class="code" data-lang="python"><code>import statsmodels.formula.api as smf
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import KFold, cross_val_score
+
+specs = {
+    "A": "order_value ~ items + tenure_months + discount_pct + C(device)",
+    "B": "order_value ~ items + I(items ** 2) + tenure_months + discount_pct + C(device)",
+    "E": "order_value ~ items + I(items ** 2) + tenure_months + discount_pct + C(device)"
+         " + day_of_month + zip_digit + email_opens",
+}
+for name, f in specs.items():
+    m = smf.ols(f, data=orders).fit()
+    print(name, round(m.rsquared, 4), round(m.rsquared_adj, 4), round(m.aic, 1), round(m.bic, 1))
+
+<span class="c"># 5-fold cross-validated RMSE for the same feature sets</span>
+cv = KFold(n_splits=5, shuffle=True, random_state=0)
+orders["items_sq"] = orders["items"] ** 2
+orders["is_mobile"] = (orders["device"] == "mobile").astype(int)
+cols_b = ["items", "items_sq", "tenure_months", "discount_pct", "is_mobile"]
+rmse_b = -cross_val_score(LinearRegression(), orders[cols_b], orders["order_value"],
+                          cv=cv, scoring="neg_root_mean_squared_error").mean()</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>R² never decreases when you add predictors, so it cannot choose between models.</li>
+            <li>Adjusted R², AIC and BIC penalise extra coefficients; compare them only across models fitted to the same rows.</li>
+            <li>Cross-validation estimates error on unseen data directly and works for any model.</li>
+            <li>Prefer the simplest model that is within noise of the best score.</li>
+            <li>For explanation, check that key coefficients are stable across sensible specifications.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Comparing AIC between a model of order value and a model of log order value.</li>
+            <li>Comparing models fitted on different rows because one dropped missing values.</li>
+            <li>Using random folds on time-ordered data, which leaks the future into training.</li>
+            <li>Reporting the cross-validated score of the model you picked as if it were an untouched test score.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="model-comparison-1"><span>Explain why R² cannot choose between nested models</span></label></li>
+          <li><label><input type="checkbox" data-key="model-comparison-2"><span>Compute adjusted R² from R², n and p</span></label></li>
+          <li><label><input type="checkbox" data-key="model-comparison-3"><span>Compare models with AIC and know when the comparison is invalid</span></label></li>
+          <li><label><input type="checkbox" data-key="model-comparison-4"><span>Run k-fold cross-validation and pick the simplest model within noise of the best</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.statlearning.com/">An Introduction to Statistical Learning, chapters 5 and 6</a></li>
+          <li><span class="kind">Docs</span><a href="https://scikit-learn.org/stable/modules/cross_validation.html">scikit-learn: Cross-validation</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>What drives basket size?</h4><p>Take a public e-commerce orders dataset, fit order value on items, discount and customer tenure, and write one plain sentence per coefficient with its interval. Include the residual-vs-fitted plot and say what it tells you.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Conversion drivers</h4><p>Fit a logistic regression for "session ends in a purchase" from pages viewed, device and traffic source. Report odds ratios with intervals, an example in probability terms, and a threshold chosen from the cost of a wasted coupon versus a missed buyer.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>A defensible model choice</h4><p>Build five candidate specifications for log order value (dummies, an interaction, a curve, noise columns), compare them with adjusted R², AIC and 5-fold CV, and check whether the discount coefficient is stable across them. Write a one-page memo recommending a model and stating what it can and cannot say about causation.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Fit linear and logistic regressions in statsmodels and explain every number in the summary</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Interpret coefficients in dollars, percentages, elasticities and odds ratios</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Spot confounders and say why a controlled coefficient is still not proof of cause</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Diagnose a model from residual plots, Cook's distance and VIFs, and apply a fix</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Choose between models with adjusted R², AIC and cross-validation without leaking test data</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 10. Shared helpers first, then one IIFE per widget. */
+var REG = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) { var u = 1 - r(), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  /* invert a symmetric positive matrix (Gauss-Jordan with partial pivoting) */
+  function inv(A) {
+    var n = A.length, M = A.map(function (row, i) { var r = row.slice(); for (var j = 0; j < n; j++) r.push(i === j ? 1 : 0); return r; });
+    for (var c = 0; c < n; c++) {
+      var p = c;
+      for (var r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+      var tmp = M[c]; M[c] = M[p]; M[p] = tmp;
+      var d = M[c][c]; if (Math.abs(d) < 1e-12) return null;
+      for (var j = 0; j < 2 * n; j++) M[c][j] /= d;
+      for (r = 0; r < n; r++) if (r !== c) { var f = M[r][c]; if (f) for (j = 0; j < 2 * n; j++) M[r][j] -= f * M[c][j]; }
+    }
+    return M.map(function (row) { return row.slice(n); });
+  }
+  /* ordinary least squares with intercept. X: array of rows (no intercept column), y: array */
+  function ols(X, y, ridge) {
+    var n = y.length, k = (X[0] ? X[0].length : 0) + 1, i, a, b;
+    var XtX = [], Xty = [];
+    for (a = 0; a < k; a++) { XtX.push(new Array(k).fill(0)); Xty.push(0); }
+    for (i = 0; i < n; i++) {
+      var row = [1].concat(X[i]);
+      for (a = 0; a < k; a++) { Xty[a] += row[a] * y[i]; for (b = 0; b < k; b++) XtX[a][b] += row[a] * row[b]; }
+    }
+    if (ridge) for (a = 1; a < k; a++) XtX[a][a] += ridge;
+    var Inv = inv(XtX); if (!Inv) return null;
+    var beta = Inv.map(function (r) { return r.reduce(function (s, v, j) { return s + v * Xty[j]; }, 0); });
+    var sse = 0, ybar = y.reduce(function (s, v) { return s + v; }, 0) / n, sst = 0;
+    for (i = 0; i < n; i++) { var f = predict(beta, X[i]); sse += (y[i] - f) * (y[i] - f); sst += (y[i] - ybar) * (y[i] - ybar); }
+    var df = n - k, s2 = sse / Math.max(1, df);
+    var se = Inv.map(function (r, j) { return Math.sqrt(Math.max(0, s2 * r[j])); });
+    return { beta: beta, se: se, inv: Inv, sse: sse, sst: sst, r2: 1 - sse / sst, n: n, k: k, df: df,
+      adjr2: 1 - (1 - (1 - sse / sst)) * (n - 1) / (n - k), aic: n * Math.log(sse / n) + 2 * k };
+  }
+  function predict(beta, x) { var s = beta[0]; for (var j = 0; j < x.length; j++) s += beta[j + 1] * x[j]; return s; }
+  /* the running example: 500 orders from an online store */
+  function orders() {
+    var r = rng(2026), out = [];
+    for (var i = 0; i < 500; i++) {
+      var tenure = 1 + Math.floor(Math.min(47, -12 * Math.log(1 - r())));
+      var mobile = r() < 0.55 ? 1 : 0;
+      var items = 1 + Math.min(9, Math.floor(-2 * Math.log(1 - r())));
+      var isNew = tenure <= 6;
+      var disc = r() < (isNew ? 0.8 : 0.15) ? 5 * ((isNew ? 2 : 1) + Math.floor(r() * 3)) : 0;
+      var lv = 3.3 + 0.15 * items + 0.02 * tenure + 0.008 * disc - 0.12 * mobile + 0.2 * gauss(r);
+      out.push({ items: items, tenure: tenure, discount: disc, mobile: mobile, value: Math.round(Math.exp(lv) * 100) / 100,
+        day: 1 + Math.floor(r() * 31), zip: Math.floor(r() * 10), opens: Math.floor(r() * 11) });
+    }
+    return out;
+  }
+  return { svg: svg, text: text, clear: clear, rng: rng, gauss: gauss, ols: ols, predict: predict, inv: inv, orders: orders };
+})();
+
+/* ---------- 10.1 drag-points least squares ---------- */
+(function () {
+  if (!document.getElementById("lin-demo")) return;
+  var H = REG, S = H.svg;
+  var plot = document.getElementById("lin-plot"), readout = document.getElementById("lin-readout");
+  var sl = document.getElementById("lin-slope"), it = document.getElementById("lin-int"), sq = document.getElementById("lin-sq");
+  var slOut = document.getElementById("lin-slope-out"), itOut = document.getElementById("lin-int-out");
+  var DEF = [[1, 22], [2, 45], [3, 41], [4, 70], [5, 62], [6, 95], [7, 84], [8, 118]];
+  var pts = DEF.map(function (p) { return p.slice(); });
+  var OX = 50, OY = 20, W = 530, HT = 270, XMAX = 10, YMAX = 160;
+  function px(x) { return OX + x * W / XMAX; }
+  function py(y) { return OY + HT - y * HT / YMAX; }
+  var drag = -1;
+  plot.style.touchAction = "none";
+  function fitLS() {
+    var n = pts.length, mx = 0, my = 0, sxy = 0, sxx = 0, sst = 0;
+    pts.forEach(function (p) { mx += p[0] / n; my += p[1] / n; });
+    pts.forEach(function (p) { sxy += (p[0] - mx) * (p[1] - my); sxx += (p[0] - mx) * (p[0] - mx); sst += (p[1] - my) * (p[1] - my); });
+    var b1 = sxx > 0 ? sxy / sxx : 0, b0 = my - b1 * mx;
+    return { b0: b0, b1: b1, sse: sse(b0, b1), sst: sst };
+  }
+  function sse(b0, b1) { return pts.reduce(function (s, p) { var e = p[1] - (b0 + b1 * p[0]); return s + e * e; }, 0); }
+  function fmt(v) { return Math.round(v).toLocaleString("en-US"); }
+  function draw() {
+    H.clear(plot);
+    var defs = S("defs", {}, plot), cp = S("clipPath", { id: "lin-clip" }, defs);
+    S("rect", { x: OX, y: OY, width: W, height: HT }, cp);
+    [0, 40, 80, 120, 160].forEach(function (v) {
+      S("line", { x1: OX, x2: OX + W, y1: py(v), y2: py(v), "class": "d-grid" }, plot);
+      H.text(plot, OX - 6, py(v) + 4, "$" + v, "d-label", "end");
+    });
+    for (var x = 0; x <= 10; x += 2) H.text(plot, px(x), OY + HT + 16, String(x), "d-label", "middle");
+    H.text(plot, OX + W, OY + HT + 30, "items in basket", "d-label", "end");
+    S("line", { x1: OX, x2: OX + W, y1: py(0), y2: py(0), "class": "d-line" }, plot);
+    S("line", { x1: OX, x2: OX, y1: OY, y2: OY + HT, "class": "d-line" }, plot);
+    var u0 = parseFloat(it.value), u1 = parseFloat(sl.value), ls = fitLS();
+    var g = S("g", { "clip-path": "url(#lin-clip)" }, plot);
+    if (sq.checked) {
+      pts.forEach(function (p) {
+        var f = u0 + u1 * p[0], side = Math.abs(py(p[1]) - py(f));
+        S("rect", { x: px(p[0]), y: Math.min(py(p[1]), py(f)), width: side, height: side, "class": "d-signal", "fill-opacity": 0.16, "stroke-opacity": 0.6 }, g);
+      });
+    }
+    S("line", { x1: px(0), y1: py(ls.b0), x2: px(XMAX), y2: py(ls.b0 + ls.b1 * XMAX), "class": "d-line-accent" }, g);
+    S("line", { x1: px(0), y1: py(u0), x2: px(XMAX), y2: py(u0 + u1 * XMAX), "class": "d-line-signal d-dash" }, g);
+    pts.forEach(function (p, i) {
+      var f = u0 + u1 * p[0];
+      S("line", { x1: px(p[0]), x2: px(p[0]), y1: py(p[1]), y2: py(f), "class": "d-line-signal", "stroke-width": 1, "stroke-opacity": 0.7 }, g);
+      var c = S("circle", { cx: px(p[0]), cy: py(p[1]), r: drag === i ? 9 : 7, "class": "d-dot", "data-i": i }, plot);
+      c.style.cursor = "grab";
+    });
+    H.text(plot, OX + 10, OY + 16, "least squares: ŷ = " + ls.b0.toFixed(2) + " + " + ls.b1.toFixed(2) + "x", "d-mono d-text-accent");
+    H.text(plot, OX + 10, OY + 34, "your line: ŷ = " + u0.toFixed(2) + " + " + u1.toFixed(2) + "x", "d-mono d-text-signal");
+    H.text(plot, OX + W - 6, OY + HT - 8, "drag the points", "d-label", "end");
+    var mine = sse(u0, u1), gap = ls.sse > 0 ? (mine - ls.sse) / ls.sse * 100 : 0;
+    slOut.textContent = u1.toFixed(2); itOut.textContent = u0.toFixed(2);
+    readout.textContent = "your SSE " + fmt(mine) + " · least-squares SSE " + fmt(ls.sse) + " · R² " + (ls.sst > 0 ? 1 - ls.sse / ls.sst : 0).toFixed(3) +
+      " · gap " + gap.toFixed(1) + "% above the minimum";
+  }
+  function toData(evt) {
+    var pt = plot.createSVGPoint(); pt.x = evt.clientX; pt.y = evt.clientY;
+    var m = plot.getScreenCTM(); if (!m) return null;
+    var q = pt.matrixTransform(m.inverse());
+    return [Math.max(0.3, Math.min(9.7, (q.x - OX) * XMAX / W)), Math.max(2, Math.min(158, (OY + HT - q.y) * YMAX / HT))];
+  }
+  plot.addEventListener("pointerdown", function (e) {
+    var t = e.target; if (!t || !t.hasAttribute || !t.hasAttribute("data-i")) return;
+    drag = parseInt(t.getAttribute("data-i"), 10);
+    try { plot.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault(); draw();
+  });
+  plot.addEventListener("pointermove", function (e) {
+    if (drag < 0) return;
+    var d = toData(e); if (!d) return;
+    pts[drag] = [Math.round(d[0] * 10) / 10, Math.round(d[1])]; draw();
+  });
+  function end() { if (drag >= 0) { drag = -1; draw(); } }
+  plot.addEventListener("pointerup", end);
+  plot.addEventListener("pointercancel", end);
+  [sl, it, sq].forEach(function (el) { el.addEventListener("input", draw); el.addEventListener("change", draw); });
+  document.getElementById("lin-reset").addEventListener("click", function () { pts = DEF.map(function (p) { return p.slice(); }); draw(); });
+  draw();
+})();
+
+/* ---------- 10.2 coefficient interpreter ---------- */
+(function () {
+  if (!document.getElementById("coef-demo")) return;
+  var H = REG, S = H.svg, O = H.orders();
+  var plot = document.getElementById("coef-plot"), readout = document.getElementById("coef-readout"), sentence = document.getElementById("coef-sentence");
+  var xs = document.getElementById("coef-x"), ys = document.getElementById("coef-y"), lx = document.getElementById("coef-logx");
+  var VARS = ["items", "tenure", "discount", "mobile"];
+  var NAME = { items: "items", tenure: "tenure_months", discount: "discount_pct", mobile: "device[mobile]" };
+  var UNIT = { items: "extra item", tenure: "extra month of tenure", discount: "extra percentage point of discount" };
+  var ctl = {}; VARS.forEach(function (v) { ctl[v] = document.getElementById("coef-c-" + v); });
+  function money(v) { return "$" + Math.abs(v).toFixed(2); }
+  function draw() {
+    var xv = xs.value, logy = ys.value === "log";
+    var canLog = xv === "items" || xv === "tenure";
+    lx.disabled = !canLog; if (!canLog) lx.checked = false;
+    var logx = lx.checked;
+    VARS.forEach(function (v) { ctl[v].disabled = v === xv; if (v === xv) ctl[v].checked = false; });
+    var cs = VARS.filter(function (v) { return v !== xv && ctl[v].checked; });
+    function xval(o) { return logx ? Math.log(o[xv]) : o[xv]; }
+    var X = O.map(function (o) { return [xval(o)].concat(cs.map(function (c) { return o[c]; })); });
+    var Y = O.map(function (o) { return logy ? Math.log(o.value) : o.value; });
+    var f = H.ols(X, Y), b = f.beta[1], se = f.se[1], lo = b - 1.965 * se, hi = b + 1.965 * se;
+    /* scatter with the fitted effect line (other predictors at their means) */
+    H.clear(plot);
+    var xsArr = X.map(function (r) { return r[0]; });
+    var xmin = Math.min.apply(null, xsArr), xmax = Math.max.apply(null, xsArr);
+    if (xv === "mobile") { xmin = -0.5; xmax = 1.5; }
+    var ymin = Math.min.apply(null, Y), ymax = Math.max.apply(null, Y);
+    var L = 60, R = 580, T = 14, B = 176;
+    function sx(v) { return L + (v - xmin) / (xmax - xmin || 1) * (R - L); }
+    function sy(v) { return B - (v - ymin) / (ymax - ymin || 1) * (B - T); }
+    S("rect", { x: L, y: T, width: R - L, height: B - T, "class": "d-grid" }, plot);
+    var r = H.rng(3);
+    O.forEach(function (o, i) {
+      var jx = xv === "mobile" ? (r() - 0.5) * 0.5 : (xv === "tenure" ? 0 : (r() - 0.5) * (logx ? 0.08 : 0.5));
+      S("circle", { cx: sx(xsArr[i] + jx).toFixed(1), cy: sy(Y[i]).toFixed(1), r: 2, "class": "d-dot-muted", "fill-opacity": 0.45 }, plot);
+    });
+    var base = f.beta[0];
+    cs.forEach(function (c, j) { var m = O.reduce(function (s, o) { return s + o[c]; }, 0) / O.length; base += f.beta[j + 2] * m; });
+    var x1 = xv === "mobile" ? 0 : xmin, x2 = xv === "mobile" ? 1 : xmax;
+    S("line", { x1: sx(x1), y1: sy(base + b * x1), x2: sx(x2), y2: sy(base + b * x2), "class": b >= 0 ? "d-line-accent" : "d-line-signal", "stroke-width": 3 }, plot);
+    var xl = (logx ? "log(" + NAME[xv] + ")" : NAME[xv]) + (xv === "mobile" ? "  (0 = desktop, 1 = mobile)" : "");
+    H.text(plot, R, B + 16, xl, "d-label", "end");
+    H.text(plot, L + 6, T + 14, logy ? "log(order_value)" : "order_value ($)", "d-label");
+    H.text(plot, L - 6, sy(ymax) + 4, logy ? ymax.toFixed(1) : "$" + Math.round(ymax), "d-label", "end");
+    H.text(plot, L - 6, sy(ymin) + 4, logy ? ymin.toFixed(1) : "$" + Math.round(ymin), "d-label", "end");
+    /* coefficient and its 95% interval on an axis through zero */
+    var a = Math.min(lo, 0), z = Math.max(hi, 0), pad = (z - a) * 0.25 || 1; a -= pad; z += pad;
+    function cx(v) { return L + (v - a) / (z - a) * (R - L); }
+    var yb = 252;
+    S("line", { x1: L, x2: R, y1: yb, y2: yb, "class": "d-grid" }, plot);
+    S("line", { x1: cx(0), x2: cx(0), y1: yb - 22, y2: yb + 14, "class": "d-line d-dash" }, plot);
+    H.text(plot, cx(0), yb + 28, "0", "d-label", "middle");
+    var good = lo > 0 || hi < 0;
+    S("line", { x1: cx(lo), x2: cx(hi), y1: yb, y2: yb, "class": good ? "d-line-accent" : "d-line-signal", "stroke-width": 5, "stroke-linecap": "round" }, plot);
+    S("circle", { cx: cx(b), cy: yb, r: 7, "class": good ? "d-dot" : "d-dot-signal" }, plot);
+    H.text(plot, cx(b), yb - 14, "coef " + b.toFixed(logy ? 4 : 3), "d-mono", "middle");
+    H.text(plot, L, yb + 28, good ? "95% interval excludes 0" : "95% interval includes 0", good ? "d-label d-text-accent" : "d-label d-text-signal");
+    /* plain-English sentence */
+    var dir = b >= 0 ? "higher" : "lower", s;
+    if (xv === "mobile") {
+      s = logy ? "Mobile orders are " + Math.abs((Math.exp(b) - 1) * 100).toFixed(1) + "% " + dir + " than desktop orders (e^β − 1)"
+               : "Mobile orders are " + money(b) + " " + dir + " than desktop orders, the reference level";
+    } else if (!logy && !logx) s = "Each " + UNIT[xv] + " is associated with a " + money(b) + " " + dir + " order value";
+    else if (logy && !logx) s = "Each " + UNIT[xv] + " is associated with a " + Math.abs((Math.exp(b) - 1) * 100).toFixed(2) + "% " + dir + " order value (100·β ≈ " + (100 * b).toFixed(2) + "%)";
+    else if (!logy && logx) s = "A 1% increase in " + NAME[xv] + " is associated with a " + money(b / 100) + " " + dir + " order value (β / 100)";
+    else s = "A 1% increase in " + NAME[xv] + " is associated with a " + Math.abs(b).toFixed(2) + "% " + dir + " order value: an elasticity of " + b.toFixed(2);
+    s += cs.length ? ", holding " + cs.map(function (c) { return NAME[c]; }).join(", ") + " fixed." : ", with no controls, so everything correlated with it is mixed in.";
+    sentence.textContent = s;
+    readout.textContent = "predictor " + NAME[xv] + " · coef " + b.toFixed(4) + " · 95% CI [" + lo.toFixed(4) + ", " + hi.toFixed(4) + "] · R² " + f.r2.toFixed(3) +
+      " · n " + f.n + " · controls: " + (cs.length ? cs.map(function (c) { return NAME[c]; }).join(", ") : "none");
+  }
+  [xs, ys, lx].concat(VARS.map(function (v) { return ctl[v]; })).forEach(function (el) { el.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 10.3 residual plot clinic ---------- */
+(function () {
+  if (!document.getElementById("resid-demo")) return;
+  var H = REG, S = H.svg;
+  var plot = document.getElementById("resid-plot"), readout = document.getElementById("resid-readout");
+  var ds = document.getElementById("resid-data"), fx = document.getElementById("resid-fix");
+  var SEED = { healthy: 1, funnel: 6, curve: 7 }, DATA = {};
+  Object.keys(SEED).forEach(function (k) {
+    var r = H.rng(SEED[k]), pts = [];
+    for (var i = 0; i < 60; i++) {
+      var x = 1 + Math.floor(r() * 10), y;
+      if (k === "healthy") y = 15 + 10 * x + 8 * H.gauss(r);
+      else if (k === "funnel") y = Math.exp(2.9 + 0.22 * x + 0.25 * H.gauss(r));
+      else y = 40 - 4 * x + 1.6 * x * x + 6 * H.gauss(r);
+      pts.push({ x: x, y: y });
+    }
+    DATA[k] = pts;
+  });
+  function rowOf(x, fix) { return fix === "square" ? [x, x * x] : [x]; }
+  function draw() {
+    var pts = DATA[ds.value], fix = fx.value, logy = fix === "log";
+    var X = pts.map(function (p) { return rowOf(p.x, fix); });
+    var Y = pts.map(function (p) { return logy ? Math.log(p.y) : p.y; });
+    var f = H.ols(X, Y);
+    var fit = X.map(function (x) { return H.predict(f.beta, x); });
+    var res = Y.map(function (v, i) { return v - fit[i]; });
+    /* HC3 robust standard error of the items coefficient */
+    var k = f.k, meat = [], a, b, i;
+    for (a = 0; a < k; a++) meat.push(new Array(k).fill(0));
+    for (i = 0; i < pts.length; i++) {
+      var row = [1].concat(X[i]), h = 0;
+      for (a = 0; a < k; a++) for (b = 0; b < k; b++) h += row[a] * f.inv[a][b] * row[b];
+      var w = res[i] * res[i] / Math.pow(1 - h, 2);
+      for (a = 0; a < k; a++) for (b = 0; b < k; b++) meat[a][b] += w * row[a] * row[b];
+    }
+    var v11 = 0;
+    for (a = 0; a < k; a++) for (b = 0; b < k; b++) v11 += f.inv[1][a] * meat[a][b] * f.inv[b][1];
+    var hc3 = Math.sqrt(v11);
+    /* spread ratio (top third vs bottom third of fitted values) and curvature score */
+    var idx = fit.map(function (v, j) { return j; }).sort(function (p, q) { return fit[p] - fit[q]; }), t = Math.floor(idx.length / 3);
+    function rms(arr) { return Math.sqrt(arr.reduce(function (s, j) { return s + res[j] * res[j]; }, 0) / arr.length); }
+    var ratio = rms(idx.slice(-t)) / rms(idx.slice(0, t));
+    var fm = fit.reduce(function (s, v) { return s + v; }, 0) / fit.length;
+    var curv = H.ols(fit.map(function (v) { return [(v - fm) * (v - fm)]; }), res).r2;
+    var issues = [];
+    if (ratio > 1.5) issues.push("funnel (spread grows)");
+    if (ratio < 0.67) issues.push("spread shrinks");
+    if (curv > 0.15) issues.push("curve left in residuals");
+    var verdict = issues.length ? issues.join(" + ") : "healthy";
+    /* left: data and fitted model on the dollar scale */
+    H.clear(plot);
+    var L1 = 46, R1 = 280, T = 24, B = 226;
+    var ymax = Math.max.apply(null, pts.map(function (p) { return p.y; })) * 1.05;
+    function sx(x) { return L1 + (x - 0.5) / 10 * (R1 - L1); }
+    function sy(y) { return B - y / ymax * (B - T); }
+    S("rect", { x: L1, y: T, width: R1 - L1, height: B - T, "class": "d-grid" }, plot);
+    H.text(plot, L1, 14, "Data + fitted model", "d-title");
+    H.text(plot, R1, B + 16, "items", "d-label", "end");
+    H.text(plot, L1 - 4, sy(0) + 4, "$0", "d-label", "end");
+    H.text(plot, L1 - 4, T + 10, "$" + Math.round(ymax), "d-label", "end");
+    var r = H.rng(9);
+    pts.forEach(function (p) { S("circle", { cx: sx(p.x + (r() - 0.5) * 0.4).toFixed(1), cy: sy(p.y).toFixed(1), r: 3, "class": "d-dot-muted" }, plot); });
+    var d = "";
+    for (var s = 0; s <= 60; s++) {
+      var xx = 0.7 + s * 9.6 / 60, yy = H.predict(f.beta, rowOf(xx, fix));
+      if (logy) yy = Math.exp(yy);
+      d += (s ? "L" : "M") + sx(xx).toFixed(1) + "," + Math.max(T, Math.min(B, sy(yy))).toFixed(1);
+    }
+    S("path", { d: d, "class": "d-line-accent", "stroke-width": 2.5 }, plot);
+    /* right: residuals vs fitted on the model's own scale */
+    var L2 = 330, R2 = 580, mid = (T + B) / 2;
+    var fmin = Math.min.apply(null, fit), fmax = Math.max.apply(null, fit);
+    var rmax = Math.max.apply(null, res.map(Math.abs)) * 1.1 || 1;
+    function rx(v) { return L2 + (v - fmin) / (fmax - fmin || 1) * (R2 - L2 - 10) + 5; }
+    function ry(v) { return mid - v / rmax * (B - T) / 2; }
+    S("rect", { x: L2, y: T, width: R2 - L2, height: B - T, "class": "d-grid" }, plot);
+    S("line", { x1: L2, x2: R2, y1: mid, y2: mid, "class": "d-line d-dash" }, plot);
+    H.text(plot, L2, 14, "Residuals vs fitted" + (logy ? " (log scale)" : ""), "d-title");
+    H.text(plot, R2, B + 16, "fitted value", "d-label", "end");
+    H.text(plot, L2 - 4, mid + 4, "0", "d-label", "end");
+    res.forEach(function (e, j) { S("circle", { cx: rx(fit[j]).toFixed(1), cy: ry(e).toFixed(1), r: 3.2, "class": issues.length ? "d-dot-signal" : "d-dot-good" }, plot); });
+    H.text(plot, (L2 + R2) / 2, B + 32, "verdict: " + verdict, issues.length ? "d-label d-text-signal" : "d-label d-text-good", "middle");
+    var slope = f.beta[1];
+    readout.textContent = "spread ratio " + ratio.toFixed(2) + " · curvature " + curv.toFixed(3) + " · verdict: " + verdict +
+      " · items coef " + slope.toFixed(3) + (fix === "robust" ? " with robust HC3 SE " + hc3.toFixed(3) + " (plain SE " + f.se[1].toFixed(3) + ")"
+      : " with plain SE " + f.se[1].toFixed(3) + " (HC3 would be " + hc3.toFixed(3) + ")");
+  }
+  ds.addEventListener("change", draw); fx.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 10.4 logistic curve, threshold, odds ratio ---------- */
+(function () {
+  if (!document.getElementById("logit-demo")) return;
+  var H = REG, S = H.svg;
+  var plot = document.getElementById("logit-plot"), readout = document.getElementById("logit-readout");
+  var in0 = document.getElementById("logit-b0"), in1 = document.getElementById("logit-b1"), inT = document.getElementById("logit-thr");
+  var o0 = document.getElementById("logit-b0-out"), o1 = document.getElementById("logit-b1-out"), oT = document.getElementById("logit-thr-out");
+  var r = H.rng(11), pts = [], i;
+  for (i = 0; i < 80; i++) { var x = 1 + Math.floor(r() * 20), p = 1 / (1 + Math.exp(-(-3.4 + 0.33 * x))); pts.push({ x: x, y: r() < p ? 1 : 0 }); }
+  var stack = {}; pts.forEach(function (q) { var key = q.x + "_" + q.y; q.j = stack[key] = (stack[key] || 0) + 1; });
+  var st = { b0: -1, b1: 0.1 }, anim = null;
+  var L = 50, R = 580, T = 40, B = 220;
+  function sx(x) { return L + x / 21 * (R - L); }
+  function sy(p) { return B - p * (B - T); }
+  function sig(z) { return 1 / (1 + Math.exp(-z)); }
+  function mle() {
+    var b0 = 0, b1 = 0;
+    for (var it = 0; it < 30; it++) {
+      var g0 = 0, g1 = 0, h00 = 0, h01 = 0, h11 = 0;
+      pts.forEach(function (q) { var p = sig(b0 + b1 * q.x), e = q.y - p, w = p * (1 - p); g0 += e; g1 += e * q.x; h00 += w; h01 += w * q.x; h11 += w * q.x * q.x; });
+      var det = h00 * h11 - h01 * h01; if (Math.abs(det) < 1e-12) break;
+      b0 += (h11 * g0 - h01 * g1) / det; b1 += (-h01 * g0 + h00 * g1) / det;
+    }
+    return { b0: b0, b1: b1 };
+  }
+  function draw() {
+    var thr = parseFloat(inT.value);
+    H.clear(plot);
+    var cut = st.b1 > 1e-9 ? (Math.log(thr / (1 - thr)) - st.b0) / st.b1 : (sig(st.b0) >= thr ? -Infinity : Infinity);
+    var cx = Math.max(L, Math.min(R, sx(cut)));
+    if (cx < R) S("rect", { x: cx, y: T - 26, width: R - cx, height: B - T + 52, "class": "d-accent", "fill-opacity": 0.12, "stroke-opacity": 0 }, plot);
+    [0, 0.5, 1].forEach(function (v) { S("line", { x1: L, x2: R, y1: sy(v), y2: sy(v), "class": "d-grid" }, plot); H.text(plot, L - 6, sy(v) + 4, String(v), "d-label", "end"); });
+    for (var x = 0; x <= 20; x += 5) H.text(plot, sx(x), B + 44, String(x), "d-label", "middle");
+    H.text(plot, R, B + 60, "pages viewed in the session", "d-label", "end");
+    var tp = 0, fp = 0, fn = 0, tn = 0, ll = 0;
+    pts.forEach(function (q) {
+      var p = sig(st.b0 + st.b1 * q.x), pc = Math.min(1 - 1e-9, Math.max(1e-9, p)), flag = p >= thr;
+      ll += q.y ? -Math.log(pc) : -Math.log(1 - pc);
+      if (flag && q.y) tp++; else if (flag) fp++; else if (q.y) fn++; else tn++;
+      var yy = q.y ? sy(1) - 2 - 4 * q.j : sy(0) + 2 + 4 * q.j;
+      S("circle", { cx: sx(q.x), cy: yy, r: 2.7, "class": q.y ? "d-dot" : "d-dot-muted" }, plot);
+    });
+    var d = "";
+    for (var s = 0; s <= 84; s++) { var xx = s / 4; d += (s ? "L" : "M") + sx(xx).toFixed(1) + "," + sy(sig(st.b0 + st.b1 * xx)).toFixed(1); }
+    S("path", { d: d, "class": "d-line-accent", "stroke-width": 2.5 }, plot);
+    S("line", { x1: L, x2: R, y1: sy(thr), y2: sy(thr), "class": "d-line-signal d-dash" }, plot);
+    H.text(plot, R - 4, sy(thr) - 6, "threshold " + thr.toFixed(2), "d-label d-text-signal", "end");
+    if (cx < R - 60 && cx > L) H.text(plot, cx + 6, sy(0.78), "flagged as buyers →", "d-label d-text-accent");
+    H.text(plot, L, B + 60, "buyers stack at 1, non-buyers at 0", "d-label");
+    o0.textContent = st.b0.toFixed(2); o1.textContent = st.b1.toFixed(3); oT.textContent = thr.toFixed(2);
+    var prec = tp + fp ? tp / (tp + fp) : 0, rec = tp + fn ? tp / (tp + fn) : 0;
+    readout.textContent = "odds ratio per page " + Math.exp(st.b1).toFixed(3) + " (log-odds +" + st.b1.toFixed(3) + ") · log loss " + (ll / pts.length).toFixed(3) +
+      " · flagged " + (tp + fp) + " · precision " + prec.toFixed(2) + " · recall " + rec.toFixed(2) + " · accuracy " + ((tp + tn) / pts.length).toFixed(2);
+  }
+  function stop() { if (anim) { cancelAnimationFrame(anim); anim = null; } }
+  in0.addEventListener("input", function () { stop(); st.b0 = parseFloat(in0.value); draw(); });
+  in1.addEventListener("input", function () { stop(); st.b1 = parseFloat(in1.value); draw(); });
+  inT.addEventListener("input", draw);
+  document.getElementById("logit-fit").addEventListener("click", function () {
+    stop();
+    var to = mle(), from = { b0: st.b0, b1: st.b1 }, t0 = null;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      var u = reduce ? 1 : Math.min(1, (ts - t0) / 700), e = 1 - Math.pow(1 - u, 3);
+      st.b0 = from.b0 + (to.b0 - from.b0) * e; st.b1 = from.b1 + (to.b1 - from.b1) * e;
+      in0.value = st.b0; in1.value = st.b1; draw();
+      anim = u < 1 ? requestAnimationFrame(frame) : null;
+    }
+    anim = requestAnimationFrame(frame);
+  });
+  draw();
+})();
+
+/* ---------- 10.5 polynomial degree vs train/validation error ---------- */
+(function () {
+  if (!document.getElementById("poly-demo")) return;
+  var H = REG, S = H.svg, w = document.getElementById("poly-demo");
+  var plot = document.getElementById("poly-plot"), readout = document.getElementById("poly-readout");
+  var deg = document.getElementById("poly-deg"), degOut = document.getElementById("poly-deg-out"), showVal = document.getElementById("poly-val");
+  var r = H.rng(77), tr = [], va = [], i;
+  for (i = 0; i < 34; i++) { var t = 1 + r() * 47, y = 38 + 36 * (1 - Math.exp(-t / 9)) + 6 * H.gauss(r); (i % 2 ? va : tr).push({ t: t, y: y }); }
+  function sc(t) { return (t - 24.5) / 23.5; }
+  function feats(t, d) { var a = [], s = sc(t); for (var j = 1; j <= d; j++) a.push(Math.pow(s, j)); return a; }
+  function rmse(beta, ps, d) { return Math.sqrt(ps.reduce(function (s, p) { var e = p.y - H.predict(beta, feats(p.t, d)); return s + e * e; }, 0) / ps.length); }
+  var MAXD = 12, fits = [], best = 1;
+  for (var d = 1; d <= MAXD; d++) {
+    var f = H.ols(tr.map(function (p) { return feats(p.t, d); }), tr.map(function (p) { return p.y; }), 1e-9);
+    fits[d] = { beta: f.beta, train: rmse(f.beta, tr, d), val: rmse(f.beta, va, d) };
+    if (fits[d].val < fits[best].val) best = d;
+  }
+  w.setAttribute("data-best", String(best));
+  var L1 = 46, R1 = 300, T = 24, B = 224, YMIN = 20, YMAX = 100;
+  function sx(t) { return L1 + t / 50 * (R1 - L1); }
+  function sy(y) { return B - (y - YMIN) / (YMAX - YMIN) * (B - T); }
+  var L2 = 360, R2 = 585;
+  function ex(dd) { return L2 + (dd - 1) / (MAXD - 1) * (R2 - L2); }
+  function ey(v) { var lo = Math.log(2), hi = Math.log(120); return B - (Math.log(Math.max(2, Math.min(120, v))) - lo) / (hi - lo) * (B - T); }
+  function draw() {
+    var dg = parseInt(deg.value, 10), F = fits[dg];
+    H.clear(plot);
+    var defs = S("defs", {}, plot), cp = S("clipPath", { id: "poly-clip" }, defs);
+    S("rect", { x: L1, y: T, width: R1 - L1, height: B - T }, cp);
+    S("rect", { x: L1, y: T, width: R1 - L1, height: B - T, "class": "d-grid" }, plot);
+    H.text(plot, L1, 14, "Avg order value vs tenure", "d-title");
+    [40, 60, 80].forEach(function (v) { H.text(plot, L1 - 4, sy(v) + 4, "$" + v, "d-label", "end"); });
+    [0, 12, 24, 36, 48].forEach(function (v) { H.text(plot, sx(v), B + 15, String(v), "d-label", "middle"); });
+    H.text(plot, R1, B + 30, "tenure (months)", "d-label", "end");
+    var g = S("g", { "clip-path": "url(#poly-clip)" }, plot), dd = "";
+    for (var s = 0; s <= 160; s++) { var tt = 1 + s * 47 / 160; dd += (s ? "L" : "M") + sx(tt).toFixed(1) + "," + Math.max(T - 50, Math.min(B + 50, sy(H.predict(F.beta, feats(tt, dg))))).toFixed(1); }
+    S("path", { d: dd, "class": "d-line-accent", "stroke-width": 2.5 }, g);
+    tr.forEach(function (p) { S("circle", { cx: sx(p.t).toFixed(1), cy: sy(p.y).toFixed(1), r: 4, "class": "d-dot" }, plot); });
+    if (showVal.checked) va.forEach(function (p) { S("circle", { cx: sx(p.t).toFixed(1), cy: sy(p.y).toFixed(1), r: 4, "class": "d-signal", "fill-opacity": 0.15 }, plot); });
+    /* error curves */
+    S("rect", { x: L2, y: T, width: R2 - L2, height: B - T, "class": "d-grid" }, plot);
+    H.text(plot, L2, 14, "RMSE by degree (log scale)", "d-title");
+    [2, 5, 10, 20, 50, 100].forEach(function (v) { S("line", { x1: L2, x2: R2, y1: ey(v), y2: ey(v), "class": "d-grid" }, plot); H.text(plot, L2 - 4, ey(v) + 4, "$" + v, "d-label", "end"); });
+    [1, 4, 8, 12].forEach(function (v) { H.text(plot, ex(v), B + 15, String(v), "d-label", "middle"); });
+    H.text(plot, R2, B + 30, "degree", "d-label", "end");
+    S("line", { x1: ex(dg), x2: ex(dg), y1: T, y2: B, "class": "d-line d-dash" }, plot);
+    ["train", "val"].forEach(function (k) {
+      var p = "";
+      for (var j = 1; j <= MAXD; j++) p += (j > 1 ? "L" : "M") + ex(j).toFixed(1) + "," + ey(fits[j][k]).toFixed(1);
+      S("path", { d: p, "class": k === "train" ? "d-line-accent" : "d-line-signal" }, plot);
+      for (j = 1; j <= MAXD; j++) S("circle", { cx: ex(j), cy: ey(fits[j][k]), r: j === dg ? 5.5 : 3, "class": k === "train" ? "d-dot" : "d-dot-signal" }, plot);
+    });
+    H.text(plot, R2 - 4, ey(fits[MAXD].train) + 16, "train", "d-label d-text-accent", "end");
+    H.text(plot, R2 - 4, Math.max(T + 12, ey(fits[MAXD].val) - 8), "validation", "d-label d-text-signal", "end");
+    degOut.textContent = String(dg);
+    readout.textContent = "degree " + dg + " · " + (dg + 1) + " coefficients for 17 training customers · train RMSE $" + F.train.toFixed(2) + " · validation RMSE $" + F.val.toFixed(2);
+  }
+  deg.addEventListener("input", draw); showVal.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 10.6 model comparison bench ---------- */
+(function () {
+  if (!document.getElementById("cmp-demo")) return;
+  var H = REG, S = H.svg, w = document.getElementById("cmp-demo"), O = H.orders();
+  var plot = document.getElementById("cmp-plot"), readout = document.getElementById("cmp-readout");
+  var KEYS = ["items", "tenure", "discount", "mobile", "items2", "day", "zip", "opens"];
+  var GET = { items: function (o) { return o.items; }, tenure: function (o) { return o.tenure; }, discount: function (o) { return o.discount; },
+    mobile: function (o) { return o.mobile; }, items2: function (o) { return o.items * o.items; }, day: function (o) { return o.day; },
+    zip: function (o) { return o.zip; }, opens: function (o) { return o.opens; } };
+  var boxes = KEYS.map(function (k) { return document.getElementById("cmp-f-" + k); });
+  var n = O.length, FOLDS = 5, D = KEYS.length + 1;
+  /* cross-product sums per fold (intercept + 8 columns + y), so any subset model fits in O(k^3) */
+  function zeros() { var m = []; for (var a = 0; a < D; a++) m.push(new Array(D).fill(0)); return m; }
+  var fold = [];
+  for (var f = 0; f < FOLDS; f++) fold.push({ xx: zeros(), xy: new Array(D).fill(0), yy: 0, n: 0 });
+  O.forEach(function (o, i) {
+    var row = [1].concat(KEYS.map(function (k) { return GET[k](o); })), F = fold[i % FOLDS], y = o.value;
+    for (var a = 0; a < D; a++) { F.xy[a] += row[a] * y; for (var b = 0; b < D; b++) F.xx[a][b] += row[a] * row[b]; }
+    F.yy += y * y; F.n++;
+  });
+  function sum(list) {
+    var s = { xx: zeros(), xy: new Array(D).fill(0), yy: 0, n: 0 };
+    list.forEach(function (F) { s.yy += F.yy; s.n += F.n; for (var a = 0; a < D; a++) { s.xy[a] += F.xy[a]; for (var b = 0; b < D; b++) s.xx[a][b] += F.xx[a][b]; } });
+    return s;
+  }
+  var ALL = sum(fold);
+  function solve(st, cols) {
+    var A = cols.map(function (a) { return cols.map(function (b) { return st.xx[a][b]; }); }), Inv = H.inv(A);
+    if (!Inv) return null;
+    return Inv.map(function (r) { return r.reduce(function (s, v, j) { return s + v * st.xy[cols[j]]; }, 0); });
+  }
+  function sseOf(st, cols, beta) {
+    var s = st.yy, a, b;
+    for (a = 0; a < cols.length; a++) { s -= 2 * beta[a] * st.xy[cols[a]]; for (b = 0; b < cols.length; b++) s += beta[a] * beta[b] * st.xx[cols[a]][cols[b]]; }
+    return Math.max(0, s);
+  }
+  function evaluate(mask) {
+    var cols = [0];
+    for (var j = 0; j < KEYS.length; j++) if (mask >> j & 1) cols.push(j + 1);
+    var beta = solve(ALL, cols), sse = sseOf(ALL, cols, beta), ybar = ALL.xy[0] / n, sst = ALL.yy - n * ybar * ybar;
+    var k = cols.length, p = k - 1, r2 = 1 - sse / sst, cv = 0;
+    for (var f2 = 0; f2 < FOLDS; f2++) {
+      var train = sum(fold.filter(function (F, q) { return q !== f2; })), bt = solve(train, cols);
+      cv += sseOf(fold[f2], cols, bt);
+    }
+    return { p: p, r2: r2, adj: 1 - (1 - r2) * (n - 1) / (n - p - 1), aic: n * Math.log(sse / n) + 2 * k, cv: Math.sqrt(cv / n) };
+  }
+  var RES = [];
+  for (var m = 0; m < 256; m++) RES.push(evaluate(m));
+  var RANGE = {};
+  ["r2", "adj", "aic", "cv"].forEach(function (key) {
+    var v = RES.map(function (x) { return x[key]; });
+    RANGE[key] = [Math.min.apply(null, v), Math.max.apply(null, v)];
+  });
+  w.setAttribute("data-best-cv", RANGE.cv[0].toFixed(2));
+  var TR = [["r2", "R²", true, 4], ["adj", "adjusted R²", true, 4], ["aic", "AIC", false, 1], ["cv", "5-fold CV RMSE", false, 2]];
+  var prev = null;
+  function maskNow() { var mk = 0; boxes.forEach(function (b, j) { if (b.checked) mk |= 1 << j; }); return mk; }
+  function draw() {
+    var mk = maskNow(), cur = RES[mk];
+    H.clear(plot);
+    var L = 170, R = 560;
+    H.text(plot, L, 16, "worst of 256 models", "d-label");
+    H.text(plot, R, 16, "best of 256 →", "d-label", "end");
+    TR.forEach(function (t, j) {
+      var y = 52 + j * 52, lo = RANGE[t[0]][0], hi = RANGE[t[0]][1];
+      function pos(v) { var u = (v - lo) / (hi - lo || 1); return L + (t[2] ? u : 1 - u) * (R - L); }
+      H.text(plot, 16, y + 4, t[1], "d-title");
+      S("line", { x1: L, x2: R, y1: y, y2: y, "class": "d-grid", "stroke-width": 6, "stroke-linecap": "round" }, plot);
+      if (prev && prev !== cur) S("circle", { cx: pos(prev[t[0]]), cy: y, r: 7, "class": "d-line" }, plot);
+      S("circle", { cx: pos(cur[t[0]]), cy: y, r: 7, "class": "d-dot" }, plot);
+      var val = t[0] === "cv" ? "$" + cur.cv.toFixed(2) : cur[t[0]].toFixed(t[3]);
+      H.text(plot, Math.min(R - 30, Math.max(L + 30, pos(cur[t[0]]))), y - 12, val, "d-mono", "middle");
+    });
+    H.text(plot, 16, 242, "hollow ring = your previous model · 500 example orders · noise columns: day_of_month, zip_digit, email_opens", "d-label");
+    readout.textContent = cur.p + " predictors · R² " + cur.r2.toFixed(4) + " · adj R² " + cur.adj.toFixed(4) + " · AIC " + cur.aic.toFixed(1) + " · 5-fold CV RMSE $" + cur.cv.toFixed(2);
+  }
+  boxes.forEach(function (b) { b.addEventListener("change", function () { prev = RES[maskNow() ^ (1 << boxes.indexOf(b))]; draw(); }); });
+  draw();
+})();
+</script>
+</body>
+</html>

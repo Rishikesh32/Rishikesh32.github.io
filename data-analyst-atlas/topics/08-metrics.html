@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Business metrics &amp; KPIs · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="metrics">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Business metrics &amp; KPIs</h1>
+    <p class="lede">A business runs on a handful of numbers: how many people convert, how many stay, what each customer costs and what each one is worth. This area teaches you to define those numbers precisely, read them as funnels, cohorts and unit economics, and trace a surprising change back to its cause.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every lesson here follows one running example: a subscription habit-tracking app with a free sign-up and a monthly paid plan. People arrive, sign up, start paying, keep paying or leave, and each paying month earns revenue. You first learn to define a metric so everyone computes it the same way. Then you read the customer journey three ways: as a funnel (who converts), as cohorts (who stays) and as unit economics (whether each customer pays back what it cost to win them). Finally you pick one north star with guardrails, and use a metric tree to explain why a number moved.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 290" role="img" aria-label="The customer journey of a subscription app from visitors to sign-ups, paying subscribers, retained subscribers and revenue, with each lesson of the area mapped onto it: funnels cover the first steps, retention the later ones, unit economics compares acquisition cost with lifetime value, a north star sits on top with guardrails, and a metric tree decomposes revenue underneath.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-good" x="250" y="12" width="260" height="44" rx="8"/>
+              <text class="d-title" x="380" y="32" text-anchor="middle">08.5 North star + guardrails</text>
+              <text class="d-label" x="380" y="48" text-anchor="middle">weekly subscribers who complete a check-in</text>
+              <line class="d-line d-dash" x1="380" y1="56" x2="380" y2="80" marker-end="url(#ov-arrow-m)"/>
+              <path class="d-line" d="M24 96 V88 H420 V96"/>
+              <text class="d-label d-text-accent" x="222" y="82" text-anchor="middle">08.2 Funnels: who converts</text>
+              <path class="d-line" d="M444 96 V88 H738 V96"/>
+              <text class="d-label d-text-accent" x="591" y="82" text-anchor="middle">08.3 Cohorts: who stays</text>
+              <rect class="d-box" x="24" y="104" width="112" height="52" rx="8"/>
+              <text class="d-title" x="80" y="126" text-anchor="middle">Visitors</text>
+              <text class="d-mono" x="80" y="144" text-anchor="middle">20,000</text>
+              <line class="d-line-accent" x1="136" y1="130" x2="172" y2="130" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="174" y="104" width="112" height="52" rx="8"/>
+              <text class="d-title" x="230" y="126" text-anchor="middle">Sign-ups</text>
+              <text class="d-mono" x="230" y="144" text-anchor="middle">1,600</text>
+              <line class="d-line-accent" x1="286" y1="130" x2="322" y2="130" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="324" y="104" width="112" height="52" rx="8"/>
+              <text class="d-title" x="380" y="126" text-anchor="middle">Paying subs</text>
+              <text class="d-mono" x="380" y="144" text-anchor="middle">160</text>
+              <line class="d-line-accent" x1="436" y1="130" x2="472" y2="130" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="474" y="104" width="112" height="52" rx="8"/>
+              <text class="d-title" x="530" y="126" text-anchor="middle">Retained</text>
+              <text class="d-mono" x="530" y="144" text-anchor="middle">70 at month 6</text>
+              <line class="d-line-accent" x1="586" y1="130" x2="622" y2="130" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="624" y="104" width="112" height="52" rx="8"/>
+              <text class="d-title" x="680" y="126" text-anchor="middle">Revenue</text>
+              <text class="d-mono" x="680" y="144" text-anchor="middle">$15 / sub / mo</text>
+              <path class="d-line" d="M80 164 V174 H680 V164"/>
+              <text class="d-label d-text-accent" x="380" y="190" text-anchor="middle">08.4 Unit economics: cost to win a customer (CAC) vs what the customer earns you (LTV)</text>
+              <rect class="d-fill" x="24" y="210" width="330" height="66" rx="8"/>
+              <text class="d-title" x="40" y="232">08.1 Metric design</text>
+              <text class="d-label" x="40" y="250">Every box above is a defined metric: an event,</text>
+              <text class="d-label" x="40" y="266">a time window, filters and an owner.</text>
+              <rect class="d-fill" x="406" y="210" width="330" height="66" rx="8"/>
+              <text class="d-title" x="422" y="232">08.6 Metric trees</text>
+              <text class="d-label" x="422" y="250">Revenue = subscribers × ARPU, and so on down.</text>
+              <text class="d-label" x="422" y="266">Walk the branches to find what moved.</text>
+            </svg>
+          </div>
+          <figcaption>The customer journey of the example app (illustrative monthly numbers) with each lesson laid over it. Funnels and cohorts describe the journey, unit economics prices it, the north star focuses it, and metric trees explain changes in it.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="metric-design">
+        <header class="topic-head">
+          <p class="eyebrow">08.1 · Definitions first</p>
+          <h2>Designing good metrics</h2>
+        </header>
+
+        <p class="lead">A metric is a definition plus a query. "Active users" sounds obvious until two teams compute it and get 41,000 and 58,000, because one counts app opens and the other counts check-ins, one includes staff accounts and one uses a rolling seven days. Good metrics are written down so precisely that anyone with the data gets the same number.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Most "why don't these numbers match?" tickets are definition problems, not math problems. When you own the definitions, you stop arguing about numbers and start discussing what they mean.</p>
+        </div>
+
+        <h3>The anatomy of a definition</h3>
+        <p>Every count of people answers four questions: what one unit is (a user, an account, an order), which logged event qualifies, over which time window, and who is excluded. Leave any one out and two people will fill it in differently.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="A metric definition broken into four parts: count distinct user_id, who completed a check-in, in a Monday to Sunday UTC window, excluding test and staff accounts. Each part answers one question, and together they define weekly active subscribers.">
+              <defs>
+                <marker id="metric-design-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="10" y="20" width="140" height="48" rx="8"/>
+              <text class="d-label" x="80" y="38" text-anchor="middle">COUNT DISTINCT</text>
+              <text class="d-mono" x="80" y="57" text-anchor="middle">user_id</text>
+              <rect class="d-box" x="160" y="20" width="150" height="48" rx="8"/>
+              <text class="d-label" x="235" y="38" text-anchor="middle">WHO DID</text>
+              <text class="d-mono" x="235" y="57" text-anchor="middle">checkin_completed</text>
+              <rect class="d-box" x="320" y="20" width="150" height="48" rx="8"/>
+              <text class="d-label" x="395" y="38" text-anchor="middle">IN WINDOW</text>
+              <text class="d-mono" x="395" y="57" text-anchor="middle">Mon–Sun, UTC</text>
+              <rect class="d-signal" x="480" y="20" width="190" height="48" rx="8"/>
+              <text class="d-label" x="575" y="38" text-anchor="middle">EXCLUDING</text>
+              <text class="d-mono" x="575" y="57" text-anchor="middle">test + staff accounts</text>
+              <line class="d-line" x1="80" y1="68" x2="80" y2="92" marker-end="url(#metric-design-arrow)"/>
+              <line class="d-line" x1="235" y1="68" x2="235" y2="92" marker-end="url(#metric-design-arrow)"/>
+              <line class="d-line" x1="395" y1="68" x2="395" y2="92" marker-end="url(#metric-design-arrow)"/>
+              <line class="d-line" x1="575" y1="68" x2="575" y2="92" marker-end="url(#metric-design-arrow)"/>
+              <text class="d-text" x="80" y="110" text-anchor="middle">Unit</text>
+              <text class="d-label" x="80" y="126" text-anchor="middle">what one count is</text>
+              <text class="d-text" x="235" y="110" text-anchor="middle">Event</text>
+              <text class="d-label" x="235" y="126" text-anchor="middle">which logged action</text>
+              <text class="d-text" x="395" y="110" text-anchor="middle">Window</text>
+              <text class="d-label" x="395" y="126" text-anchor="middle">start, end, time zone</text>
+              <text class="d-text" x="575" y="110" text-anchor="middle">Filters</text>
+              <text class="d-label" x="575" y="126" text-anchor="middle">who is out, and why</text>
+              <path class="d-line" d="M10 144 V150 H670 V144"/>
+              <rect class="d-good" x="150" y="160" width="380" height="40" rx="8"/>
+              <text class="d-title" x="340" y="178" text-anchor="middle">= Weekly active subscribers (WAS)</text>
+              <text class="d-label" x="340" y="194" text-anchor="middle">owner: product analytics · source: events · refreshed nightly</text>
+            </svg>
+          </div>
+          <figcaption>Read a definition left to right like a sentence. Each box closes one gap that two people could otherwise fill in differently.</figcaption>
+        </figure>
+
+        <h3>Precise, measurable, actionable</h3>
+        <p>Use three tests. <strong>Precise</strong>: the definition leaves no choices open. <strong>Measurable</strong>: the event is actually logged, at a grain and freshness you have. <strong>Actionable</strong>: when it moves, someone knows what to do. A metric that fails the third test is a <strong>vanity metric</strong>: it looks good on a slide but cannot guide a decision.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 215" role="img" aria-label="Two charts over the same eight weeks. Cumulative sign-ups rise smoothly every week and hide a problem. Weekly activation rate drops from about 45 percent to 31 percent in week 5, which reveals an onboarding bug.">
+              <text class="d-title" x="40" y="22">Cumulative sign-ups (vanity)</text>
+              <line class="d-grid" x1="40" y1="170" x2="310" y2="170"/>
+              <line class="d-grid" x1="40" y1="105" x2="310" y2="105"/>
+              <line class="d-grid" x1="40" y1="40" x2="310" y2="40"/>
+              <text class="d-label" x="34" y="174" text-anchor="end">0</text>
+              <text class="d-label" x="34" y="44" text-anchor="end">3.5k</text>
+              <polyline class="d-line-accent" points="40,155.1 78,139.5 116,124.3 154,108.3 192,92 230,76.2 268,59.7 306,43"/>
+              <circle class="d-dot" cx="192" cy="92" r="4"/>
+              <text class="d-label" x="200" y="110">week 5 looks fine</text>
+              <text class="d-label" x="40" y="192">only goes up, whatever happens</text>
+              <text class="d-title" x="380" y="22">Weekly activation rate (actionable)</text>
+              <line class="d-grid" x1="380" y1="170" x2="650" y2="170"/>
+              <line class="d-grid" x1="380" y1="105" x2="650" y2="105"/>
+              <line class="d-grid" x1="380" y1="40" x2="650" y2="40"/>
+              <text class="d-label" x="374" y="174" text-anchor="end">0%</text>
+              <text class="d-label" x="374" y="109" text-anchor="end">30%</text>
+              <text class="d-label" x="374" y="44" text-anchor="end">60%</text>
+              <polyline class="d-line-accent" points="380,79 418,74.7 456,76.8 494,72.5 532,102.8 570,74.7 608,72.5 646,70.3"/>
+              <circle class="d-dot-signal" cx="532" cy="102.8" r="5"/>
+              <text class="d-label d-text-signal" x="540" y="126">31%: onboarding bug</text>
+              <text class="d-label d-text-signal" x="540" y="141">shipped in week 5</text>
+              <text class="d-label" x="380" y="192">a rate per period moves when something breaks</text>
+              <text class="d-label" x="40" y="210">Example data: about 420 sign-ups a week; activation = share of new sign-ups who complete a first check-in within 7 days.</text>
+            </svg>
+          </div>
+          <figcaption>A cumulative total cannot go down, so it cannot warn you. A rate per period, computed for each new group of users, shows the week 5 bug immediately.</figcaption>
+        </figure>
+
+        <div class="widget" id="md-demo">
+          <div class="widget-head">
+            <span class="widget-title">Metric definition checker</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="md-event">Counts users who <select id="md-event">
+              <option value="login" selected>logged in</option>
+              <option value="open">opened the app</option>
+              <option value="checkin">completed a check-in</option>
+              <option value="feel">felt more motivated</option>
+            </select></label>
+            <label for="md-window">Window <select id="md-window">
+              <option value="recent" selected>recently</option>
+              <option value="all">all time</option>
+              <option value="hour">per hour</option>
+              <option value="day">per day</option>
+              <option value="week">per week (Mon–Sun, UTC)</option>
+              <option value="month">per calendar month</option>
+            </select></label>
+            <label for="md-split">Break down by <select id="md-split">
+              <option value="none" selected>nothing</option>
+              <option value="platform">platform</option>
+              <option value="channel">sign-up channel</option>
+            </select></label>
+            <label for="md-distinct"><input type="checkbox" id="md-distinct" checked> Count distinct users</label>
+            <label for="md-test"><input type="checkbox" id="md-test"> Exclude test and staff accounts</label>
+          </div>
+          <svg id="md-plot" viewBox="0 0 640 250" role="img" aria-label="The metric definition you built, written out as a sentence, with three meters scoring it as precise, measurable and actionable and a list of the problems still open."></svg>
+          <p class="readout" id="md-readout"></p>
+        </div>
+        <p>The app's events land in the warehouse once a night, so an hourly metric cannot be computed from it. Feelings are not logged at all. Those are measurability failures, and no amount of SQL fixes them.</p>
+
+        <h3>Pick the right kind of number</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Type</th><th>Example</th><th>Watch out for</th></tr></thead>
+            <tbody>
+              <tr><td>Count</td><td>Weekly active subscribers</td><td>Grows with the user base; compare as a rate too</td></tr>
+              <tr><td>Rate</td><td>Activation: first check-in within 7 days ÷ sign-ups</td><td>State the denominator and the window explicitly</td></tr>
+              <tr><td>Average</td><td>Revenue per paying user (ARPPU)</td><td>A few big spenders drag it; show the median beside it</td></tr>
+              <tr><td>Percentile</td><td>p90 time to first check-in</td><td>Cannot be averaged across days or segments</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Also label each metric <strong>leading</strong> or <strong>lagging</strong>. Revenue lags: by the time it falls, customers have already left. Activation and weekly check-ins lead: they move first and you can still act on them.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Weekly active subscribers: the written definition, as code</span>
+SELECT
+  date_trunc('week', e.event_ts AT TIME ZONE 'UTC') AS week,   <span class="c">-- weeks start Monday</span>
+  u.platform,
+  COUNT(DISTINCT e.user_id)                         AS weekly_active_subscribers
+FROM events e
+JOIN users u ON u.user_id = e.user_id
+WHERE e.event_name = 'checkin_completed'
+  AND u.is_test = FALSE
+  AND u.is_staff = FALSE
+  AND u.plan = 'paid'
+GROUP BY 1, 2
+ORDER BY 1, 2;</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A metric is unit + event + window + filters, written down with an owner and a source table.</li>
+            <li>Test every metric: precise, measurable, actionable.</li>
+            <li>Cumulative totals and raw counts flatter; rates per period reveal change.</li>
+            <li>Pair a lagging outcome (revenue) with leading inputs (activation, weekly usage).</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Counting events and calling it users: one keen user with 40 check-ins becomes 40 "active users".</li>
+            <li>Leaving the time zone or week start undefined, so two dashboards disagree at every boundary.</li>
+            <li>Quietly changing a definition without versioning it, which creates a fake jump in the trend.</li>
+            <li>Reporting a rate without its denominator, so nobody notices when the denominator shrinks.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="metric-design-1"><span>Write a full definition (unit, event, window, filters, owner) for "active users" in a product you know</span></label></li>
+          <li><label><input type="checkbox" data-key="metric-design-2"><span>Explain why cumulative sign-ups is a vanity metric and name an actionable replacement</span></label></li>
+          <li><label><input type="checkbox" data-key="metric-design-3"><span>Classify five metrics as leading or lagging</span></label></li>
+          <li><label><input type="checkbox" data-key="metric-design-4"><span>Turn a written metric definition into a SQL query with COUNT(DISTINCT …)</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Performance_indicator">Wikipedia: Performance indicator (KPI)</a></li>
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/SMART_criteria">Wikipedia: SMART criteria</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="funnels">
+        <header class="topic-head">
+          <p class="eyebrow">08.2 · Where people drop out</p>
+          <h2>Funnels &amp; conversion</h2>
+        </header>
+
+        <p class="lead">A funnel follows the same people through an ordered series of steps and asks what share makes it from each step to the next. It turns "we need more customers" into "we lose 92% of visitors before they sign up", which tells you where to look.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Funnels are the most requested analysis in product and marketing teams. Getting the steps, the order and the conversion window right is what separates a funnel people trust from one that starts arguments.</p>
+        </div>
+
+        <h3>Step conversion and overall conversion</h3>
+        <p><strong>Step conversion</strong> is the share of people at one step who reach the next. <strong>Overall conversion</strong> is the share of the first step who reach the last, and it equals all the step rates multiplied together. Drop-off is simply one minus the step rate.</p>
+
+        <div class="formula">
+          \[ \text{step}_k = \frac{n_{k+1}}{n_k}, \qquad \text{overall} = \frac{n_{\text{last}}}{n_1} = \prod_k \text{step}_k \]
+          <span class="formula-note">Example: \(0.08 \times 0.50 \times 0.40 \times 0.50 = 0.008\), so 0.8% of visitors end up paying.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="A five-step funnel for one month: 20,000 visitors, 1,600 sign-ups, 800 activated, 320 trials and 160 paying. Step conversions are 8, 50, 40 and 50 percent, and overall conversion is 0.8 percent.">
+              <rect class="d-box" x="20" y="16" width="420" height="30" rx="5"/>
+              <text class="d-text" x="230" y="36" text-anchor="middle">Visitors · 20,000</text>
+              <rect class="d-box" x="102.5" y="62" width="255" height="30" rx="5"/>
+              <text class="d-text" x="230" y="82" text-anchor="middle">Sign-ups · 1,600</text>
+              <rect class="d-box" x="125" y="108" width="210" height="30" rx="5"/>
+              <text class="d-text" x="230" y="128" text-anchor="middle">Activated · 800</text>
+              <rect class="d-box" x="154" y="154" width="152" height="30" rx="5"/>
+              <text class="d-text" x="230" y="174" text-anchor="middle">Trial · 320</text>
+              <rect class="d-accent" x="177.5" y="200" width="105" height="30" rx="5"/>
+              <text class="d-title" x="230" y="220" text-anchor="middle">Paid · 160</text>
+              <text class="d-mono d-text-signal" x="460" y="58">8.0% convert · 18,400 drop</text>
+              <text class="d-mono" x="460" y="104">50% convert · 800 drop</text>
+              <text class="d-mono" x="460" y="150">40% convert · 480 drop</text>
+              <text class="d-mono" x="460" y="196">50% convert · 160 drop</text>
+              <line class="d-line" x1="452" y1="31" x2="452" y2="215"/>
+              <text class="d-label" x="460" y="226">overall 160 / 20,000 = 0.8%</text>
+            </svg>
+          </div>
+          <figcaption>An example month for the app. Bar widths use a log scale so the small steps stay visible. The biggest absolute and relative loss is the very first step.</figcaption>
+        </figure>
+
+        <h3>Order and conversion windows</h3>
+        <p>A funnel needs two more decisions. Does order matter (must the trial come before the payment)? And how long does someone have to convert? A 14-day window means a payment on day 21 does not count for this cohort. Fix the cohort by its first step: "September sign-ups who paid within 14 days" is stable, while "September payments divided by September sign-ups" mixes different people.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="Four users on a 30-day timeline after sign-up with a 14-day conversion window. User A starts a trial on day 2 and pays on day 9 and counts as converted. User B pays on day 21, outside the window. User C pays on day 4 without a trial, so a strict ordered funnel does not count it. User D starts a trial and never pays.">
+              <defs>
+                <marker id="funnels-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-good" x="120" y="28" width="242.7" height="152" rx="6" style="fill-opacity:.35"/>
+              <text class="d-label d-text-good" x="241" y="22" text-anchor="middle">14-day conversion window</text>
+              <line class="d-line" x1="120" y1="190" x2="645" y2="190" marker-end="url(#funnels-arrow)"/>
+              <text class="d-label" x="120" y="205" text-anchor="middle">day 0</text>
+              <text class="d-label" x="362.7" y="205" text-anchor="middle">14</text>
+              <text class="d-label" x="640" y="205" text-anchor="end">day 30</text>
+              <text class="d-text" x="20" y="54">User A</text>
+              <line class="d-grid" x1="120" y1="50" x2="640" y2="50"/>
+              <circle class="d-dot-muted" cx="120" cy="50" r="6"/>
+              <rect class="d-accent" x="148.7" y="44" width="12" height="12"/>
+              <circle class="d-dot-good" cx="276" cy="50" r="7"/>
+              <text class="d-label d-text-good" x="380" y="54">counted: trial, then paid on day 9</text>
+              <text class="d-text" x="20" y="89">User B</text>
+              <line class="d-grid" x1="120" y1="85" x2="640" y2="85"/>
+              <circle class="d-dot-muted" cx="120" cy="85" r="6"/>
+              <rect class="d-accent" x="200.7" y="79" width="12" height="12"/>
+              <circle class="d-dot-signal" cx="484" cy="85" r="7"/>
+              <text class="d-label d-text-signal" x="496" y="89">paid day 21: too late</text>
+              <text class="d-text" x="20" y="124">User C</text>
+              <line class="d-grid" x1="120" y1="120" x2="640" y2="120"/>
+              <circle class="d-dot-muted" cx="120" cy="120" r="6"/>
+              <circle class="d-dot-signal" cx="189.3" cy="120" r="7"/>
+              <text class="d-label" x="380" y="124">paid day 4, no trial: only an unordered funnel counts it</text>
+              <text class="d-text" x="20" y="159">User D</text>
+              <line class="d-grid" x1="120" y1="155" x2="640" y2="155"/>
+              <circle class="d-dot-muted" cx="120" cy="155" r="6"/>
+              <rect class="d-accent" x="166" y="149" width="12" height="12"/>
+              <text class="d-label" x="380" y="159">trial on day 3, never paid</text>
+            </svg>
+          </div>
+          <figcaption>Grey dot: sign-up. Square: trial start. Coloured dot: first payment. The same four users give 1, 2 or 3 conversions depending on the window and ordering rules, so write the rules down.</figcaption>
+        </figure>
+
+        <div class="widget" id="funnel-demo">
+          <div class="widget-head">
+            <span class="widget-title">Funnel builder</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="fn-visitors">Visitors <input type="range" id="fn-visitors" min="5000" max="50000" step="1000" value="20000"><output id="fn-visitors-out">20,000</output></label>
+            <label for="fn-r1">Visit → sign-up <input type="range" id="fn-r1" min="1" max="30" step="0.5" value="8"><output id="fn-r1-out">8.0%</output></label>
+            <label for="fn-r2">Sign-up → activated <input type="range" id="fn-r2" min="10" max="90" step="1" value="50"><output id="fn-r2-out">50%</output></label>
+            <label for="fn-r3">Activated → trial <input type="range" id="fn-r3" min="10" max="90" step="1" value="40"><output id="fn-r3-out">40%</output></label>
+            <label for="fn-r4">Trial → paid <input type="range" id="fn-r4" min="10" max="90" step="1" value="50"><output id="fn-r4-out">50%</output></label>
+          </div>
+          <svg id="fn-plot" viewBox="0 0 640 250" role="img" aria-label="Funnel bars for visitors, sign-ups, activated users, trials and paying customers, with each step's conversion and drop-off and the step with the biggest drop highlighted."></svg>
+          <p class="readout" id="fn-readout"></p>
+        </div>
+        <p>Because the steps multiply, the same number of extra points is worth far more on a low rate. Moving 8% to 12% is a 50% lift; moving 50% to 54% is an 8% lift.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- September sign-up cohort: trial and paid within 14 days, in order</span>
+WITH steps AS (
+  SELECT
+    u.user_id,
+    MIN(e.event_ts) FILTER (WHERE e.event_name = 'trial_started') AS trial_ts,
+    MIN(e.event_ts) FILTER (WHERE e.event_name = 'first_payment') AS paid_ts
+  FROM users u
+  LEFT JOIN events e
+    ON  e.user_id  = u.user_id
+    AND e.event_ts &gt;= u.signup_ts
+    AND e.event_ts &lt;  u.signup_ts + INTERVAL '14 days'
+  WHERE u.signup_ts &gt;= '2026-09-01' AND u.signup_ts &lt; '2026-10-01'
+    AND NOT u.is_test
+  GROUP BY u.user_id
+)
+SELECT
+  COUNT(*)                                              AS signups,
+  COUNT(trial_ts)                                       AS trials,
+  COUNT(*) FILTER (WHERE paid_ts &gt; trial_ts)            AS paid,
+  ROUND(100.0 * COUNT(trial_ts) / COUNT(*), 1)          AS signup_to_trial_pct,
+  ROUND(100.0 * COUNT(*) FILTER (WHERE paid_ts &gt; trial_ts)
+        / NULLIF(COUNT(trial_ts), 0), 1)                AS trial_to_paid_pct
+FROM steps;</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Step conversions multiply into overall conversion.</li>
+            <li>Define the funnel by a cohort at step one, an order rule and a conversion window.</li>
+            <li>Absolute drop-off shows where most people leave; relative lift shows where a fix pays most.</li>
+            <li>Segment funnels by channel, platform and device before drawing conclusions.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Dividing this month's payments by this month's sign-ups, which mixes different cohorts.</li>
+            <li>Counting events instead of distinct users at each step, so a step can exceed the one before it.</li>
+            <li>Reading a recent cohort before its window has closed and seeing a fake drop.</li>
+            <li>Optimizing the last step only, when most people leave at the first.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="funnels-1"><span>Compute step and overall conversion from a table of step counts</span></label></li>
+          <li><label><input type="checkbox" data-key="funnels-2"><span>Write a cohort-based funnel query with a conversion window in SQL</span></label></li>
+          <li><label><input type="checkbox" data-key="funnels-3"><span>Explain which step improvement adds the most customers and why</span></label></li>
+          <li><label><input type="checkbox" data-key="funnels-4"><span>Spot a funnel that mixes cohorts or counts events instead of users</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Conversion_rate_optimization">Wikipedia: Conversion rate optimization</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.postgresql.org/docs/current/sql-expressions.html">PostgreSQL: value expressions (aggregate FILTER clause)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="retention">
+        <header class="topic-head">
+          <p class="eyebrow">08.3 · Who stays</p>
+          <h2>Cohorts &amp; retention</h2>
+        </header>
+
+        <p class="lead">A <strong>cohort</strong> is a group of users who started in the same period, such as everyone who first paid in January. Retention asks what share of that group is still active one, two or six months later. Tracking cohorts separately stops new arrivals from hiding the fact that old ones are leaving.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Total active users can grow while every cohort decays, as long as marketing keeps pouring people in. Cohort tables show whether the product keeps people, which drives lifetime value and almost every growth forecast.</p>
+        </div>
+
+        <h3>Reading a cohort table</h3>
+        <p>Each row is a cohort, each column is the age of the cohort in months, and each cell is the share still active. Read across a row to see one cohort age. Read down a column to compare cohorts at the same age. Read a diagonal to see one calendar month across all cohorts, which is where outages and seasonality show up.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="A cohort retention triangle for paying subscribers who started from January to June. Month 1 retention is about 70 percent for January to March and about 76 percent from April, after an onboarding change, which shows up when you read down the month 1 column.">
+              <text class="d-label" x="100" y="34" text-anchor="middle">cohort</text>
+              <text class="d-label" x="141" y="34" text-anchor="middle">M0</text>
+              <text class="d-label" x="203" y="34" text-anchor="middle">M1</text>
+              <text class="d-label" x="265" y="34" text-anchor="middle">M2</text>
+              <text class="d-label" x="327" y="34" text-anchor="middle">M3</text>
+              <text class="d-label" x="389" y="34" text-anchor="middle">M4</text>
+              <text class="d-label" x="451" y="34" text-anchor="middle">M5</text>
+              <g>
+                <text class="d-text" x="100" y="62" text-anchor="middle">Jan</text>
+                <rect class="d-accent" x="110" y="44" width="62" height="28" style="fill-opacity:1;stroke:none"/><text class="d-mono" x="141" y="62" text-anchor="middle">100%</text>
+                <rect class="d-accent" x="172" y="44" width="62" height="28" style="fill-opacity:.7;stroke:none"/><text class="d-mono" x="203" y="62" text-anchor="middle">70%</text>
+                <rect class="d-accent" x="234" y="44" width="62" height="28" style="fill-opacity:.58;stroke:none"/><text class="d-mono" x="265" y="62" text-anchor="middle">58%</text>
+                <rect class="d-accent" x="296" y="44" width="62" height="28" style="fill-opacity:.52;stroke:none"/><text class="d-mono" x="327" y="62" text-anchor="middle">52%</text>
+                <rect class="d-accent" x="358" y="44" width="62" height="28" style="fill-opacity:.48;stroke:none"/><text class="d-mono" x="389" y="62" text-anchor="middle">48%</text>
+                <rect class="d-accent" x="420" y="44" width="62" height="28" style="fill-opacity:.46;stroke:none"/><text class="d-mono" x="451" y="62" text-anchor="middle">46%</text>
+              </g>
+              <g>
+                <text class="d-text" x="100" y="90" text-anchor="middle">Feb</text>
+                <rect class="d-accent" x="110" y="72" width="62" height="28" style="fill-opacity:1;stroke:none"/><text class="d-mono" x="141" y="90" text-anchor="middle">100%</text>
+                <rect class="d-accent" x="172" y="72" width="62" height="28" style="fill-opacity:.71;stroke:none"/><text class="d-mono" x="203" y="90" text-anchor="middle">71%</text>
+                <rect class="d-accent" x="234" y="72" width="62" height="28" style="fill-opacity:.59;stroke:none"/><text class="d-mono" x="265" y="90" text-anchor="middle">59%</text>
+                <rect class="d-accent" x="296" y="72" width="62" height="28" style="fill-opacity:.53;stroke:none"/><text class="d-mono" x="327" y="90" text-anchor="middle">53%</text>
+                <rect class="d-accent" x="358" y="72" width="62" height="28" style="fill-opacity:.49;stroke:none"/><text class="d-mono" x="389" y="90" text-anchor="middle">49%</text>
+              </g>
+              <g>
+                <text class="d-text" x="100" y="118" text-anchor="middle">Mar</text>
+                <rect class="d-accent" x="110" y="100" width="62" height="28" style="fill-opacity:1;stroke:none"/><text class="d-mono" x="141" y="118" text-anchor="middle">100%</text>
+                <rect class="d-accent" x="172" y="100" width="62" height="28" style="fill-opacity:.69;stroke:none"/><text class="d-mono" x="203" y="118" text-anchor="middle">69%</text>
+                <rect class="d-accent" x="234" y="100" width="62" height="28" style="fill-opacity:.57;stroke:none"/><text class="d-mono" x="265" y="118" text-anchor="middle">57%</text>
+                <rect class="d-accent" x="296" y="100" width="62" height="28" style="fill-opacity:.52;stroke:none"/><text class="d-mono" x="327" y="118" text-anchor="middle">52%</text>
+              </g>
+              <g>
+                <text class="d-text" x="100" y="146" text-anchor="middle">Apr</text>
+                <rect class="d-accent" x="110" y="128" width="62" height="28" style="fill-opacity:1;stroke:none"/><text class="d-mono" x="141" y="146" text-anchor="middle">100%</text>
+                <rect class="d-accent" x="172" y="128" width="62" height="28" style="fill-opacity:.76;stroke:none"/><text class="d-mono" x="203" y="146" text-anchor="middle">76%</text>
+                <rect class="d-accent" x="234" y="128" width="62" height="28" style="fill-opacity:.65;stroke:none"/><text class="d-mono" x="265" y="146" text-anchor="middle">65%</text>
+              </g>
+              <g>
+                <text class="d-text" x="100" y="174" text-anchor="middle">May</text>
+                <rect class="d-accent" x="110" y="156" width="62" height="28" style="fill-opacity:1;stroke:none"/><text class="d-mono" x="141" y="174" text-anchor="middle">100%</text>
+                <rect class="d-accent" x="172" y="156" width="62" height="28" style="fill-opacity:.77;stroke:none"/><text class="d-mono" x="203" y="174" text-anchor="middle">77%</text>
+              </g>
+              <g>
+                <text class="d-text" x="100" y="202" text-anchor="middle">Jun</text>
+                <rect class="d-accent" x="110" y="184" width="62" height="28" style="fill-opacity:1;stroke:none"/><text class="d-mono" x="141" y="202" text-anchor="middle">100%</text>
+              </g>
+              <rect class="d-line-accent" x="108" y="42" width="376" height="32" rx="4"/>
+              <rect class="d-line-signal d-dash" x="170" y="126" width="66" height="60" rx="4"/>
+              <text class="d-label d-text-accent" x="500" y="56">read a row:</text>
+              <text class="d-label d-text-accent" x="500" y="71">one cohort ageing</text>
+              <text class="d-label d-text-signal" x="500" y="144">read a column: April on</text>
+              <text class="d-label d-text-signal" x="500" y="159">keeps 76–77% at M1,</text>
+              <text class="d-label d-text-signal" x="500" y="174">up from about 70%</text>
+              <text class="d-label" x="100" y="236">Example data: paying subscribers by first-payment month. Empty cells have not happened yet.</text>
+            </svg>
+          </div>
+          <figcaption>Rows age left to right; columns compare cohorts at the same age. The April onboarding change shows up as a jump down the M1 column that the overall active count would blur.</figcaption>
+        </figure>
+
+        <h3>The shape of the curve</h3>
+        <p>Plot one row as a line and look at where it ends. A curve that <strong>flattens</strong> means a core group finds lasting value. A curve that keeps <strong>decaying toward zero</strong> means every cohort eventually leaves, and growth depends on constant new acquisition. A <strong>smile</strong> means some users come back later, often after a new feature or a seasonal need.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 200" role="img" aria-label="Three retention curves over 12 months. One flattens near 45 percent, one decays toward zero, and one dips to 30 percent and then rises again to 37 percent.">
+              <line class="d-grid" x1="60" y1="30" x2="380" y2="30"/>
+              <line class="d-grid" x1="60" y1="100" x2="380" y2="100"/>
+              <line class="d-line" x1="60" y1="170" x2="385" y2="170"/>
+              <line class="d-line" x1="60" y1="25" x2="60" y2="170"/>
+              <text class="d-label" x="54" y="34" text-anchor="end">100%</text>
+              <text class="d-label" x="54" y="104" text-anchor="end">50%</text>
+              <text class="d-label" x="54" y="174" text-anchor="end">0%</text>
+              <text class="d-label" x="60" y="188">M0</text>
+              <text class="d-label" x="380" y="188" text-anchor="end">M12</text>
+              <polyline class="d-line-accent" points="60,30.0 86.7,74.8 113.3,90.2 140,98.6 166.7,102.8 193.4,105.6 220,106.3 246.7,107.0 273.4,107.0 300,107.0 326.7,107.0 353.4,107.0 380,107.0"/>
+              <polyline class="d-line-signal" points="60,30.0 86.67,93.0 113.34,116.8 140.01,132.2 166.68,143.4 193.35,151.8 220.02,157.4 246.69,161.6 273.36,164.4 300.03,165.8 326.7,167.2 353.37,167.9 380.04,168.6"/>
+              <polyline class="d-line d-dash" points="60,30.0 86.67,100.0 113.34,116.8 140.01,125.2 166.68,128.0 193.35,128.0 220.02,126.6 246.69,125.2 273.36,123.8 300.03,122.4 326.7,121.0 353.37,119.6 380.04,118.2"/>
+              <text class="d-label d-text-accent" x="390" y="104">flattens at 45%</text>
+              <text class="d-label" x="390" y="122">smile: back to 37%</text>
+              <text class="d-label d-text-signal" x="390" y="168">decays toward 0</text>
+              <text class="d-title" x="500" y="50">What to ask</text>
+              <text class="d-label" x="500" y="72">Where does it flatten?</text>
+              <text class="d-label" x="500" y="90">How fast does it get there?</text>
+              <text class="d-label" x="500" y="108">Are newer cohorts higher?</text>
+              <text class="d-label" x="500" y="126">Which segment holds the floor?</text>
+            </svg>
+          </div>
+          <figcaption>Illustrative curves. The level where a curve flattens matters more than the first-month drop, because it decides how many customers you keep for good.</figcaption>
+        </figure>
+
+        <div class="widget" id="retention-demo">
+          <div class="widget-head">
+            <span class="widget-title">Cohort retention heatmap generator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="ret-m1">Month-1 retention <input type="range" id="ret-m1" min="20" max="95" step="1" value="70"><output id="ret-m1-out">70%</output></label>
+            <label for="ret-keep">Month-to-month keep rate of the not-yet-loyal <input type="range" id="ret-keep" min="50" max="98" step="1" value="80"><output id="ret-keep-out">80%</output></label>
+            <label for="ret-floor">Loyal floor <input type="range" id="ret-floor" min="0" max="60" step="1" value="30"><output id="ret-floor-out">30%</output></label>
+            <label for="ret-trend">Each newer cohort changes by <input type="range" id="ret-trend" min="-3" max="3" step="0.5" value="0"><output id="ret-trend-out">+0.0 pts</output></label>
+          </div>
+          <svg id="ret-plot" viewBox="0 0 640 290" role="img" aria-label="A cohort triangle of eight monthly cohorts by months since start, coloured by retention, next to the retention curves of the oldest and newest cohorts."></svg>
+          <p class="readout" id="ret-readout"></p>
+        </div>
+
+        <h3>Pick a retention definition</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Definition</th><th>Counts a user at day or month N if…</th><th>Good for</th></tr></thead>
+            <tbody>
+              <tr><td>N-day (bounded)</td><td>Active exactly in period N</td><td>Habit products used regularly</td></tr>
+              <tr><td>Unbounded (rolling)</td><td>Active in period N or any later period</td><td>Irregular use, like travel or tax apps</td></tr>
+              <tr><td>Subscription retention</td><td>Still paying at the start of period N</td><td>Paid plans; churn rate = 1 − retention per period</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+
+<span class="c"># payments: one row per user per paid month (user_id, paid_at)</span>
+p = payments.copy()
+p["month_idx"]  = p["paid_at"].dt.year * 12 + p["paid_at"].dt.month
+p["cohort_idx"] = p.groupby("user_id")["month_idx"].transform("min")
+p["age"]        = p["month_idx"] - p["cohort_idx"]          <span class="c"># 0, 1, 2, ...</span>
+p["cohort"]     = p.groupby("user_id")["paid_at"].transform("min").dt.to_period("M")
+
+counts = (p.groupby(["cohort", "age"])["user_id"].nunique()
+            .unstack(fill_value=0))
+retention = counts.div(counts[0], axis=0).round(3)          <span class="c"># divide by cohort size</span>
+print(retention.iloc[:, :7])</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Group users by start period and track each group separately.</li>
+            <li>Rows show ageing, columns compare cohorts, diagonals show calendar events.</li>
+            <li>The level where the curve flattens drives lifetime value more than the first drop.</li>
+            <li>State whether retention is bounded, unbounded or paid.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Averaging recent cohorts with old ones for late months, where only the old cohorts have data.</li>
+            <li>Calling growing total actives "good retention" while each cohort decays.</li>
+            <li>Comparing cohorts of very different sizes or channel mixes as if they were alike.</li>
+            <li>Mixing up monthly churn with annual churn: 5% a month is about 46% a year, not 60%.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="retention-1"><span>Build a cohort retention table in pandas or SQL from an events or payments table</span></label></li>
+          <li><label><input type="checkbox" data-key="retention-2"><span>Read rows, columns and diagonals of a cohort triangle and say what each shows</span></label></li>
+          <li><label><input type="checkbox" data-key="retention-3"><span>Tell a flattening curve from a decaying one and explain what each means for growth</span></label></li>
+          <li><label><input type="checkbox" data-key="retention-4"><span>Convert a monthly churn rate into a 12-month retention figure</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Cohort_analysis">Wikipedia: Cohort analysis</a></li>
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/">pandas documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="unit-economics">
+        <header class="topic-head">
+          <p class="eyebrow">08.4 · Does each customer pay off?</p>
+          <h2>Unit economics (CAC, LTV, margin)</h2>
+        </header>
+
+        <p class="lead">Unit economics asks one question about a single customer: do they earn back more than they cost to win and serve? If the answer is yes, growth makes money. If it is no, every new customer digs the hole deeper, however good the sign-up chart looks.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Finance, marketing and leadership all quote CAC, LTV and payback, often computed three different ways. You are the person who can say exactly which spend, which customers and which margin went into each number.</p>
+        </div>
+
+        <h3>The four numbers</h3>
+        <p><strong>Customer acquisition cost (CAC)</strong> is marketing and sales spend divided by new paying customers in the same period. <strong>Contribution margin</strong> per month is revenue per user (ARPU) times gross margin, the money left after the cost of serving them. <strong>Lifetime value (LTV)</strong> is that margin over the expected lifetime, which for a steady monthly churn rate is margin divided by churn. <strong>Payback</strong> is how many months of margin it takes to recover CAC.</p>
+
+        <div class="formula">
+          \[ \text{CAC} = \frac{\text{spend}}{\text{new customers}}, \quad m = \text{ARPU} \times \text{GM}, \quad \text{LTV} = \frac{m}{\text{churn}}, \quad \text{payback} = \frac{\text{CAC}}{m} \]
+          <span class="formula-note">Example: $30,000 spend ÷ 200 customers = $150 CAC. $15 ARPU × 80% margin = $12 a month. With 6% monthly churn, LTV = $12 ÷ 0.06 = $200, so LTV:CAC ≈ 1.3 and simple payback = 12.5 months.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Cumulative margin per customer over 24 months against a CAC line at 150 dollars. Without churn the margin line crosses CAC at 12.5 months. With 6 percent monthly churn the expected cumulative margin curves toward an LTV of 200 dollars and crosses CAC only at about 22 months.">
+              <line class="d-grid" x1="60" y1="110" x2="420" y2="110"/>
+              <line class="d-line" x1="60" y1="190" x2="425" y2="190"/>
+              <line class="d-line" x1="60" y1="25" x2="60" y2="190"/>
+              <text class="d-label" x="54" y="194" text-anchor="end">$0</text>
+              <text class="d-label" x="54" y="114" text-anchor="end">$150</text>
+              <text class="d-label" x="54" y="87" text-anchor="end">$200</text>
+              <text class="d-label" x="54" y="34" text-anchor="end">$300</text>
+              <text class="d-label" x="60" y="208">month 0</text>
+              <text class="d-label" x="420" y="208" text-anchor="end">24</text>
+              <line class="d-line-signal" x1="60" y1="110" x2="420" y2="110"/>
+              <text class="d-label d-text-signal" x="66" y="104">CAC $150</text>
+              <line class="d-line d-dash" x1="60" y1="83.3" x2="420" y2="83.3"/>
+              <text class="d-label" x="66" y="78">LTV $200 (with churn)</text>
+              <line class="d-line d-dash" x1="60" y1="190" x2="420" y2="36.4"/>
+              <polyline class="d-line-accent" points="60.0,190.0 75.0,183.6 90.0,177.6 105.0,171.9 120.0,166.6 135.0,161.6 150.0,156.9 165.0,152.5 180.0,148.4 195.0,144.5 210.0,140.8 225.0,137.3 240.0,134.1 255.0,131.1 270.0,128.2 285.0,125.5 300.0,123.0 315.0,120.6 330.0,118.4 345.0,116.3 360.0,114.3 375.0,112.4 390.0,110.7 405.0,109.0 420.0,107.5"/>
+              <circle class="d-dot" cx="247.5" cy="110" r="5"/>
+              <text class="d-label" x="247.5" y="130" text-anchor="middle">12.5 mo</text>
+              <circle class="d-dot-signal" cx="396" cy="110" r="5"/>
+              <text class="d-label d-text-signal" x="396" y="130" text-anchor="middle">22.4 mo</text>
+              <text class="d-title" x="450" y="40">Per customer</text>
+              <text class="d-mono" x="450" y="64">margin  $12.00 / month</text>
+              <text class="d-mono" x="450" y="84">CAC     $150</text>
+              <text class="d-label" x="450" y="110">dashed: $12 every month,</text>
+              <text class="d-label" x="450" y="125">payback 12.5 months</text>
+              <text class="d-label d-text-accent" x="450" y="150">curve: expected margin with</text>
+              <text class="d-label d-text-accent" x="450" y="165">6% monthly churn; payback</text>
+              <text class="d-label d-text-accent" x="450" y="180">≈ 22 months, LTV caps at $200</text>
+            </svg>
+          </div>
+          <figcaption>Simple payback assumes the customer never leaves. Once you weight each month by the chance they are still subscribed, payback takes almost twice as long. Quote which one you mean.</figcaption>
+        </figure>
+
+        <h3>Blended CAC hides bad channels</h3>
+        <p><strong>Blended CAC</strong> divides all spend by all new customers, including the ones who arrived for free. <strong>Paid CAC</strong> leaves out organic customers. Per-channel CAC is where decisions get made, because one expensive channel can hide inside a healthy average.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="CAC by channel against a 200 dollar LTV line: search 90 dollars, social 200 dollars, a partner promo 625 dollars, organic with no spend. Blended CAC is 150 dollars and paid CAC is 160 dollars, both below LTV, even though the partner promo costs three times LTV.">
+              <line class="d-line d-dash" x1="284" y1="18" x2="284" y2="222"/>
+              <text class="d-label" x="288" y="16">LTV $200</text>
+              <text class="d-text" x="150" y="44" text-anchor="end">Search</text>
+              <rect class="d-good" x="160" y="30" width="55.8" height="20" rx="3"/>
+              <text class="d-mono" x="222" y="44">$90 · $9k / 100</text>
+              <text class="d-text" x="150" y="76" text-anchor="end">Social</text>
+              <rect class="d-box" x="160" y="62" width="124" height="20" rx="3"/>
+              <text class="d-mono" x="292" y="76">$200 · $16k / 80</text>
+              <text class="d-text" x="150" y="108" text-anchor="end">Partner promo</text>
+              <rect class="d-signal" x="160" y="94" width="387.5" height="20" rx="3"/>
+              <text class="d-mono" x="554" y="108">$625 · $5k / 8</text>
+              <text class="d-text" x="150" y="140" text-anchor="end">Organic</text>
+              <text class="d-mono" x="166" y="140">no spend · 12 customers</text>
+              <line class="d-grid" x1="20" y1="158" x2="660" y2="158"/>
+              <text class="d-text" x="150" y="182" text-anchor="end">Blended</text>
+              <rect class="d-accent" x="160" y="168" width="93" height="20" rx="3"/>
+              <text class="d-mono" x="292" y="182">$150 · $30k / 200</text>
+              <text class="d-text" x="150" y="214" text-anchor="end">Paid only</text>
+              <rect class="d-accent" x="160" y="200" width="99.2" height="20" rx="3"/>
+              <text class="d-mono" x="292" y="214">$160 · $30k / 188</text>
+            </svg>
+          </div>
+          <figcaption>Example month. Both averages sit under LTV, so the business looks fine, yet the partner promo spends $625 to win a customer worth $200.</figcaption>
+        </figure>
+
+        <div class="widget" id="ue-demo">
+          <div class="widget-head">
+            <span class="widget-title">CAC, LTV and payback calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="ue-spend">Monthly spend <input type="range" id="ue-spend" min="5000" max="100000" step="1000" value="30000"><output id="ue-spend-out">$30,000</output></label>
+            <label for="ue-new">New paying customers <input type="range" id="ue-new" min="50" max="1000" step="10" value="200"><output id="ue-new-out">200</output></label>
+            <label for="ue-arpu">ARPU / month <input type="range" id="ue-arpu" min="5" max="50" step="1" value="15"><output id="ue-arpu-out">$15</output></label>
+            <label for="ue-gm">Gross margin <input type="range" id="ue-gm" min="20" max="95" step="1" value="80"><output id="ue-gm-out">80%</output></label>
+            <label for="ue-churn">Monthly churn <input type="range" id="ue-churn" min="1" max="20" step="0.5" value="6"><output id="ue-churn-out">6.0%</output></label>
+          </div>
+          <svg id="ue-plot" viewBox="0 0 640 260" role="img" aria-label="Cumulative margin per customer over 36 months, with and without churn, against the CAC line, with the payback points marked."></svg>
+          <p class="readout" id="ue-readout"></p>
+        </div>
+        <p>A common rule of thumb in subscription businesses is LTV:CAC of about 3 or more and payback within roughly 12 months. Treat both as conventions to discuss, not laws: a business with cheap capital can accept longer payback, and an LTV built on a guessed churn rate is only as good as that guess.</p>
+
+        <pre class="code" data-lang="excel"><code>     A                              B
+1    Marketing spend (month)        30000
+2    New paying customers           200
+3    ARPU per month                 15
+4    Gross margin                   80%
+5    Monthly churn                  6%
+7    CAC                            =B1/B2              <span class="c">→ 150</span>
+8    Margin per customer per month  =B3*B4              <span class="c">→ 12</span>
+9    LTV                            =B8/B5              <span class="c">→ 200</span>
+10   LTV : CAC                      =B9/B7              <span class="c">→ 1.33</span>
+11   Simple payback (months)        =B7/B8              <span class="c">→ 12.5</span>
+12   Churn-adjusted payback         =IF(B9&lt;=B7,"never",LN(1-B7/B9)/LN(1-B5))   <span class="c">→ 22.4</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>CAC = spend ÷ new customers; say whether it is blended, paid or per channel.</li>
+            <li>Use margin, not revenue, in LTV and payback.</li>
+            <li>LTV = monthly margin ÷ monthly churn when churn is steady; small churn changes swing it a lot.</li>
+            <li>Payback with churn is longer than simple payback, and never comes if LTV is below CAC.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Computing LTV from revenue instead of margin, which inflates it by the cost of serving.</li>
+            <li>Using blended CAC to defend a channel whose own CAC is far above LTV.</li>
+            <li>Dividing this month's spend by this month's customers when sales cycles last months.</li>
+            <li>Estimating churn from a young cohort, then projecting LTV years into the future.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="unit-economics-1"><span>Compute CAC, LTV, LTV:CAC and payback from spend, customers, ARPU, margin and churn</span></label></li>
+          <li><label><input type="checkbox" data-key="unit-economics-2"><span>Explain the difference between blended, paid and per-channel CAC</span></label></li>
+          <li><label><input type="checkbox" data-key="unit-economics-3"><span>Explain why churn-adjusted payback is longer than simple payback</span></label></li>
+          <li><label><input type="checkbox" data-key="unit-economics-4"><span>Build the unit-economics model in a spreadsheet with clearly labelled inputs</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Customer_lifetime_value">Wikipedia: Customer lifetime value</a></li>
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Customer_acquisition_cost">Wikipedia: Customer acquisition cost</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="north-star">
+        <header class="topic-head">
+          <p class="eyebrow">08.5 · One goal, with brakes</p>
+          <h2>North star &amp; guardrail metrics</h2>
+        </header>
+
+        <p class="lead">A <strong>north star metric</strong> is the single number that best captures the value customers get from the product, chosen so that growing it also grows the business. <strong>Guardrail metrics</strong> are the numbers you promise not to break while pushing it. Together they let a team move fast without winning the metric and losing the customer.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Teams optimize what they are measured on. You often propose the north star, define its inputs and guardrails, and are the first to notice when a "win" is really a cost moved somewhere else.</p>
+        </div>
+
+        <h3>Inputs above, guardrails below</h3>
+        <p>A north star is usually a lagging outcome, so teams work on <strong>input metrics</strong> that drive it: how many people reach value, how often and how deeply they use it. Guardrails sit underneath and catch the side effects: unsubscribes, margin, support load, page speed.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="A north star of weekly subscribers who complete a check-in, driven by three input metrics: newly activated subscribers, check-ins per subscriber and week-4 retention. Three guardrails sit below: unsubscribe rate, gross margin and support tickets per thousand users.">
+              <defs>
+                <marker id="north-star-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-good" x="200" y="14" width="280" height="50" rx="10"/>
+              <text class="d-title" x="340" y="36" text-anchor="middle">North star</text>
+              <text class="d-label" x="340" y="54" text-anchor="middle">weekly subscribers with ≥ 1 check-in</text>
+              <rect class="d-box" x="20" y="100" width="190" height="46" rx="8"/>
+              <text class="d-text" x="115" y="120" text-anchor="middle">Newly activated subs</text>
+              <text class="d-label" x="115" y="137" text-anchor="middle">breadth</text>
+              <rect class="d-box" x="245" y="100" width="190" height="46" rx="8"/>
+              <text class="d-text" x="340" y="120" text-anchor="middle">Check-ins per sub / week</text>
+              <text class="d-label" x="340" y="137" text-anchor="middle">depth and frequency</text>
+              <rect class="d-box" x="470" y="100" width="190" height="46" rx="8"/>
+              <text class="d-text" x="565" y="120" text-anchor="middle">Week-4 retention</text>
+              <text class="d-label" x="565" y="137" text-anchor="middle">staying power</text>
+              <path class="d-line-accent" d="M115 100 C115 80 250 78 270 66" marker-end="url(#north-star-arrow)"/>
+              <line class="d-line-accent" x1="340" y1="100" x2="340" y2="68" marker-end="url(#north-star-arrow)"/>
+              <path class="d-line-accent" d="M565 100 C565 80 430 78 410 66" marker-end="url(#north-star-arrow)"/>
+              <text class="d-label d-text-accent" x="470" y="84">inputs drive it</text>
+              <path class="d-line" d="M20 168 H660"/>
+              <text class="d-label d-text-signal" x="20" y="162">guardrails: must not break while you push</text>
+              <rect class="d-signal" x="20" y="182" width="190" height="46" rx="8"/>
+              <text class="d-text" x="115" y="202" text-anchor="middle">Unsubscribe rate</text>
+              <text class="d-label" x="115" y="219" text-anchor="middle">≤ 3% of users a week</text>
+              <rect class="d-signal" x="245" y="182" width="190" height="46" rx="8"/>
+              <text class="d-text" x="340" y="202" text-anchor="middle">Gross margin</text>
+              <text class="d-label" x="340" y="219" text-anchor="middle">≥ 60%</text>
+              <rect class="d-signal" x="470" y="182" width="190" height="46" rx="8"/>
+              <text class="d-text" x="565" y="202" text-anchor="middle">Support tickets</text>
+              <text class="d-label" x="565" y="219" text-anchor="middle">≤ 20 per 1k users a week</text>
+            </svg>
+          </div>
+          <figcaption>Example metric map for the habit app. Teams own inputs; the north star summarizes them; guardrail limits are agreed before any push starts.</figcaption>
+        </figure>
+
+        <h3>Goodhart's law in action</h3>
+        <p>"When a measure becomes a target, it ceases to be a good measure." Suppose the team is told to raise sessions per user and turns on daily push notifications. Sessions jump. Unsubscribes jump more, and a few weeks later the weekly active base starts to shrink. Without a guardrail on unsubscribes, the dashboard calls this a win for a month.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="Index lines over ten weeks with week 3 equal to 100. After daily notifications start in week 4, sessions per user rise to 138, unsubscribes rise to 205, and weekly active subscribers fall to 91 by week 10.">
+              <line class="d-grid" x1="60" y1="160" x2="390" y2="160"/>
+              <line class="d-grid" x1="60" y1="60" x2="390" y2="60"/>
+              <line class="d-line" x1="60" y1="190" x2="395" y2="190"/>
+              <text class="d-label" x="54" y="164" text-anchor="end">100</text>
+              <text class="d-label" x="54" y="64" text-anchor="end">200</text>
+              <line class="d-line d-dash" x1="168" y1="30" x2="168" y2="190"/>
+              <text class="d-label" x="172" y="34">daily pushes start</text>
+              <text class="d-label" x="60" y="205">week 1</text>
+              <text class="d-label" x="384" y="205" text-anchor="end">week 10</text>
+              <polyline class="d-line-accent" points="60,160 96,160 132,160 168,142 204,130 240,125 276,123 312,122 348,122 384,122"/>
+              <polyline class="d-line-signal" points="60,160 96,160 132,160 168,120 204,85 240,70 276,60 312,55 348,55 384,55"/>
+              <polyline class="d-line" style="stroke-width:2.4" points="60,160 96,159 132,160 168,156 204,157 240,160 276,163 312,166 348,168 384,169"/>
+              <text class="d-label d-text-signal" x="400" y="58">unsubscribes 205</text>
+              <text class="d-label d-text-accent" x="400" y="126">sessions / user 138</text>
+              <text class="d-label" x="400" y="174">weekly active 91</text>
+              <text class="d-title" x="530" y="80">Target: sessions</text>
+              <text class="d-label" x="530" y="100">hit in week 5</text>
+              <text class="d-title" x="530" y="130">Reality</text>
+              <text class="d-label" x="530" y="150">fewer people stay</text>
+            </svg>
+          </div>
+          <figcaption>Illustrative index (week 3 = 100). The targeted number improves while the outcome it was meant to represent gets worse.</figcaption>
+        </figure>
+
+        <div class="widget" id="ns-demo">
+          <div class="widget-head">
+            <span class="widget-title">North star vs guardrails</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="ns-push">Push notifications / week <input type="range" id="ns-push" min="0" max="14" step="1" value="2"><output id="ns-push-out">2</output></label>
+            <label for="ns-disc">First-month discount <input type="range" id="ns-disc" min="0" max="50" step="1" value="0"><output id="ns-disc-out">0%</output></label>
+            <label for="ns-steps">Onboarding screens <input type="range" id="ns-steps" min="2" max="8" step="1" value="6"><output id="ns-steps-out">6</output></label>
+          </div>
+          <svg id="ns-plot" viewBox="0 0 640 250" role="img" aria-label="The north star value as a bar, and three guardrail gauges for unsubscribe rate, gross margin and support tickets, each with its limit marked."></svg>
+          <p class="readout" id="ns-readout"></p>
+        </div>
+        <p>The model behind the demo is illustrative: each lever lifts the north star with diminishing or steady returns, and each one also pushes on a guardrail. Real responses come from experiments, which is the next area.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Business</th><th>Possible north star</th><th>Typical guardrails</th></tr></thead>
+            <tbody>
+              <tr><td>Subscription habit app</td><td>Weekly subscribers completing a check-in</td><td>Unsubscribe rate, support tickets, refunds</td></tr>
+              <tr><td>Online store</td><td>Orders delivered on time per week</td><td>Return rate, gross margin, delivery cost per order</td></tr>
+              <tr><td>Two-sided marketplace</td><td>Completed transactions per week</td><td>Cancellation rate, complaints from either side</td></tr>
+              <tr><td>B2B software</td><td>Weekly active teams using the core feature</td><td>Account churn, page load time, incidents</td></tr>
+              <tr><td>Support team</td><td>Tickets resolved within the service level</td><td>Reopen rate, satisfaction score</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A north star measures delivered customer value and links to long-term revenue.</li>
+            <li>Teams move input metrics; the north star summarizes them.</li>
+            <li>Guardrails have explicit limits agreed before the push, not after.</li>
+            <li>Any single target can be gamed; pair it with the cost it might shift.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Picking revenue as the north star, which lags and says little about customer value.</li>
+            <li>Picking an activity count, like sessions, that can rise while value falls.</li>
+            <li>Listing ten guardrails, so every change breaks one and the team ignores them all.</li>
+            <li>Checking guardrails only at launch, when harm such as churn shows up weeks later.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="north-star-1"><span>Propose a north star, three inputs and three guardrails for a product you use</span></label></li>
+          <li><label><input type="checkbox" data-key="north-star-2"><span>Explain Goodhart's law with a concrete metric example</span></label></li>
+          <li><label><input type="checkbox" data-key="north-star-3"><span>Tell a north star apart from a vanity metric and from a lagging financial metric</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Goodhart%27s_law">Wikipedia: Goodhart's law</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="metric-trees">
+        <header class="topic-head">
+          <p class="eyebrow">08.6 · Why did it move?</p>
+          <h2>Metric trees &amp; root-cause analysis</h2>
+        </header>
+
+        <p class="lead">A <strong>metric tree</strong> writes a top-line number as the product or sum of smaller numbers, and those as smaller numbers again. When revenue drops, you walk down the tree, following the branch that moved most, until you reach something specific enough to fix: "Android checkout conversion fell after Tuesday's release."</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>"Revenue is down 12%, why?" is one of the most common and most urgent questions you will get. A tree plus a fixed routine turns a stressful hunt into a structured answer within hours.</p>
+        </div>
+
+        <h3>Build the tree from identities</h3>
+        <p>Each split must be an exact identity, so the children multiply or add back to the parent. Multiplicative splits break a number into drivers: revenue = orders × average order value (AOV). Additive splits break it into segments: sessions = search + organic + email + social. This lesson uses an online store, the classic case.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 262" role="img" aria-label="A metric tree for an online store. Revenue equals orders times average order value. Orders equal sessions times conversion. Average order value equals items per order times price per item. Sessions are the sum of channels and conversion splits by platform.">
+              <rect class="d-accent" x="14" y="108" width="112" height="46" rx="8"/>
+              <text class="d-title" x="70" y="128" text-anchor="middle">Revenue</text>
+              <text class="d-mono" x="70" y="145" text-anchor="middle">$120,000</text>
+              <path class="d-line" d="M126 131 H146 V66 H166"/>
+              <path class="d-line" d="M146 131 V196 H166"/>
+              <text class="d-text d-text-accent" x="152" y="136">×</text>
+              <rect class="d-box" x="166" y="44" width="122" height="44" rx="8"/>
+              <text class="d-text" x="227" y="63" text-anchor="middle">Orders</text>
+              <text class="d-mono" x="227" y="80" text-anchor="middle">2,400</text>
+              <rect class="d-box" x="166" y="174" width="122" height="44" rx="8"/>
+              <text class="d-text" x="227" y="193" text-anchor="middle">Avg order value</text>
+              <text class="d-mono" x="227" y="210" text-anchor="middle">$50.00</text>
+              <path class="d-line" d="M288 66 H308 V32 H328"/>
+              <path class="d-line" d="M308 66 V96 H328"/>
+              <text class="d-text d-text-accent" x="314" y="70">×</text>
+              <path class="d-line" d="M288 196 H308 V170 H328"/>
+              <path class="d-line" d="M308 196 V230 H328"/>
+              <text class="d-text d-text-accent" x="314" y="201">×</text>
+              <rect class="d-box" x="328" y="12" width="140" height="40" rx="8"/>
+              <text class="d-text" x="398" y="29" text-anchor="middle">Sessions</text>
+              <text class="d-mono" x="398" y="45" text-anchor="middle">80,000</text>
+              <rect class="d-box" x="328" y="76" width="140" height="40" rx="8"/>
+              <text class="d-text" x="398" y="93" text-anchor="middle">Conversion</text>
+              <text class="d-mono" x="398" y="109" text-anchor="middle">3.0%</text>
+              <rect class="d-box" x="328" y="150" width="140" height="40" rx="8"/>
+              <text class="d-text" x="398" y="167" text-anchor="middle">Items per order</text>
+              <text class="d-mono" x="398" y="183" text-anchor="middle">2.0</text>
+              <rect class="d-box" x="328" y="210" width="140" height="40" rx="8"/>
+              <text class="d-text" x="398" y="227" text-anchor="middle">Price per item</text>
+              <text class="d-mono" x="398" y="243" text-anchor="middle">$25.00</text>
+              <line class="d-line" x1="468" y1="32" x2="498" y2="32"/>
+              <line class="d-line" x1="468" y1="96" x2="498" y2="96"/>
+              <rect class="d-fill" x="498" y="12" width="170" height="40" rx="8"/>
+              <text class="d-label" x="583" y="29" text-anchor="middle">Σ by channel</text>
+              <text class="d-label" x="583" y="45" text-anchor="middle">search, organic, email, social</text>
+              <rect class="d-fill" x="498" y="76" width="170" height="40" rx="8"/>
+              <text class="d-label" x="583" y="93" text-anchor="middle">split by platform</text>
+              <text class="d-label" x="583" y="109" text-anchor="middle">web, iOS, Android</text>
+              <text class="d-label" x="498" y="160">× multiplies drivers</text>
+              <text class="d-label" x="498" y="176">Σ adds segments</text>
+              <text class="d-label" x="498" y="192">each level is exact, so</text>
+              <text class="d-label" x="498" y="208">changes can be attributed</text>
+            </svg>
+          </div>
+          <figcaption>Example store, one week. 80,000 × 3.0% = 2,400 orders, and 2,400 × $50 = $120,000. Because every split is an identity, the tree also tells you how much of a change each branch explains.</figcaption>
+        </figure>
+
+        <h3>Attribute the change</h3>
+        <p>For a product, the percentage changes do not add up, but their logarithms do. That gives each driver an exact share of the change. For a sum, each segment's share is just its own change divided by the total change.</p>
+
+        <div class="formula">
+          \[ \ln\frac{R_1}{R_0} = \ln\frac{O_1}{O_0} + \ln\frac{A_1}{A_0}, \qquad \text{share}_{\text{orders}} = \frac{\ln(O_1/O_0)}{\ln(R_1/R_0)} \]
+          <span class="formula-note">Example: revenue −11.7% (ln −0.124), orders −10.8% (ln −0.114), AOV −1.0% (ln −0.010). Orders explain 92% of the drop.</span>
+        </div>
+
+        <h3>A routine for root cause</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 175" role="img" aria-label="A five-step root-cause routine: check the change is real, ask whether the cause is internal or external, decompose with the metric tree, segment the moving branch, then size the cause and confirm it.">
+              <defs>
+                <marker id="metric-trees-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-signal" x="10" y="20" width="120" height="48" rx="8"/>
+              <text class="d-title" x="70" y="40" text-anchor="middle">1 Is it real?</text>
+              <text class="d-label" x="70" y="57" text-anchor="middle">data, not the world</text>
+              <line class="d-line-accent" x1="130" y1="44" x2="143" y2="44" marker-end="url(#metric-trees-arrow)"/>
+              <rect class="d-box" x="145" y="20" width="120" height="48" rx="8"/>
+              <text class="d-title" x="205" y="40" text-anchor="middle">2 In or out?</text>
+              <text class="d-label" x="205" y="57" text-anchor="middle">our change or theirs</text>
+              <line class="d-line-accent" x1="265" y1="44" x2="278" y2="44" marker-end="url(#metric-trees-arrow)"/>
+              <rect class="d-box" x="280" y="20" width="120" height="48" rx="8"/>
+              <text class="d-title" x="340" y="40" text-anchor="middle">3 Decompose</text>
+              <text class="d-label" x="340" y="57" text-anchor="middle">walk the tree</text>
+              <line class="d-line-accent" x1="400" y1="44" x2="413" y2="44" marker-end="url(#metric-trees-arrow)"/>
+              <rect class="d-box" x="415" y="20" width="120" height="48" rx="8"/>
+              <text class="d-title" x="475" y="40" text-anchor="middle">4 Segment</text>
+              <text class="d-label" x="475" y="57" text-anchor="middle">where in the branch</text>
+              <line class="d-line-accent" x1="535" y1="44" x2="548" y2="44" marker-end="url(#metric-trees-arrow)"/>
+              <rect class="d-good" x="550" y="20" width="120" height="48" rx="8"/>
+              <text class="d-title" x="610" y="40" text-anchor="middle">5 Size, confirm</text>
+              <text class="d-label" x="610" y="57" text-anchor="middle">explains how much?</text>
+              <text class="d-label" x="16" y="94">pipeline late?</text>
+              <text class="d-label" x="16" y="110">tracking changed?</text>
+              <text class="d-label" x="16" y="126">definition edited?</text>
+              <text class="d-label" x="151" y="94">release, price,</text>
+              <text class="d-label" x="151" y="110">campaign ended?</text>
+              <text class="d-label" x="151" y="126">holiday, competitor?</text>
+              <text class="d-label" x="286" y="94">orders or AOV?</text>
+              <text class="d-label" x="286" y="110">sessions or</text>
+              <text class="d-label" x="286" y="126">conversion?</text>
+              <text class="d-label" x="421" y="94">platform, channel,</text>
+              <text class="d-label" x="421" y="110">country, new vs</text>
+              <text class="d-label" x="421" y="126">returning</text>
+              <text class="d-label" x="556" y="94">share of the drop,</text>
+              <text class="d-label" x="556" y="110">timing matches,</text>
+              <text class="d-label" x="556" y="126">a fix reverses it</text>
+              <text class="d-label" x="10" y="160">Step 1 catches a surprising share of "drops": a late load or a renamed event looks exactly like a business problem.</text>
+            </svg>
+          </div>
+          <figcaption>Work left to right and stop as soon as one step explains the change. The tree powers steps 3 and 4; steps 1 and 2 keep you from analysing a data bug.</figcaption>
+        </figure>
+
+        <div class="widget" id="tree-demo">
+          <div class="widget-head">
+            <span class="widget-title">Metric tree drill-down: revenue fell 11.7% this week</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <button type="button" class="btn" id="tree-reset">Collapse tree</button>
+            <span class="muted">Click a node (or focus it and press Enter) to open its children.</span>
+          </div>
+          <svg id="tree-plot" viewBox="0 0 640 330" role="img" aria-label="An interactive metric tree. Each node shows last week, this week and the percentage change. Clicking a node expands its children."></svg>
+          <p class="readout" id="tree-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Which platform explains the change in orders between two weeks?</span>
+WITH w AS (
+  SELECT
+    platform,
+    SUM(orders) FILTER (WHERE week = DATE '2026-11-09') AS prev,
+    SUM(orders) FILTER (WHERE week = DATE '2026-11-16') AS curr
+  FROM weekly_orders
+  GROUP BY platform
+)
+SELECT
+  platform, prev, curr,
+  curr - prev                                                    AS change,
+  ROUND(100.0 * (curr - prev) / SUM(curr - prev) OVER (), 1)     AS pct_of_total_change
+FROM w
+ORDER BY change;</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Split metrics only by exact identities: × for drivers, Σ for segments.</li>
+            <li>Follow the branch that explains the most change; log shares for products, plain shares for sums.</li>
+            <li>Rule out data problems and known events before analysing behaviour.</li>
+            <li>A root cause is specific, sized and timed: what changed, where, how much, since when.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Chasing the segment with the largest percentage change when it is too small to matter.</li>
+            <li>Missing a mix shift: every segment is flat, but traffic moved toward a low-converting one, so the total fell.</li>
+            <li>Stopping at "conversion dropped", which restates the problem instead of explaining it.</li>
+            <li>Skipping the data check and spending a day explaining a broken pipeline.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="metric-trees-1"><span>Draw a three-level metric tree for revenue of a store or a subscription app</span></label></li>
+          <li><label><input type="checkbox" data-key="metric-trees-2"><span>Attribute a revenue change to orders and AOV with log shares</span></label></li>
+          <li><label><input type="checkbox" data-key="metric-trees-3"><span>Run the five-step routine on a described drop and name what you check first</span></label></li>
+          <li><label><input type="checkbox" data-key="metric-trees-4"><span>Explain a mix shift with a two-segment numeric example</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Root_cause_analysis">Wikipedia: Root cause analysis</a></li>
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Simpson%27s_paradox">Wikipedia: Simpson's paradox</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>A metric spec sheet</h4><p>Pick an app or store you know and write definitions for five metrics: unit, event, window, filters, owner and source. Turn each into a SQL query against an invented schema, and mark each one leading or lagging.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Funnel and cohort report</h4><p>Take any public e-commerce or app event log. Build a cohort-based funnel with a conversion window and a monthly retention triangle, then write one page on where users drop out and whether newer cohorts retain better.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Root-cause drill</h4><p>Generate a synthetic weekly orders table by channel and platform, plant a hidden drop (for example, one platform's conversion falls), and swap with a peer. Find theirs with a metric tree, size it with contribution shares, and write the incident summary.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Write a metric definition that two analysts would compute identically</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Build a funnel and a cohort retention table from raw events in SQL or pandas</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Compute CAC, LTV and payback, and say which version of each you used</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Propose a north star with inputs and guardrails, and name how it could be gamed</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Explain a sudden metric change with a tree, contribution shares and a data check</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 08. Shared helpers first, then one IIFE per widget. */
+var ATLAS08 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k) && attrs[k] != null) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor, style) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start", style: style || null }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function num(n, d) {
+    var s = (d ? n.toFixed(d) : String(Math.round(n)));
+    var p = s.split(".");
+    p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return p.join(".");
+  }
+  function val(id) { return parseFloat(document.getElementById(id).value); }
+  function out(id, s) { var o = document.getElementById(id); if (o) o.textContent = s; }
+  return { svg: svg, text: text, clear: clear, num: num, val: val, out: out };
+})();
+
+/* ---------- 08.1 metric definition checker ---------- */
+(function () {
+  if (!document.getElementById("md-demo")) return;
+  var H = ATLAS08, S = H.svg, T = H.text;
+  var plot = document.getElementById("md-plot"), readout = document.getElementById("md-readout");
+  var ids = ["md-event", "md-window", "md-split", "md-distinct", "md-test"];
+  var EVENT = { login: "logged in", open: "opened the app", checkin: "completed a check-in", feel: "felt more motivated" };
+  var NAME = { login: "logged-in users", open: "app-opening users", checkin: "active subscribers", feel: "motivated users" };
+  var WIN = { recent: ["Recent", "recently"], all: ["All-time", "at any time since launch"], hour: ["Hourly", "in each clock hour (UTC)"], day: ["Daily", "on each calendar day (UTC)"], week: ["Weekly", "in each Mon–Sun week (UTC)"], month: ["Monthly", "in each calendar month (UTC)"] };
+  var SPLIT = { none: "", platform: ", split by platform", channel: ", split by sign-up channel" };
+
+  function wrap(s, n) {
+    var words = s.split(" "), lines = [], cur = "";
+    words.forEach(function (w) { if ((cur + " " + w).trim().length > n) { lines.push(cur.trim()); cur = w; } else cur += " " + w; });
+    if (cur.trim()) lines.push(cur.trim());
+    return lines;
+  }
+  function draw() {
+    var ev = document.getElementById("md-event").value, win = document.getElementById("md-window").value;
+    var split = document.getElementById("md-split").value;
+    var distinct = document.getElementById("md-distinct").checked, test = document.getElementById("md-test").checked;
+    var issues = [];
+    function add(s) { if (issues.indexOf(s) < 0) issues.push(s); }
+    var p = 0, m = 0, a = 0;
+    if (ev !== "feel") p++; else add("a feeling is not a logged action");
+    if (win !== "recent") p++; else add("'recently' is not a defined window");
+    if (distinct) p++; else add("counts events, not distinct users");
+    if (test) p++; else add("test and staff accounts are included");
+    if (ev !== "feel") m++; else add("feelings are not in the events table");
+    if (win !== "hour" && win !== "recent") m++; else if (win === "hour") add("events load nightly: no hourly data");
+    if (ev === "checkin") a++; else if (ev !== "feel") add(EVENT[ev] + " does not show value delivered");
+    if (win !== "all" && win !== "recent") a++; else if (win === "all") add("an all-time total can only go up");
+    if (split !== "none") a++; else add("no breakdown, so no clue where to act");
+
+    H.clear(plot);
+    S("rect", { x: 10, y: 8, width: 620, height: 98, rx: 10, "class": "d-box" }, plot);
+    T(plot, 26, 32, WIN[win][0] + " " + NAME[ev], "d-title");
+    var sentence = "Count of " + (distinct ? "distinct users" : "events from users") + " who " + EVENT[ev] + " " + WIN[win][1] +
+      (test ? ", excluding test and staff accounts" : "") + SPLIT[split] + ".";
+    wrap(sentence, 84).slice(0, 3).forEach(function (l, i) { T(plot, 26, 54 + i * 18, l, "d-mono"); });
+
+    var rows = [["Precise", p, 4], ["Measurable", m, 2], ["Actionable", a, 3]];
+    rows.forEach(function (r, i) {
+      var y = 128 + i * 38;
+      T(plot, 20, y + 12, r[0], "d-text");
+      S("rect", { x: 120, y: y, width: 200, height: 16, rx: 4, "class": "d-fill" }, plot);
+      var full = r[1] === r[2];
+      if (r[1] > 0) S("rect", { x: 120, y: y, width: 200 * r[1] / r[2], height: 16, rx: 4, "class": full ? "d-good" : "d-accent" }, plot);
+      T(plot, 330, y + 12, r[1] + " / " + r[2], "d-mono");
+    });
+    var ok = issues.length === 0;
+    T(plot, 380, 136, ok ? "No open issues" : "Open issues", "d-title");
+    if (ok) { T(plot, 380, 158, "Ready to publish with an owner", "d-label d-text-good"); T(plot, 380, 176, "and a source table.", "d-label d-text-good"); }
+    issues.slice(0, 5).forEach(function (s, i) { T(plot, 380, 158 + i * 18, "! " + s, "d-label d-text-signal"); });
+    if (issues.length > 5) T(plot, 380, 248, "+ " + (issues.length - 5) + " more", "d-label");
+    readout.textContent = "precise " + p + "/4 · measurable " + m + "/2 · actionable " + a + "/3 · " + (ok ? "ready to publish" : issues.length + " issue" + (issues.length > 1 ? "s" : "") + " open");
+  }
+  ids.forEach(function (id) { document.getElementById(id).addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 08.2 funnel builder ---------- */
+(function () {
+  if (!document.getElementById("funnel-demo")) return;
+  var H = ATLAS08, S = H.svg, T = H.text;
+  var plot = document.getElementById("fn-plot"), readout = document.getElementById("fn-readout");
+  var NAMES = ["Visitors", "Sign-ups", "Activated", "Trial", "Paid"];
+  var STEP = ["visit → sign-up", "sign-up → activated", "activated → trial", "trial → paid"];
+  function draw() {
+    var v = H.val("fn-visitors"), r = [H.val("fn-r1"), H.val("fn-r2"), H.val("fn-r3"), H.val("fn-r4")];
+    H.out("fn-visitors-out", H.num(v)); H.out("fn-r1-out", r[0].toFixed(1) + "%");
+    H.out("fn-r2-out", r[1] + "%"); H.out("fn-r3-out", r[2] + "%"); H.out("fn-r4-out", r[3] + "%");
+    var n = [v];
+    r.forEach(function (x) { n.push(n[n.length - 1] * x / 100); });
+    var weakest = 0; r.forEach(function (x, i) { if (x < r[weakest]) weakest = i; });
+    H.clear(plot);
+    var top = Math.log10(50000);
+    n.forEach(function (c, i) {
+      var w = Math.max(40, (Math.log10(Math.max(c, 1)) / top) * 380);
+      var y = 12 + i * 46;
+      S("rect", { x: 210 - w / 2, y: y, width: w, height: 30, rx: 5, "class": i === 4 ? "d-accent" : "d-box" }, plot);
+      T(plot, 210, y + 20, NAMES[i] + " · " + H.num(c), i === 4 ? "d-title" : "d-text", "middle");
+      if (i < 4) {
+        var hot = i === weakest;
+        T(plot, 420, y + 41, r[i].toFixed(i === 0 ? 1 : 0) + "% convert · " + H.num(c - n[i + 1]) + " drop", "d-mono" + (hot ? " d-text-signal" : ""));
+        if (hot) T(plot, 420, y + 56, "weakest step", "d-label d-text-signal");
+      }
+    });
+    S("line", { x1: 410, y1: 30, x2: 410, y2: 210, "class": "d-line" }, plot);
+    T(plot, 20, 245, "Bar widths on a log scale. Overall conversion " + (n[4] / v * 100).toFixed(2) + "% of visitors.", "d-label");
+    readout.textContent = "paid " + H.num(n[4]) + " · overall " + (n[4] / v * 100).toFixed(2) + "% · weakest step: " + STEP[weakest] + " (" + r[weakest].toFixed(weakest === 0 ? 1 : 0) + "%)";
+  }
+  ["fn-visitors", "fn-r1", "fn-r2", "fn-r3", "fn-r4"].forEach(function (id) { document.getElementById(id).addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---------- 08.3 cohort retention heatmap ---------- */
+(function () {
+  if (!document.getElementById("retention-demo")) return;
+  var H = ATLAS08, S = H.svg, T = H.text;
+  var plot = document.getElementById("ret-plot"), readout = document.getElementById("ret-readout");
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"];
+  function model(m1, keep, floor, trend, c, t) {
+    if (t === 0) return 100;
+    var f = Math.min(floor, m1);
+    var v = f + (m1 - f) * Math.pow(keep, t - 1) + trend * c;
+    return Math.max(0, Math.min(100, v));
+  }
+  function draw() {
+    var m1 = H.val("ret-m1"), keep = H.val("ret-keep") / 100, floor = H.val("ret-floor"), trend = H.val("ret-trend");
+    H.out("ret-m1-out", m1 + "%"); H.out("ret-keep-out", Math.round(keep * 100) + "%"); H.out("ret-floor-out", floor + "%");
+    H.out("ret-trend-out", (trend >= 0 ? "+" : "") + trend.toFixed(1) + " pts");
+    H.clear(plot);
+    var x0 = 56, y0 = 30, cw = 44, ch = 28;
+    for (var t = 0; t < 8; t++) T(plot, x0 + t * cw + cw / 2, y0 - 8, "M" + t, "d-label", "middle");
+    for (var c = 0; c < 8; c++) {
+      T(plot, x0 - 8, y0 + c * ch + 18, MONTHS[c], "d-text", "end");
+      for (t = 0; t < 8 - c; t++) {
+        var v = model(m1, keep, floor, trend, c, t);
+        S("rect", { x: x0 + t * cw, y: y0 + c * ch, width: cw - 2, height: ch - 2, rx: 3, "class": "d-dot", style: "fill-opacity:" + (0.06 + 0.6 * v / 100).toFixed(3) }, plot);
+        T(plot, x0 + t * cw + cw / 2 - 1, y0 + c * ch + 18, Math.round(v) + "", "d-mono", "middle");
+      }
+    }
+    T(plot, x0, y0 + 8 * ch + 22, "rows: cohorts by start month · columns: months since start", "d-label");
+    // curves
+    var cx0 = 478, cx1 = 628, cy0 = 30, cy1 = 230;
+    function X(t2) { return cx0 + (cx1 - cx0) * t2 / 7; }
+    function Y(v2) { return cy1 - (cy1 - cy0) * v2 / 100; }
+    S("line", { x1: cx0, y1: cy1, x2: cx1, y2: cy1, "class": "d-line" }, plot);
+    S("line", { x1: cx0, y1: cy0, x2: cx0, y2: cy1, "class": "d-line" }, plot);
+    T(plot, cx0 - 4, cy0 + 4, "100%", "d-label", "end");
+    T(plot, cx0 - 4, cy1 + 4, "0", "d-label", "end");
+    T(plot, cx0, cy1 + 16, "M0", "d-label");
+    T(plot, cx1, cy1 + 16, "M7", "d-label", "end");
+    var f = Math.min(floor, m1);
+    if (f > 0) { S("line", { x1: cx0, y1: Y(f), x2: cx1, y2: Y(f), "class": "d-line d-dash" }, plot); T(plot, cx1, Y(f) - 5, "floor " + Math.round(f) + "%", "d-label", "end"); }
+    var pts = [];
+    for (t = 0; t < 8; t++) pts.push(X(t).toFixed(1) + "," + Y(model(m1, keep, floor, trend, 0, t)).toFixed(1));
+    S("polyline", { points: pts.join(" "), "class": "d-line-accent" }, plot);
+    T(plot, cx0, cy1 + 34, "solid: Jan cohort", "d-label d-text-accent");
+    if (trend !== 0) {
+      var pts2 = [];
+      for (t = 0; t < 8; t++) pts2.push(X(t).toFixed(1) + "," + Y(model(m1, keep, floor, trend, 7, t)).toFixed(1));
+      S("polyline", { points: pts2.join(" "), "class": "d-line-signal d-dash" }, plot);
+      T(plot, cx0, cy1 + 50, "dashed: Aug, if trend holds", "d-label d-text-signal");
+    }
+    var M = function (t3) { return Math.round(model(m1, keep, floor, trend, 0, t3)); };
+    var shape = f >= 5 ? "curve flattens near " + Math.round(f) + "%" : "curve decays toward 0";
+    var extra = trend !== 0 ? " · Jul cohort M1 " + Math.round(model(m1, keep, floor, trend, 6, 1)) + "%" : "";
+    readout.textContent = "Jan cohort: M1 " + M(1) + "% · M3 " + M(3) + "% · M6 " + M(6) + "% · " + shape + extra;
+  }
+  ["ret-m1", "ret-keep", "ret-floor", "ret-trend"].forEach(function (id) { document.getElementById(id).addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---------- 08.4 CAC / LTV / payback ---------- */
+(function () {
+  if (!document.getElementById("ue-demo")) return;
+  var H = ATLAS08, S = H.svg, T = H.text;
+  var plot = document.getElementById("ue-plot"), readout = document.getElementById("ue-readout");
+  function draw() {
+    var spend = H.val("ue-spend"), nw = H.val("ue-new"), arpu = H.val("ue-arpu"), gm = H.val("ue-gm") / 100, churn = H.val("ue-churn") / 100;
+    H.out("ue-spend-out", "$" + H.num(spend)); H.out("ue-new-out", H.num(nw)); H.out("ue-arpu-out", "$" + arpu);
+    H.out("ue-gm-out", Math.round(gm * 100) + "%"); H.out("ue-churn-out", (churn * 100).toFixed(1) + "%");
+    var cac = spend / nw, m = arpu * gm, ltv = m / churn, ratio = ltv / cac, pay = cac / m;
+    var payC = ltv > cac ? Math.log(1 - cac / ltv) / Math.log(1 - churn) : Infinity;
+    H.clear(plot);
+    var x0 = 60, x1 = 420, y0 = 24, y1 = 220, ymax = Math.max(cac, ltv) * 1.35;
+    function X(t) { return x0 + (x1 - x0) * t / 36; }
+    function Y(v) { return y1 - (y1 - y0) * v / ymax; }
+    S("line", { x1: x0, y1: y1, x2: x1 + 4, y2: y1, "class": "d-line" }, plot);
+    S("line", { x1: x0, y1: y0, x2: x0, y2: y1, "class": "d-line" }, plot);
+    T(plot, x0 - 4, y1 + 4, "$0", "d-label", "end");
+    T(plot, x0 - 4, y0 + 8, "$" + H.num(ymax), "d-label", "end");
+    T(plot, x0, y1 + 16, "month 0", "d-label");
+    T(plot, x1, y1 + 16, "36", "d-label", "end");
+    S("line", { x1: x0, y1: Y(cac), x2: x1, y2: Y(cac), "class": "d-line-signal" }, plot);
+    T(plot, x0 + 6, Y(cac) - 6, "CAC $" + H.num(cac), "d-label d-text-signal");
+    S("line", { x1: x0, y1: Y(ltv), x2: x1, y2: Y(ltv), "class": "d-line d-dash" }, plot);
+    T(plot, x1 - 4, Y(ltv) - 6, "LTV $" + H.num(ltv), "d-label", "end");
+    var tEnd = Math.min(36, ymax / m);
+    S("line", { x1: X(0), y1: Y(0), x2: X(tEnd), y2: Y(m * tEnd), "class": "d-line d-dash" }, plot);
+    var pts = [];
+    for (var t = 0; t <= 36; t++) pts.push(X(t).toFixed(1) + "," + Y(ltv * (1 - Math.pow(1 - churn, t))).toFixed(1));
+    S("polyline", { points: pts.join(" "), "class": "d-line-accent" }, plot);
+    if (pay <= 36) { S("circle", { cx: X(pay), cy: Y(cac), r: 5, "class": "d-dot-muted" }, plot); }
+    if (payC <= 36) { S("circle", { cx: X(payC), cy: Y(cac), r: 6, "class": "d-dot" }, plot); }
+    var px = 445;
+    T(plot, px, 40, "Per customer", "d-title");
+    T(plot, px, 64, "CAC      $" + H.num(cac), "d-mono");
+    T(plot, px, 84, "margin   $" + m.toFixed(2) + " / mo", "d-mono");
+    T(plot, px, 104, "LTV      $" + H.num(ltv), "d-mono");
+    T(plot, px, 124, "LTV:CAC  " + ratio.toFixed(2), "d-mono" + (ratio >= 3 ? " d-text-good" : ratio < 1 ? " d-text-signal" : ""));
+    T(plot, px, 152, "payback (no churn)", "d-label");
+    T(plot, px, 168, pay.toFixed(1) + " months", "d-mono");
+    T(plot, px, 192, "payback with churn", "d-label d-text-accent");
+    T(plot, px, 208, isFinite(payC) ? payC.toFixed(1) + " months" : "never: LTV ≤ CAC", "d-mono" + (isFinite(payC) ? "" : " d-text-signal"));
+    T(plot, x0, 252, "dashed line: $" + m.toFixed(2) + " every month · curve: expected margin after churn", "d-label");
+    readout.textContent = "CAC $" + H.num(cac) + " · margin $" + m.toFixed(2) + "/mo · LTV $" + H.num(ltv) + " · LTV:CAC " + ratio.toFixed(2) +
+      " · payback " + pay.toFixed(1) + " mo (" + (isFinite(payC) ? payC.toFixed(1) + " mo with churn" : "never with churn") + ")";
+  }
+  ["ue-spend", "ue-new", "ue-arpu", "ue-gm", "ue-churn"].forEach(function (id) { document.getElementById(id).addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---------- 08.5 north star vs guardrails ---------- */
+(function () {
+  if (!document.getElementById("ns-demo")) return;
+  var H = ATLAS08, S = H.svg, T = H.text;
+  var plot = document.getElementById("ns-plot"), readout = document.getElementById("ns-readout");
+  function draw() {
+    var push = H.val("ns-push"), disc = H.val("ns-disc"), steps = H.val("ns-steps");
+    H.out("ns-push-out", push); H.out("ns-disc-out", disc + "%"); H.out("ns-steps-out", steps);
+    var ns = 10000 + 4000 * (1 - Math.exp(-push / 4)) + 60 * disc + (6 - steps) * 500;
+    var unsub = 1 + 0.25 * push, gm = 70 - 0.6 * disc, tickets = 8 + 1.5 * Math.pow(Math.max(0, 6 - steps), 2);
+    var g = [
+      { name: "Unsubscribe rate", v: unsub, lo: 0, hi: 5, lim: 3, max: true, fmt: unsub.toFixed(2) + "%", limTxt: "≤ 3.0%" },
+      { name: "Gross margin", v: gm, lo: 40, hi: 75, lim: 60, max: false, fmt: gm.toFixed(1) + "%", limTxt: "≥ 60%" },
+      { name: "Tickets per 1k users", v: tickets, lo: 0, hi: 40, lim: 20, max: true, fmt: tickets.toFixed(1), limTxt: "≤ 20" }
+    ];
+    var broken = 0;
+    H.clear(plot);
+    T(plot, 20, 22, "North star: weekly subscribers with a check-in", "d-title");
+    var bx = 20, bw = 600;
+    S("rect", { x: bx, y: 32, width: bw, height: 26, rx: 5, "class": "d-fill" }, plot);
+    S("rect", { x: bx, y: 32, width: Math.max(4, bw * Math.min(ns, 16000) / 16000), height: 26, rx: 5, "class": "d-good" }, plot);
+    T(plot, bx + 10, 50, H.num(ns), "d-mono");
+    var gx = bx + bw * 15000 / 16000;
+    S("line", { x1: gx, y1: 28, x2: gx, y2: 62, "class": "d-line d-dash" }, plot);
+    T(plot, gx, 76, "15,000 goal", "d-label", "middle");
+    T(plot, bx, 76, "0", "d-label");
+    g.forEach(function (r, i) {
+      var y = 104 + i * 46, ok = r.max ? r.v <= r.lim + 1e-9 : r.v >= r.lim - 1e-9;
+      if (!ok) broken++;
+      T(plot, 20, y + 13, r.name, "d-text");
+      var tx = 200, tw = 300;
+      function X(v) { return tx + tw * (Math.max(r.lo, Math.min(r.hi, v)) - r.lo) / (r.hi - r.lo); }
+      S("rect", { x: tx, y: y, width: tw, height: 18, rx: 4, "class": "d-fill" }, plot);
+      S("rect", { x: tx, y: y, width: Math.max(3, X(r.v) - tx), height: 18, rx: 4, "class": ok ? "d-good" : "d-signal" }, plot);
+      S("line", { x1: X(r.lim), y1: y - 5, x2: X(r.lim), y2: y + 23, "class": "d-line-signal" }, plot);
+      T(plot, X(r.lim), y + 35, "limit " + r.limTxt, "d-label d-text-signal", "middle");
+      T(plot, 512, y + 13, r.fmt + (ok ? "  OK" : "  BROKEN"), "d-mono" + (ok ? " d-text-good" : " d-text-signal"));
+    });
+    readout.textContent = "north star " + H.num(ns) + " · unsubscribes " + unsub.toFixed(2) + "% · margin " + gm.toFixed(1) + "% · tickets " + tickets.toFixed(1) + " per 1k · " +
+      (broken ? broken + " guardrail" + (broken > 1 ? "s" : "") + " broken" : "all guardrails OK");
+  }
+  ["ns-push", "ns-disc", "ns-steps"].forEach(function (id) { document.getElementById(id).addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---------- 08.6 metric tree drill-down ---------- */
+(function () {
+  if (!document.getElementById("tree-demo")) return;
+  var H = ATLAS08, S = H.svg, T = H.text;
+  var w = document.getElementById("tree-demo");
+  var plot = document.getElementById("tree-plot"), readout = document.getElementById("tree-readout");
+  function money(v) { return v >= 1000 ? "$" + (v / 1000).toFixed(1) + "k" : "$" + v.toFixed(2); }
+  var N = {
+    rev: { label: "Revenue", a: 120000, b: 105980, f: money, kids: ["orders", "aov"], op: "×", note: "revenue fell 11.7%. Open the branch that explains most of it." },
+    orders: { label: "Orders", a: 2400, b: 2141, kids: ["sessions", "conv"], op: "×", note: "orders explain 92% of the revenue drop (log share). Keep going down." },
+    aov: { label: "AOV", a: 50, b: 49.5, f: function (v) { return "$" + v.toFixed(2); }, note: "AOV explains only 8% of the drop, within normal weekly noise. Look elsewhere." },
+    sessions: { label: "Sessions", a: 80000, b: 80800, kids: ["s-search", "s-org", "s-email", "s-social"], op: "Σ", note: "sessions went up 1%, so traffic did not cause the drop, even though one channel fell." },
+    conv: { label: "Conversion", a: 3.0, b: 2.65, f: function (v) { return v.toFixed(2) + "%"; }, kids: ["c-web", "c-ios", "c-and"], op: "split", note: "conversion explains 109% of the orders drop (sessions rose). Which platform?" },
+    "s-search": { label: "Paid search", a: 20000, b: 16000, note: "paid search fell 20%, but organic and email made up for it. A red herring." },
+    "s-org": { label: "Organic", a: 35000, b: 38500, note: "organic sessions rose 10%." },
+    "s-email": { label: "Email", a: 15000, b: 16300, note: "email sessions rose 9%." },
+    "s-social": { label: "Social", a: 10000, b: 10000, note: "social sessions are flat." },
+    "c-web": { label: "Web", a: 3.20, b: 3.17, f: function (v) { return v.toFixed(2) + "%"; }, note: "web conversion is flat (orders 1,280 → 1,281)." },
+    "c-ios": { label: "iOS", a: 3.00, b: 3.00, f: function (v) { return v.toFixed(2) + "%"; }, note: "iOS conversion is flat (orders 720 → 727)." },
+    "c-and": { label: "Android", a: 2.50, b: 0.82, f: function (v) { return v.toFixed(2) + "%"; }, note: "Android orders fell 400 → 133, which explains 103% of the orders drop. Root cause found: check what shipped to Android checkout this week." }
+  };
+  var PATH = { rev: ["rev"], orders: ["rev", "orders"], aov: ["rev", "aov"], sessions: ["rev", "orders", "sessions"], conv: ["rev", "orders", "conv"] };
+  Object.keys(N).forEach(function (k) { if (!PATH[k]) PATH[k] = (k.charAt(0) === "s" ? PATH.sessions : PATH.conv).concat([k]); });
+  var open = { rev: true }, sel = "rev";
+  function fmt(n, v) { return n.f ? n.f(v) : H.num(v); }
+  function collapse(id) { delete open[id]; (N[id].kids || []).forEach(collapse); }
+  function layout() {
+    var pos = {}, row = 0;
+    function walk(id, depth) {
+      var n = N[id], kids = open[id] ? (n.kids || []) : [];
+      if (!kids.length) { pos[id] = { d: depth, y: row++ }; return pos[id].y; }
+      var ys = kids.map(function (k) { return walk(k, depth + 1); });
+      pos[id] = { d: depth, y: (ys[0] + ys[ys.length - 1]) / 2 };
+      return pos[id].y;
+    }
+    walk("rev", 0);
+    return { pos: pos, rows: row };
+  }
+  function draw() {
+    H.clear(plot);
+    var L = layout(), pos = L.pos;
+    var COLX = [4, 166, 328, 490], NW = 128, NH = 34, RH = 40;
+    var top = Math.max(4, (330 - L.rows * RH) / 2);
+    function cy(id) { return top + pos[id].y * RH + RH / 2; }
+    Object.keys(pos).forEach(function (id) {
+      var n = N[id];
+      if (!open[id] || !n.kids) return;
+      var px = COLX[pos[id].d] + NW + 15, py = cy(id), mx = px + 8;
+      n.kids.forEach(function (k) {
+        S("path", { d: "M" + px + " " + py + " H" + mx + " V" + cy(k) + " H" + COLX[pos[k].d], "class": PATH[sel].indexOf(k) >= 0 ? "d-line-accent" : "d-line" }, plot);
+      });
+    });
+    Object.keys(pos).forEach(function (id) {
+      var n = N[id], x = COLX[pos[id].d], y = cy(id) - NH / 2;
+      var g = S("g", { tabindex: "0", role: "button", "aria-label": n.label + ", " + fmt(n, n.a) + " to " + fmt(n, n.b) + (n.kids ? (open[id] ? ", expanded" : ", collapsed") : ""), style: "cursor:pointer", "data-node": id }, plot);
+      var found = id === "c-and" && sel === "c-and";
+      S("rect", { x: x, y: y, width: NW, height: NH, rx: 6, "class": found ? "d-signal" : id === sel ? "d-accent" : "d-box" }, g);
+      var ch = (n.b - n.a) / n.a * 100;
+      T(g, x + 8, y + 14, n.label, "d-text", null, "font-size:12px");
+      T(g, x + NW - 6, y + 14, (ch > 0 ? "+" : ch < 0 ? "−" : "±") + Math.abs(ch).toFixed(1) + "%", "d-mono" + (ch < -2 ? " d-text-signal" : ch > 2 ? " d-text-good" : ""), "end", "font-size:11px");
+      T(g, x + 8, y + 28, fmt(n, n.a) + " → " + fmt(n, n.b), "d-label", null, "font-size:10.5px");
+      if (n.kids) {
+        S("circle", { cx: x + NW + 8, cy: y + NH / 2, r: 7, "class": "d-box" }, g);
+        T(g, x + NW + 8, y + NH / 2 + 4, open[id] ? "−" : "+", "d-mono", "middle", "font-size:11px");
+      }
+    });
+    var path = PATH[sel].map(function (k) { return N[k].label; }).join(" › ");
+    var msg = N[sel].note;
+    readout.textContent = "Path: " + path + " · " + msg;
+    w.setAttribute("data-found", sel === "c-and" ? "1" : "0");
+  }
+  function pick(id) {
+    if (!N[id]) return;
+    if (N[id].kids) { if (open[id] && sel === id) collapse(id); else open[id] = true; }
+    sel = id;
+    draw();
+  }
+  plot.addEventListener("click", function (e) { var g = e.target.closest("[data-node]"); if (g) pick(g.getAttribute("data-node")); });
+  plot.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var g = e.target.closest && e.target.closest("[data-node]");
+    if (!g) return;
+    e.preventDefault();
+    var id = g.getAttribute("data-node");
+    pick(id);
+    var again = plot.querySelector('[data-node="' + id + '"]'); if (again) again.focus();
+  });
+  document.getElementById("tree-reset").addEventListener("click", function () { open = { rev: true }; sel = "rev"; draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

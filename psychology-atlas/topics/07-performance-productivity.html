@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Performance &amp; Productivity · Psychology Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="performance">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <circle cx="13" cy="13" r="8" fill="none" stroke="var(--accent-ink)" stroke-width="2"/>
+        <circle cx="13" cy="13" r="3.5" fill="var(--accent-ink)"/>
+      </svg>
+      Psychology Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Performance &amp; Productivity</h1>
+    <p class="lede">True productivity is not frantic busyness; it is the deliberate application of cognitive energy to what matters most. This area explores the psychology of workplace motivation, the neurobiology of stress (Yerkes-Dodson), entering deep Flow states, and preventing the creeping exhaustion of professional burnout.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Peak cognitive performance requires managing energy rather than time. The diagram below illustrates how workplace job design, optimal physiological arousal (eustress), uninterrupted flow channels, and deliberate psychological detachment create sustainable high performance.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 180" role="img" aria-label="Performance pipeline: Work Motivation to Yerkes-Dodson arousal to Flow Channel to Burnout Recovery.">
+              <rect class="d-accent" x="20" y="45" width="160" height="60" rx="8"/>
+              <text class="d-title" x="100" y="70" text-anchor="middle">Work Motivation</text>
+              <text class="d-label" x="100" y="88" text-anchor="middle">Job Characteristics</text>
+
+              <line class="d-line-accent" x1="180" y1="75" x2="210" y2="75"/>
+
+              <rect class="d-box" x="210" y="45" width="160" height="60" rx="8"/>
+              <text class="d-title" x="290" y="70" text-anchor="middle">Yerkes-Dodson Law</text>
+              <text class="d-label" x="290" y="88" text-anchor="middle">Optimal Eustress</text>
+
+              <line class="d-line-accent" x1="370" y1="75" x2="400" y2="75"/>
+
+              <rect class="d-box" x="400" y="45" width="160" height="60" rx="8"/>
+              <text class="d-title" x="480" y="70" text-anchor="middle">Flow Channel</text>
+              <text class="d-label" x="480" y="88" text-anchor="middle">Challenge = Skill</text>
+
+              <line class="d-line-accent" x1="560" y1="75" x2="590" y2="75"/>
+
+              <rect class="d-good" x="590" y="45" width="150" height="60" rx="8"/>
+              <text class="d-title" x="665" y="70" text-anchor="middle">Detachment &amp; Rest</text>
+              <text class="d-label" x="665" y="88" text-anchor="middle">Burnout Prevention</text>
+
+              <rect class="d-fill" x="20" y="125" width="720" height="45" rx="6"/>
+              <text class="d-label" x="380" y="152" text-anchor="middle">Csikszentmihalyi's Principle: When challenge matches capability with zero distractions, ego dissolves into effortless flow.</text>
+            </svg>
+          </div>
+          <figcaption>The sustainable performance framework: from motivational job design and optimal stress levels to deep flow immersion and deliberate restorative recovery.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="work-motivation">
+        <header class="topic-head">
+          <p class="eyebrow">07.1 · Meaning in the craft</p>
+          <h2>Motivation at work</h2>
+        </header>
+
+        <p class="lead">Why do employees show up with energy or slide into 'quiet quitting'? Job satisfaction and daily engagement are determined by how work is structured.</p>
+
+        <h3>Herzberg's Two-Factor Theory</h3>
+        <p>Frederick Herzberg proved that job satisfaction and dissatisfaction are not opposites; they are driven by two separate sets of factors:</p>
+        <ul>
+          <li><strong>Hygiene Factors:</strong> Base salary, company policies, physical working conditions, and job security. If inadequate, they cause intense dissatisfaction. However, making them perfect merely eliminates dissatisfaction—it does not create motivation.</li>
+          <li><strong>Motivators:</strong> Challenging work, recognition, responsibility, personal growth, and a sense of achievement. These factors actively ignite intrinsic drive.</li>
+        </ul>
+
+        <h3>The Job Characteristics Model (Hackman &amp; Oldham)</h3>
+        <p>High internal work motivation is catalyzed by five core design dimensions:</p>
+        <ol>
+          <li><strong>Skill Variety:</strong> Using a diverse range of capabilities rather than monotonous repetition.</li>
+          <li><strong>Task Identity:</strong> Completing a whole, identifiable piece of work from start to finish.</li>
+          <li><strong>Task Significance:</strong> Seeing how the work tangibly impacts the lives or well-being of other human beings.</li>
+          <li><strong>Autonomy:</strong> Substantial discretion and freedom in scheduling work and determining procedures.</li>
+          <li><strong>Feedback:</strong> Clear, direct, real-time knowledge of the actual results of performance.</li>
+        </ol>
+      </section>
+
+      <section class="topic" id="stress">
+        <header class="topic-head">
+          <p class="eyebrow">07.2 · Calibrating arousal</p>
+          <h2>Stress management</h2>
+        </header>
+
+        <p class="lead">Stress is not inherently toxic; our biological stress response evolved to sharpen alertness and mobilize energy. The problem arises when temporary activation becomes chronic distress.</p>
+
+        <h3>The Yerkes-Dodson Law</h3>
+        <p>The Yerkes-Dodson law dictates that performance on complex cognitive tasks follows an inverted-U relationship with physiological/mental arousal:</p>
+        <ul>
+          <li><strong>Under-Arousal (Boredom):</strong> Low energy, inattention, lack of urgency, sluggish reaction time.</li>
+          <li><strong>Optimal Arousal (Eustress):</strong> Alert focus, high working memory availability, peak cognitive agility.</li>
+          <li><strong>Over-Arousal (Distress &amp; Panic):</strong> Tunnel vision, impaired prefrontal cortex inhibition, cognitive freeze.</li>
+        </ul>
+
+        <div class="callout why">
+          <h4>Stress Mindset: Threat vs Challenge</h4>
+          <p>Stanford psychologist Alia Crum showed that interpreting stress as an energizing physiological resource (<em>"My body is preparing me to perform"</em>) lowers vascular resistance and improves executive problem-solving compared to viewing stress as harmful damage.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="flow">
+        <header class="topic-head">
+          <p class="eyebrow">07.3 · Deep immersion</p>
+          <h2>Flow &amp; peak performance</h2>
+        </header>
+
+        <p class="lead"><strong>Flow</strong> is the optimal state of consciousness where you feel your best and perform your best. Pioneered by Mihaly Csikszentmihalyi, it occurs when attention is completely absorbed in an activity.</p>
+
+        <h3>Triggers of the Flow State</h3>
+        <ul>
+          <li><strong>Challenge-Skill Balance:</strong> The challenge of the task must match your high level of skill. If the challenge is too high, anxiety takes over; if too low, boredom results.</li>
+          <li><strong>Clear, Immediate Goals:</strong> Knowing precisely what you are trying to accomplish in the next 15 minutes.</li>
+          <li><strong>Unambiguous Feedback:</strong> Real-time confirmation of whether your action succeeded (like a musician hearing notes or a programmer running code).</li>
+          <li><strong>Distraction-Free Environment:</strong> A single slack notification or email interruption breaks working memory, requiring over 20 minutes to re-enter deep immersion.</li>
+        </ul>
+
+        <div class="callout why">
+          <h4>Transient Hypofrontality</h4>
+          <p>During deep flow, neuroscientists observe a temporary downregulation of the prefrontal cortex's default mode network. The inner critic, self-doubt, and anxious timekeeping go quiet, freeing up massive computational bandwidth for real-time creativity.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="burnout">
+        <header class="topic-head">
+          <p class="eyebrow">07.4 · Sustaining the marathon</p>
+          <h2>Burnout prevention</h2>
+        </header>
+
+        <p class="lead">Burnout is an occupational phenomenon recognized by the World Health Organization. It is not ordinary tiredness that a weekend nap can fix; it is the systemic exhaustion of emotional and physical capacity.</p>
+
+        <h3>The Three Dimensions of Burnout (Christina Maslach)</h3>
+        <ol>
+          <li><strong>Exhaustion:</strong> Profound physical, mental, and emotional depletion.</li>
+          <li><strong>Cynicism &amp; Depersonalization:</strong> Detached, cynical, calloused attitudes toward work, clients, or colleagues.</li>
+          <li><strong>Inefficacy:</strong> A collapse in feelings of competence, achievement, and self-worth.</li>
+        </ol>
+
+        <div class="callout trap">
+          <h4>The Myth of Individual Resilience</h4>
+          <p>Burnout is rarely caused by individual weakness or lack of grit. Extensive research by Christina Maslach proves that burnout is driven by workplace design flaws: unsustainable workload, lack of control, insufficient reward, breakdown of community, absence of fairness, and values mismatch.</p>
+        </div>
+
+        <h3>Psychological Detachment</h3>
+        <p>To avoid burnout, workers must practice <strong>active psychological detachment</strong>: mentally disconnecting from work thoughts, notifications, and anxieties during leisure time. Switching off completely allows the autonomic nervous system to restore baseline neurochemistry.</p>
+      </section>
+
+      <div data-fill="pager"></div>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

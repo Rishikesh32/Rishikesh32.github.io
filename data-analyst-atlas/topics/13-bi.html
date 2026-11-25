@@ -1,0 +1,1634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BI &amp; dashboards · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="bi">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>BI &amp; dashboards</h1>
+    <p class="lede">A dashboard is a small product: it answers a few recurring questions for a specific audience, on top of a data model, a handful of calculations and a refresh schedule. This area covers how to design, model, calculate, speed up and launch dashboards in Power BI, Tableau or Looker so that people trust the numbers and come back every week.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every dashboard in this area is the same weekly sales dashboard for an online store, built from an <code>orders</code> table. The business questions decide the grain of the data model and the layout of the page. The model holds facts and dimensions, measures turn them into numbers, and filters let people slice those numbers. Refresh settings decide how fresh and how fast it all is, and usage tells you whether anyone cares. The six lessons follow that path, and the loop at the top is why a dashboard is never finished on launch day.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 240" role="img" aria-label="The BI path: warehouse tables feed a star-schema data model, measures compute numbers, the dashboard lays them out with filters, and people use it. Business questions set the model's grain and the page layout, and usage feeds back into the questions.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="300" y="20" width="170" height="48" rx="8"/>
+              <text class="d-title" x="385" y="41" text-anchor="middle">Business questions</text>
+              <text class="d-label" x="385" y="58" text-anchor="middle">13.1 · who decides what?</text>
+              <line class="d-line" x1="330" y1="68" x2="248" y2="117" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="262" y="88" text-anchor="end">sets the grain</text>
+              <line class="d-line" x1="440" y1="68" x2="522" y2="117" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="508" y="88">sets the layout</text>
+              <rect class="d-fill" x="15" y="120" width="120" height="60" rx="8"/>
+              <text class="d-title" x="75" y="146" text-anchor="middle">Warehouse</text>
+              <text class="d-label" x="75" y="164" text-anchor="middle">Area 14 tables</text>
+              <line class="d-line-accent" x1="135" y1="150" x2="168" y2="150" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="170" y="120" width="120" height="60" rx="8"/>
+              <text class="d-title" x="230" y="146" text-anchor="middle">Data model</text>
+              <text class="d-label" x="230" y="164" text-anchor="middle">13.2 · star schema</text>
+              <line class="d-line-accent" x1="290" y1="150" x2="323" y2="150" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="325" y="120" width="120" height="60" rx="8"/>
+              <text class="d-title" x="385" y="146" text-anchor="middle">Measures</text>
+              <text class="d-label" x="385" y="164" text-anchor="middle">13.3 · DAX, LOD</text>
+              <line class="d-line-accent" x1="445" y1="150" x2="478" y2="150" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-good" x="480" y="120" width="120" height="60" rx="8"/>
+              <text class="d-title" x="540" y="146" text-anchor="middle">Dashboard</text>
+              <text class="d-label" x="540" y="164" text-anchor="middle">13.1 + 13.4 filters</text>
+              <line class="d-line-accent" x1="600" y1="150" x2="633" y2="150" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="635" y="120" width="120" height="60" rx="8"/>
+              <text class="d-title" x="695" y="146" text-anchor="middle">People</text>
+              <text class="d-label" x="695" y="164" text-anchor="middle">13.6 · weekly users</text>
+              <path class="d-line-signal d-dash" d="M695 120 V44 H474" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="590" y="36" text-anchor="middle">usage shows what to fix</text>
+              <line class="d-grid" x1="15" y1="200" x2="445" y2="200"/>
+              <text class="d-label" x="230" y="220" text-anchor="middle">13.5 · import or DirectQuery, refresh schedule, load time</text>
+            </svg>
+          </div>
+          <figcaption>The BI path. Data flows left to right from warehouse to people. Questions shape the model and the page, refresh settings (13.5) govern the first three boxes, and usage loops back to the questions.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="dashboard-design">
+        <header class="topic-head">
+          <p class="eyebrow">13.1 · Questions first, then pixels</p>
+          <h2>Dashboard design</h2>
+        </header>
+
+        <p class="lead">A good dashboard answers three to five recurring questions for one audience, in the order they ask them. People read a screen from the top left, so the most important number goes there, the trend that explains it comes next, and the detail table goes last. Design is mostly deciding what to leave out.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Dashboards are often the most visible thing an analyst builds. A cluttered page with 20 charts gets opened once and then ignored, and the questions come back to your inbox as ad hoc requests. A focused page answers them before anyone asks.</p>
+        </div>
+
+        <h3>Start from the decision</h3>
+        <p>Before you open the BI tool, write down who will use the page, when, and what they will decide. "Sales leads, Monday morning, decide where to push this week" leads to three questions, and each question picks its own visual.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="An audience and decision on the left lead to three questions in the middle, and each question maps to one visual on the right: a KPI tile against target, a weekly trend line and a bar chart by region.">
+              <defs>
+                <marker id="dashboard-design-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="20" y="30" width="160" height="190" rx="10"/>
+              <text class="d-title" x="100" y="70" text-anchor="middle">Sales leads</text>
+              <text class="d-label" x="100" y="94" text-anchor="middle">Monday, 09:00</text>
+              <text class="d-label" x="100" y="130" text-anchor="middle">Decision:</text>
+              <text class="d-text" x="100" y="150" text-anchor="middle">where to push</text>
+              <text class="d-text" x="100" y="168" text-anchor="middle">this week</text>
+              <line class="d-line-accent" x1="180" y1="70" x2="228" y2="55" marker-end="url(#dashboard-design-arrow)"/>
+              <line class="d-line-accent" x1="180" y1="125" x2="228" y2="125" marker-end="url(#dashboard-design-arrow)"/>
+              <line class="d-line-accent" x1="180" y1="180" x2="228" y2="195" marker-end="url(#dashboard-design-arrow)"/>
+              <rect class="d-box" x="230" y="30" width="200" height="50" rx="8"/>
+              <text class="d-text" x="246" y="60">1. Are we on target?</text>
+              <rect class="d-box" x="230" y="100" width="200" height="50" rx="8"/>
+              <text class="d-text" x="246" y="130">2. Which way is it going?</text>
+              <rect class="d-box" x="230" y="170" width="200" height="50" rx="8"/>
+              <text class="d-text" x="246" y="200">3. Where is the gap?</text>
+              <line class="d-line" x1="430" y1="55" x2="478" y2="55"/>
+              <line class="d-line" x1="430" y1="125" x2="478" y2="125"/>
+              <line class="d-line" x1="430" y1="195" x2="478" y2="195"/>
+              <rect class="d-good" x="480" y="30" width="180" height="50" rx="8"/>
+              <text class="d-mono" x="494" y="52">Revenue $412k</text>
+              <text class="d-label d-text-good" x="494" y="70">+4% vs target</text>
+              <rect class="d-box" x="480" y="100" width="180" height="50" rx="8"/>
+              <path class="d-line-accent" d="M492 138 L516 132 L540 136 L564 124 L588 126 L612 116 L644 110"/>
+              <text class="d-label" x="648" y="140" text-anchor="end">12 weeks</text>
+              <rect class="d-box" x="480" y="170" width="180" height="50" rx="8"/>
+              <rect class="d-fill" x="494" y="178" width="120" height="8" rx="2"/>
+              <rect class="d-fill" x="494" y="191" width="96" height="8" rx="2"/>
+              <rect class="d-signal" x="494" y="204" width="44" height="8" rx="2"/>
+              <text class="d-label" x="546" y="212">West lags</text>
+              <text class="d-label" x="570" y="240" text-anchor="middle">one visual per question</text>
+            </svg>
+          </div>
+          <figcaption>From decision to tiles. Each question gets exactly one visual. A chart that answers no listed question is a candidate for deletion (the numbers are illustrative).</figcaption>
+        </figure>
+
+        <h3>Reading order and hierarchy</h3>
+        <p>Eye-tracking studies of screens show a "Z" or "F" scan: top left first, then across, then down. Put headline KPIs (key performance indicators) in a top row with their comparison (vs target, vs last year), then the trend, then breakdowns, and keep detail tables at the bottom or behind a drill-through.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 310" role="img" aria-label="Wireframe of a sales dashboard. A header with filters, a row of four KPI tiles, a large trend chart and a region bar chart below. Numbered circles and a dashed Z path show the reading order: KPIs, then trend, then breakdown, with the detail table below the fold.">
+              <rect class="d-box" x="20" y="14" width="600" height="262" rx="10"/>
+              <rect class="d-fill" x="32" y="24" width="576" height="26" rx="5"/>
+              <text class="d-label" x="44" y="41">Weekly sales · week 46</text>
+              <text class="d-label" x="596" y="41" text-anchor="end">Region ▾  Channel ▾</text>
+              <rect class="d-accent" x="32" y="60" width="135" height="58" rx="6"/>
+              <text class="d-label" x="44" y="80">Revenue</text><text class="d-title" x="44" y="104">$412k</text>
+              <rect class="d-accent" x="179" y="60" width="135" height="58" rx="6"/>
+              <text class="d-label" x="191" y="80">Orders</text><text class="d-title" x="191" y="104">5,180</text>
+              <rect class="d-accent" x="326" y="60" width="135" height="58" rx="6"/>
+              <text class="d-label" x="338" y="80">Avg order value</text><text class="d-title" x="338" y="104">$79.50</text>
+              <rect class="d-accent" x="473" y="60" width="135" height="58" rx="6"/>
+              <text class="d-label" x="485" y="80">Conversion</text><text class="d-title" x="485" y="104">2.9%</text>
+              <rect class="d-box" x="32" y="130" width="360" height="134" rx="6"/>
+              <text class="d-label" x="44" y="149">Revenue by week vs target</text>
+              <path class="d-line d-dash" d="M50 200 H378"/>
+              <path class="d-line-accent" d="M50 228 L90 218 L130 222 L170 206 L210 210 L250 196 L290 200 L330 188 L374 182"/>
+              <rect class="d-box" x="404" y="130" width="204" height="134" rx="6"/>
+              <text class="d-label" x="416" y="149">Revenue by region</text>
+              <rect class="d-fill" x="416" y="162" width="150" height="14" rx="3"/>
+              <rect class="d-fill" x="416" y="184" width="124" height="14" rx="3"/>
+              <rect class="d-fill" x="416" y="206" width="98" height="14" rx="3"/>
+              <rect class="d-signal" x="416" y="228" width="52" height="14" rx="3"/>
+              <path class="d-line-signal d-dash" d="M44 66 H600 L70 156 V250 H420"/>
+              <circle class="d-dot-signal" cx="44" cy="66" r="10"/><text class="d-label" x="44" y="70" text-anchor="middle" style="fill:var(--surface)">1</text>
+              <circle class="d-dot-signal" cx="70" cy="166" r="10"/><text class="d-label" x="70" y="170" text-anchor="middle" style="fill:var(--surface)">2</text>
+              <circle class="d-dot-signal" cx="430" cy="250" r="10"/><text class="d-label" x="430" y="254" text-anchor="middle" style="fill:var(--surface)">3</text>
+              <text class="d-label" x="320" y="296" text-anchor="middle">4. order detail table: below the fold, or a drill-through page</text>
+            </svg>
+          </div>
+          <figcaption>A typical sales layout and its reading path. The KPI row answers "how are we doing?", the trend answers "is it getting better?" and the breakdown answers "where?". Illustrative numbers.</figcaption>
+        </figure>
+
+        <div class="widget" id="dd-demo">
+          <div class="widget-head">
+            <span class="widget-title">Dashboard layout critic</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="dd-a">Move <select id="dd-a"></select></label>
+            <label for="dd-b">swap with <select id="dd-b"></select></label>
+            <button class="btn primary" type="button" id="dd-swap">Swap</button>
+            <button class="btn" type="button" id="dd-reset">Reset</button>
+          </div>
+          <svg id="dd-plot" viewBox="0 0 600 330" role="img" aria-label="Six dashboard tiles in a three by two grid, numbered in reading order, with a hierarchy score and a list of layout problems."></svg>
+          <p class="readout" id="dd-readout"></p>
+        </div>
+        <p>You can also click one tile and then another to swap them. The score counts how many pairs of tiles appear in the right order: KPIs before the trend, the trend before the breakdown, and the breakdown before the detail table. Slots read left to right, top row first.</p>
+
+        <h3>Pick the visual for the question</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Question</th><th>Good visual</th><th>Avoid</th></tr></thead>
+            <tbody>
+              <tr><td>Are we on target?</td><td>KPI tile with target and delta, or a bullet chart</td><td>Gauges and donuts that use a lot of space for one number</td></tr>
+              <tr><td>Which way is it going?</td><td>Line chart at the grain people manage (week, month)</td><td>Daily noise when decisions are weekly</td></tr>
+              <tr><td>Which category is biggest or lagging?</td><td>Sorted horizontal bar chart</td><td>Pie charts with more than three or four slices</td></tr>
+              <tr><td>How has the mix shifted?</td><td>100% stacked bars or small multiples</td><td>Several pies side by side</td></tr>
+              <tr><td>Which exact orders?</td><td>Table with conditional formatting, at the bottom or drill-through</td><td>A 500-row table at the top of the page</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Write the audience, the decision and three to five questions before you build anything.</li>
+            <li>One visual per question; delete charts that answer nothing on the list.</li>
+            <li>Top left holds the headline KPI with its comparison, then trend, then breakdown, then detail.</li>
+            <li>A number without context (target, last year, last week) can't tell anyone whether to act.</li>
+            <li>Use colour to flag the exception, not to decorate every bar.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Building one dashboard for every audience, so nobody finds their three numbers.</li>
+            <li>Putting a large detail table or a slicer wall in the most valuable top-left spot.</li>
+            <li>Showing KPIs without a comparison, or with a different date range from the charts below them.</li>
+            <li>Using a different colour for every category, so the one problem area doesn't stand out.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="dashboard-design-1"><span>Write the audience, decision and three questions for a dashboard you use</span></label></li>
+          <li><label><input type="checkbox" data-key="dashboard-design-2"><span>Sketch a layout that puts KPIs, trend, breakdown and detail in reading order</span></label></li>
+          <li><label><input type="checkbox" data-key="dashboard-design-3"><span>Pick the right visual for "on target?", "trend?", "where?" and "which records?"</span></label></li>
+          <li><label><input type="checkbox" data-key="dashboard-design-4"><span>Critique an existing dashboard and name two charts to remove</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Blog</span><a href="https://www.storytellingwithdata.com/">Storytelling with Data (Cole Nussbaumer Knaflic)</a></li>
+          <li><span class="kind">Docs</span><a href="https://help.tableau.com/">Tableau Help</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="bi-modeling">
+        <header class="topic-head">
+          <p class="eyebrow">13.2 · Star schemas</p>
+          <h2>Data models for BI</h2>
+        </header>
+
+        <p class="lead">BI tools work best on a <strong>star schema</strong>: one fact table of events (order lines) in the middle, and dimension tables (date, product, customer, store) around it that describe those events. Every relationship runs one-to-many from a dimension to the fact table, and filters flow the same way, from the dimension you slice by down to the facts you add up.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Most "the dashboard is wrong" bugs are model bugs: a duplicated key, a missing relationship or two tables at different grains. Measures stay short and fast on a clean star, and become fragile workarounds on a flat export.</p>
+        </div>
+
+        <h3>Facts and dimensions</h3>
+        <p>A <strong>fact table</strong> holds one row per event at a stated <strong>grain</strong> ("one row per order line") with keys and numbers you add up. A <strong>dimension table</strong> holds one row per thing (product, customer, day) with the text attributes you group and filter by. The key in each dimension must be unique.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 310" role="img" aria-label="A star schema. The fct_sales fact table sits in the centre with four keys and two numeric columns. Four dimension tables, dim_date, dim_product, dim_customer and dim_store, connect to it with one-to-many relationships, and arrows show filters flowing from each dimension into the fact table.">
+              <defs>
+                <marker id="bi-modeling-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="30" y="20" width="150" height="92" rx="8"/>
+              <text class="d-title" x="44" y="42">dim_date</text>
+              <text class="d-mono" x="44" y="64">date_key  PK</text>
+              <text class="d-label" x="44" y="82">date, week, month</text>
+              <text class="d-label" x="44" y="100">is_holiday</text>
+              <rect class="d-box" x="460" y="20" width="150" height="92" rx="8"/>
+              <text class="d-title" x="474" y="42">dim_product</text>
+              <text class="d-mono" x="474" y="64">product_key  PK</text>
+              <text class="d-label" x="474" y="82">name, category</text>
+              <text class="d-label" x="474" y="100">brand, list_price</text>
+              <rect class="d-box" x="30" y="200" width="150" height="92" rx="8"/>
+              <text class="d-title" x="44" y="222">dim_customer</text>
+              <text class="d-mono" x="44" y="244">customer_key  PK</text>
+              <text class="d-label" x="44" y="262">segment, city</text>
+              <text class="d-label" x="44" y="280">first_order_date</text>
+              <rect class="d-box" x="460" y="200" width="150" height="92" rx="8"/>
+              <text class="d-title" x="474" y="222">dim_store</text>
+              <text class="d-mono" x="474" y="244">store_key  PK</text>
+              <text class="d-label" x="474" y="262">channel, region</text>
+              <text class="d-label" x="474" y="280">country</text>
+              <line class="d-line-accent" x1="180" y1="80" x2="243" y2="115" marker-end="url(#bi-modeling-arrow)"/>
+              <line class="d-line-accent" x1="460" y1="80" x2="397" y2="115" marker-end="url(#bi-modeling-arrow)"/>
+              <line class="d-line-accent" x1="180" y1="230" x2="243" y2="195" marker-end="url(#bi-modeling-arrow)"/>
+              <line class="d-line-accent" x1="460" y1="230" x2="397" y2="195" marker-end="url(#bi-modeling-arrow)"/>
+              <text class="d-mono" x="190" y="76">1</text><text class="d-mono" x="232" y="102">*</text>
+              <text class="d-mono" x="444" y="76">1</text><text class="d-mono" x="402" y="102">*</text>
+              <text class="d-mono" x="190" y="246">1</text><text class="d-mono" x="232" y="220">*</text>
+              <text class="d-mono" x="444" y="246">1</text><text class="d-mono" x="402" y="220">*</text>
+              <rect class="d-accent" x="245" y="100" width="150" height="112" rx="8"/>
+              <text class="d-title" x="259" y="122">fct_sales</text>
+              <text class="d-label" x="259" y="138">1 row per order line</text>
+              <text class="d-mono" x="259" y="158">date_key, product_key</text>
+              <text class="d-mono" x="259" y="176">customer_key, store_key</text>
+              <text class="d-mono" x="259" y="198">quantity, net_amount</text>
+              <text class="d-label d-text-accent" x="320" y="250" text-anchor="middle">filters flow</text>
+              <text class="d-label d-text-accent" x="320" y="266" text-anchor="middle">dimension → fact</text>
+            </svg>
+          </div>
+          <figcaption>A star schema for the sales dashboard. Slicing by <code>dim_store[region]</code> keeps the fact rows whose <code>store_key</code> belongs to that region, and the measure adds up what is left.</figcaption>
+        </figure>
+
+        <h3>Relationships and filter direction</h3>
+        <p>In Power BI you draw relationships in the model view; in Tableau you relate logical tables; in Looker you declare joins in an Explore. In all three, the "one" side must have unique keys. If a dimension key repeats, the tool either refuses the relationship, treats it as many-to-many, or (in a SQL join) silently multiplies fact rows.</p>
+
+        <div class="widget" id="star-demo">
+          <div class="widget-head">
+            <span class="widget-title">Star-schema builder</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="star-slice">Slice revenue by <select id="star-slice"><option value="category" selected>dim_product[category]</option><option value="segment">dim_customer[segment]</option></select></label>
+            <label for="star-rel-prod"><input type="checkbox" id="star-rel-prod"> Relate dim_product</label>
+            <label for="star-rel-cust"><input type="checkbox" id="star-rel-cust" checked> Relate dim_customer</label>
+            <label for="star-dedupe"><input type="checkbox" id="star-dedupe"> Remove duplicate P3 row</label>
+          </div>
+          <svg id="star-plot" viewBox="0 0 600 300" role="img" aria-label="A fact table with two dimension tables and their relationships on the left, and the resulting revenue table with its total on the right."></svg>
+          <p class="readout" id="star-readout"></p>
+        </div>
+        <p>The fact table has 8 order lines worth 880 in total. <code>dim_product</code> was loaded twice for product P3, once with a stale category. Watch what an unrelated dimension does (in Power BI every row shows the grand total, because nothing filters the facts) and what a duplicated key does (rows add up to more than the total).</p>
+
+        <h3>Grain: one row per what?</h3>
+        <p>Trouble starts when you join two tables at different grains. Orders have one row per order; shipments have one row per parcel. Join them and an order sent in two parcels appears twice, so its revenue is counted twice. Keep each fact table at one grain and relate both to shared dimensions instead.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 230" role="img" aria-label="An orders table with one order of 100 dollars joined to a shipments table with two parcels for that order produces two rows of 100 dollars, so summing revenue gives 200 instead of 100.">
+              <defs>
+                <marker id="bi-modeling-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="100" y="30" text-anchor="middle">orders</text>
+              <rect class="d-fill" x="20" y="42" width="160" height="24" rx="4"/>
+              <text class="d-label" x="30" y="58">order_id</text><text class="d-label" x="170" y="58" text-anchor="end">amount</text>
+              <rect class="d-box" x="20" y="70" width="160" height="26" rx="4"/>
+              <text class="d-mono" x="30" y="88">1042</text><text class="d-mono" x="170" y="88" text-anchor="end">100</text>
+              <text class="d-label" x="100" y="120" text-anchor="middle">grain: 1 row per order</text>
+              <text class="d-title" x="320" y="30" text-anchor="middle">shipments</text>
+              <rect class="d-fill" x="240" y="42" width="160" height="24" rx="4"/>
+              <text class="d-label" x="250" y="58">order_id</text><text class="d-label" x="390" y="58" text-anchor="end">parcel</text>
+              <rect class="d-box" x="240" y="70" width="160" height="26" rx="4"/>
+              <text class="d-mono" x="250" y="88">1042</text><text class="d-mono" x="390" y="88" text-anchor="end">A</text>
+              <rect class="d-box" x="240" y="100" width="160" height="26" rx="4"/>
+              <text class="d-mono" x="250" y="118">1042</text><text class="d-mono" x="390" y="118" text-anchor="end">B</text>
+              <text class="d-label" x="320" y="146" text-anchor="middle">grain: 1 row per parcel</text>
+              <line class="d-line" x1="404" y1="98" x2="456" y2="98" marker-end="url(#bi-modeling-arrow2)"/>
+              <text class="d-label" x="430" y="88" text-anchor="middle">JOIN</text>
+              <text class="d-title" x="550" y="30" text-anchor="middle">joined</text>
+              <rect class="d-signal" x="460" y="70" width="180" height="26" rx="4"/>
+              <text class="d-mono" x="470" y="88">1042  A</text><text class="d-mono" x="630" y="88" text-anchor="end">100</text>
+              <rect class="d-signal" x="460" y="100" width="180" height="26" rx="4"/>
+              <text class="d-mono" x="470" y="118">1042  B</text><text class="d-mono" x="630" y="118" text-anchor="end">100</text>
+              <line class="d-line" x1="460" y1="140" x2="640" y2="140"/>
+              <text class="d-mono d-text-signal" x="630" y="160" text-anchor="end">SUM = 200</text>
+              <text class="d-label" x="330" y="200" text-anchor="middle">Fix: keep orders and shipments as separate facts, both related to dim_date and dim_customer.</text>
+            </svg>
+          </div>
+          <figcaption>A fan-out. The join copies the order onto every parcel row, so any sum over the joined table double counts. This is the most common reason a dashboard total disagrees with finance.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- 1. Check that a dimension key is unique before you relate it</span>
+SELECT product_key, COUNT(*) AS n
+FROM dim_product
+GROUP BY product_key
+HAVING COUNT(*) &gt; 1;          <span class="c">-- must return zero rows</span>
+
+<span class="c">-- 2. Check that the fact table really has the grain you claim</span>
+SELECT order_id, line_number, COUNT(*) AS n
+FROM fct_sales
+GROUP BY order_id, line_number
+HAVING COUNT(*) &gt; 1;
+
+<span class="c">-- 3. A star query: slice facts by dimension attributes</span>
+SELECT p.category, s.region, SUM(f.net_amount) AS revenue
+FROM fct_sales f
+JOIN dim_product p ON p.product_key = f.product_key
+JOIN dim_store   s ON s.store_key   = f.store_key
+GROUP BY p.category, s.region;</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Table</th><th>One row per</th><th>Columns</th><th>Size</th></tr></thead>
+            <tbody>
+              <tr><td>Fact</td><td>Event at a fixed grain (order line, page view)</td><td>Foreign keys, numeric measures</td><td>Long: millions of rows</td></tr>
+              <tr><td>Dimension</td><td>Thing (product, customer, day)</td><td>Unique key, descriptive text</td><td>Short and wide</td></tr>
+              <tr><td>Date dimension</td><td>Calendar day</td><td>Week, month, fiscal period, holiday flags</td><td>About 365 rows per year</td></tr>
+              <tr><td>Flat export</td><td>Mixed: whatever the query produced</td><td>Everything</td><td>Avoid as a BI model</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A star schema puts one fact table at a stated grain in the middle and dimensions around it.</li>
+            <li>Relationships go one-to-many from dimension to fact, and filters flow the same way.</li>
+            <li>Dimension keys must be unique; a duplicate turns the relationship many-to-many and inflates totals.</li>
+            <li>Never join two facts at different grains into one table; relate both to shared dimensions.</li>
+            <li>Use a proper date table so time intelligence (last year, year to date) works.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Importing one wide flat export and building every measure around its duplicates.</li>
+            <li>Leaving a dimension unrelated, so a slicer on it shows the same total on every row.</li>
+            <li>Setting relationships to filter in both directions "to make it work", which creates ambiguous paths and slow models.</li>
+            <li>Joining orders to shipments or returns before loading, which double counts revenue.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="bi-modeling-1"><span>State the grain of a fact table in one sentence</span></label></li>
+          <li><label><input type="checkbox" data-key="bi-modeling-2"><span>Sketch a star schema for an online store with four dimensions</span></label></li>
+          <li><label><input type="checkbox" data-key="bi-modeling-3"><span>Write SQL that proves a dimension key is unique</span></label></li>
+          <li><label><input type="checkbox" data-key="bi-modeling-4"><span>Explain why a join across two grains double counts, and how to fix it</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://learn.microsoft.com/en-us/power-bi/guidance/star-schema">Power BI guidance: Understand star schema</a></li>
+          <li><span class="kind">Book</span><span>The Data Warehouse Toolkit (Kimball and Ross)</span></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="calculations">
+        <header class="topic-head">
+          <p class="eyebrow">13.3 · Filter context</p>
+          <h2>Measures &amp; calculations</h2>
+        </header>
+
+        <p class="lead">A <strong>calculated column</strong> is computed once per row when the data refreshes and is stored like any other column. A <strong>measure</strong> is computed at query time, separately for every cell of every visual, using only the rows that cell's filters leave. Most BI logic belongs in measures, because the same formula then gives the right answer for a region, a week or the grand total.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Ratios such as margin, conversion and average order value are where dashboards go quietly wrong. If you average a per-row ratio instead of dividing two sums, the total row is wrong and nobody notices until finance does.</p>
+        </div>
+
+        <h3>Filter context</h3>
+        <p>Every cell in a visual has a <strong>filter context</strong>: the combination of row and column headers, slicers and page filters that applies to it. The engine keeps the fact rows that match, then evaluates the measure on those rows. The total row has fewer filters, so it sees more rows.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="A matrix visual with regions as rows and channels as columns. The cell for West and Web is highlighted. Its filters keep two of eight fact rows, and SUM of amount over those rows gives 300.">
+              <defs>
+                <marker id="calculations-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="30">Matrix visual</text>
+              <rect class="d-fill" x="20" y="44" width="200" height="26" rx="4"/>
+              <text class="d-label" x="80" y="61" text-anchor="middle">Web</text><text class="d-label" x="160" y="61" text-anchor="middle">Store</text>
+              <text class="d-label" x="16" y="92" text-anchor="end">North</text>
+              <rect class="d-box" x="40" y="76" width="80" height="26" rx="3"/><rect class="d-box" x="120" y="76" width="80" height="26" rx="3"/>
+              <text class="d-mono" x="80" y="94" text-anchor="middle">300</text><text class="d-mono" x="160" y="94" text-anchor="middle">400</text>
+              <text class="d-label" x="16" y="122" text-anchor="end">West</text>
+              <rect class="d-accent" x="40" y="106" width="80" height="26" rx="3"/><rect class="d-box" x="120" y="106" width="80" height="26" rx="3"/>
+              <text class="d-mono" x="80" y="124" text-anchor="middle">300</text><text class="d-mono" x="160" y="124" text-anchor="middle">300</text>
+              <text class="d-label" x="16" y="152" text-anchor="end">South</text>
+              <rect class="d-box" x="40" y="136" width="80" height="26" rx="3"/><rect class="d-box" x="120" y="136" width="80" height="26" rx="3"/>
+              <text class="d-mono" x="80" y="154" text-anchor="middle">150</text><text class="d-mono" x="160" y="154" text-anchor="middle">50</text>
+              <text class="d-label d-text-accent" x="80" y="186" text-anchor="middle">Region = West</text>
+              <text class="d-label d-text-accent" x="80" y="202" text-anchor="middle">Channel = Web</text>
+              <line class="d-line-accent" x1="210" y1="119" x2="268" y2="119" marker-end="url(#calculations-arrow)"/>
+              <text class="d-label" x="239" y="110" text-anchor="middle">filter</text>
+              <text class="d-title" x="272" y="30">Sales (8 rows)</text>
+              <g xml:space="preserve">
+                <rect class="d-box" x="272" y="44" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="58">North  Web    200</text>
+                <rect class="d-box" x="272" y="66" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="80">North  Store  400</text>
+                <rect class="d-accent" x="272" y="88" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="102">West   Web    100</text>
+                <rect class="d-box" x="272" y="110" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="124">West   Store  300</text>
+                <rect class="d-box" x="272" y="132" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="146">South  Web    150</text>
+                <rect class="d-box" x="272" y="154" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="168">South  Store   50</text>
+                <rect class="d-box" x="272" y="176" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="190">North  Web    100</text>
+                <rect class="d-accent" x="272" y="198" width="200" height="20" rx="3"/><text class="d-mono" x="280" y="212">West   Web    200</text>
+              </g>
+              <line class="d-line-accent" x1="472" y1="160" x2="530" y2="130" marker-end="url(#calculations-arrow)"/>
+              <rect class="d-good" x="532" y="96" width="132" height="62" rx="8"/>
+              <text class="d-mono" x="598" y="120" text-anchor="middle">SUM(Amount)</text>
+              <text class="d-title" x="598" y="144" text-anchor="middle">= 300</text>
+              <text class="d-label" x="598" y="186" text-anchor="middle">same formula,</text>
+              <text class="d-label" x="598" y="202" text-anchor="middle">different rows per cell</text>
+            </svg>
+          </div>
+          <figcaption>One measure, many contexts. The West / Web cell keeps 2 of the 8 rows (100 + 200). The same <code>SUM</code> in the North / Store cell sees a different single row.</figcaption>
+        </figure>
+
+        <h3>Ratio of sums, not average of ratios</h3>
+        <p>Margin for a group is total profit divided by total revenue. If you store a per-order margin column and average it, a $10 order counts as much as a $1,000 order. The two answers can differ a lot.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Two orders: order A with 1000 dollars revenue and 100 dollars profit has a 10 percent margin; order B with 10 dollars revenue and 5 dollars profit has a 50 percent margin. Averaging the two margins gives 30 percent, while dividing total profit by total revenue gives 10.4 percent.">
+              <text class="d-mono" x="20" y="34" xml:space="preserve">Order A  $1,000 revenue  $100 profit  → 10%</text>
+              <text class="d-mono" x="20" y="58" xml:space="preserve">Order B  $10 revenue     $5 profit    → 50%</text>
+              <line class="d-grid" x1="20" y1="76" x2="620" y2="76"/>
+              <text class="d-label" x="20" y="110">AVERAGE(margin column)</text>
+              <rect class="d-signal" x="200" y="94" width="300" height="24" rx="4"/>
+              <text class="d-mono d-text-signal" x="510" y="111">30.0%</text>
+              <text class="d-label" x="20" y="156">SUM(profit) / SUM(revenue)</text>
+              <rect class="d-good" x="200" y="140" width="104" height="24" rx="4"/>
+              <text class="d-mono d-text-good" x="314" y="157">10.4%  = 105 / 1,010</text>
+              <text class="d-label" x="320" y="200" text-anchor="middle">The tiny order drags the average of ratios up; the ratio of sums weights by revenue.</text>
+            </svg>
+          </div>
+          <figcaption>Average of ratios versus ratio of sums. Use the second for margin, conversion rate and average order value at any level of a dashboard.</figcaption>
+        </figure>
+
+        <div class="widget" id="calc-demo">
+          <div class="widget-head">
+            <span class="widget-title">Measure vs calculated column, evaluated</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="calc-f">Formula <select id="calc-f">
+              <option value="rev" selected>Revenue = SUM(Amount)</option>
+              <option value="avgcol">Avg margin = AVERAGE(MarginPct column)</option>
+              <option value="margin">Margin % = DIVIDE(SUM(Profit), SUM(Amount))</option>
+              <option value="pct">% of all regions = DIVIDE([Revenue], CALCULATE([Revenue], ALL(Region)))</option>
+            </select></label>
+            <label for="calc-g">Rows <select id="calc-g"><option value="region" selected>Region</option><option value="channel">Channel</option></select></label>
+            <label for="calc-s">Slicer: channel <select id="calc-s"><option value="All" selected>All</option><option value="Web">Web</option><option value="Store">Store</option></select></label>
+          </div>
+          <svg id="calc-plot" viewBox="0 0 600 300" role="img" aria-label="The eight-row Sales table with rows kept by the slicer highlighted, and the visual's result table with a total row for the chosen formula."></svg>
+          <p class="readout" id="calc-readout"></p>
+        </div>
+        <p>The left table is the model: 8 sales rows and a stored <code>MarginPct</code> column (profit / amount per row). The right table is the visual. Compare the total row of the two margin formulas, and work out why <code>ALL(Region)</code> behaves differently when the rows are channels.</p>
+
+        <h3>The same idea in three tools</h3>
+        <pre class="code" data-lang="dax"><code><span class="c">-- Power BI (DAX) measures</span>
+Revenue      = SUM ( Sales[NetAmount] )
+Orders       = DISTINCTCOUNT ( Sales[OrderID] )
+AOV          = DIVIDE ( [Revenue], [Orders] )        <span class="c">-- ratio of sums, safe divide</span>
+Margin %     = DIVIDE ( SUM ( Sales[Profit] ), [Revenue] )
+Revenue LY   = CALCULATE ( [Revenue], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+YoY %        = DIVIDE ( [Revenue] - [Revenue LY], [Revenue LY] )
+<span class="c">-- CALCULATE changes the filter context; ALL removes the Region filter</span>
+% of regions = DIVIDE ( [Revenue], CALCULATE ( [Revenue], ALL ( Sales[Region] ) ) )</code></pre>
+
+        <pre class="code" data-lang="tableau"><code><span class="c">// Tableau calculated fields</span>
+// Margin % (aggregate calculation: evaluated per mark, like a measure)
+SUM([Profit]) / SUM([Sales])
+
+// First order date per customer, whatever is in the view (LOD expression)
+{ FIXED [Customer ID] : MIN([Order Date]) }
+
+// New vs returning revenue: compare each order to the customer's first order
+IF [Order Date] = { FIXED [Customer ID] : MIN([Order Date]) }
+THEN "New" ELSE "Returning" END</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th></th><th>Calculated column</th><th>Measure</th></tr></thead>
+            <tbody>
+              <tr><td>Computed</td><td>At refresh, once per row</td><td>At query time, once per visual cell</td></tr>
+              <tr><td>Stored</td><td>Yes: uses memory and file size</td><td>No: just a formula</td></tr>
+              <tr><td>Sees</td><td>The current row</td><td>All rows left by the filter context</td></tr>
+              <tr><td>Use for</td><td>Attributes to slice by (price band, age group)</td><td>Totals, ratios, time comparisons</td></tr>
+              <tr><td>Tableau / Looker</td><td>Row-level calculated field / dimension</td><td>Aggregate calculation / <code>measure:</code> in LookML</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A measure is evaluated per cell in that cell's filter context; a calculated column is stored per row.</li>
+            <li>Build ratios as one sum divided by another so every level, including totals, is correct.</li>
+            <li><code>CALCULATE</code> modifies filter context; <code>ALL</code> removes a filter for a denominator.</li>
+            <li>Tableau's <code>FIXED</code> LOD computes at a level you choose, independent of the view.</li>
+            <li>Define each business metric once, in the model, and reuse it everywhere.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Averaging a per-row ratio column instead of dividing two sums.</li>
+            <li>Using calculated columns for numbers that should be measures, which bloats the model and breaks totals.</li>
+            <li>Using <code>/</code> instead of <code>DIVIDE</code> and showing errors or infinity when the denominator is zero.</li>
+            <li>Copying the same "Revenue" logic into five reports with small differences in refund handling.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="calculations-1"><span>Explain filter context using one cell of a matrix visual</span></label></li>
+          <li><label><input type="checkbox" data-key="calculations-2"><span>Show with numbers why an average of ratios differs from a ratio of sums</span></label></li>
+          <li><label><input type="checkbox" data-key="calculations-3"><span>Write DAX measures for revenue, AOV, last year and share of total</span></label></li>
+          <li><label><input type="checkbox" data-key="calculations-4"><span>Decide whether a new calculation should be a column or a measure</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Reference</span><a href="https://dax.guide/">DAX Guide (every DAX function with examples)</a></li>
+          <li><span class="kind">Articles</span><a href="https://www.sqlbi.com/">SQLBI: articles on DAX and modeling</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="interactivity">
+        <header class="topic-head">
+          <p class="eyebrow">13.4 · Slicing without breaking</p>
+          <h2>Filters &amp; interactivity</h2>
+        </header>
+
+        <p class="lead">Interactivity lets one page serve many questions: pick a region, click a bar, drill from month to week. Every interaction is just a filter added to some visuals' filter context. Your job is to decide which visuals each filter should reach, and to make the current filters obvious on screen.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>A slicer that silently filters the company target tile, or a hidden page filter that excludes refunds, produces numbers that look right and aren't. Clear filter scopes are what make a self-service dashboard trustworthy.</p>
+        </div>
+
+        <h3>Where a filter lives</h3>
+        <p>Filters nest. A <strong>report filter</strong> applies to every page, a <strong>page filter</strong> to every visual on one page, and a <strong>visual filter</strong> to one chart. A <strong>slicer</strong> is a page filter that viewers control. Tableau has the same layers as data source, context and dimension filters; Looker uses dashboard filters wired to each tile.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 260" role="img" aria-label="Nested filter scopes. A report filter for year 2026 contains a page filter for the Web channel. Inside the page, a region slicer feeds two visuals: a weekly revenue chart and a top products chart that also has its own visual filter for the top 5 products.">
+              <defs>
+                <marker id="interactivity-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="16" width="600" height="236" rx="12"/>
+              <text class="d-label" x="34" y="36">Report filter: Year = 2026 (every page)</text>
+              <rect class="d-box" x="40" y="48" width="560" height="190" rx="10"/>
+              <text class="d-label" x="54" y="68">Page filter: Channel = Web (this page)</text>
+              <rect class="d-accent" x="60" y="86" width="120" height="136" rx="8"/>
+              <text class="d-title" x="120" y="108" text-anchor="middle">Slicer</text>
+              <text class="d-label" x="120" y="126" text-anchor="middle">Region</text>
+              <text class="d-mono" x="76" y="152">☐ North</text>
+              <text class="d-mono" x="76" y="172">☑ South</text>
+              <text class="d-mono" x="76" y="192">☐ West</text>
+              <line class="d-line-accent" x1="180" y1="130" x2="226" y2="130" marker-end="url(#interactivity-arrow)"/>
+              <path class="d-line-accent" d="M180 180 H210 V200 H408" marker-end="url(#interactivity-arrow)"/>
+              <rect class="d-box" x="228" y="86" width="168" height="96" rx="8"/>
+              <text class="d-title" x="240" y="106">Revenue by week</text>
+              <path class="d-line-accent" d="M244 164 L272 156 L300 160 L328 146 L356 150 L384 138"/>
+              <rect class="d-box" x="410" y="86" width="176" height="136" rx="8"/>
+              <text class="d-title" x="422" y="106">Top products</text>
+              <rect class="d-fill" x="422" y="118" width="120" height="10" rx="2"/>
+              <rect class="d-fill" x="422" y="134" width="96" height="10" rx="2"/>
+              <rect class="d-fill" x="422" y="150" width="70" height="10" rx="2"/>
+              <rect class="d-signal" x="420" y="174" width="156" height="38" rx="6"/>
+              <text class="d-label" x="430" y="190">Visual filter:</text>
+              <text class="d-label" x="430" y="205">Top 5 by revenue</text>
+            </svg>
+          </div>
+          <figcaption>Filter scopes for the weekly sales page. A number in "Top products" is filtered by year, channel, region and its own Top 5 rule. Show the active filters in the page header so viewers don't have to guess.</figcaption>
+        </figure>
+
+        <h3>Cross-filter or cross-highlight</h3>
+        <p>Clicking a mark in one visual filters the others on the page. Power BI offers two styles per pair of visuals: <strong>filter</strong> (other charts redraw with only the selected data) and <strong>highlight</strong> (other charts keep their full bars and shade the selected part). You can also switch an interaction off for a visual that must ignore it.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="Two panels. In both, the West bar of a region chart is clicked. In the cross-filter panel, the product chart redraws with only West revenue: 10, 30 and 40. In the cross-highlight panel, the product chart keeps the full bars of 80, 110 and 110 and shades the West share inside each.">
+              <text class="d-title" x="30" y="28">Cross-filter</text>
+              <text class="d-title" x="360" y="28">Cross-highlight</text>
+              <text class="d-label" x="30" y="58">North</text><rect class="d-fill" x="90" y="47" width="96" height="16" rx="3"/>
+              <text class="d-label" x="30" y="80">South</text><rect class="d-fill" x="90" y="69" width="80" height="16" rx="3"/>
+              <text class="d-label" x="30" y="102">West</text><rect class="d-accent" x="90" y="91" width="64" height="16" rx="3"/>
+              <text class="d-label d-text-accent" x="162" y="103">clicked</text>
+              <line class="d-grid" x1="30" y1="124" x2="320" y2="124"/>
+              <text class="d-label" x="30" y="158">Mugs</text><rect class="d-accent" x="90" y="146" width="15" height="16" rx="3"/><text class="d-mono" x="112" y="159">10</text>
+              <text class="d-label" x="30" y="184">Tees</text><rect class="d-accent" x="90" y="172" width="45" height="16" rx="3"/><text class="d-mono" x="142" y="185">30</text>
+              <text class="d-label" x="30" y="210">Posters</text><rect class="d-accent" x="90" y="198" width="60" height="16" rx="3"/><text class="d-mono" x="157" y="211">40</text>
+              <text class="d-label" x="30" y="240">axis rescales to West only</text>
+              <line class="d-grid" x1="340" y1="16" x2="340" y2="244"/>
+              <text class="d-label" x="360" y="58">North</text><rect class="d-fill" x="420" y="47" width="96" height="16" rx="3"/>
+              <text class="d-label" x="360" y="80">South</text><rect class="d-fill" x="420" y="69" width="80" height="16" rx="3"/>
+              <text class="d-label" x="360" y="102">West</text><rect class="d-accent" x="420" y="91" width="64" height="16" rx="3"/>
+              <text class="d-label d-text-accent" x="492" y="103">clicked</text>
+              <line class="d-grid" x1="360" y1="124" x2="660" y2="124"/>
+              <text class="d-label" x="360" y="158">Mugs</text><rect class="d-fill" x="420" y="146" width="120" height="16" rx="3"/><rect class="d-accent" x="420" y="146" width="15" height="16" rx="3"/><text class="d-mono" x="548" y="159">10 of 80</text>
+              <text class="d-label" x="360" y="184">Tees</text><rect class="d-fill" x="420" y="172" width="165" height="16" rx="3"/><rect class="d-accent" x="420" y="172" width="45" height="16" rx="3"/><text class="d-mono" x="593" y="185">30 of 110</text>
+              <text class="d-label" x="360" y="210">Posters</text><rect class="d-fill" x="420" y="198" width="165" height="16" rx="3"/><rect class="d-accent" x="420" y="198" width="60" height="16" rx="3"/><text class="d-mono" x="593" y="211">40 of 110</text>
+              <text class="d-label" x="360" y="240">full bars stay, selection shaded</text>
+            </svg>
+          </div>
+          <figcaption>Clicking West (revenue in $k, illustrative). Cross-filter answers "what does West sell?"; cross-highlight answers "how much of each product is West?".</figcaption>
+        </figure>
+
+        <div class="widget" id="filt-demo">
+          <div class="widget-head">
+            <span class="widget-title">Filter and slicer interaction graph</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="filt-region">Region slicer <select id="filt-region"><option value="All" selected>All</option><option value="North">North</option><option value="South">South</option><option value="West">West</option></select></label>
+            <label for="filt-product">Clicked bar <select id="filt-product"><option value="None" selected>None</option><option value="Mugs">Mugs</option><option value="Tees">Tees</option><option value="Posters">Posters</option></select></label>
+          </div>
+          <div class="widget-controls" aria-label="Edit interactions">
+            <label for="filt-r-kpi"><input type="checkbox" id="filt-r-kpi" checked> Region → KPI</label>
+            <label for="filt-r-bars"><input type="checkbox" id="filt-r-bars" checked> Region → bars</label>
+            <label for="filt-r-tgt"><input type="checkbox" id="filt-r-tgt" checked> Region → target</label>
+            <label for="filt-p-kpi"><input type="checkbox" id="filt-p-kpi" checked> Bar click → KPI</label>
+            <label for="filt-p-tgt"><input type="checkbox" id="filt-p-tgt" checked> Bar click → target</label>
+          </div>
+          <svg id="filt-plot" viewBox="0 0 600 300" role="img" aria-label="Left: a graph of which filter sources reach which visuals. Right: the KPI tile, the product bar chart and the company target tile with their current values."></svg>
+          <p class="readout" id="filt-readout"></p>
+        </div>
+        <p>By default every filter reaches every visual, which is also the default in most BI tools. You can click the product bars to cross-filter. The company target tile compares revenue with a company-wide target of $320k, so think about which filters should reach it.</p>
+
+        <h3>Drill-down, drill-through and clear state</h3>
+        <p><strong>Drill-down</strong> moves along a hierarchy inside one visual (year → month → week). <strong>Drill-through</strong> jumps to a detail page carrying the clicked value as a filter, which is where the order table belongs. Whatever you add, show the active filters in a title, and give people a reset button.</p>
+
+        <pre class="code" data-lang="dax"><code><span class="c">-- Dynamic title so viewers always see the active region</span>
+Page title =
+"Weekly sales · " &amp; SELECTEDVALUE ( Store[Region], "All regions" )
+
+<span class="c">-- A tile that should ignore the region slicer: remove that filter inside the measure</span>
+Company revenue = CALCULATE ( [Revenue], ALL ( Store[Region] ) )
+Company vs target = DIVIDE ( [Company revenue], [Company target] )</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tool</th><th>Scope</th><th>Use it for</th></tr></thead>
+            <tbody>
+              <tr><td>Report or page filter</td><td>All pages or one page, set by the author</td><td>Fixed rules: exclude test orders, current year</td></tr>
+              <tr><td>Slicer / dashboard filter</td><td>Visuals you wire it to, set by viewers</td><td>Region, channel, date range</td></tr>
+              <tr><td>Cross-filter / highlight</td><td>Other visuals on the page</td><td>Exploring "where does this come from?"</td></tr>
+              <tr><td>Drill-down</td><td>Inside one visual</td><td>Year → month → week</td></tr>
+              <tr><td>Drill-through</td><td>A detail page with the clicked value</td><td>Order-level tables, customer profiles</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Every interaction is a filter added to some visuals' filter context.</li>
+            <li>Filters nest: report, page, visual; slicers are page filters that viewers control.</li>
+            <li>Cross-filter redraws with only the selection; cross-highlight shades it inside the full total.</li>
+            <li>Turn interactions off, or remove filters in the measure, for tiles that must show company-wide numbers.</li>
+            <li>Always show the active filters, and keep detail tables on drill-through pages.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Leaving the default "everything filters everything", so a target or benchmark tile changes with the slicer.</li>
+            <li>Hiding important page filters that viewers can't see.</li>
+            <li>Adding ten slicers so the page becomes a query builder and nobody can reproduce a number.</li>
+            <li>Forgetting that a selection persists when the report is saved or shared.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="interactivity-1"><span>Name the filters acting on a given visual, from report level down</span></label></li>
+          <li><label><input type="checkbox" data-key="interactivity-2"><span>Explain when to use cross-filter versus cross-highlight</span></label></li>
+          <li><label><input type="checkbox" data-key="interactivity-3"><span>Make one tile ignore a slicer, both through interactions and through a measure</span></label></li>
+          <li><label><input type="checkbox" data-key="interactivity-4"><span>Add a drill-through page for order detail and a dynamic title</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://learn.microsoft.com/en-us/power-bi/">Power BI documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://cloud.google.com/looker/docs">Looker documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="bi-performance">
+        <header class="topic-head">
+          <p class="eyebrow">13.5 · Fast and fresh enough</p>
+          <h2>Performance &amp; refresh</h2>
+        </header>
+
+        <p class="lead">Every BI tool makes the same trade. You can copy the data into the tool's own compressed store and refresh it on a schedule (fast pages, data as old as the last refresh), or you can send live SQL to the warehouse for every visual (fresh data, slower pages, more warehouse cost). Power BI calls these <strong>Import</strong> and <strong>DirectQuery</strong>; Tableau calls them <strong>extract</strong> and <strong>live</strong>.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>People abandon a page that takes ten seconds to load, and they stop trusting one that shows Tuesday's numbers on Thursday. Picking the storage mode, the refresh schedule and the number of visuals is part of the analyst's job, not an afterthought for IT.</p>
+        </div>
+
+        <h3>Import versus DirectQuery</h3>
+        <p>In Import mode the refresh runs a few big queries, compresses the result column by column and keeps it in memory, so each visual answers in milliseconds. In DirectQuery mode nothing is stored; each visual on each page view becomes a SQL query, so speed depends on the warehouse and the number of visuals.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="Two lanes. Import: the warehouse is copied by a scheduled refresh into an in-memory model, and visuals read the model in milliseconds. DirectQuery: each visual sends its own SQL query to the warehouse on every page view and waits seconds for results.">
+              <defs>
+                <marker id="bi-performance-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="bi-performance-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="24">IMPORT / EXTRACT</text>
+              <rect class="d-fill" x="20" y="36" width="120" height="60" rx="8"/>
+              <text class="d-title" x="80" y="62" text-anchor="middle">Warehouse</text>
+              <text class="d-label" x="80" y="80" text-anchor="middle">200M rows</text>
+              <line class="d-line-accent" x1="140" y1="66" x2="258" y2="66" marker-end="url(#bi-performance-arrow)"/>
+              <text class="d-label" x="199" y="56" text-anchor="middle">refresh 06:00</text>
+              <rect class="d-accent" x="260" y="36" width="160" height="60" rx="8"/>
+              <text class="d-title" x="340" y="62" text-anchor="middle">In-memory model</text>
+              <text class="d-label" x="340" y="80" text-anchor="middle">compressed copy</text>
+              <line class="d-line-accent" x1="420" y1="66" x2="538" y2="66" marker-end="url(#bi-performance-arrow)"/>
+              <text class="d-label" x="479" y="56" text-anchor="middle">milliseconds</text>
+              <rect class="d-good" x="540" y="36" width="120" height="60" rx="8"/>
+              <text class="d-title" x="600" y="62" text-anchor="middle">12 visuals</text>
+              <text class="d-label" x="600" y="80" text-anchor="middle">page ≈ 1–2 s</text>
+              <line class="d-grid" x1="20" y1="122" x2="660" y2="122"/>
+              <text class="d-label" x="20" y="146">DIRECTQUERY / LIVE</text>
+              <rect class="d-fill" x="20" y="158" width="120" height="60" rx="8"/>
+              <text class="d-title" x="80" y="184" text-anchor="middle">Warehouse</text>
+              <text class="d-label" x="80" y="202" text-anchor="middle">always current</text>
+              <line class="d-line-signal" x1="538" y1="176" x2="142" y2="176" marker-end="url(#bi-performance-arrow-s)"/>
+              <text class="d-label" x="340" y="168" text-anchor="middle">12 SQL queries per page view</text>
+              <line class="d-line-accent" x1="140" y1="202" x2="538" y2="202" marker-end="url(#bi-performance-arrow)"/>
+              <text class="d-label" x="340" y="222" text-anchor="middle">results: seconds each, a few run in parallel</text>
+              <rect class="d-signal" x="540" y="158" width="120" height="60" rx="8"/>
+              <text class="d-title" x="600" y="184" text-anchor="middle">12 visuals</text>
+              <text class="d-label" x="600" y="202" text-anchor="middle">page ≈ 5–10 s</text>
+            </svg>
+          </div>
+          <figcaption>The two storage modes for the same page. Import pays once per refresh; DirectQuery pays on every page view. The timings are illustrative and depend on the warehouse and the model.</figcaption>
+        </figure>
+
+        <h3>How old can the data get?</h3>
+        <p>With Import, data age climbs until the next refresh, then drops. The worst moment is just before a refresh, so the schedule matters more than the count: two refreshes at 06:00 and 14:00 still leave 16 hours between them overnight. Schedule refreshes right after the upstream pipeline finishes, not at a round hour.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="Data age over one day with refreshes at 06:00 and 14:00. Age climbs to about 16.5 hours just before the 06:00 refresh, drops near zero, climbs to 8.5 hours before 14:00, drops again and climbs to 10.5 hours at midnight. A DirectQuery line stays near zero all day.">
+              <line class="d-grid" x1="60" y1="51.5" x2="600" y2="51.5"/>
+              <line class="d-grid" x1="60" y1="123.5" x2="600" y2="123.5"/>
+              <line class="d-line" x1="60" y1="200" x2="600" y2="200"/>
+              <line class="d-line" x1="60" y1="30" x2="60" y2="200"/>
+              <text class="d-label" x="52" y="204" text-anchor="end">0 h</text>
+              <text class="d-label" x="52" y="127" text-anchor="end">8.5 h</text>
+              <text class="d-label" x="52" y="55" text-anchor="end">16.5 h</text>
+              <text class="d-label" x="60" y="218" text-anchor="middle">00:00</text>
+              <text class="d-label" x="195" y="218" text-anchor="middle">06:00</text>
+              <text class="d-label" x="375" y="218" text-anchor="middle">14:00</text>
+              <text class="d-label" x="600" y="218" text-anchor="middle">24:00</text>
+              <path class="d-line-accent" d="M60 105.5 L195 51.5 L195 195.5 L375 123.5 L375 195.5 L600 105.5"/>
+              <path class="d-line-signal d-dash" d="M60 198 H600"/>
+              <circle class="d-dot-signal" cx="195" cy="51.5" r="5"/>
+              <text class="d-label" x="203" y="46">worst: 16.5 h before the 06:00 refresh</text>
+              <text class="d-label d-text-accent" x="470" y="150">Import, 2 refreshes a day</text>
+              <text class="d-label d-text-signal" x="470" y="190">DirectQuery: live</text>
+              <text class="d-label" x="16" y="120" transform="rotate(-90 16 120)" text-anchor="middle">data age</text>
+            </svg>
+          </div>
+          <figcaption>Data age under an Import schedule. Each refresh takes about 30 minutes here, so the age never quite reaches zero. Moving the second refresh to 18:00 would cut the worst case from 16.5 h to 12.5 h.</figcaption>
+        </figure>
+
+        <div class="widget" id="perf-demo">
+          <div class="widget-head">
+            <span class="widget-title">Import vs DirectQuery trade-off calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="perf-mode">Mode <select id="perf-mode"><option value="import" selected>Import (scheduled refresh)</option><option value="dq">DirectQuery (live)</option></select></label>
+            <label for="perf-rows">Fact rows (M) <input type="range" id="perf-rows" min="10" max="500" step="10" value="200"><output id="perf-rows-out">200</output></label>
+            <label for="perf-vis">Visuals per page <input type="range" id="perf-vis" min="2" max="20" step="1" value="12"><output id="perf-vis-out">12</output></label>
+          </div>
+          <div class="widget-controls">
+            <label for="perf-ref">Refreshes per day <input type="range" id="perf-ref" min="1" max="24" step="1" value="1"><output id="perf-ref-out">1</output></label>
+            <label for="perf-inc"><input type="checkbox" id="perf-inc"> Incremental refresh</label>
+            <label for="perf-views">Page views per day <input type="range" id="perf-views" min="10" max="2000" step="10" value="300"><output id="perf-views-out">300</output></label>
+          </div>
+          <svg id="perf-plot" viewBox="0 0 600 260" role="img" aria-label="Gauges for page load time, maximum data age and warehouse queries per day, and a 24-hour strip showing when refreshes or live queries hit the warehouse."></svg>
+          <p class="readout" id="perf-readout"></p>
+        </div>
+        <p>The cost model is illustrative but has the right shape. A full refresh re-reads every row (about 0.4 minutes per million here), while <strong>incremental refresh</strong> reloads only recent partitions. DirectQuery runs about four visual queries at a time, and each query slows down as the table grows.</p>
+
+        <h3>Make it faster</h3>
+        <p>Most slow dashboards have too many visuals or a model that is too big. Remove columns nobody uses, pre-aggregate in the warehouse, and keep high-cardinality columns such as order IDs out of the model unless a drill-through needs them.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- A daily aggregate for the dashboard: 200M order lines become ~70k rows</span>
+CREATE TABLE marts.agg_sales_daily AS
+SELECT
+    order_date,
+    store_key,
+    product_category,
+    COUNT(DISTINCT order_id) AS orders,
+    SUM(net_amount)          AS revenue,
+    SUM(profit)              AS profit
+FROM marts.fct_sales
+GROUP BY order_date, store_key, product_category;
+<span class="c">-- Point the KPI and trend visuals at this table; keep fct_sales for drill-through.
+-- Store revenue and profit, not margin %, so margin can be rebuilt as a ratio of sums.</span></code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tool</th><th>Stored copy</th><th>Live queries</th><th>Middle ground</th></tr></thead>
+            <tbody>
+              <tr><td>Power BI</td><td>Import (scheduled or incremental refresh)</td><td>DirectQuery</td><td>Composite models, aggregation tables</td></tr>
+              <tr><td>Tableau</td><td>Extract (.hyper), scheduled refresh</td><td>Live connection</td><td>Incremental extracts</td></tr>
+              <tr><td>Looker</td><td>None: it always generates SQL</td><td>Every query</td><td>Query caching, persistent derived tables, aggregate awareness</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Import is fast and stale between refreshes; DirectQuery is fresh, slower and costs warehouse compute on every view.</li>
+            <li>The worst data age is the longest gap between refreshes, plus refresh time.</li>
+            <li>Incremental refresh reloads only recent partitions, which makes frequent refreshes possible on big tables.</li>
+            <li>Fewer visuals and pre-aggregated tables speed up both modes.</li>
+            <li>Schedule the BI refresh after the upstream pipeline, not before it.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Choosing DirectQuery for "real-time" when the warehouse itself only loads once a night.</li>
+            <li>Refreshing at 05:00 when the pipeline finishes at 06:00, so the dashboard is a day behind all day.</li>
+            <li>Importing every column of a wide table, including IDs and free text nobody filters on.</li>
+            <li>Putting 25 visuals on one page and blaming the tool for the load time.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="bi-performance-1"><span>Explain the trade-off between Import and DirectQuery in two sentences</span></label></li>
+          <li><label><input type="checkbox" data-key="bi-performance-2"><span>Compute the worst-case data age for a given refresh schedule</span></label></li>
+          <li><label><input type="checkbox" data-key="bi-performance-3"><span>Design an aggregate table that serves the KPI and trend visuals</span></label></li>
+          <li><label><input type="checkbox" data-key="bi-performance-4"><span>List three changes that would cut a slow page's load time</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://learn.microsoft.com/en-us/power-bi/">Power BI documentation (storage modes, incremental refresh)</a></li>
+          <li><span class="kind">Docs</span><a href="https://help.tableau.com/">Tableau Help (extracts and live connections)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="adoption">
+        <header class="topic-head">
+          <p class="eyebrow">13.6 · From launched to used</p>
+          <h2>Driving adoption</h2>
+        </header>
+
+        <p class="lead">A dashboard creates value only when someone uses it to decide something. Treat it like a product: know who it is for, launch it where those people already meet, measure who comes back, and fix or retire what nobody uses. Adoption is a funnel, and most people drop out after the first look.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Usage data tells you whether your work changed anything. It also protects your time: a report with two viewers a month is a candidate to retire, and a page the sales team opens every Monday deserves your next improvement.</p>
+        </div>
+
+        <h3>The adoption funnel</h3>
+        <p>Count people at each stage: in the audience, opened it once, came back the next week, and use it weekly. The biggest drop is usually between the first visit and the second, which is about trust and habit more than design.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="An adoption funnel for a sales dashboard with an audience of 120 people: 84 opened it once, 46 came back in week 2, 30 use it weekly and 12 cite it in decisions. The biggest drop is between the first visit and the second.">
+              <text class="d-label" x="20" y="44">Audience</text>
+              <rect class="d-fill" x="170" y="28" width="420" height="26" rx="4"/>
+              <text class="d-mono" x="598" y="46" text-anchor="end">120</text>
+              <text class="d-label" x="20" y="84">Opened once</text>
+              <rect class="d-accent" x="170" y="68" width="294" height="26" rx="4"/>
+              <text class="d-mono" x="472" y="86">84 (70%)</text>
+              <text class="d-label" x="20" y="124">Came back in week 2</text>
+              <rect class="d-accent" x="170" y="108" width="161" height="26" rx="4"/>
+              <text class="d-mono" x="339" y="126">46 (55% of 84)</text>
+              <text class="d-label" x="20" y="164">Weekly active</text>
+              <rect class="d-good" x="170" y="148" width="105" height="26" rx="4"/>
+              <text class="d-mono" x="283" y="166">30</text>
+              <text class="d-label" x="20" y="204">Cited in a decision</text>
+              <rect class="d-good" x="170" y="188" width="42" height="26" rx="4"/>
+              <text class="d-mono" x="220" y="206">12</text>
+              <path class="d-line-signal d-dash" d="M470 100 C 520 104, 520 118, 470 122"/>
+              <text class="d-label d-text-signal" x="528" y="116">biggest drop</text>
+              <text class="d-label" x="320" y="240" text-anchor="middle">illustrative numbers for one dashboard, eight weeks after launch</text>
+            </svg>
+          </div>
+          <figcaption>An adoption funnel. "Opened once" is easy to win with a launch email; "weekly active" depends on the numbers being trusted and on the page fitting into a routine.</figcaption>
+        </figure>
+
+        <div class="widget" id="adopt-demo">
+          <div class="widget-head">
+            <span class="widget-title">Adoption funnel: what moves weekly users?</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="adopt-meet"><input type="checkbox" id="adopt-meet"> Walk through it in the Monday sales meeting</label>
+            <label for="adopt-sub"><input type="checkbox" id="adopt-sub"> Monday 08:00 email subscription</label>
+            <label for="adopt-cert"><input type="checkbox" id="adopt-cert"> Reconcile with finance and certify</label>
+          </div>
+          <div class="widget-controls">
+            <label for="adopt-speed"><input type="checkbox" id="adopt-speed"> Cut load time from 11 s to 2 s</label>
+            <label for="adopt-retire"><input type="checkbox" id="adopt-retire"> Retire the old Excel report</label>
+            <label for="adopt-more"><input type="checkbox" id="adopt-more"> Add 15 more charts so everyone finds theirs</label>
+          </div>
+          <svg id="adopt-plot" viewBox="0 0 600 240" role="img" aria-label="Funnel bars for an audience of 120: aware, opened, returned in week 2 and weekly active, with the conversion rate at each stage."></svg>
+          <p class="readout" id="adopt-readout"></p>
+        </div>
+        <p>Each change moves one or two stages of the funnel (the effects are illustrative). Notice which changes help people find the page, which help them come back, and which one makes things worse.</p>
+
+        <h3>Measure it like a product</h3>
+        <p>Power BI, Tableau and Looker all log who viewed what and when. Pull those logs into the warehouse and track weekly active viewers and the week-2 return rate, the same way you would for an app.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- report_views(user_id, report_id, viewed_at): one row per page view</span>
+WITH weekly AS (
+    SELECT DISTINCT user_id, DATE_TRUNC('week', viewed_at) AS week
+    FROM report_views
+    WHERE report_id = 'weekly-sales'
+),
+first_seen AS (
+    SELECT user_id, MIN(week) AS first_week
+    FROM weekly
+    GROUP BY user_id
+)
+SELECT
+    f.first_week,
+    COUNT(*)                                   AS new_viewers,
+    COUNT(w.user_id)                           AS back_next_week,
+    ROUND(100.0 * COUNT(w.user_id) / COUNT(*), 1) AS return_pct
+FROM first_seen f
+LEFT JOIN weekly w
+       ON w.user_id = f.user_id
+      AND w.week = f.first_week + INTERVAL '7 days'
+GROUP BY f.first_week
+ORDER BY f.first_week;</code></pre>
+
+        <h3>The trust loop</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 250" role="img" aria-label="A loop of five steps: define each metric once, reconcile with finance, launch where the audience meets, measure weekly usage, then fix or retire, which leads back to defining metrics.">
+              <defs>
+                <marker id="adoption-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-accent" x="240" y="16" width="160" height="50" rx="8"/>
+              <text class="d-title" x="320" y="38" text-anchor="middle">Define once</text>
+              <text class="d-label" x="320" y="55" text-anchor="middle">certified measures</text>
+              <rect class="d-accent" x="456" y="84" width="164" height="50" rx="8"/>
+              <text class="d-title" x="538" y="106" text-anchor="middle">Reconcile</text>
+              <text class="d-label" x="538" y="123" text-anchor="middle">matches finance</text>
+              <rect class="d-good" x="400" y="184" width="164" height="50" rx="8"/>
+              <text class="d-title" x="482" y="206" text-anchor="middle">Launch</text>
+              <text class="d-label" x="482" y="223" text-anchor="middle">in the Monday meeting</text>
+              <rect class="d-good" x="76" y="184" width="164" height="50" rx="8"/>
+              <text class="d-title" x="158" y="206" text-anchor="middle">Measure</text>
+              <text class="d-label" x="158" y="223" text-anchor="middle">weekly viewers</text>
+              <rect class="d-signal" x="20" y="84" width="164" height="50" rx="8"/>
+              <text class="d-title" x="102" y="106" text-anchor="middle">Fix or retire</text>
+              <text class="d-label" x="102" y="123" text-anchor="middle">feedback, usage</text>
+              <path class="d-line-accent" d="M400 41 Q 520 44 534 82" marker-end="url(#adoption-arrow)"/>
+              <path class="d-line-accent" d="M538 134 Q 536 166 520 182" marker-end="url(#adoption-arrow)"/>
+              <path class="d-line-accent" d="M400 209 H242" marker-end="url(#adoption-arrow)"/>
+              <path class="d-line-accent" d="M110 184 Q 100 160 102 136" marker-end="url(#adoption-arrow)"/>
+              <path class="d-line-accent" d="M108 84 Q 120 44 238 41" marker-end="url(#adoption-arrow)"/>
+              <text class="d-label" x="320" y="128" text-anchor="middle">trust grows each lap</text>
+            </svg>
+          </div>
+          <figcaption>The trust loop. A dashboard earns weekly use when its numbers match the official ones, it shows up where decisions happen, and its owner keeps acting on usage and feedback.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Adoption is a funnel: aware, opened, returned, weekly active, used in decisions.</li>
+            <li>The first visit is easy to win; the second depends on trust and habit.</li>
+            <li>Numbers that match finance and one certified definition per metric build trust.</li>
+            <li>Launch inside an existing routine, such as a weekly meeting or a scheduled email.</li>
+            <li>Retire the old report, or people will keep using it.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Announcing a dashboard once by email and calling it launched.</li>
+            <li>Leaving the old spreadsheet running, so two versions of revenue compete.</li>
+            <li>Answering every request by adding another chart until the page serves nobody.</li>
+            <li>Never looking at usage logs, so dead reports pile up for years.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="adoption-1"><span>Draw the adoption funnel for a dashboard you own, with real counts</span></label></li>
+          <li><label><input type="checkbox" data-key="adoption-2"><span>Write SQL for weekly active viewers and week-2 return rate from a view log</span></label></li>
+          <li><label><input type="checkbox" data-key="adoption-3"><span>Plan a launch that fits into an existing meeting or email</span></label></li>
+          <li><label><input type="checkbox" data-key="adoption-4"><span>Decide which of your reports to retire based on usage</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://learn.microsoft.com/en-us/power-bi/">Power BI documentation (usage metrics, certified datasets)</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Redesign one page</h4><p>Take a public dashboard or one from work. Write its audience, decision and three questions, then rebuild it with a KPI row, one trend and one breakdown. Keep a before and after screenshot for your portfolio.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Weekly sales dashboard on a star schema</h4><p>Model a public retail dataset as one fact table and three dimensions, write revenue, AOV, margin and year-over-year measures, and add a region slicer, a drill-through order page and a dynamic title.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Run it like a product</h4><p>Set up a scheduled refresh after the upstream pipeline, add an aggregate table, publish it to a few colleagues and track weekly viewers and week-2 return for a month. Write a one-page review of what you changed and why.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Turn a stakeholder's decision into three questions and a layout in reading order</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Build a star schema with unique dimension keys and a stated fact grain</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Write measures whose totals are correct at every level, including ratios and time comparisons</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Wire slicers and cross-filters so every tile shows what its title says</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Choose a storage mode and refresh schedule that meet a freshness and speed target</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Measure adoption and act on it</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 13. Shared helpers first, then one IIFE per widget. */
+var ATLAS13 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k) && attrs[k] != null) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+  function arrowDef(plot, id, cls) {
+    var defs = svg("defs", {}, plot);
+    var mk = svg("marker", { id: id, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+    svg("path", { d: "M0,0 L10,5 L0,10 z", "class": cls || "d-head-accent" }, mk);
+  }
+  return { svg: svg, text: text, clear: clear, fmt: fmt, arrowDef: arrowDef };
+})();
+
+/* ---------- 13.1 dashboard layout critic ---------- */
+(function () {
+  if (!document.getElementById("dd-demo")) return;
+  var H = ATLAS13, S = H.svg;
+  var plot = document.getElementById("dd-plot"), readout = document.getElementById("dd-readout");
+  var selA = document.getElementById("dd-a"), selB = document.getElementById("dd-b");
+  var TILES = {
+    rev: { name: "Revenue KPI", rank: 0, kind: "kpi", val: "$412k" },
+    ord: { name: "Orders KPI", rank: 0, kind: "kpi", val: "5,180" },
+    conv: { name: "Conversion KPI", rank: 0, kind: "kpi", val: "2.9%" },
+    trend: { name: "Weekly trend", rank: 1, kind: "trend" },
+    region: { name: "Revenue by region", rank: 2, kind: "bars" },
+    table: { name: "Order detail table", rank: 3, kind: "table" }
+  };
+  var START = ["table", "region", "rev", "trend", "ord", "conv"];
+  var order = START.slice(), swaps = 0, picked = -1;
+  var ROLE = ["headline KPI", "trend", "breakdown", "detail"];
+
+  Object.keys(TILES).forEach(function (k) {
+    [selA, selB].forEach(function (sel, i) {
+      var o = document.createElement("option"); o.value = k; o.textContent = TILES[k].name; sel.appendChild(o);
+    });
+  });
+  selA.value = "table"; selB.value = "rev";
+
+  function score() {
+    var good = 0, total = 0;
+    for (var i = 0; i < 6; i++) for (var j = i + 1; j < 6; j++) {
+      var a = TILES[order[i]].rank, b = TILES[order[j]].rank;
+      if (a === b) continue;
+      total++; if (a < b) good++;
+    }
+    return Math.round(100 * good / total);
+  }
+  function problems() {
+    var out = [];
+    var first = TILES[order[0]];
+    if (first.kind !== "kpi") out.push(first.name + " holds slot 1, the first thing people read.");
+    var topKpis = order.slice(0, 3).filter(function (k) { return TILES[k].kind === "kpi"; }).length;
+    if (topKpis < 3) out.push("Only " + topKpis + " of 3 KPIs are in the top row.");
+    var ti = order.indexOf("table");
+    if (ti !== 5) out.push("The detail table is not last.");
+    if (order.indexOf("trend") > order.indexOf("region")) out.push("The breakdown comes before the trend that frames it.");
+    return out;
+  }
+  function swap(i, j) {
+    if (i === j || i < 0 || j < 0) return;
+    var t = order[i]; order[i] = order[j]; order[j] = t; swaps++;
+  }
+  function sketch(g, k, x, y, w, h) {
+    var t = TILES[k];
+    if (t.kind === "kpi") {
+      H.text(g, x + 12, y + 62, t.val, "d-title");
+      H.text(g, x + 12, y + 80, "vs target", "d-label");
+    } else if (t.kind === "trend") {
+      S("path", { d: "M" + (x + 12) + " " + (y + 84) + " L" + (x + 50) + " " + (y + 72) + " L" + (x + 86) + " " + (y + 78) + " L" + (x + 122) + " " + (y + 58) + " L" + (x + w - 14) + " " + (y + 50), "class": "d-line-accent" }, g);
+    } else if (t.kind === "bars") {
+      [0.85, 0.65, 0.45, 0.25].forEach(function (f, i) { S("rect", { x: x + 12, y: y + 42 + i * 12, width: (w - 30) * f, height: 8, rx: 2, "class": i === 3 ? "d-signal" : "d-fill" }, g); });
+    } else {
+      for (var r = 0; r < 4; r++) S("line", { x1: x + 12, x2: x + w - 12, y1: y + 46 + r * 12, y2: y + 46 + r * 12, "class": "d-grid" }, g);
+    }
+  }
+  function draw() {
+    H.clear(plot);
+    var W = 180, Hh = 100, gx = 15, gy = 14;
+    var pos = [];
+    for (var s = 0; s < 6; s++) pos.push([15 + (s % 3) * (W + gx), 12 + Math.floor(s / 3) * (Hh + gy)]);
+    // reading path
+    var path = "M" + (pos[0][0] + 14) + " " + (pos[0][1] + 14) + " L" + (pos[2][0] + W - 14) + " " + (pos[2][1] + 14) + " L" + (pos[3][0] + 14) + " " + (pos[3][1] + 14) + " L" + (pos[5][0] + W - 14) + " " + (pos[5][1] + 14);
+    S("path", { d: path, "class": "d-line d-dash" }, plot);
+    order.forEach(function (k, s) {
+      var x = pos[s][0], y = pos[s][1], t = TILES[k];
+      var g = S("g", { style: "cursor:pointer", tabindex: 0, role: "button", "aria-label": "Slot " + (s + 1) + ": " + t.name }, plot);
+      var cls = t.kind === "kpi" ? "d-accent" : (t.kind === "table" ? "d-fill" : "d-box");
+      var r = S("rect", { x: x, y: y, width: W, height: Hh, rx: 8, "class": cls }, g);
+      if (picked === s) r.setAttribute("style", "stroke-width:3;stroke:var(--signal)");
+      S("circle", { cx: x + 14, cy: y + 14, r: 10, "class": "d-dot-signal" }, g);
+      var n = H.text(g, x + 14, y + 18, String(s + 1), "d-label", "middle"); n.setAttribute("style", "fill:var(--surface);font-weight:600");
+      H.text(g, x + 30, y + 19, t.name, "d-text");
+      H.text(g, x + W - 10, y + 36, ROLE[t.rank], "d-label", "end");
+      sketch(g, k, x, y, W, Hh);
+      g.addEventListener("click", function () { clickSlot(s); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); clickSlot(s); } });
+    });
+    var sc = score(), probs = problems();
+    H.text(plot, 15, 250, "Hierarchy score " + sc + " / 100", "d-title");
+    S("rect", { x: 200, y: 239, width: 380, height: 12, rx: 6, "class": "d-fill" }, plot);
+    S("rect", { x: 200, y: 239, width: Math.max(4, 380 * sc / 100), height: 12, rx: 6, "class": sc === 100 ? "d-good" : "d-signal" }, plot);
+    if (probs.length) probs.slice(0, 3).forEach(function (p, i) { H.text(plot, 15, 274 + i * 18, "• " + p, "d-label d-text-signal"); });
+    else H.text(plot, 15, 274, "Reading order matches the hierarchy: KPIs, trend, breakdown, detail.", "d-label d-text-good");
+    if (picked >= 0) H.text(plot, 585, 274, "now click a second tile", "d-label", "end");
+    readout.textContent = "hierarchy score " + sc + "/100 · swaps " + swaps + " · reading order: " + order.map(function (k) { return TILES[k].name; }).join(" → ");
+  }
+  function clickSlot(s) {
+    if (picked < 0) { picked = s; }
+    else { swap(picked, s); picked = -1; }
+    draw();
+  }
+  document.getElementById("dd-swap").addEventListener("click", function () {
+    picked = -1; swap(order.indexOf(selA.value), order.indexOf(selB.value)); draw();
+  });
+  document.getElementById("dd-reset").addEventListener("click", function () { order = START.slice(); swaps = 0; picked = -1; draw(); });
+  draw();
+})();
+
+/* ---------- 13.2 star-schema builder ---------- */
+(function () {
+  if (!document.getElementById("star-demo")) return;
+  var H = ATLAS13, S = H.svg;
+  var plot = document.getElementById("star-plot"), readout = document.getElementById("star-readout");
+  var slice = document.getElementById("star-slice"), relP = document.getElementById("star-rel-prod"),
+    relC = document.getElementById("star-rel-cust"), dedupe = document.getElementById("star-dedupe");
+  var FACT = [["P1", "C1", 120], ["P2", "C2", 80], ["P3", "C1", 200], ["P1", "C3", 60], ["P4", "C2", 150], ["P2", "C3", 90], ["P3", "C2", 100], ["P4", "C1", 80]];
+  var PROD = [["P1", "Mug", "Kitchen"], ["P2", "Tee", "Apparel"], ["P3", "Lamp", "Home"], ["P4", "Hoodie", "Apparel"]];
+  var DUP = ["P3", "Lamp", "Kitchen"];
+  var CUST = [["C1", "Consumer"], ["C2", "Business"], ["C3", "Consumer"]];
+  var TOTAL = FACT.reduce(function (s, r) { return s + r[2]; }, 0);
+
+  function compute() {
+    var bySeg = slice.value === "segment";
+    var prod = PROD.slice(); if (!dedupe.checked) prod.push(DUP);
+    var dimRows = bySeg ? CUST : prod;
+    var cats = []; dimRows.forEach(function (d) { var c = bySeg ? d[1] : d[2]; if (cats.indexOf(c) < 0) cats.push(c); });
+    var related = bySeg ? relC.checked : relP.checked;
+    var rows = cats.map(function (c) {
+      if (!related) return [c, TOTAL];
+      var v = 0;
+      FACT.forEach(function (f) {
+        var key = bySeg ? f[1] : f[0];
+        dimRows.forEach(function (d) { if (d[0] === key && (bySeg ? d[1] : d[2]) === c) v += f[2]; });
+      });
+      return [c, v];
+    });
+    var sum = rows.reduce(function (s, r) { return s + r[1]; }, 0);
+    var card = bySeg ? "one-to-many" : (dedupe.checked ? "one-to-many" : "many-to-many");
+    return { rows: rows, sum: sum, related: related, card: card, bySeg: bySeg, prod: prod };
+  }
+  function tbl(g, x, y, w, title, head, rows, opts) {
+    opts = opts || {};
+    S("rect", { x: x, y: y, width: w, height: 22 + 18 * (rows.length + 1) + 6, rx: 6, "class": opts.cls || "d-box" }, g);
+    H.text(g, x + 8, y + 16, title, "d-title");
+    H.text(g, x + 8, y + 34, head, "d-label");
+    rows.forEach(function (r, i) {
+      var t = H.text(g, x + 8, y + 52 + i * 18, r.text, "d-mono" + (r.bad ? " d-text-signal" : ""));
+      t.setAttribute("xml:space", "preserve");
+      t.setAttribute("style", "font-size:11px;white-space:pre");
+    });
+  }
+  function draw() {
+    H.clear(plot);
+    H.arrowDef(plot, "star-demo-arrow", "d-head-accent");
+    var c = compute();
+    var factRows = FACT.map(function (f) { return { text: f[0] + "  " + f[1] + "  " + String(f[2]).padStart(3, " ") }; });
+    tbl(plot, 112, 70, 118, "fct_sales", "prod cust amt", factRows, { cls: "d-accent" });
+    tbl(plot, 6, 8, 96, "dim_product", "key cat", c.prod.map(function (p, i) { return { text: p[0] + " " + p[2], bad: i === 4 }; }));
+    tbl(plot, 6, 196, 96, "dim_customer", "key segment", CUST.map(function (d) { return { text: d[0] + " " + d[1].slice(0, 8) }; }));
+    // relationships
+    function rel(on, x1, y1, x2, y2, label) {
+      S("line", { x1: x1, y1: y1, x2: x2, y2: y2, "class": on ? "d-line-accent" : "d-line d-dash", "marker-end": on ? "url(#star-demo-arrow)" : null }, plot);
+      H.text(plot, (x1 + x2) / 2 + 4, (y1 + y2) / 2 - 4, on ? label : "no link", "d-label" + (on && label === "* : *" ? " d-text-signal" : ""));
+    }
+    rel(relP.checked, 102, 70, 130, 92, dedupe.checked ? "1 : *" : "* : *");
+    rel(relC.checked, 102, 230, 130, 232, "1 : *");
+    // result table
+    var x0 = 300, y0 = 20;
+    H.text(plot, x0, y0, "Revenue by " + (c.bySeg ? "segment" : "category"), "d-title");
+    var maxV = Math.max.apply(null, c.rows.map(function (r) { return r[1]; }).concat([TOTAL]));
+    c.rows.forEach(function (r, i) {
+      var y = y0 + 22 + i * 30;
+      H.text(plot, x0, y + 14, r[0], "d-text");
+      S("rect", { x: x0 + 76, y: y + 2, width: Math.max(2, 150 * r[1] / maxV), height: 16, rx: 3, "class": !c.related ? "d-fill" : (c.card === "many-to-many" && !c.bySeg ? "d-signal" : "d-accent") }, plot);
+      H.text(plot, x0 + 290, y + 15, H.fmt(r[1]), "d-mono", "end");
+    });
+    var yt = y0 + 22 + c.rows.length * 30 + 6;
+    S("line", { x1: x0, y1: yt, x2: x0 + 290, y2: yt, "class": "d-line" }, plot);
+    H.text(plot, x0, yt + 20, "Rows add up to", "d-label");
+    H.text(plot, x0 + 290, yt + 20, H.fmt(c.sum), "d-mono" + (c.sum !== TOTAL ? " d-text-signal" : " d-text-good"), "end");
+    H.text(plot, x0, yt + 40, "Visual total (fact rows)", "d-label");
+    H.text(plot, x0 + 290, yt + 40, H.fmt(TOTAL), "d-mono", "end");
+    var msg, ok = c.related && c.sum === TOTAL;
+    if (!c.related) msg = "Unrelated: nothing filters the facts, so every row shows the total.";
+    else if (c.sum !== TOTAL) msg = "Duplicate key: Lamp counts in two categories.";
+    else msg = "One-to-many star: rows add up to the total.";
+    var m = H.text(plot, x0, yt + 70, msg, "d-label " + (ok ? "d-text-good" : "d-text-signal"));
+    readout.textContent = "slice " + (c.bySeg ? "segment" : "category") + " · rows sum " + H.fmt(c.sum) + " · total " + H.fmt(TOTAL) + " · " + (c.related ? "relationship " + c.card : "no relationship") + " · " + (ok ? "rows add up" : "rows do not add up");
+  }
+  [slice, relP, relC, dedupe].forEach(function (e) { e.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 13.3 measure vs calculated column evaluator ---------- */
+(function () {
+  if (!document.getElementById("calc-demo")) return;
+  var H = ATLAS13, S = H.svg;
+  var plot = document.getElementById("calc-plot"), readout = document.getElementById("calc-readout");
+  var fSel = document.getElementById("calc-f"), gSel = document.getElementById("calc-g"), sSel = document.getElementById("calc-s");
+  var ROWS = [["North", "Web", 200, 50], ["North", "Store", 400, 80], ["West", "Web", 100, 40], ["West", "Store", 300, 30],
+    ["South", "Web", 150, 45], ["South", "Store", 50, 20], ["North", "Web", 100, 10], ["West", "Web", 200, 30]];
+  function pct(v) { return (100 * v).toFixed(1) + "%"; }
+  function evalF(f, rows, allRegionRows) {
+    var amt = 0, prof = 0, avg = 0;
+    rows.forEach(function (r) { amt += r[2]; prof += r[3]; avg += r[3] / r[2]; });
+    if (f === "rev") return { v: amt, s: H.fmt(amt) };
+    if (f === "avgcol") { var a = rows.length ? avg / rows.length : NaN; return { v: a, s: rows.length ? pct(a) : "(blank)" }; }
+    if (f === "margin") { var m = amt ? prof / amt : NaN; return { v: m, s: amt ? pct(m) : "(blank)" }; }
+    var den = allRegionRows.reduce(function (s, r) { return s + r[2]; }, 0);
+    var p = den ? amt / den : NaN; return { v: p, s: den ? pct(p) : "(blank)" };
+  }
+  function draw() {
+    H.clear(plot);
+    var f = fSel.value, g = gSel.value, sl = sSel.value, gi = g === "region" ? 0 : 1;
+    var inCtx = function (r) { return sl === "All" || r[1] === sl; };
+    // model table
+    H.text(plot, 10, 18, "Sales (model)", "d-title");
+    [[12, "Region", "start"], [70, "Channel", "start"], [170, "Amount", "end"], [214, "Profit", "end"], [276, "MarginPct", "end"]].forEach(function (c) { H.text(plot, c[0], 38, c[1], "d-label", c[2]); });
+    ROWS.forEach(function (r, i) {
+      var y = 46 + i * 24, on = inCtx(r);
+      S("rect", { x: 6, y: y, width: 282, height: 20, rx: 3, "class": on ? "d-accent" : "d-box", opacity: on ? 1 : 0.45 }, plot);
+      var cells = [[12, r[0], "start"], [70, r[1], "start"], [170, String(r[2]), "end"], [214, String(r[3]), "end"], [276, pct(r[3] / r[2]), "end"]];
+      cells.forEach(function (c, k) {
+        var t = H.text(plot, c[0], y + 14, c[1], k === 4 ? "d-mono" + (f === "avgcol" ? " d-text-accent" : "") : "d-mono", c[2]);
+        t.setAttribute("style", "font-size:11px" + (on ? "" : ";opacity:.6"));
+      });
+    });
+    H.text(plot, 10, 260, sl === "All" ? "slicer: all 8 rows in context" : "slicer keeps " + ROWS.filter(inCtx).length + " " + sl + " rows", "d-label");
+    if (f === "avgcol") H.text(plot, 10, 278, "MarginPct is a stored column: one value per row", "d-label d-text-accent");
+    // visual
+    var x0 = 312;
+    H.text(plot, x0, 18, "Visual: " + (g === "region" ? "Region" : "Channel") + " × formula", "d-title");
+    var groups = []; ROWS.forEach(function (r) { if (groups.indexOf(r[gi]) < 0) groups.push(r[gi]); });
+    var ctxRows = ROWS.filter(inCtx);
+    var out = [];
+    groups.forEach(function (gv) {
+      var rows = ctxRows.filter(function (r) { return r[gi] === gv; });
+      // ALL(Region) removes only the Region filter; slicer and channel row filters stay
+      var allReg = ctxRows.filter(function (r) { return gi === 0 ? true : r[1] === gv; });
+      var res = evalF(f, rows, allReg);
+      if (rows.length || f === "pct") out.push([gv, res]);
+    });
+    var totalRes = evalF(f, ctxRows, ctxRows);
+    out.forEach(function (o, i) {
+      var y = 34 + i * 28;
+      S("rect", { x: x0, y: y, width: 276, height: 24, rx: 3, "class": "d-box" }, plot);
+      H.text(plot, x0 + 10, y + 16, o[0], "d-text");
+      H.text(plot, x0 + 266, y + 16, o[1].s, "d-mono", "end");
+    });
+    var yt = 34 + out.length * 28 + 4;
+    S("rect", { x: x0, y: yt, width: 276, height: 26, rx: 3, "class": "d-good" }, plot);
+    H.text(plot, x0 + 10, yt + 17, "Total", "d-title");
+    H.text(plot, x0 + 266, yt + 17, totalRes.s, "d-mono", "end");
+    var note = "", note2 = "";
+    var rowsSum = out.reduce(function (s, o) { return s + (isFinite(o[1].v) ? o[1].v : 0); }, 0);
+    if (f === "avgcol") {
+      var tm = evalF("margin", ctxRows, ctxRows);
+      note = "True margin (ratio of sums) is " + tm.s + ".";
+      note2 = "Average of row ratios is off by " + Math.abs(100 * (totalRes.v - tm.v)).toFixed(1) + " pts.";
+    } else if (f === "margin") {
+      note = "Each cell divides its own sums, so the total"; note2 = "is the revenue-weighted margin.";
+    } else if (f === "pct") {
+      note = "Denominator: CALCULATE(..., ALL(Region))."; note2 = "Rows sum to " + pct(rowsSum) + ".";
+    } else {
+      note = "SUM sees only the rows in each cell's context."; note2 = "Rows sum to " + H.fmt(rowsSum) + ".";
+    }
+    H.text(plot, x0, yt + 52, note, "d-label");
+    H.text(plot, x0, yt + 70, note2, "d-label");
+    var everyRow100 = f === "pct" && out.length > 0 && out.every(function (o) { return Math.abs(o[1].v - 1) < 1e-9; });
+    readout.textContent = "formula " + f + " · rows by " + g + " · slicer " + sl + " · total " + totalRes.s + " · " +
+      out.map(function (o) { return o[0] + " " + o[1].s; }).join(", ") + (everyRow100 ? " · every row shows 100%" : "");
+  }
+  [fSel, gSel, sSel].forEach(function (e) { e.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 13.4 filter / slicer interaction graph ---------- */
+(function () {
+  if (!document.getElementById("filt-demo")) return;
+  var H = ATLAS13, S = H.svg;
+  var plot = document.getElementById("filt-plot"), readout = document.getElementById("filt-readout");
+  var region = document.getElementById("filt-region"), product = document.getElementById("filt-product");
+  var E = {}; ["r-kpi", "r-bars", "r-tgt", "p-kpi", "p-tgt"].forEach(function (k) { E[k] = document.getElementById("filt-" + k); });
+  var DATA = { North: { Mugs: 40, Tees: 60, Posters: 20 }, South: { Mugs: 30, Tees: 20, Posters: 50 }, West: { Mugs: 10, Tees: 30, Posters: 40 } };
+  var PRODS = ["Mugs", "Tees", "Posters"], TARGET = 320;
+  function total(rf, pf) {
+    var s = 0;
+    Object.keys(DATA).forEach(function (r) {
+      if (rf && rf !== "All" && r !== rf) return;
+      PRODS.forEach(function (p) { if (pf && pf !== "None" && p !== pf) return; s += DATA[r][p]; });
+    });
+    return s;
+  }
+  function draw() {
+    H.clear(plot);
+    H.arrowDef(plot, "filt-demo-arrow", "d-head-accent");
+    var rv = region.value, pv = product.value;
+    var kpi = total(E["r-kpi"].checked ? rv : "All", E["p-kpi"].checked ? pv : "None");
+    var tgt = total(E["r-tgt"].checked ? rv : "All", E["p-tgt"].checked ? pv : "None");
+    // graph
+    var N = { reg: [20, 30, "Region slicer", rv], bars: [20, 200, "Product bars", pv === "None" ? "no click" : pv + " clicked"], kpi: [180, 30, "Revenue KPI", ""], tgt: [180, 200, "Target tile", ""] };
+    function edge(on, a, b, dx1, dy1, dx2, dy2) {
+      S("line", { x1: N[a][0] + dx1, y1: N[a][1] + dy1, x2: N[b][0] + dx2, y2: N[b][1] + dy2, "class": on ? "d-line-accent" : "d-line d-dash", "marker-end": on ? "url(#filt-demo-arrow)" : null, opacity: on ? 1 : 0.5 }, plot);
+    }
+    edge(E["r-kpi"].checked, "reg", "kpi", 100, 22, -2, 22);
+    edge(E["r-bars"].checked, "reg", "bars", 50, 46, 50, -2);
+    edge(E["r-tgt"].checked, "reg", "tgt", 100, 40, -2, 6);
+    edge(E["p-kpi"].checked, "bars", "kpi", 100, 6, -2, 40);
+    edge(E["p-tgt"].checked, "bars", "tgt", 100, 24, -2, 24);
+    Object.keys(N).forEach(function (k) {
+      var n = N[k], src = k === "reg" || k === "bars";
+      S("rect", { x: n[0], y: n[1], width: 100, height: 46, rx: 8, "class": src ? "d-accent" : "d-box" }, plot);
+      H.text(plot, n[0] + 50, n[1] + 20, n[2], "d-text", "middle").setAttribute("style", "font-size:12px");
+      if (n[3]) H.text(plot, n[0] + 50, n[1] + 37, n[3], "d-label", "middle");
+    });
+    H.text(plot, 150, 288, "solid = filter reaches the visual", "d-label", "middle");
+    // rendered visuals
+    var x0 = 310;
+    S("rect", { x: x0, y: 10, width: 280, height: 64, rx: 8, "class": "d-accent" }, plot);
+    H.text(plot, x0 + 12, 30, "Revenue", "d-label");
+    H.text(plot, x0 + 12, 58, "$" + kpi + "k", "d-title").setAttribute("style", "font-size:20px");
+    var ctxTxt = [];
+    if (E["r-kpi"].checked && rv !== "All") ctxTxt.push(rv);
+    if (E["p-kpi"].checked && pv !== "None") ctxTxt.push(pv);
+    H.text(plot, x0 + 268, 58, ctxTxt.length ? ctxTxt.join(" · ") : "all data", "d-label", "end");
+    S("rect", { x: x0, y: 84, width: 280, height: 110, rx: 8, "class": "d-box" }, plot);
+    H.text(plot, x0 + 12, 102, "Revenue by product" + (E["r-bars"].checked && rv !== "All" ? " · " + rv : ""), "d-label");
+    var vals = PRODS.map(function (p) { return total(E["r-bars"].checked ? rv : "All", p); });
+    var mx = Math.max.apply(null, vals.concat([1]));
+    PRODS.forEach(function (p, i) {
+      var y = 112 + i * 26;
+      var g = S("g", { style: "cursor:pointer" }, plot);
+      H.text(g, x0 + 12, y + 13, p, "d-label");
+      S("rect", { x: x0 + 70, y: y, width: Math.max(2, 160 * vals[i] / mx), height: 18, rx: 3, "class": pv === p ? "d-accent" : (pv === "None" ? "d-fill" : "d-box") }, g);
+      H.text(g, x0 + 236, y + 14, "$" + vals[i] + "k", "d-mono");
+      g.addEventListener("click", function () { product.value = product.value === p ? "None" : p; draw(); });
+    });
+    S("rect", { x: x0, y: 204, width: 280, height: 86, rx: 8, "class": "d-good" }, plot);
+    H.text(plot, x0 + 12, 224, "Company revenue vs target", "d-label");
+    var ratio = tgt / TARGET;
+    H.text(plot, x0 + 12, 250, "$" + tgt + "k of $" + TARGET + "k", "d-title");
+    H.text(plot, x0 + 268, 250, Math.round(ratio * 100) + "%", "d-title " + (ratio < 0.5 ? "d-text-signal" : "d-text-good"), "end");
+    S("rect", { x: x0 + 12, y: 262, width: 256, height: 10, rx: 5, "class": "d-fill" }, plot);
+    S("rect", { x: x0 + 12, y: 262, width: Math.max(3, 256 * Math.min(1, ratio)), height: 10, rx: 5, "class": ratio < 0.5 ? "d-signal" : "d-good" }, plot);
+    if (tgt !== total("All", "None")) H.text(plot, x0 + 12, 286, "filtered: no longer company-wide", "d-label d-text-signal");
+    readout.textContent = "KPI $" + kpi + "k · target tile $" + tgt + "k of $" + TARGET + "k (" + Math.round(ratio * 100) + "%) · bars " + (E["r-bars"].checked && rv !== "All" ? rv + " only" : "all regions");
+  }
+  [region, product].concat(Object.keys(E).map(function (k) { return E[k]; })).forEach(function (e) { e.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 13.5 import vs DirectQuery calculator ---------- */
+(function () {
+  if (!document.getElementById("perf-demo")) return;
+  var H = ATLAS13, S = H.svg;
+  var plot = document.getElementById("perf-plot"), readout = document.getElementById("perf-readout");
+  var I = {}; ["mode", "rows", "vis", "ref", "inc", "views"].forEach(function (k) { I[k] = document.getElementById("perf-" + k); });
+  function model() {
+    var rows = +I.rows.value, vis = +I.vis.value, ref = +I.ref.value, views = +I.views.value, inc = I.inc.checked;
+    if (I.mode.value === "import") {
+      var refMin = inc ? 2 + rows * 0.005 : rows * 0.4;
+      var interval = 1440 / ref, overlap = refMin > interval;
+      return { mode: "import", load: 0.4 + 0.08 * vis, age: overlap ? Infinity : 24 / ref + refMin / 60, refMin: refMin, overlap: overlap, q: ref * 6, ref: ref, rows: rows };
+    }
+    var lat = 0.8 + rows / 100;
+    return { mode: "dq", load: Math.ceil(vis / 4) * lat, age: 0, refMin: 0, overlap: false, q: views * vis, lat: lat, rows: rows };
+  }
+  function gauge(y, label, val, max, txt, bad) {
+    H.text(plot, 10, y + 13, label, "d-label");
+    S("rect", { x: 170, y: y, width: 330, height: 18, rx: 4, "class": "d-fill" }, plot);
+    S("rect", { x: 170, y: y, width: Math.max(3, 330 * Math.min(1, val / max)), height: 18, rx: 4, "class": bad ? "d-signal" : "d-accent" }, plot);
+    H.text(plot, 590, y + 14, txt, "d-mono" + (bad ? " d-text-signal" : ""), "end");
+  }
+  function draw() {
+    ["rows", "vis", "ref", "views"].forEach(function (k) { document.getElementById("perf-" + k + "-out").textContent = I[k].value; });
+    I.ref.disabled = I.inc.disabled = I.mode.value !== "import";
+    H.clear(plot);
+    var m = model();
+    gauge(14, "Page load", m.load, 12, m.load.toFixed(1) + " s", m.load >= 5);
+    gauge(44, "Max data age", isFinite(m.age) ? m.age : 30, 30, isFinite(m.age) ? (m.mode === "dq" ? "live" : m.age.toFixed(1) + " h") : "can't keep up", !isFinite(m.age) || m.age > 24);
+    gauge(74, "Warehouse queries/day", Math.log10(m.q + 1), 5, H.fmt(m.q), m.q > 5000);
+    H.text(plot, 10, 128, "Warehouse activity over 24 hours", "d-title");
+    var x0 = 10, w = 580, y0 = 140, hh = 40;
+    S("rect", { x: x0, y: y0, width: w, height: hh, rx: 4, "class": "d-box" }, plot);
+    for (var h = 0; h <= 24; h += 6) {
+      S("line", { x1: x0 + w * h / 24, x2: x0 + w * h / 24, y1: y0 + hh, y2: y0 + hh + 6, "class": "d-line" }, plot);
+      H.text(plot, x0 + w * h / 24, y0 + hh + 20, (h < 10 ? "0" : "") + h + ":00", "d-label", h === 0 ? "start" : (h === 24 ? "end" : "middle"));
+    }
+    if (m.mode === "import") {
+      for (var k = 0; k < m.ref; k++) {
+        var start = 6 * 60 + k * 1440 / m.ref;
+        var sx = (start % 1440) / 1440 * w, bw = Math.max(2, Math.min(w, m.refMin / 1440 * w));
+        S("rect", { x: x0 + sx, y: y0 + 6, width: Math.min(bw, w - sx), height: hh - 12, rx: 2, "class": m.overlap ? "d-signal" : "d-accent", opacity: 0.85 }, plot);
+        if (sx + bw > w) S("rect", { x: x0, y: y0 + 6, width: sx + bw - w, height: hh - 12, rx: 2, "class": m.overlap ? "d-signal" : "d-accent", opacity: 0.85 }, plot);
+      }
+      H.text(plot, 10, 222, m.ref + " refresh" + (m.ref > 1 ? "es" : "") + " from 06:00, each " + (m.refMin < 10 ? m.refMin.toFixed(1) : Math.round(m.refMin)) + " min (" + (I.inc.checked ? "incremental" : "full reload") + ")", "d-label");
+      if (m.overlap) H.text(plot, 10, 242, "Each refresh takes longer than the gap between refreshes.", "d-label d-text-signal");
+      else H.text(plot, 10, 242, "Visuals read the in-memory copy; the warehouse is idle between refreshes.", "d-label");
+    } else {
+      var n = Math.min(240, Math.round(m.q / 40));
+      for (var j = 0; j < n; j++) {
+        var t = (j * 0.618034) % 1, hour = 7 + t * 12; // views cluster in working hours
+        S("line", { x1: x0 + w * hour / 24, x2: x0 + w * hour / 24, y1: y0 + 6, y2: y0 + hh - 6, "class": "d-line-signal", opacity: 0.5 }, plot);
+      }
+      H.text(plot, 10, 222, "Every page view sends " + I.vis.value + " queries; each takes about " + m.lat.toFixed(1) + " s on " + m.rows + "M rows, 4 at a time.", "d-label");
+      H.text(plot, 10, 242, "Fresh data, but load time and warehouse cost grow with visuals and views.", "d-label");
+    }
+    readout.textContent = "mode " + m.mode + " · load " + m.load.toFixed(1) + " s · max data age " + (isFinite(m.age) ? m.age.toFixed(1) + " h" : "n/a (refreshes overlap)") +
+      (m.mode === "import" ? " · refresh " + m.refMin.toFixed(1) + " min" : "") + " · warehouse queries/day " + H.fmt(m.q) + " · rows " + m.rows + "M";
+  }
+  Object.keys(I).forEach(function (k) { I[k].addEventListener("input", draw); I[k].addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 13.6 adoption funnel ---------- */
+(function () {
+  if (!document.getElementById("adopt-demo")) return;
+  var H = ATLAS13, S = H.svg;
+  var plot = document.getElementById("adopt-plot"), readout = document.getElementById("adopt-readout");
+  var KEYS = ["meet", "sub", "cert", "speed", "retire", "more"], C = {};
+  KEYS.forEach(function (k) { C[k] = document.getElementById("adopt-" + k); });
+  var AUD = 120;
+  /* illustrative additive effects on each stage's conversion rate */
+  var FX = {
+    meet: [0.45, 0.10, 0, 0], sub: [0, 0, 0.20, 0.10], cert: [0, 0, 0.15, 0.20],
+    speed: [0, 0.10, 0.10, 0], retire: [0, 0, 0, 0.25], more: [0, 0, -0.10, -0.10]
+  };
+  var BASE = [0.45, 0.60, 0.35, 0.45];
+  var STAGES = ["Aware of it", "Opened once", "Back in week 2", "Weekly active"];
+  function draw() {
+    H.clear(plot);
+    var rates = BASE.slice(), used = 0;
+    KEYS.forEach(function (k) { if (C[k].checked) { used++; FX[k].forEach(function (d, i) { rates[i] += d; }); } });
+    rates = rates.map(function (r) { return Math.max(0.05, Math.min(0.95, r)); });
+    var counts = [], n = AUD;
+    rates.forEach(function (r) { n = n * r; counts.push(n); });
+    H.text(plot, 10, 22, "Audience", "d-label");
+    S("rect", { x: 140, y: 10, width: 380, height: 18, rx: 3, "class": "d-fill" }, plot);
+    H.text(plot, 590, 24, String(AUD), "d-mono", "end");
+    var weakest = 0;
+    rates.forEach(function (r, i) { if (r < rates[weakest]) weakest = i; });
+    counts.forEach(function (c, i) {
+      var y = 44 + i * 40;
+      H.text(plot, 10, y + 14, STAGES[i], "d-label");
+      S("rect", { x: 140, y: y, width: Math.max(2, 380 * c / AUD), height: 22, rx: 3, "class": i === 3 ? "d-good" : "d-accent" }, plot);
+      H.text(plot, 590, y + 16, String(Math.round(c)), "d-mono", "end");
+      H.text(plot, 140, y + 36, Math.round(rates[i] * 100) + "% of the stage above" + (i === weakest ? "  ← weakest step" : ""), "d-label" + (i === weakest ? " d-text-signal" : ""));
+    });
+    var wau = Math.round(counts[3]);
+    H.text(plot, 10, 230, "Weekly active: " + wau + " of " + AUD + " (" + Math.round(100 * wau / AUD) + "%) with " + used + " change" + (used === 1 ? "" : "s"), "d-title");
+    readout.textContent = "weekly active " + wau + " of " + AUD + " · changes used " + used + " · stage rates " + rates.map(function (r) { return Math.round(r * 100) + "%"; }).join(" / ");
+  }
+  KEYS.forEach(function (k) { C[k].addEventListener("change", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

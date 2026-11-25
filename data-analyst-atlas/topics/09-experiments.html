@@ -1,0 +1,1634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A/B testing &amp; experiments · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="experiments">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>A/B testing &amp; experiments</h1>
+    <p class="lede">An experiment is the one tool that tells you what a change actually caused. This area teaches you to design a test, size it, read the result honestly, catch the traps that fool even experienced teams, and estimate effects when you cannot randomize at all.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every lesson here follows one running example: a subscription app wants to ship a redesigned <strong>pricing page</strong>. About 4% of the people who see today's page start a paid plan within 7 days. You first design the test (who gets randomized and what you measure), then size it so it can detect a change worth caring about. While it runs you guard against peeking, broken splits and novelty. When it ends you read the confidence interval, resist slicing it into twenty segments, and, for the changes you cannot randomize, you reach for quasi-experiments such as difference-in-differences.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 280" role="img" aria-label="The life of an experiment: a hypothesis leads to design, power and sample size, running the test, reading the result, checking segments and a decision. Guards against SRM, peeking and novelty sit under the running step, and a separate path for changes you cannot randomize leads through quasi-experiments into reading the result.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="62" width="92" height="56" rx="8"/>
+              <text class="d-title" x="56" y="86" text-anchor="middle">Hypothesis</text>
+              <text class="d-label" x="56" y="104" text-anchor="middle">new pricing page</text>
+              <line class="d-line-accent" x1="102" y1="90" x2="116" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="118" y="62" width="92" height="56" rx="8"/>
+              <text class="d-title" x="164" y="86" text-anchor="middle">Design</text>
+              <text class="d-label" x="164" y="104" text-anchor="middle">09.1 · unit, metric</text>
+              <line class="d-line-accent" x1="210" y1="90" x2="224" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="226" y="62" width="92" height="56" rx="8"/>
+              <text class="d-title" x="272" y="86" text-anchor="middle">Power</text>
+              <text class="d-label" x="272" y="104" text-anchor="middle">09.2 · n, days</text>
+              <line class="d-line-accent" x1="318" y1="90" x2="332" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-accent" x="334" y="62" width="92" height="56" rx="8"/>
+              <text class="d-title" x="380" y="86" text-anchor="middle">Run</text>
+              <text class="d-label" x="380" y="104" text-anchor="middle">A 50% · B 50%</text>
+              <line class="d-line-accent" x1="426" y1="90" x2="440" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="442" y="62" width="92" height="56" rx="8"/>
+              <text class="d-title" x="488" y="86" text-anchor="middle">Read</text>
+              <text class="d-label" x="488" y="104" text-anchor="middle">09.3 · CI, p</text>
+              <line class="d-line-accent" x1="534" y1="90" x2="548" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="550" y="62" width="92" height="56" rx="8"/>
+              <text class="d-title" x="596" y="86" text-anchor="middle">Segments</text>
+              <text class="d-label" x="596" y="104" text-anchor="middle">09.5 · correct</text>
+              <line class="d-line-accent" x1="642" y1="90" x2="656" y2="90" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-good" x="658" y="62" width="92" height="56" rx="8"/>
+              <text class="d-title" x="704" y="86" text-anchor="middle">Decide</text>
+              <text class="d-label" x="704" y="104" text-anchor="middle">ship or not</text>
+              <text class="d-label" x="380" y="40" text-anchor="middle">randomized path</text>
+              <line class="d-line d-dash" x1="380" y1="118" x2="380" y2="150"/>
+              <rect class="d-signal" x="290" y="150" width="180" height="50" rx="8"/>
+              <text class="d-title" x="380" y="171" text-anchor="middle">Guards · 09.4</text>
+              <text class="d-label" x="380" y="189" text-anchor="middle">SRM, peeking, novelty</text>
+              <line class="d-line" x1="56" y1="118" x2="56" y2="218" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="64" y="170">can't randomize?</text>
+              <rect class="d-fill" x="10" y="220" width="220" height="50" rx="8"/>
+              <text class="d-title" x="120" y="241" text-anchor="middle">Quasi-experiments · 09.6</text>
+              <text class="d-label" x="120" y="259" text-anchor="middle">diff-in-diff, before/after with control</text>
+              <path class="d-line-signal d-dash" d="M230 245 H488 V120" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="360" y="238" text-anchor="middle">weaker evidence, same reading rules</text>
+            </svg>
+          </div>
+          <figcaption>The life of one experiment. The top row is the randomized path you should use whenever you can; the guards keep the run honest; the bottom path is for changes you cannot randomize, and it feeds the same reading step with weaker evidence.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="design">
+        <header class="topic-head">
+          <p class="eyebrow">09.1 · Randomize, then compare</p>
+          <h2>Experiment design</h2>
+        </header>
+
+        <p class="lead">An A/B test randomly splits people into a <strong>control</strong> group (A, today's pricing page) and a <strong>treatment</strong> group (B, the new page). Because a coin flip decides who sees what, the two groups are alike in every way except the page. So if B converts more often than A by more than chance allows, the page caused it.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Before/after comparisons are polluted by seasonality, marketing pushes and price changes. Randomization is the only design that removes all of those at once. Analysts are usually the ones who write the test plan, pick the metric and unit, and get blamed when the result can't be trusted.</p>
+        </div>
+
+        <h3>How a user lands in a group</h3>
+        <p>Assignment must be random <em>and</em> sticky: the same person should see the same page every time. The standard trick is to hash the user id together with the experiment name into a number from 0 to 99, then send buckets 0 to 49 to A and 50 to 99 to B. Hashing is deterministic, so no lookup table is needed, and adding the experiment name makes each test's split independent of the others.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 700 230" role="img" aria-label="Visitors to the pricing page are hashed with the experiment name into buckets 0 to 99. Buckets 0 to 49 see the current page A and buckets 50 to 99 see the new page B. Each user's 7-day paid conversion is measured, and the difference between the groups estimates the effect.">
+              <defs>
+                <marker id="design-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="85" width="110" height="60" rx="8"/>
+              <text class="d-title" x="65" y="110" text-anchor="middle">Visitors</text>
+              <text class="d-label" x="65" y="128" text-anchor="middle">pricing page</text>
+              <line class="d-line-accent" x1="120" y1="115" x2="148" y2="115" marker-end="url(#design-arrow)"/>
+              <rect class="d-box" x="150" y="85" width="140" height="60" rx="8"/>
+              <text class="d-mono" x="220" y="109" text-anchor="middle">hash(user_id,</text>
+              <text class="d-mono" x="220" y="127" text-anchor="middle">"pricing-v2") % 100</text>
+              <line class="d-line-accent" x1="290" y1="105" x2="328" y2="60" marker-end="url(#design-arrow)"/>
+              <line class="d-line-accent" x1="290" y1="125" x2="328" y2="170" marker-end="url(#design-arrow)"/>
+              <text class="d-label" x="300" y="72">0–49</text>
+              <text class="d-label" x="300" y="166">50–99</text>
+              <rect class="d-accent" x="330" y="35" width="120" height="50" rx="8"/>
+              <text class="d-title" x="390" y="57" text-anchor="middle">A · control</text>
+              <text class="d-label" x="390" y="75" text-anchor="middle">current page</text>
+              <rect class="d-signal" x="330" y="145" width="120" height="50" rx="8"/>
+              <text class="d-title" x="390" y="167" text-anchor="middle">B · treatment</text>
+              <text class="d-label" x="390" y="185" text-anchor="middle">new page</text>
+              <line class="d-line" x1="450" y1="60" x2="478" y2="60" marker-end="url(#design-arrow)"/>
+              <line class="d-line" x1="450" y1="170" x2="478" y2="170" marker-end="url(#design-arrow)"/>
+              <rect class="d-box" x="480" y="35" width="92" height="50" rx="8"/>
+              <text class="d-mono" x="526" y="57" text-anchor="middle">paid in 7d?</text>
+              <text class="d-label" x="526" y="75" text-anchor="middle">e.g. 4.0%</text>
+              <rect class="d-box" x="480" y="145" width="92" height="50" rx="8"/>
+              <text class="d-mono" x="526" y="167" text-anchor="middle">paid in 7d?</text>
+              <text class="d-label" x="526" y="185" text-anchor="middle">e.g. 4.4%</text>
+              <line class="d-line" x1="572" y1="60" x2="600" y2="100" marker-end="url(#design-arrow)"/>
+              <line class="d-line" x1="572" y1="170" x2="600" y2="130" marker-end="url(#design-arrow)"/>
+              <rect class="d-good" x="602" y="85" width="90" height="60" rx="8"/>
+              <text class="d-title" x="647" y="110" text-anchor="middle">B − A</text>
+              <text class="d-label" x="647" y="128" text-anchor="middle">= the effect</text>
+              <text class="d-label" x="220" y="200" text-anchor="middle">same user → same bucket, every visit</text>
+            </svg>
+          </div>
+          <figcaption>Deterministic hashing gives a random but sticky split. Everything that differs between A and B, apart from the page, averages out across thousands of users, so B − A estimates the causal effect.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>import hashlib
+
+def bucket(user_id: str, experiment: str, buckets: int = 100) -&gt; int:
+    <span class="c"># same inputs always give the same bucket; the experiment name decorrelates tests</span>
+    digest = hashlib.sha256(f"{experiment}:{user_id}".encode()).hexdigest()
+    return int(digest[:8], 16) % buckets
+
+def variant(user_id: str) -&gt; str:
+    return "A" if bucket(user_id, "pricing-v2") &lt; 50 else "B"
+
+print(variant("u_10482"), variant("u_10482"))   <span class="c"># identical on every call</span></code></pre>
+
+        <h3>Write the plan before you launch</h3>
+        <p>A test plan fixes the decisions that are tempting to change once data arrives. Write it down, share it, and treat it as a contract. The plan below is the one this area uses.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Decision</th><th>Pricing page test (example)</th><th>Why it is fixed in advance</th></tr></thead>
+            <tbody>
+              <tr><td>Hypothesis</td><td>Showing annual savings up front raises paid sign-ups</td><td>Says what should move and why</td></tr>
+              <tr><td>Primary metric</td><td>Share of pricing-page visitors who start a paid plan within 7 days</td><td>One metric decides; the rest inform</td></tr>
+              <tr><td>Guardrails</td><td>Refund rate, support tickets, page load time</td><td>Catches wins that cause harm elsewhere</td></tr>
+              <tr><td>Unit</td><td>Logged-in user, 50/50 split</td><td>Matches how the metric is counted</td></tr>
+              <tr><td>Size and duration</td><td>MDE and power give n; run whole weeks</td><td>Stops you ending when it looks good</td></tr>
+              <tr><td>Decision rule</td><td>Ship if the 95% CI excludes 0 and no guardrail degrades</td><td>Removes post-hoc storytelling</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Choosing the randomization unit</h3>
+        <p>The <strong>randomization unit</strong> is the thing the coin is flipped for: a user, a session or a single page view. Smaller units give you more units and faster tests, but a returning visitor may then see both pages, which confuses them and blurs the effect. As a rule, randomize at the level you analyse: if the metric is "share of users who pay", flip the coin per user.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="One user's three visits, each with three page views, under three randomization units. Randomizing by user shows A every time. By session, the visits alternate between A and B. By page view, A and B are mixed even within a single visit.">
+              <rect class="d-accent" x="140" y="12" width="14" height="14" rx="3"/>
+              <text class="d-label" x="160" y="24">A · current page</text>
+              <rect class="d-signal" x="270" y="12" width="14" height="14" rx="3"/>
+              <text class="d-label" x="290" y="24">B · new page</text>
+              <text class="d-label" x="190" y="54" text-anchor="middle">visit 1</text>
+              <text class="d-label" x="330" y="54" text-anchor="middle">visit 2</text>
+              <text class="d-label" x="470" y="54" text-anchor="middle">visit 3</text>
+              <text class="d-title" x="20" y="84">User</text>
+              <rect class="d-accent" x="148" y="66" width="24" height="24" rx="4"/><rect class="d-accent" x="178" y="66" width="24" height="24" rx="4"/><rect class="d-accent" x="208" y="66" width="24" height="24" rx="4"/>
+              <rect class="d-accent" x="288" y="66" width="24" height="24" rx="4"/><rect class="d-accent" x="318" y="66" width="24" height="24" rx="4"/><rect class="d-accent" x="348" y="66" width="24" height="24" rx="4"/>
+              <rect class="d-accent" x="428" y="66" width="24" height="24" rx="4"/><rect class="d-accent" x="458" y="66" width="24" height="24" rx="4"/><rect class="d-accent" x="488" y="66" width="24" height="24" rx="4"/>
+              <text class="d-label d-text-good" x="540" y="83">consistent</text>
+              <text class="d-title" x="20" y="134">Session</text>
+              <rect class="d-accent" x="148" y="116" width="24" height="24" rx="4"/><rect class="d-accent" x="178" y="116" width="24" height="24" rx="4"/><rect class="d-accent" x="208" y="116" width="24" height="24" rx="4"/>
+              <rect class="d-signal" x="288" y="116" width="24" height="24" rx="4"/><rect class="d-signal" x="318" y="116" width="24" height="24" rx="4"/><rect class="d-signal" x="348" y="116" width="24" height="24" rx="4"/>
+              <rect class="d-accent" x="428" y="116" width="24" height="24" rx="4"/><rect class="d-accent" x="458" y="116" width="24" height="24" rx="4"/><rect class="d-accent" x="488" y="116" width="24" height="24" rx="4"/>
+              <text class="d-label d-text-signal" x="540" y="133">flips between visits</text>
+              <text class="d-title" x="20" y="184">Page view</text>
+              <rect class="d-signal" x="148" y="166" width="24" height="24" rx="4"/><rect class="d-accent" x="178" y="166" width="24" height="24" rx="4"/><rect class="d-signal" x="208" y="166" width="24" height="24" rx="4"/>
+              <rect class="d-accent" x="288" y="166" width="24" height="24" rx="4"/><rect class="d-accent" x="318" y="166" width="24" height="24" rx="4"/><rect class="d-signal" x="348" y="166" width="24" height="24" rx="4"/>
+              <rect class="d-signal" x="428" y="166" width="24" height="24" rx="4"/><rect class="d-accent" x="458" y="166" width="24" height="24" rx="4"/><rect class="d-accent" x="488" y="166" width="24" height="24" rx="4"/>
+              <text class="d-label d-text-signal" x="540" y="183">flips within a visit</text>
+            </svg>
+          </div>
+          <figcaption>The same person's three visits under three units. Only user-level randomization gives one consistent experience, which is what a pricing page needs.</figcaption>
+        </figure>
+
+        <div class="widget" id="unit-demo">
+          <div class="widget-head">
+            <span class="widget-title">Randomization unit chooser</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="unit-unit">Randomize by
+              <select id="unit-unit">
+                <option value="user">user</option>
+                <option value="session">session</option>
+                <option value="page" selected>page view</option>
+              </select>
+            </label>
+            <label for="unit-visits">Visits per user <input type="range" id="unit-visits" min="1" max="8" step="0.5" value="3"><output id="unit-visits-out">3.0</output></label>
+            <label for="unit-reset">Cookie resets <input type="range" id="unit-reset" min="0" max="40" step="2" value="10"><output id="unit-reset-out">10%</output></label>
+          </div>
+          <svg id="unit-plot" viewBox="0 0 600 270" role="img" aria-label="Sixteen example users as rows; each square is one visit coloured by the version that visit showed, split into page views when randomizing by page view."></svg>
+          <p class="readout" id="unit-readout"></p>
+        </div>
+        <p>Each row is one of 2,000 simulated users and each square one visit. Logged-out visitors are tracked by a cookie, so a <em>cookie reset</em> (cleared cookies, a new device) makes the same person look like a new user who gets a fresh coin flip. That is why tests on logged-in users are cleaner.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Unit</th><th>Consistent experience</th><th>Sample size</th><th>Use when</th></tr></thead>
+            <tbody>
+              <tr><td>User (account id)</td><td>Yes</td><td>Smallest</td><td>Visible changes, pricing, anything users remember</td></tr>
+              <tr><td>Cookie / device</td><td>Mostly, until cookies reset</td><td>Small</td><td>Logged-out traffic such as landing pages</td></tr>
+              <tr><td>Session</td><td>Within a visit only</td><td>Larger</td><td>Invisible changes measured per session, such as search ranking</td></tr>
+              <tr><td>Page view</td><td>No</td><td>Largest</td><td>Back-end changes users cannot notice, such as latency tweaks</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- sanity check after launch: nobody should appear in both variants</span>
+SELECT COUNT(*) AS users_in_both
+FROM (
+  SELECT user_id
+  FROM experiment_exposures
+  WHERE experiment = 'pricing-v2'
+  GROUP BY user_id
+  HAVING COUNT(DISTINCT variant) &gt; 1
+) t;</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Randomization makes the groups alike in everything except the change, so the difference in outcomes is causal.</li>
+            <li>Hash the user id with the experiment name for a split that is random, sticky and independent across tests.</li>
+            <li>Write the hypothesis, primary metric, guardrails, unit, size and decision rule before launch.</li>
+            <li>Randomize at the level you analyse; for visible changes that means the user.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Randomizing page views but analysing users, so many users saw both versions and the standard errors are wrong.</li>
+            <li>Counting everyone who was assigned, including people who never reached the pricing page, which dilutes the effect.</li>
+            <li>Picking the primary metric after seeing which one moved.</li>
+            <li>Reusing the same bucket split for every experiment, so the same users are always in treatment.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="design-1"><span>Write a one-page test plan with hypothesis, primary metric, guardrails, unit and decision rule</span></label></li>
+          <li><label><input type="checkbox" data-key="design-2"><span>Explain why hashing user id plus experiment name gives a sticky, independent split</span></label></li>
+          <li><label><input type="checkbox" data-key="design-3"><span>Choose between user, session and page-view randomization for a given change</span></label></li>
+          <li><label><input type="checkbox" data-key="design-4"><span>Query exposure logs to find users who landed in both variants</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://experimentguide.com/">Trustworthy Online Controlled Experiments (Kohavi, Tang, Xu)</a></li>
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/A/B_testing">A/B testing (Wikipedia overview)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="power">
+        <header class="topic-head">
+          <p class="eyebrow">09.2 · How many users, how many days</p>
+          <h2>Power &amp; sample size</h2>
+        </header>
+
+        <p class="lead">Small effects hide in noise. If the new pricing page lifts conversion from 4.0% to 4.4%, a test with a few thousand users will usually miss it. <strong>Power</strong> is the probability that your test detects an effect of a given size when it is really there. You choose the size of effect worth detecting, and the maths tells you how many users that takes.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Stakeholders always ask "how long do we need to run it?". An underpowered test wastes weeks and ends with "no significant difference", which people then misread as "no effect". Sizing the test up front is the analyst's job, and it often kills a test idea before it wastes anyone's traffic.</p>
+        </div>
+
+        <h3>Four numbers in, one number out</h3>
+        <ul>
+          <li><strong>Baseline rate</strong> \(p_1\): today's conversion, here 4.0%.</li>
+          <li><strong>Minimum detectable effect (MDE)</strong>: the smallest lift worth acting on. A 10% relative MDE means 4.0% → 4.4%, an absolute change of 0.4 percentage points (pp).</li>
+          <li><strong>Significance level</strong> \(\alpha\): the false-positive rate you accept, usually 0.05.</li>
+          <li><strong>Power</strong> \(1-\beta\): the chance of detecting a true MDE-sized effect, usually 0.8.</li>
+        </ul>
+
+        <div class="formula">
+          \[ n_{\text{per variant}} \approx \frac{\left(z_{1-\alpha/2} + z_{1-\beta}\right)^2 \,\big[p_1(1-p_1) + p_2(1-p_2)\big]}{(p_2 - p_1)^2} \]
+          <span class="formula-note">With \(\alpha = 0.05\) and power 0.8, \((1.96 + 0.84)^2 \approx 7.85\). For 4.0% → 4.4%: \(7.85 \times (0.0384 + 0.0421) / 0.004^2 \approx 39{,}500\) users per variant.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 230" role="img" aria-label="Two bell curves for the observed difference: one centred on zero if there is no effect, and one centred on the MDE if the effect is real. A critical line at 1.96 standard errors cuts both. The null tail beyond the line is alpha, 2.5 percent on that side; the alternative curve's area beyond the line is the power, 80 percent; the area before it is beta, 20 percent.">
+              <line class="d-line" x1="30" y1="180" x2="630" y2="180"/>
+              <path class="d-signal" d="M205.7,180 L205.7,179.7 L211.6,179.6 L217.6,179.5 L223.5,179.3 L229.4,179.0 L235.3,178.7 L241.2,178.2 L247.1,177.6 L253.1,176.9 L259.0,175.9 L264.9,174.7 L270.8,173.3 L276.7,171.5 L282.7,169.3 L288.6,166.8 L294.5,163.8 L300.4,160.3 L306.3,156.3 L312.2,151.7 L318.2,146.6 L324.1,141.0 L330.0,135.0 L335.9,128.5 L341.8,121.6 L347.8,114.5 L353.7,107.2 L359.6,100.0 L363.1,95.7 L363.1,180 Z" opacity="0.55"/>
+              <path class="d-good" d="M363.1,180 L363.1,95.7 L369.1,88.7 L375.0,82.2 L380.9,76.3 L386.8,71.1 L392.7,66.7 L398.7,63.4 L404.6,61.2 L410.5,60.1 L416.4,60.2 L422.3,61.5 L428.2,64.0 L434.2,67.5 L440.1,72.0 L446.0,77.4 L451.9,83.5 L457.8,90.1 L463.8,97.1 L469.7,104.3 L475.6,111.6 L481.5,118.8 L487.4,125.7 L493.3,132.4 L499.3,138.7 L505.2,144.5 L511.1,149.7 L517.0,154.5 L522.9,158.7 L528.9,162.4 L534.8,165.6 L540.7,168.4 L546.6,170.7 L552.5,172.6 L558.4,174.2 L564.4,175.5 L570.3,176.5 L576.2,177.3 L582.1,178.0 L588.0,178.5 L594.0,178.9 L599.9,179.2 L605.8,179.4 L611.7,179.6 L617.6,179.7 L620.0,180 Z" opacity="0.7"/>
+              <path class="d-accent" d="M363.1,180 L363.1,162.4 L369.1,165.6 L375.0,168.4 L380.9,170.7 L386.8,172.6 L392.7,174.2 L398.7,175.5 L404.6,176.5 L410.5,177.3 L416.4,178.0 L422.3,178.5 L428.2,178.9 L434.2,179.2 L440.1,179.4 L446.0,179.6 L451.9,179.7 L454.3,180 Z"/>
+              <path class="d-line" d="M40.0,179.7 L54.8,179.4 L69.6,178.7 L84.4,177.3 L99.2,174.7 L114.0,170.5 L128.8,163.8 L143.6,154.0 L158.4,141.0 L173.2,125.1 L188.0,107.2 L202.8,89.4 L217.6,74.1 L232.3,63.7 L247.1,60.0 L261.9,63.7 L276.7,74.1 L291.5,89.4 L306.3,107.2 L321.1,125.1 L335.9,141.0 L350.7,154.0 L365.5,163.8 L380.3,170.5 L395.1,174.7 L409.9,177.3 L424.7,178.7 L439.5,179.4 L454.3,179.7" stroke-width="2"/>
+              <path class="d-line-accent" d="M205.7,179.7 L220.5,179.4 L235.3,178.7 L250.1,177.3 L264.9,174.7 L279.7,170.5 L294.5,163.8 L309.3,154.0 L324.1,141.0 L338.9,125.1 L353.7,107.2 L368.5,89.4 L383.3,74.1 L398.1,63.7 L412.9,60.0 L427.7,63.7 L442.4,74.1 L457.2,89.4 L472.0,107.2 L486.8,125.1 L501.6,141.0 L516.4,154.0 L531.2,163.8 L546.0,170.5 L560.8,174.7 L575.6,177.3 L590.4,178.7 L605.2,179.4 L620.0,179.7"/>
+              <line class="d-line d-dash" x1="363.1" y1="30" x2="363.1" y2="196"/>
+              <text class="d-label" x="363" y="24" text-anchor="middle">critical value 1.96 SE</text>
+              <text class="d-title" x="247" y="50" text-anchor="middle">no effect</text>
+              <text class="d-title" x="470" y="50" text-anchor="middle">true lift = MDE</text>
+              <text class="d-label d-text-good" x="475" y="150">power 80%</text>
+              <text class="d-label d-text-signal" x="300" y="200" text-anchor="middle">β 20% (missed)</text>
+              <text class="d-label d-text-accent" x="420" y="200" text-anchor="middle">α/2 = 2.5%</text>
+              <text class="d-mono" x="247" y="214" text-anchor="middle">0</text>
+              <text class="d-mono" x="413" y="214" text-anchor="middle">0.4 pp</text>
+              <text class="d-label" x="630" y="214" text-anchor="end">observed B − A</text>
+            </svg>
+          </div>
+          <figcaption>The test declares a win when the observed difference lands right of the critical line. With no real effect that happens 2.5% of the time on this side (α/2). With a real 0.4 pp lift it happens 80% of the time (the power). More users narrow both curves and pull them apart.</figcaption>
+        </figure>
+
+        <h3>The MDE drives everything</h3>
+        <p>Sample size grows with the inverse square of the effect. Halving the MDE means four times the users, so the most important conversation is "what lift would change our decision?", not "what lift do we hope for?". At 5,000 pricing-page visitors a day, a 10% relative MDE needs about 79,000 users, roughly 16 days. A 5% MDE needs about 309,000, roughly two months.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Users needed per variant against relative MDE at a 4 percent baseline: 951 thousand at 2 percent, 154 thousand at 5 percent, 39 thousand at 10 percent, 10 thousand at 20 percent. Halving the MDE quadruples the sample.">
+              <line class="d-line" x1="70" y1="190" x2="620" y2="190"/>
+              <line class="d-line" x1="70" y1="20" x2="70" y2="190"/>
+              <line class="d-grid" x1="70" y1="40" x2="620" y2="40"/>
+              <line class="d-grid" x1="70" y1="90" x2="620" y2="90"/>
+              <line class="d-grid" x1="70" y1="140" x2="620" y2="140"/>
+              <text class="d-label" x="62" y="44" text-anchor="end">1M</text>
+              <text class="d-label" x="62" y="94" text-anchor="end">100k</text>
+              <text class="d-label" x="62" y="144" text-anchor="end">10k</text>
+              <text class="d-label" x="62" y="194" text-anchor="end">1k</text>
+              <path class="d-line-accent" d="M106.7,41.1 L125,58.6 L161.7,80.6 L207.5,98.0 L253.3,110.2 L345,127.3 L436.7,139.3 L620,156.6"/>
+              <circle class="d-dot" cx="106.7" cy="41.1" r="4.5"/>
+              <circle class="d-dot" cx="161.7" cy="80.6" r="4.5"/>
+              <circle class="d-dot-signal" cx="253.3" cy="110.2" r="5.5"/>
+              <circle class="d-dot" cx="436.7" cy="139.3" r="4.5"/>
+              <text class="d-label" x="115" y="36">951k</text>
+              <text class="d-label" x="170" y="76">154k</text>
+              <text class="d-label d-text-signal" x="261" y="104">39.5k (our plan)</text>
+              <text class="d-label" x="445" y="133">10.3k</text>
+              <text class="d-label" x="106.7" y="208" text-anchor="middle">2%</text>
+              <text class="d-label" x="161.7" y="208" text-anchor="middle">5%</text>
+              <text class="d-label" x="253.3" y="208" text-anchor="middle">10%</text>
+              <text class="d-label" x="436.7" y="208" text-anchor="middle">20%</text>
+              <text class="d-label" x="620" y="208" text-anchor="end">30%</text>
+              <text class="d-label" x="345" y="226" text-anchor="middle">relative MDE (baseline 4.0%, α 0.05, power 0.8)</text>
+              <text class="d-label" x="16" y="105" transform="rotate(-90 16 105)" text-anchor="middle">users per variant (log)</text>
+              <text class="d-label d-text-accent" x="420" y="70">halve the MDE → 4× the users</text>
+            </svg>
+          </div>
+          <figcaption>Required users per variant fall with the square of the MDE (log scale). Detecting tiny lifts on a 4% baseline needs enormous traffic.</figcaption>
+        </figure>
+
+        <div class="widget" id="power-demo">
+          <div class="widget-head">
+            <span class="widget-title">Sample size and duration calculator</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="power-base">Baseline rate <input type="range" id="power-base" min="1" max="20" step="0.5" value="4"><output id="power-base-out">4.0%</output></label>
+            <label for="power-mde">Relative MDE <input type="range" id="power-mde" min="2" max="30" step="1" value="5"><output id="power-mde-out">5%</output></label>
+            <label for="power-alpha">α
+              <select id="power-alpha"><option value="0.01">0.01</option><option value="0.05" selected>0.05</option><option value="0.1">0.10</option></select>
+            </label>
+            <label for="power-pow">Power
+              <select id="power-pow"><option value="0.7">0.70</option><option value="0.8" selected>0.80</option><option value="0.9">0.90</option></select>
+            </label>
+            <label for="power-traffic">Visitors / day <input type="range" id="power-traffic" min="1000" max="40000" step="1000" value="5000"><output id="power-traffic-out">5,000</output></label>
+          </div>
+          <svg id="power-plot" viewBox="0 0 600 270" role="img" aria-label="Sample size per variant against relative MDE for the chosen baseline, with the current setting marked, and a calendar strip showing how many days and full weeks the test needs."></svg>
+          <p class="readout" id="power-readout"></p>
+        </div>
+        <p>Traffic is split 50/50, so each variant gets half the daily visitors. Round the duration up to whole weeks: weekday and weekend visitors behave differently, and a test that covers only some weekdays over-represents them.</p>
+
+        <pre class="code" data-lang="python"><code>from statsmodels.stats.proportion import proportion_effectsize
+from statsmodels.stats.power import NormalIndPower
+
+p1, p2 = 0.040, 0.044                       <span class="c"># baseline and baseline + 10% relative MDE</span>
+h = proportion_effectsize(p2, p1)           <span class="c"># Cohen's h (arcsine transform)</span>
+n = NormalIndPower().solve_power(effect_size=h, alpha=0.05, power=0.8,
+                                 ratio=1.0, alternative="two-sided")
+print(round(n))                             <span class="c"># about 39,450 users per variant</span>
+
+daily_visitors = 5_000
+days = 2 * n / daily_visitors               <span class="c"># about 15.8, so plan 3 full weeks</span></code></pre>
+
+        <div class="grid-2">
+          <div class="card"><h4>To need fewer users</h4><p>Accept a larger MDE, test a bigger change, pick a metric with less variance (conversion rather than revenue per user), or use variance reduction such as CUPED, which adjusts for each user's pre-experiment behaviour.</p></div>
+          <div class="card"><h4>What does not help</h4><p>Lowering power to 50% just to finish sooner. You then miss half of all real wins, and the wins you do catch overstate the true effect.</p></div>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Power is the chance a test detects an effect of the MDE size when it is real; 80% is the usual target.</li>
+            <li>Sample size depends on baseline rate, MDE, α and power, and grows with the inverse square of the MDE.</li>
+            <li>Choose the MDE from the business decision: the smallest lift that would change what you do.</li>
+            <li>Duration = total users needed ÷ eligible daily traffic, rounded up to whole weeks.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Mixing relative and absolute MDE: 10% of 4% is 0.4 pp, not 10 pp.</li>
+            <li>Using all site traffic in the duration estimate instead of only users who reach the pricing page.</li>
+            <li>Reading "not significant" from an underpowered test as proof that the change does nothing.</li>
+            <li>Running until the planned n and then extending "a bit longer" because the result is close.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="power-1"><span>Compute users per variant for a conversion test by hand with the formula</span></label></li>
+          <li><label><input type="checkbox" data-key="power-2"><span>Convert between relative and absolute MDE without mistakes</span></label></li>
+          <li><label><input type="checkbox" data-key="power-3"><span>Turn a sample size into a duration in whole weeks from eligible daily traffic</span></label></li>
+          <li><label><input type="checkbox" data-key="power-4"><span>Explain what power is and why an underpowered "no difference" is not evidence of no effect</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Tool</span><a href="https://www.evanmiller.org/ab-testing/sample-size.html">Evan Miller: sample size calculator</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.statsmodels.org/stable/index.html">statsmodels documentation (stats.power)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="reading-results">
+        <header class="topic-head">
+          <p class="eyebrow">09.3 · Estimate, interval, decision</p>
+          <h2>Reading results</h2>
+        </header>
+
+        <p class="lead">The test has run its planned three weeks. Control converted 1,600 of 40,000 users (4.00%) and the new page 1,760 of 40,000 (4.40%). The headline is not "B won". It is an estimate with uncertainty: <strong>+0.40 percentage points, 95% CI +0.12 to +0.68 pp, p = 0.005</strong>. Read the interval first and the p-value second.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Your write-up decides whether a feature ships. Reporting only "significant, +10%" hides how unsure you are and invites people to bank the point estimate. Reporting the interval lets a product manager see the worst plausible case before committing.</p>
+        </div>
+
+        <h3>The confidence interval for a difference</h3>
+        <p>Each conversion rate has a standard error that shrinks with the square root of its sample size. The standard error of the difference combines both, and the 95% interval is the difference plus or minus 1.96 of those standard errors.</p>
+
+        <div class="formula">
+          \[ \hat d = \hat p_B - \hat p_A, \qquad SE = \sqrt{\frac{\hat p_A(1-\hat p_A)}{n_A} + \frac{\hat p_B(1-\hat p_B)}{n_B}}, \qquad \text{95\% CI} = \hat d \pm 1.96\, SE \]
+          <span class="formula-note">Here \(SE = \sqrt{0.04 \cdot 0.96/40{,}000 + 0.044 \cdot 0.956/40{,}000} \approx 0.00142\), so the CI is \(0.40 \pm 0.28\) pp. In relative terms that is a lift of about 10%, plausibly anywhere from 3% to 17%.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 260" role="img" aria-label="Five example confidence intervals for B minus A against a zero line and a plus 0.2 point line marking the smallest lift worth shipping: a clear win entirely above 0.2, a significant but possibly too small effect, a wide inconclusive interval crossing zero, a narrow flat interval around zero, and a harmful interval below zero.">
+              <line class="d-line" x1="313.3" y1="22" x2="313.3" y2="222"/>
+              <line class="d-line-signal d-dash" x1="364.4" y1="22" x2="364.4" y2="222"/>
+              <text class="d-label" x="313" y="16" text-anchor="middle">0</text>
+              <text class="d-label d-text-signal" x="372" y="16">+0.2 pp worth shipping</text>
+              <text class="d-title" x="10" y="44">Clear win</text>
+              <line class="d-line-accent" x1="390" y1="40" x2="543.3" y2="40" stroke-width="6"/>
+              <circle class="d-dot" cx="466.7" cy="40" r="6"/>
+              <text class="d-title" x="10" y="84">Real but small?</text>
+              <line class="d-line-accent" x1="326.1" y1="80" x2="402.8" y2="80" stroke-width="6"/>
+              <circle class="d-dot" cx="364.4" cy="80" r="6"/>
+              <text class="d-title" x="10" y="124">Inconclusive</text>
+              <text class="d-label" x="10" y="138">too few users</text>
+              <line class="d-line" x1="211.1" y1="120" x2="543.3" y2="120" stroke-width="6"/>
+              <circle class="d-dot-muted" cx="377.2" cy="120" r="6"/>
+              <text class="d-title" x="10" y="164">Flat</text>
+              <text class="d-label" x="10" y="178">confident no big effect</text>
+              <line class="d-line" x1="275" y1="160" x2="351.7" y2="160" stroke-width="6"/>
+              <circle class="d-dot-muted" cx="313.3" cy="160" r="6"/>
+              <text class="d-title" x="10" y="204">Harmful</text>
+              <line class="d-line-signal" x1="172.8" y1="200" x2="275" y2="200" stroke-width="6"/>
+              <circle class="d-dot-signal" cx="223.9" cy="200" r="6"/>
+              <line class="d-line" x1="160" y1="230" x2="620" y2="230"/>
+              <text class="d-label" x="160" y="248" text-anchor="middle">−0.6</text>
+              <text class="d-label" x="313.3" y="248" text-anchor="middle">0</text>
+              <text class="d-label" x="466.7" y="248" text-anchor="middle">+0.6</text>
+              <text class="d-label" x="620" y="248" text-anchor="end">+1.2 pp</text>
+            </svg>
+          </div>
+          <figcaption>Five possible readouts of the same test. Significance only asks "does the interval exclude 0?". The decision also asks where the interval sits relative to the smallest lift worth shipping.</figcaption>
+        </figure>
+
+        <h3>What the p-value says</h3>
+        <p>The <strong>p-value</strong> is the probability of seeing a difference at least this large if the new page truly did nothing. To compute it, pool both groups to estimate the shared rate under "no effect", divide the observed difference by that standard error to get \(z\), and read the two tails of the normal curve beyond \(\pm z\).</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="The standard normal curve of z under no effect. Regions beyond plus and minus 1.96 are shaded as the 5 percent rejection region. The observed z of 2.82 lies inside the right region, giving a two-sided p-value of 0.005.">
+              <path class="d-accent" d="M467.2,180 L467.2,161.0 L474.2,164.4 L481.2,167.4 L488.2,169.9 L495.2,172.0 L502.2,173.7 L509.2,175.1 L516.2,176.2 L523.2,177.1 L530.2,177.8 L537.2,178.4 L544.2,178.8 L551.2,179.1 L558.2,179.4 L565.2,179.5 L572.2,179.7 L579.2,179.8 L586.2,179.8 L593.2,179.9 L600.2,179.9 L607.2,179.9 L610.0,180 Z"/>
+              <path class="d-accent" d="M50.0,180 L50.0,180.0 L57.0,179.9 L64.0,179.9 L71.0,179.9 L78.0,179.8 L85.0,179.7 L92.0,179.6 L99.0,179.4 L106.0,179.2 L113.0,178.9 L120.0,178.6 L127.0,178.1 L134.0,177.4 L141.0,176.6 L148.0,175.6 L155.0,174.3 L162.0,172.7 L169.0,170.8 L176.0,168.4 L183.0,165.7 L190.0,162.4 L192.8,161.0 L192.8,180 Z"/>
+              <path class="d-line" stroke-width="2" d="M50.0,180.0 L64.0,179.9 L78.0,179.8 L92.0,179.6 L106.0,179.2 L120.0,178.6 L134.0,177.4 L148.0,175.6 L162.0,172.7 L176.0,168.4 L190.0,162.4 L204.0,154.3 L218.0,143.9 L232.0,131.2 L246.0,116.7 L260.0,101.2 L274.0,85.6 L288.0,71.4 L302.0,60.0 L316.0,52.6 L330.0,50.0 L344.0,52.6 L358.0,60.0 L372.0,71.4 L386.0,85.6 L400.0,101.2 L414.0,116.7 L428.0,131.2 L442.0,143.9 L456.0,154.3 L470.0,162.4 L484.0,168.4 L498.0,172.7 L512.0,175.6 L526.0,177.4 L540.0,178.6 L554.0,179.2 L568.0,179.6 L582.0,179.8 L596.0,179.9 L610.0,180.0"/>
+              <line class="d-line" x1="40" y1="180" x2="620" y2="180"/>
+              <line class="d-line-signal" x1="527.4" y1="100" x2="527.4" y2="180"/>
+              <circle class="d-dot-signal" cx="527.4" cy="177.6" r="5"/>
+              <text class="d-label d-text-signal" x="527" y="92" text-anchor="middle">observed z = 2.82</text>
+              <text class="d-label d-text-signal" x="527" y="78" text-anchor="middle">p = 0.005</text>
+              <text class="d-label d-text-accent" x="467" y="150" text-anchor="end">2.5%</text>
+              <text class="d-label d-text-accent" x="193" y="150">2.5%</text>
+              <text class="d-mono" x="330" y="198" text-anchor="middle">0</text>
+              <text class="d-mono" x="467.2" y="198" text-anchor="middle">+1.96</text>
+              <text class="d-mono" x="192.8" y="198" text-anchor="middle">−1.96</text>
+              <text class="d-label" x="330" y="214" text-anchor="middle">z = (p̂B − p̂A) / SE_pooled, assuming no effect</text>
+              <text class="d-title" x="330" y="34" text-anchor="middle">if the page did nothing</text>
+            </svg>
+          </div>
+          <figcaption>Under "no effect", \(z\) follows a standard normal curve. The shaded tails hold 5% of it. Our observed \(z = 2.82\) lands deep in the right tail, so a difference this large would be rare (p = 0.005) if the page did nothing.</figcaption>
+        </figure>
+
+        <div class="widget" id="result-demo">
+          <div class="widget-head">
+            <span class="widget-title">Two-proportion result reader</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="result-n">Users per variant <input type="range" id="result-n" min="1000" max="100000" step="1000" value="10000"><output id="result-n-out">10,000</output></label>
+            <label for="result-a">Rate A <input type="range" id="result-a" min="1" max="10" step="0.1" value="4"><output id="result-a-out">4.0%</output></label>
+            <label for="result-b">Rate B <input type="range" id="result-b" min="1" max="10" step="0.1" value="4.4"><output id="result-b-out">4.4%</output></label>
+          </div>
+          <svg id="result-plot" viewBox="0 0 600 220" role="img" aria-label="The observed difference B minus A with its 95 percent confidence interval drawn against zero and the plus 0.2 point shipping threshold, plus the verdict."></svg>
+          <p class="readout" id="result-readout"></p>
+        </div>
+        <p>Keep the rates at 4.0% and 4.4% and move only the sample size. The point estimate never changes, but the interval shrinks with \(\sqrt{n}\) until it clears zero. Significance is a statement about your evidence, not about the size of the effect.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- per-variant counts for the primary metric (users exposed to the pricing page)</span>
+SELECT e.variant,
+       COUNT(*)                                        AS users,
+       COUNT(*) FILTER (WHERE s.first_paid_at &gt;= e.exposed_at
+                          AND s.first_paid_at &lt;  e.exposed_at + INTERVAL '7 days') AS converters
+FROM (
+  SELECT user_id, MIN(variant) AS variant, MIN(exposed_at) AS exposed_at
+  FROM experiment_exposures
+  WHERE experiment = 'pricing-v2'
+  GROUP BY user_id                 <span class="c">-- one row per user (users in both variants already excluded)</span>
+) e
+LEFT JOIN subscriptions s ON s.user_id = e.user_id   <span class="c">-- one row per user: first_paid_at</span>
+GROUP BY e.variant;</code></pre>
+
+        <pre class="code" data-lang="python"><code>from statsmodels.stats.proportion import proportions_ztest, confint_proportions_2indep
+
+conv  = [1760, 1600]                 <span class="c"># B, A</span>
+users = [40000, 40000]
+
+z, p = proportions_ztest(conv, users)                 <span class="c"># pooled z test, two-sided</span>
+lo, hi = confint_proportions_2indep(conv[0], users[0], conv[1], users[1],
+                                    compare="diff", method="wald")
+print(f"z={z:.2f}  p={p:.4f}  diff CI=[{lo*100:+.2f}, {hi*100:+.2f}] pp")
+<span class="c"># z=2.82  p=0.0048  diff CI=[+0.12, +0.68] pp</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Report the difference, its 95% confidence interval and the p-value, in absolute and relative terms.</li>
+            <li>The p-value is the chance of a difference this large if the change did nothing; it is not the chance B is better.</li>
+            <li>Statistical significance (CI excludes 0) and practical significance (CI clears the smallest worthwhile lift) are separate questions.</li>
+            <li>Check guardrail metrics before shipping a primary-metric win.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Saying "p = 0.005 means a 99.5% chance the new page is better".</li>
+            <li>Banking the point estimate (+10%) in a forecast when the interval runs from +3% to +17%.</li>
+            <li>Calling a wide, zero-crossing interval "no effect" instead of "inconclusive".</li>
+            <li>Running a t-test on per-page-view rows when users were randomized, which overstates the sample size.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="reading-results-1"><span>Compute the difference, SE and 95% CI for two conversion rates by hand</span></label></li>
+          <li><label><input type="checkbox" data-key="reading-results-2"><span>State correctly what a p-value of 0.03 does and does not mean</span></label></li>
+          <li><label><input type="checkbox" data-key="reading-results-3"><span>Classify a result as clear win, small, inconclusive, flat or harmful from its interval</span></label></li>
+          <li><label><input type="checkbox" data-key="reading-results-4"><span>Produce per-variant counts in SQL and the test in statsmodels</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://www.statsmodels.org/stable/index.html">statsmodels documentation (stats.proportion)</a></li>
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Misuse_of_p-values">Misuse of p-values (Wikipedia)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="pitfalls">
+        <header class="topic-head">
+          <p class="eyebrow">09.4 · Keeping the run honest</p>
+          <h2>Pitfalls: peeking, SRM &amp; novelty</h2>
+        </header>
+
+        <p class="lead">Most wrong experiment conclusions come from three traps. <strong>Peeking</strong>: checking the p-value every day and stopping the first time it dips below 0.05. <strong>Sample ratio mismatch (SRM)</strong>: the split you asked for is not the split you got, which means something in the pipeline is broken. <strong>Novelty</strong>: users react to anything new, so the first week's lift fades.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Dashboards make it easy for anyone to watch a test live, and someone will ask "it's significant now, can we ship?". These checks are where analysts protect the company from shipping noise. SRM in particular is a fast, mechanical check that catches bugs nobody else will notice.</p>
+        </div>
+
+        <h3>Peeking inflates false positives</h3>
+        <p>A p-value is only valid for one look at a sample size fixed in advance. The z-statistic of an A/A test (two identical pages) wanders like a random walk as data accumulates. Look once and it lands beyond ±1.96 only 5% of the time. Look every day and stop at the first crossing, and you get many chances to catch a random excursion.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="The daily z-statistic of a test with no real effect over 21 days. It briefly crosses the plus 1.96 line on days 6 and 7, then drifts back to 0.4 by day 21. Stopping at the first crossing would declare a false win.">
+              <rect class="d-fill" x="60" y="40" width="540" height="51.6"/>
+              <line class="d-line" x1="60" y1="170" x2="600" y2="170"/>
+              <line class="d-line" x1="60" y1="30" x2="60" y2="190"/>
+              <line class="d-line-signal d-dash" x1="60" y1="91.6" x2="600" y2="91.6"/>
+              <text class="d-label d-text-signal" x="596" y="85" text-anchor="end">z = 1.96 (p = 0.05)</text>
+              <text class="d-label" x="66" y="56">"significant" zone</text>
+              <path class="d-line-accent" d="M60,158.0 L87,134.0 L114,114.0 L141,126.0 L168,102.0 L195,86.0 L222,78.0 L249,98.0 L276,110.0 L303,122.0 L330,130.0 L357,118.0 L384,134.0 L411,142.0 L438,138.0 L465,146.0 L492,134.0 L519,142.0 L546,150.0 L573,146.0 L600,154.0"/>
+              <circle class="d-dot-signal" cx="195" cy="86" r="6"/>
+              <text class="d-label d-text-signal" x="195" y="118" text-anchor="middle">day 6: "we won!"</text>
+              <circle class="d-dot" cx="600" cy="154" r="5"/>
+              <text class="d-label" x="596" y="186" text-anchor="end">day 21: z = 0.4, p = 0.69</text>
+              <text class="d-label" x="52" y="174" text-anchor="end">0</text>
+              <text class="d-label" x="52" y="134" text-anchor="end">1</text>
+              <text class="d-label" x="52" y="94" text-anchor="end">2</text>
+              <text class="d-label" x="60" y="208">day 1</text>
+              <text class="d-label" x="600" y="208" text-anchor="end">day 21</text>
+              <text class="d-label" x="16" y="110" transform="rotate(-90 16 110)" text-anchor="middle">z-statistic</text>
+            </svg>
+          </div>
+          <figcaption>An A/A test, so the true effect is zero. The planned day-21 read is clearly null, but a team checking daily would have shipped on day 6 (illustrative path).</figcaption>
+        </figure>
+
+        <div class="widget" id="peek-demo">
+          <div class="widget-head">
+            <span class="widget-title">Peeking simulator: 1,000 A/A tests</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="peek-looks">Looks <input type="range" id="peek-looks" min="1" max="20" step="1" value="10"><output id="peek-looks-out">10</output></label>
+            <label for="peek-rule">Stop when
+              <select id="peek-rule">
+                <option value="peek" selected>p &lt; 0.05 at any look</option>
+                <option value="bonf">p &lt; 0.05 / looks (Bonferroni)</option>
+                <option value="pocock">|z| &gt; Pocock boundary</option>
+              </select>
+            </label>
+            <button class="btn" type="button" id="peek-rerun">New batch</button>
+          </div>
+          <svg id="peek-plot" viewBox="0 0 600 260" role="img" aria-label="Forty of the simulated z-statistic paths across the looks, with the stopping boundary drawn; paths that cross it are highlighted as false positives."></svg>
+          <p class="readout" id="peek-readout"></p>
+        </div>
+        <p>Every simulated test compares two identical pages, so every "win" is a false positive. With one look you get about 5%. With ten looks and the naive rule, about one test in five declares a winner. A <strong>sequential design</strong> raises the bar at each look so the overall false-positive rate stays at 5%; the Pocock boundary uses one constant bar, and many experimentation platforms offer always-valid p-values built on the same idea.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Equally spaced looks, stop at first p &lt; 0.05</th><th>1</th><th>2</th><th>5</th><th>10</th><th>20</th></tr></thead>
+            <tbody><tr><td>Chance an A/A test "wins"</td><td>5%</td><td>8%</td><td>14%</td><td>19%</td><td>25%</td></tr></tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="python"><code>import numpy as np
+
+rng = np.random.default_rng(0)
+sims, looks = 10_000, 10
+<span class="c"># A/A test: equal batches of data per look; z at look k = (sum of k N(0,1) increments) / sqrt(k)</span>
+z = rng.standard_normal((sims, looks)).cumsum(axis=1) / np.sqrt(np.arange(1, looks + 1))
+
+print("one planned look:", (np.abs(z[:, -1]) &gt; 1.96).mean())        <span class="c"># about 0.05</span>
+print("peek at every look:", (np.abs(z) &gt; 1.96).any(axis=1).mean())  <span class="c"># about 0.19</span></code></pre>
+
+        <h3>Sample ratio mismatch: the split is a health check</h3>
+        <p>If you asked for 50/50 and got 50.6/49.4 across 100,000 users, that is not bad luck. A <strong>chi-square goodness-of-fit test</strong> compares observed counts with the expected split. When p is below 0.001, stop reading the metrics: some users were lost or added unevenly, and the groups are no longer comparable.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 210" role="img" aria-label="Assignment sends exactly half of users to A and half to B. On the way to the logs, the B path loses some users: the new page loads slower so some leave before the exposure event fires, a redirect drops tracking, or a bot filter treats B differently. The logged counts end up 50.6 to 49.4 percent, an SRM.">
+              <defs>
+                <marker id="pitfalls-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="pitfalls-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="10" y="75" width="120" height="60" rx="8"/>
+              <text class="d-title" x="70" y="100" text-anchor="middle">Assignment</text>
+              <text class="d-label" x="70" y="118" text-anchor="middle">exactly 50 / 50</text>
+              <line class="d-line-accent" x1="130" y1="95" x2="218" y2="55" marker-end="url(#pitfalls-arrow)"/>
+              <line class="d-line-accent" x1="130" y1="115" x2="218" y2="155" marker-end="url(#pitfalls-arrow)"/>
+              <rect class="d-accent" x="220" y="30" width="130" height="50" rx="8"/>
+              <text class="d-title" x="285" y="60" text-anchor="middle">A · fast page</text>
+              <rect class="d-signal" x="220" y="130" width="130" height="50" rx="8"/>
+              <text class="d-title" x="285" y="160" text-anchor="middle">B · slower page</text>
+              <line class="d-line-accent" x1="350" y1="55" x2="498" y2="55" marker-end="url(#pitfalls-arrow)"/>
+              <line class="d-line-accent" x1="350" y1="155" x2="498" y2="155" marker-end="url(#pitfalls-arrow)"/>
+              <line class="d-line-signal d-dash" x1="400" y1="155" x2="400" y2="200" marker-end="url(#pitfalls-arrow-s)"/>
+              <text class="d-label d-text-signal" x="408" y="196">leave before the exposure event fires</text>
+              <rect class="d-box" x="500" y="30" width="150" height="50" rx="8"/>
+              <text class="d-mono" x="575" y="60" text-anchor="middle">A logged 50.6%</text>
+              <rect class="d-box" x="500" y="130" width="150" height="50" rx="8"/>
+              <text class="d-mono" x="575" y="160" text-anchor="middle">B logged 49.4%</text>
+              <text class="d-label" x="575" y="110" text-anchor="middle">χ² test: p &lt; 0.001 → SRM</text>
+            </svg>
+          </div>
+          <figcaption>A common SRM cause: the treatment changes who gets logged. The users B lost are not random (they are the impatient ones), so comparing the remaining users is biased in an unknown direction.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \chi^2 = \sum_{g \in \{A,B\}} \frac{(O_g - E_g)^2}{E_g}, \qquad \text{df} = 1 \]
+          <span class="formula-note">\(O_g\) observed users in group \(g\), \(E_g\) expected users from the planned split. For 50,412 vs 49,183 users: \(\chi^2 \approx 15.2\), \(p \approx 0.0001\). That is an SRM.</span>
+        </div>
+
+        <div class="widget" id="srm-demo">
+          <div class="widget-head">
+            <span class="widget-title">SRM detector (chi-square)</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="srm-total">Total users <input type="range" id="srm-total" min="2000" max="400000" step="2000" value="20000"><output id="srm-total-out">20,000</output></label>
+            <label for="srm-share">Share in B <input type="range" id="srm-share" min="47" max="53" step="0.1" value="50.5"><output id="srm-share-out">50.5%</output></label>
+          </div>
+          <svg id="srm-plot" viewBox="0 0 600 220" role="img" aria-label="Observed against expected users for A and B, and a p-value scale with the 0.001 SRM threshold marked."></svg>
+          <p class="readout" id="srm-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="python"><code>from scipy.stats import chisquare
+
+observed = [50_412, 49_183]                         <span class="c"># users logged in A, B</span>
+total = sum(observed)
+stat, p = chisquare(observed, f_exp=[total / 2, total / 2])
+print(f"chi2={stat:.1f}  p={p:.1e}")                <span class="c"># chi2=15.2  p=9.8e-05</span>
+if p &lt; 0.001:
+    print("SRM: debug assignment and logging before reading any metric")</code></pre>
+
+        <h3>Novelty and primacy effects</h3>
+        <p>Returning users notice a redesigned page and click around out of curiosity (<strong>novelty</strong>), or resist it because they liked the old one (<strong>primacy</strong>). Both fade. Plot the daily lift: if it slides steadily, the first week overstates (or understates) the long-run effect. Run long enough to see it flatten, or compare new users only, who have no old habit to break.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Daily relative lift of a redesigned page over 28 days. It starts at 12 percent on day 1 and decays towards 3 percent. The first week's average is about 8 percent, the steady state about 3 percent.">
+              <line class="d-line" x1="60" y1="190" x2="610" y2="190"/>
+              <line class="d-line" x1="60" y1="20" x2="60" y2="190"/>
+              <line class="d-grid" x1="60" y1="158" x2="610" y2="158"/>
+              <rect class="d-fill" x="60" y="22" width="120" height="168" opacity="0.8"/>
+              <text class="d-label" x="66" y="36">week 1</text>
+              <path class="d-line-accent" d="M60.0,62.0 L80.0,79.4 L100.0,93.6 L120.0,105.3 L140.0,114.9 L160.0,122.7 L180.0,129.1 L200.0,134.3 L220.0,138.6 L240.0,142.1 L260.0,145.0 L280.0,147.4 L300.0,149.3 L320.0,150.9 L340.0,152.2 L360.0,153.2 L380.0,154.1 L400.0,154.8 L420.0,155.4 L440.0,155.9 L460.0,156.2 L480.0,156.6 L500.0,156.8 L520.0,157.0 L540.0,157.2 L560.0,157.4 L580.0,157.5 L600.0,157.6"/>
+              <line class="d-line-signal d-dash" x1="60" y1="101" x2="180" y2="101"/>
+              <text class="d-label d-text-signal" x="188" y="98">week-1 average ≈ +8%</text>
+              <text class="d-label d-text-good" x="600" y="150" text-anchor="end">steady state ≈ +3%</text>
+              <text class="d-label" x="52" y="66" text-anchor="end">12%</text>
+              <text class="d-label" x="52" y="162" text-anchor="end">3%</text>
+              <text class="d-label" x="52" y="194" text-anchor="end">0</text>
+              <text class="d-label" x="60" y="206">day 1</text>
+              <text class="d-label" x="600" y="206" text-anchor="end">day 28</text>
+            </svg>
+          </div>
+          <figcaption>A novelty effect (illustrative). Reading the test after one week would report almost three times the lasting lift.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Decide the sample size in advance and read once, or use a sequential method built for repeated looks.</li>
+            <li>Ten naive peeks turn a 5% false-positive rate into roughly 19%.</li>
+            <li>Run a chi-square SRM check on every test; at p &lt; 0.001, debug before reading metrics.</li>
+            <li>Plot lift by day to spot novelty or primacy, and run whole weeks.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Stopping a test early because it "reached significance" on a dashboard.</li>
+            <li>Dismissing a 50.6/49.4 split as "close enough" on 100,000 users.</li>
+            <li>Fixing an SRM by down-sampling the bigger group, which keeps the bias.</li>
+            <li>Shipping on a week-one lift for a change returning users will notice.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="pitfalls-1"><span>Explain with a random-walk picture why daily peeking inflates false positives</span></label></li>
+          <li><label><input type="checkbox" data-key="pitfalls-2"><span>Run a chi-square SRM check and list three causes of SRM</span></label></li>
+          <li><label><input type="checkbox" data-key="pitfalls-3"><span>Simulate A/A tests in numpy to measure a stopping rule's false-positive rate</span></label></li>
+          <li><label><input type="checkbox" data-key="pitfalls-4"><span>Spot a novelty effect in a daily-lift chart and say how long to run</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://www.evanmiller.org/how-not-to-run-an-ab-test.html">Evan Miller: How Not To Run an A/B Test</a></li>
+          <li><span class="kind">Book</span><a href="https://experimentguide.com/">Trustworthy Online Controlled Experiments (chapter on trustworthiness checks)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="multiple-testing">
+        <header class="topic-head">
+          <p class="eyebrow">09.5 · More tests, more false wins</p>
+          <h2>Multiple tests &amp; segments</h2>
+        </header>
+
+        <p class="lead">The pricing test came back flat overall, so someone slices it by 20 countries and finds that "the new page wins in Canada, p = 0.03". With 20 independent looks at a 5% false-positive rate, you expect one such win from noise alone, and the chance of at least one is 64%. Every extra metric, segment or variant is another ticket in that lottery.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Segment deep-dives and dashboards with 30 metrics are part of every test readout. Knowing how to correct for multiple comparisons, and when a segment result is a hypothesis rather than a finding, keeps you from shipping a feature for a "winning" segment that was never real.</p>
+        </div>
+
+        <h3>The family-wise error rate</h3>
+        <p>Run \(m\) independent tests at \(\alpha = 0.05\) when nothing is real, and the probability that at least one comes out significant (the <strong>family-wise error rate</strong>, FWER) grows quickly.</p>
+
+        <div class="formula">
+          \[ \text{FWER} = 1 - (1-\alpha)^m \qquad\Rightarrow\qquad m = 20:\; 1 - 0.95^{20} \approx 0.64 \]
+          <span class="formula-note">Assumes independent tests and no real effects. Correlated metrics inflate it less, but still a lot.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Chance of at least one false positive against the number of tests at alpha 0.05: 5 percent for one test, 23 percent for 5, 40 percent for 10, 64 percent for 20 and 92 percent for 50.">
+              <line class="d-line" x1="60" y1="190" x2="610" y2="190"/>
+              <line class="d-line" x1="60" y1="20" x2="60" y2="190"/>
+              <line class="d-grid" x1="60" y1="30" x2="610" y2="30"/>
+              <line class="d-grid" x1="60" y1="110" x2="610" y2="110"/>
+              <text class="d-label" x="52" y="34" text-anchor="end">100%</text>
+              <text class="d-label" x="52" y="114" text-anchor="end">50%</text>
+              <text class="d-label" x="52" y="194" text-anchor="end">0</text>
+              <path class="d-line-accent" d="M60,182.0 L71,174.4 L82,167.2 L93,160.3 L104,153.8 L115,147.6 L126,141.7 L137,136.1 L148,130.8 L159,125.8 L170,121.0 L181,116.5 L192,112.1 L203,108.0 L214,104.1 L225,100.4 L236,96.9 L247,93.6 L258,90.4 L269,87.4 L280,84.5 L291,81.8 L302,79.2 L313,76.7 L324,74.4 L335,72.2 L346,70.1 L357,68.1 L368,66.1 L379,64.3 L390,62.6 L401,61.0 L412,59.4 L423,58.0 L434,56.6 L445,55.2 L456,54.0 L467,52.8 L478,51.6 L489,50.6 L500,49.5 L511,48.6 L522,47.6 L533,46.7 L544,45.9 L555,45.1 L566,44.4 L577,43.6 L588,43.0 L599,42.3"/>
+              <circle class="d-dot" cx="60" cy="182" r="4.5"/><text class="d-label" x="68" y="186">5%</text>
+              <circle class="d-dot" cx="104" cy="153.8" r="4.5"/><text class="d-label" x="112" y="160">23%</text>
+              <circle class="d-dot" cx="159" cy="125.8" r="4.5"/><text class="d-label" x="167" y="134">40%</text>
+              <circle class="d-dot-signal" cx="269" cy="87.4" r="6"/><text class="d-label d-text-signal" x="277" y="104">64% at 20 segments</text>
+              <circle class="d-dot" cx="599" cy="42.3" r="4.5"/><text class="d-label" x="595" y="62" text-anchor="end">92% at 50</text>
+              <text class="d-label" x="60" y="208">1 test</text>
+              <text class="d-label" x="269" y="208" text-anchor="middle">20</text>
+              <text class="d-label" x="599" y="208" text-anchor="end">50 tests</text>
+            </svg>
+          </div>
+          <figcaption>With 20 segments and no real effect anywhere, a "significant" segment is more likely than not.</figcaption>
+        </figure>
+
+        <h3>Two ways to correct</h3>
+        <p><strong>Bonferroni</strong> controls the FWER by testing each hypothesis at \(\alpha/m\): with 20 segments a segment needs p &lt; 0.0025. It is simple and strict, so it also misses real effects. <strong>Benjamini–Hochberg (BH)</strong> controls the <strong>false discovery rate</strong> instead, the expected share of your "wins" that are false. Sort the p-values, compare the \(i\)-th smallest with \(\tfrac{i}{m}q\), and reject every hypothesis up to the largest \(i\) that passes.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Ten sorted p-values plotted against rank with three rules. The unadjusted 0.05 line accepts five, the Bonferroni 0.005 line accepts two, and the rising Benjamini-Hochberg line i over m times 0.05 accepts the first four.">
+              <line class="d-line" x1="60" y1="190" x2="610" y2="190"/>
+              <line class="d-line" x1="60" y1="20" x2="60" y2="190"/>
+              <line class="d-line d-dash" x1="60" y1="110" x2="610" y2="110"/>
+              <text class="d-label" x="606" y="104" text-anchor="end">unadjusted 0.05 → 5 wins</text>
+              <line class="d-line-signal" x1="60" y1="182" x2="610" y2="182"/>
+              <text class="d-label d-text-signal" x="606" y="176" text-anchor="end">Bonferroni 0.005 → 2</text>
+              <line class="d-line-accent" x1="80" y1="182" x2="575" y2="110"/>
+              <text class="d-label d-text-accent" x="420" y="142">BH: (i / 10) × 0.05 → 4</text>
+              <circle class="d-dot-good" cx="80" cy="188.4" r="5.5"/>
+              <circle class="d-dot-good" cx="135" cy="183.6" r="5.5"/>
+              <circle class="d-dot-good" cx="190" cy="170.8" r="5.5"/>
+              <circle class="d-dot-good" cx="245" cy="159.6" r="5.5"/>
+              <circle class="d-dot-muted" cx="300" cy="142" r="5.5"/>
+              <text class="d-label" x="300" y="132" text-anchor="middle">0.03</text>
+              <circle class="d-dot-muted" cx="355" cy="30" r="5"/><circle class="d-dot-muted" cx="410" cy="30" r="5"/><circle class="d-dot-muted" cx="465" cy="30" r="5"/><circle class="d-dot-muted" cx="520" cy="30" r="5"/><circle class="d-dot-muted" cx="575" cy="30" r="5"/>
+              <text class="d-label" x="465" y="50" text-anchor="middle">p ≥ 0.15 (off scale)</text>
+              <text class="d-label" x="52" y="34" text-anchor="end">0.10</text>
+              <text class="d-label" x="52" y="114" text-anchor="end">0.05</text>
+              <text class="d-label" x="52" y="194" text-anchor="end">0</text>
+              <text class="d-label" x="80" y="208" text-anchor="middle">1</text>
+              <text class="d-label" x="575" y="208" text-anchor="middle">10</text>
+              <text class="d-label" x="330" y="224" text-anchor="middle">rank i of the sorted p-values</text>
+            </svg>
+          </div>
+          <figcaption>Ten segment p-values (0.001, 0.004, 0.012, 0.019, 0.03, then 0.15 and up). BH keeps the first four because the fourth (0.019) is under its bar of 0.020 and the fifth (0.03) is over its bar of 0.025.</figcaption>
+        </figure>
+
+        <div class="widget" id="fdr-demo">
+          <div class="widget-head">
+            <span class="widget-title">Segment lottery: false discoveries</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="fdr-m">Segments <input type="range" id="fdr-m" min="2" max="40" step="1" value="20"><output id="fdr-m-out">20</output></label>
+            <label for="fdr-real">Real effects <input type="range" id="fdr-real" min="0" max="10" step="1" value="0"><output id="fdr-real-out">0</output></label>
+            <label for="fdr-rule">Correction
+              <select id="fdr-rule">
+                <option value="none" selected>none (p &lt; 0.05)</option>
+                <option value="bonf">Bonferroni</option>
+                <option value="bh">Benjamini–Hochberg</option>
+              </select>
+            </label>
+            <button class="btn" type="button" id="fdr-rerun">New experiment</button>
+          </div>
+          <svg id="fdr-plot" viewBox="0 0 600 240" role="img" aria-label="One bar per segment showing minus log10 of its p-value, with the significance threshold drawn. Segments with a real effect are outlined; flagged segments are filled."></svg>
+          <p class="readout" id="fdr-readout"></p>
+        </div>
+        <p>Bars show \(-\log_{10} p\), so taller means smaller p. Segments that truly differ are marked with a ring. Without a correction, null segments regularly cross the line. Bonferroni rarely lets a null through but can miss real effects; BH usually keeps more real ones while letting few nulls through.</p>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+from statsmodels.stats.proportion import proportions_ztest
+from statsmodels.stats.multitest import multipletests
+
+rows = []
+for country, g in users.groupby("country"):          <span class="c"># one row per user: variant, converted</span>
+    agg = g.groupby("variant")["converted"].agg(["sum", "count"]).loc[["B", "A"]]
+    z, p = proportions_ztest(agg["sum"], agg["count"])
+    rows.append({"country": country, "p": p})
+seg = pd.DataFrame(rows)
+
+seg["bonferroni"] = multipletests(seg["p"], alpha=0.05, method="bonferroni")[0]
+seg["bh"]         = multipletests(seg["p"], alpha=0.05, method="fdr_bh")[0]
+print(seg.sort_values("p").head())</code></pre>
+
+        <div class="grid-2">
+          <div class="card"><h4>Plan it</h4><p>Name one primary metric and at most a few pre-registered segments (for example new vs returning users). Those get the full α; everything else is exploration.</p></div>
+          <div class="card"><h4>Explore it</h4><p>Unplanned segment wins are hypotheses. Correct them with BH, report them as "worth a follow-up test", and confirm in a new experiment before acting.</p></div>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Each extra metric, segment or variant is another chance for a false positive: FWER = 1 − (1 − α)<sup>m</sup>.</li>
+            <li>Bonferroni (α/m) controls the chance of any false positive; it is strict.</li>
+            <li>Benjamini–Hochberg controls the share of false discoveries and keeps more power.</li>
+            <li>Pre-register a primary metric and key segments; treat the rest as hypotheses to retest.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Slicing a flat test until some segment is significant, then shipping for that segment.</li>
+            <li>Correcting for the 3 segments you report but not the 40 you looked at.</li>
+            <li>Reading many tiny segments as precise: each has a fraction of the users, so its interval is much wider.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="multiple-testing-1"><span>Compute the family-wise error rate for m independent tests</span></label></li>
+          <li><label><input type="checkbox" data-key="multiple-testing-2"><span>Apply Bonferroni and Benjamini–Hochberg by hand to ten p-values</span></label></li>
+          <li><label><input type="checkbox" data-key="multiple-testing-3"><span>Explain the difference between controlling FWER and FDR</span></label></li>
+          <li><label><input type="checkbox" data-key="multiple-testing-4"><span>Run per-segment tests and corrections with statsmodels</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/False_discovery_rate">False discovery rate (Wikipedia)</a></li>
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Multiple_comparisons_problem">Multiple comparisons problem (Wikipedia)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="causal">
+        <header class="topic-head">
+          <p class="eyebrow">09.6 · Quasi-experiments</p>
+          <h2>When you can't randomize</h2>
+        </header>
+
+        <p class="lead">Some changes cannot be A/B tested. A legal review means the new pricing page can only launch in Germany. A TV campaign reaches everyone in a region. A price change must apply to all customers at once. You can still estimate the effect, but you need a <strong>comparison group</strong> that shows what would have happened without the change, and an assumption that makes that comparison fair.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>"Did the launch work?" is asked about far more changes than ever get an A/B test. A plain before/after chart mixes the launch with seasonality, marketing and everything else that changed that month. Quasi-experimental methods are how analysts give a defensible answer anyway, and say clearly how much weaker it is.</p>
+        </div>
+
+        <h3>Difference-in-differences</h3>
+        <p>Germany (treated) got the new page in March; France (control) kept the old one. Germany's conversion rose from 3.6% to 4.4%, but France also rose, from 4.0% to 4.3%, because spring is a stronger season. <strong>Difference-in-differences (DiD)</strong> subtracts the control's change from the treated group's change, removing everything both markets shared.</p>
+
+        <div class="formula">
+          \[ \widehat{\text{DiD}} = (\bar y_{T,\text{post}} - \bar y_{T,\text{pre}}) - (\bar y_{C,\text{post}} - \bar y_{C,\text{pre}}) = (4.4 - 3.6) - (4.3 - 4.0) = +0.5 \text{ pp} \]
+          <span class="formula-note">The naive before/after in Germany says +0.8 pp. 0.3 pp of that was the season, which France reveals.</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="Conversion before and after launch. France, the control, rises from 4.0 to 4.3 percent. Germany, treated, rises from 3.6 to 4.4 percent. A dashed counterfactual line for Germany rises in parallel with France to 3.9 percent. The gap between 3.9 and 4.4 percent is the estimated effect of 0.5 points.">
+              <line class="d-line" x1="80" y1="210" x2="600" y2="210"/>
+              <line class="d-line" x1="80" y1="30" x2="80" y2="210"/>
+              <line class="d-line d-dash" x1="310" y1="30" x2="310" y2="210"/>
+              <text class="d-label" x="316" y="42">launch in Germany</text>
+              <line class="d-line" x1="160" y1="131.4" x2="460" y2="97.1" stroke-width="2.5"/>
+              <circle class="d-dot-muted" cx="160" cy="131.4" r="6"/><circle class="d-dot-muted" cx="460" cy="97.1" r="6"/>
+              <text class="d-label" x="150" y="126" text-anchor="end">France 4.0%</text>
+              <text class="d-label" x="472" y="94">France 4.3%</text>
+              <line class="d-line-accent" x1="160" y1="177.1" x2="460" y2="85.7" stroke-width="2.5"/>
+              <circle class="d-dot" cx="160" cy="177.1" r="6"/><circle class="d-dot" cx="460" cy="85.7" r="6"/>
+              <text class="d-label d-text-accent" x="150" y="182" text-anchor="end">Germany 3.6%</text>
+              <text class="d-label d-text-accent" x="472" y="72">Germany 4.4%</text>
+              <line class="d-line-signal d-dash" x1="160" y1="177.1" x2="460" y2="142.9"/>
+              <circle class="d-dot-signal" cx="460" cy="142.9" r="5"/>
+              <text class="d-label d-text-signal" x="472" y="147">without launch: 3.9%</text>
+              <path class="d-line-signal" d="M540 85.7 H550 V142.9 H540"/>
+              <text class="d-title d-text-signal" x="556" y="119">+0.5 pp</text>
+              <text class="d-label" x="160" y="228" text-anchor="middle">Feb (pre)</text>
+              <text class="d-label" x="460" y="228" text-anchor="middle">Mar (post)</text>
+              <text class="d-label" x="16" y="120" transform="rotate(-90 16 120)" text-anchor="middle">paid conversion</text>
+            </svg>
+          </div>
+          <figcaption>DiD draws Germany's counterfactual by moving it in parallel with France (dashed line). The effect is the gap between what happened and that counterfactual. Example numbers.</figcaption>
+        </figure>
+
+        <h3>The assumption: parallel trends</h3>
+        <p>DiD only works if, without the launch, both groups would have moved by the same amount. You cannot test that directly for the post period, but you can check the weeks before launch: if the lines were already diverging, the estimate absorbs that divergence as fake effect.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 200" role="img" aria-label="Two small charts of weekly conversion in the six weeks before launch. On the left the treated and control lines run parallel, so DiD is credible. On the right the treated line is already climbing faster before launch, so DiD would credit that pre-existing trend to the launch.">
+              <rect class="d-box" x="10" y="20" width="310" height="160" rx="8"/>
+              <text class="d-title" x="24" y="42">Parallel before launch</text>
+              <path class="d-line" stroke-width="2" d="M30,110 L70,104 L110,108 L150,98 L190,100 L230,94"/>
+              <path class="d-line-accent" d="M30,145 L70,139 L110,143 L150,133 L190,135 L230,129"/>
+              <line class="d-line d-dash" x1="250" y1="55" x2="250" y2="170"/>
+              <text class="d-label" x="256" y="70">launch</text>
+              <text class="d-label d-text-good" x="24" y="168">credible: DiD can work</text>
+              <rect class="d-box" x="340" y="20" width="310" height="160" rx="8"/>
+              <text class="d-title" x="354" y="42">Already diverging</text>
+              <path class="d-line" stroke-width="2" d="M360,110 L400,108 L440,109 L480,106 L520,107 L560,105"/>
+              <path class="d-line-accent" d="M360,160 L400,149 L440,141 L480,129 L520,120 L560,109"/>
+              <line class="d-line d-dash" x1="580" y1="55" x2="580" y2="170"/>
+              <text class="d-label" x="586" y="70">launch</text>
+              <text class="d-label d-text-signal" x="354" y="172">trend would be credited to the launch</text>
+            </svg>
+          </div>
+          <figcaption>Always plot the pre-period. Treated (accent) and control (grey) should move together before the change; if they don't, pick a better control or another method.</figcaption>
+        </figure>
+
+        <div class="widget" id="did-demo">
+          <div class="widget-head">
+            <span class="widget-title">Difference-in-differences lab</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="did-effect">True effect <input type="range" id="did-effect" min="0" max="1.5" step="0.1" value="0.5"><output id="did-effect-out">+0.5 pp</output></label>
+            <label for="did-season">Shared seasonal change <input type="range" id="did-season" min="-1" max="1" step="0.1" value="0.5"><output id="did-season-out">+0.5 pp</output></label>
+            <label for="did-gap">Extra pre-trend in treated <input type="range" id="did-gap" min="-0.15" max="0.15" step="0.01" value="0.05"><output id="did-gap-out">+0.05 pp/wk</output></label>
+          </div>
+          <svg id="did-plot" viewBox="0 0 600 260" role="img" aria-label="Weekly conversion for the control and treated markets over eight weeks with launch after week four, plus the treated market's parallel-trends counterfactual."></svg>
+          <p class="readout" id="did-readout"></p>
+        </div>
+        <p>The lab is noise-free so you can see each bias on its own. The shared seasonal change fools the naive before/after estimate but cancels out in DiD. An extra pre-trend in the treated market is exactly what DiD cannot remove.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- the 2 x 2 table behind a DiD estimate</span>
+SELECT country,
+       CASE WHEN visited_at &gt;= DATE '2026-03-02' THEN 'post' ELSE 'pre' END AS period,
+       ROUND(AVG(converted::int) * 100, 2) AS conv_pct,
+       COUNT(*) AS visitors
+FROM pricing_page_visits
+WHERE country IN ('DE', 'FR')
+  AND visited_at &gt;= DATE '2026-02-02' AND visited_at &lt; DATE '2026-03-30'
+GROUP BY 1, 2
+ORDER BY 1, 2;</code></pre>
+
+        <pre class="code" data-lang="python"><code>import statsmodels.formula.api as smf
+
+<span class="c"># one row per visit: converted (0/1), treated (DE = 1), post (after launch = 1)</span>
+model = smf.ols("converted ~ treated * post", data=visits).fit(cov_type="HC1")
+print(model.params["treated:post"])          <span class="c"># the DiD estimate, about 0.005 (0.5 pp)</span>
+print(model.conf_int().loc["treated:post"])
+<span class="c"># with only two markets, these standard errors are optimistic: say so in the write-up</span></code></pre>
+
+        <h3>Other designs worth knowing</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Design</th><th>Idea</th><th>Key assumption</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Before/after</td><td>Compare the same group over time</td><td>Nothing else changed (rarely true)</td><td>Sign-ups the week after launch</td></tr>
+              <tr><td>Difference-in-differences</td><td>Subtract a control group's change</td><td>Parallel trends</td><td>Launch in one country</td></tr>
+              <tr><td>Synthetic control</td><td>Build the control as a weighted mix of many untreated units</td><td>The mix tracks the treated unit before launch</td><td>A regional campaign</td></tr>
+              <tr><td>Regression discontinuity</td><td>Compare units just above and below a cut-off</td><td>Nothing else jumps at the cut-off</td><td>Free shipping over $50</td></tr>
+              <tr><td>Interrupted time series</td><td>Forecast the pre-trend forward and compare</td><td>The trend would have continued</td><td>A site-wide price change</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Without randomization you need a comparison group and an assumption that makes it a fair counterfactual.</li>
+            <li>DiD = treated change − control change; it removes shocks both groups share, such as seasonality.</li>
+            <li>Parallel pre-trends are the assumption to check, by plotting the weeks before launch.</li>
+            <li>Quasi-experiments give weaker evidence than A/B tests; state the assumption next to the estimate.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Reporting a before/after change as the effect of a launch.</li>
+            <li>Choosing a control group that was hit by its own change in the same period.</li>
+            <li>Skipping the pre-period plot, so a pre-existing trend gets credited to the launch.</li>
+            <li>Trusting tiny standard errors when there are only two markets.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="causal-1"><span>Compute a DiD estimate from a 2 × 2 table of means</span></label></li>
+          <li><label><input type="checkbox" data-key="causal-2"><span>Check and explain the parallel-trends assumption with a pre-period chart</span></label></li>
+          <li><label><input type="checkbox" data-key="causal-3"><span>Fit a DiD regression with an interaction term and read its coefficient</span></label></li>
+          <li><label><input type="checkbox" data-key="causal-4"><span>Pick a quasi-experimental design for a launch you cannot randomize</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://mixtape.scunning.com/">Causal Inference: The Mixtape (Cunningham, free online)</a></li>
+          <li><span class="kind">Book</span><a href="https://matheusfacure.github.io/python-causality-handbook/">Causal Inference for the Brave and True (Python, free)</a></li>
+          <li><span class="kind">Article</span><a href="https://en.wikipedia.org/wiki/Difference_in_differences">Difference in differences (Wikipedia)</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>A test plan and readout</h4><p>Write a one-page plan for a pricing-page test (hypothesis, metric, guardrails, unit, MDE, duration), then analyse a provided or simulated results table in Python with a confidence interval, p-value and a plain-language recommendation.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>An experiment health checker</h4><p>Build a notebook that takes exposure and conversion tables and outputs the SRM test, users in both variants, daily lift (novelty), the primary result and BH-corrected segment results. Run it on a simulated test with a planted SRM bug.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Measure a launch you could not randomize</h4><p>Use a public dataset with a policy change in one region, estimate the effect with difference-in-differences, plot the pre-trends, run a placebo test with a fake launch date, and write up how much you trust the result.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Design an A/B test with the right unit, primary metric, guardrails and decision rule</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Size a test from baseline, MDE, α and power and turn it into weeks of traffic</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Report a result as a difference with a confidence interval and explain the p-value correctly</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Catch peeking, SRM, novelty and multiple-testing problems before they reach a decision</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Estimate an effect with difference-in-differences and defend its assumption</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 09. Shared helpers first, then one IIFE per widget. */
+var EXP = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) { var u = 1 - r(), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function poisson(r, lam) { var L = Math.exp(-lam), k = 0, p = 1; do { k++; p *= r(); } while (p > L); return k - 1; }
+  /* complementary error function (Numerical Recipes erfcc, fractional error < 1.2e-7) */
+  function erfc(x) {
+    var z = Math.abs(x), t = 1 / (1 + 0.5 * z);
+    var r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 +
+      t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277)))))))));
+    return x >= 0 ? r : 2 - r;
+  }
+  function p2(z) { return erfc(Math.abs(z) / Math.SQRT2); }          /* two-sided p-value for a z-statistic */
+  /* inverse standard normal CDF (Acklam) */
+  function qnorm(p) {
+    var a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.3577518672690, -30.66479806614716, 2.506628277459239];
+    var b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+    var c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+    var d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+    var q, r, lo = 0.02425;
+    if (p < lo) { q = Math.sqrt(-2 * Math.log(p)); return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+    if (p > 1 - lo) { q = Math.sqrt(-2 * Math.log(1 - p)); return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+    q = p - 0.5; r = q * q;
+    return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+  }
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+  function sgn(v, dp) { return (v < 0 ? "−" : "+") + Math.abs(v).toFixed(dp == null ? 2 : dp); }
+  function fmtP(p) { return p < 0.001 ? p.toExponential(1) : p.toFixed(3); }
+  return { svg: svg, text: text, clear: clear, rng: rng, gauss: gauss, poisson: poisson, p2: p2, qnorm: qnorm, fmt: fmt, sgn: sgn, fmtP: fmtP };
+})();
+
+/* ---------- 09.1 randomization unit chooser ---------- */
+(function () {
+  if (!document.getElementById("unit-demo")) return;
+  var H = EXP, S = H.svg;
+  var plot = document.getElementById("unit-plot"), readout = document.getElementById("unit-readout");
+  var unitEl = document.getElementById("unit-unit"), visEl = document.getElementById("unit-visits"), resEl = document.getElementById("unit-reset");
+  var visOut = document.getElementById("unit-visits-out"), resOut = document.getElementById("unit-reset-out");
+  var NAMES = { user: "user", session: "session", page: "page view" };
+  function simulate(unit, meanVisits, reset) {
+    var r = H.rng(2024), users = [], mixed = 0, units = 0;
+    for (var u = 0; u < 2000; u++) {
+      var k = Math.min(12, 1 + H.poisson(r, meanVisits - 1)), visits = [], seen = { A: 0, B: 0 };
+      var idCoin = r() < 0.5 ? "A" : "B";
+      if (unit === "user") units++;
+      for (var v = 0; v < k; v++) {
+        var pv = Math.min(6, 1 + H.poisson(r, 2)), views = [];
+        if (unit === "user" && v > 0 && r() < reset) { idCoin = r() < 0.5 ? "A" : "B"; units++; }
+        var sessCoin = r() < 0.5 ? "A" : "B";
+        if (unit === "session") units++;
+        for (var j = 0; j < pv; j++) {
+          var pageCoin = r() < 0.5 ? "A" : "B", c;
+          if (unit === "page") { c = pageCoin; units++; } else c = unit === "session" ? sessCoin : idCoin;
+          views.push(c); seen[c] = 1;
+        }
+        visits.push(views);
+      }
+      if (seen.A && seen.B) mixed++;
+      users.push(visits);
+    }
+    return { users: users, mixed: mixed / 2000, units: units };
+  }
+  function draw() {
+    var unit = unitEl.value, mv = parseFloat(visEl.value), rs = parseFloat(resEl.value) / 100;
+    visOut.textContent = mv.toFixed(1); resOut.textContent = Math.round(rs * 100) + "%";
+    var sim = simulate(unit, mv, rs);
+    H.clear(plot);
+    H.text(plot, 10, 14, "16 of 2,000 users · each square = one visit", "d-label");
+    for (var i = 0; i < 16; i++) {
+      var y = 24 + i * 15, visits = sim.users[i], both = { A: 0, B: 0 };
+      H.text(plot, 10, y + 10, "user " + (i + 1), "d-label");
+      for (var v = 0; v < visits.length; v++) {
+        var x = 64 + v * 17, views = visits[v], w = 14 / views.length;
+        for (var j = 0; j < views.length; j++) {
+          both[views[j]] = 1;
+          S("rect", { x: (x + j * w).toFixed(2), y: y, width: (w - (views.length > 1 ? 0.6 : 0)).toFixed(2), height: 12, rx: views.length > 1 ? 1 : 3, "class": views[j] === "A" ? "d-accent" : "d-signal" }, plot);
+        }
+      }
+      if (both.A && both.B) H.text(plot, 64 + visits.length * 17 + 4, y + 10, "both", "d-label d-text-signal");
+    }
+    /* summary panel */
+    var px = 330, g = S("g", {}, plot);
+    S("rect", { x: px, y: 24, width: 260, height: 232, rx: 10, "class": "d-box" }, g);
+    H.text(g, px + 16, 50, "Randomize by " + NAMES[unit], "d-title");
+    H.text(g, px + 16, 78, "users who saw both versions", "d-label");
+    S("rect", { x: px + 16, y: 86, width: 228, height: 16, rx: 4, "class": "d-fill" }, g);
+    S("rect", { x: px + 16, y: 86, width: Math.max(2, 228 * sim.mixed).toFixed(1), height: 16, rx: 4, "class": sim.mixed > 0.1 ? "d-signal" : "d-good" }, g);
+    H.text(g, px + 244, 124, (100 * sim.mixed).toFixed(1) + "%", "d-title " + (sim.mixed > 0.1 ? "d-text-signal" : "d-text-good"), "end");
+    H.text(g, px + 16, 150, "randomized units", "d-label");
+    H.text(g, px + 244, 150, H.fmt(sim.units), "d-mono", "end");
+    H.text(g, px + 16, 172, "analysis unit", "d-label");
+    H.text(g, px + 244, 172, "user", "d-mono", "end");
+    var match = unit === "user";
+    H.text(g, px + 16, 194, "units match", "d-label");
+    H.text(g, px + 244, 194, match ? "yes" : "no", "d-mono " + (match ? "d-text-good" : "d-text-signal"), "end");
+    var note = match ? (rs > 0 ? "cookie resets still split some users" : "one consistent page per person") :
+      (unit === "session" ? "returning users flip between pages" : "pages flip inside one visit");
+    H.text(g, px + 16, 226, note, "d-label");
+    S("rect", { x: px + 16, y: 236, width: 10, height: 10, rx: 2, "class": "d-accent" }, g); H.text(g, px + 30, 245, "A", "d-label");
+    S("rect", { x: px + 52, y: 236, width: 10, height: 10, rx: 2, "class": "d-signal" }, g); H.text(g, px + 66, 245, "B", "d-label");
+    readout.textContent = "unit " + NAMES[unit] + " · 2,000 users · " + H.fmt(sim.units) + " randomized units · users who saw both versions " +
+      (100 * sim.mixed).toFixed(1) + "% · analysis unit (user) matches: " + (match ? "yes" : "no");
+  }
+  [unitEl, visEl, resEl].forEach(function (el) { el.addEventListener("input", draw); el.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 09.2 power and sample size ---------- */
+(function () {
+  if (!document.getElementById("power-demo")) return;
+  var H = EXP, S = H.svg;
+  var plot = document.getElementById("power-plot"), readout = document.getElementById("power-readout");
+  var el = {}, ids = ["base", "mde", "alpha", "pow", "traffic"];
+  ids.forEach(function (k) { el[k] = document.getElementById("power-" + k); });
+  function nPer(p1, rel, alpha, power) {
+    var p2 = p1 * (1 + rel), z = H.qnorm(1 - alpha / 2) + H.qnorm(power);
+    return z * z * (p1 * (1 - p1) + p2 * (1 - p2)) / ((p2 - p1) * (p2 - p1));
+  }
+  function draw() {
+    var base = parseFloat(el.base.value) / 100, rel = parseFloat(el.mde.value) / 100, alpha = parseFloat(el.alpha.value),
+      power = parseFloat(el.pow.value), traffic = parseFloat(el.traffic.value);
+    document.getElementById("power-base-out").textContent = (base * 100).toFixed(1) + "%";
+    document.getElementById("power-mde-out").textContent = Math.round(rel * 100) + "%";
+    document.getElementById("power-traffic-out").textContent = H.fmt(traffic);
+    var n = Math.ceil(nPer(base, rel, alpha, power)), total = 2 * n, days = Math.ceil(total / traffic), weeks = Math.ceil(days / 7);
+    H.clear(plot);
+    /* curve: n per variant vs relative MDE, log scale */
+    var X0 = 70, X1 = 570, Y0 = 20, Y1 = 160;
+    var hiN = nPer(base, 0.02, alpha, power), loN = nPer(base, 0.30, alpha, power);
+    var dHi = Math.ceil(Math.log10(hiN)), dLo = Math.floor(Math.log10(loN));
+    function xr(r) { return X0 + (r - 0.02) / 0.28 * (X1 - X0); }
+    function yn(v) { return Y1 - (Math.log10(v) - dLo) / (dHi - dLo) * (Y1 - Y0); }
+    for (var d = dLo; d <= dHi; d++) {
+      S("line", { x1: X0, x2: X1, y1: yn(Math.pow(10, d)), y2: yn(Math.pow(10, d)), "class": "d-grid" }, plot);
+      var lab = d >= 6 ? Math.pow(10, d - 6) + "M" : d >= 3 ? Math.pow(10, d - 3) + "k" : String(Math.pow(10, d));
+      H.text(plot, X0 - 6, yn(Math.pow(10, d)) + 4, lab, "d-label", "end");
+    }
+    var pts = [];
+    for (var r = 0.02; r <= 0.3001; r += 0.005) pts.push(xr(r).toFixed(1) + "," + yn(nPer(base, r, alpha, power)).toFixed(1));
+    S("path", { d: "M" + pts.join(" L"), "class": "d-line-accent" }, plot);
+    var cx = xr(rel), cy = yn(n);
+    S("line", { x1: cx, x2: cx, y1: cy, y2: Y1, "class": "d-line d-dash" }, plot);
+    S("circle", { cx: cx, cy: cy, r: 6, "class": "d-dot-signal" }, plot);
+    H.text(plot, cx + (cx > 420 ? -10 : 10), cy - 8, H.fmt(n) + " per variant", "d-label d-text-signal", cx > 420 ? "end" : "start");
+    H.text(plot, X0, Y1 + 16, "2%", "d-label", "middle");
+    H.text(plot, X1, Y1 + 16, "30%", "d-label", "middle");
+    H.text(plot, (X0 + X1) / 2, Y1 + 16, "relative MDE", "d-label", "middle");
+    /* duration strip: up to 10 weeks */
+    var SY = 200, maxD = 70, bw = (X1 - X0) / maxD;
+    H.text(plot, 10, SY + 12, "duration", "d-label");
+    S("rect", { x: X0, y: SY, width: X1 - X0, height: 16, rx: 4, "class": "d-fill" }, plot);
+    S("rect", { x: X0, y: SY, width: (Math.min(weeks * 7, maxD) * bw).toFixed(1), height: 16, rx: 4, "class": "d-accent" }, plot);
+    S("rect", { x: X0, y: SY, width: (Math.min(days, maxD) * bw).toFixed(1), height: 16, rx: 4, "class": days > 14 ? "d-signal" : "d-good" }, plot);
+    for (var wk = 1; wk <= 10; wk++) {
+      S("line", { x1: X0 + wk * 7 * bw, x2: X0 + wk * 7 * bw, y1: SY - 3, y2: SY + 19, "class": "d-line" }, plot);
+      if (wk % 2 === 0 || wk === 1) H.text(plot, X0 + wk * 7 * bw, SY + 32, "wk " + wk, "d-label", "middle");
+    }
+    S("line", { x1: X0 + 14 * bw, x2: X0 + 14 * bw, y1: SY - 10, y2: SY + 22, "class": "d-line-signal d-dash" }, plot);
+    H.text(plot, X0 + 14 * bw, SY - 14, "2-week target", "d-label d-text-signal", "middle");
+    H.text(plot, X1, SY - 14, days > maxD ? "→ " + days + " days" : days + " days → " + weeks + " full week" + (weeks > 1 ? "s" : ""), "d-label", "end");
+    var abs = base * rel * 100;
+    readout.textContent = "n per variant " + H.fmt(n) + " · total " + H.fmt(total) + " · " + days + " days → " + weeks + " full weeks at " + H.fmt(traffic) +
+      " visitors/day · absolute MDE " + abs.toFixed(2) + " pp (" + (base * 100).toFixed(2) + "% → " + (base * (1 + rel) * 100).toFixed(2) + "%)";
+  }
+  ids.forEach(function (k) { el[k].addEventListener("input", draw); el[k].addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 09.3 two-proportion result reader ---------- */
+(function () {
+  if (!document.getElementById("result-demo")) return;
+  var H = EXP, S = H.svg;
+  var plot = document.getElementById("result-plot"), readout = document.getElementById("result-readout");
+  var nEl = document.getElementById("result-n"), aEl = document.getElementById("result-a"), bEl = document.getElementById("result-b");
+  function draw() {
+    var n = parseFloat(nEl.value), pa = parseFloat(aEl.value) / 100, pb = parseFloat(bEl.value) / 100;
+    document.getElementById("result-n-out").textContent = H.fmt(n);
+    document.getElementById("result-a-out").textContent = (pa * 100).toFixed(1) + "%";
+    document.getElementById("result-b-out").textContent = (pb * 100).toFixed(1) + "%";
+    var d = pb - pa, se = Math.sqrt(pa * (1 - pa) / n + pb * (1 - pb) / n), pp = (pa + pb) / 2,
+      sep = Math.sqrt(pp * (1 - pp) * 2 / n), z = sep > 0 ? d / sep : 0, p = H.p2(z);
+    var lo = (d - 1.96 * se) * 100, hi = (d + 1.96 * se) * 100, dd = d * 100;
+    var verdict, tone;
+    if (lo > 0.2) { verdict = "clear win: whole CI above +0.2 pp"; tone = "good"; }
+    else if (lo > 0) { verdict = "significant, but may be below +0.2 pp"; tone = "accent"; }
+    else if (hi < 0) { verdict = "harmful: whole CI below 0"; tone = "signal"; }
+    else if (lo > -0.2 && hi < 0.2) { verdict = "flat: no effect worth shipping"; tone = "muted"; }
+    else { verdict = "inconclusive: CI includes 0"; tone = "muted"; }
+    H.clear(plot);
+    /* rate bars */
+    var maxR = Math.max(pa, pb) * 100 * 1.15;
+    [["A", pa, "d-accent"], ["B", pb, "d-signal"]].forEach(function (row, i) {
+      var y = 14 + i * 26;
+      H.text(plot, 20, y + 13, row[0], "d-title");
+      S("rect", { x: 44, y: y, width: (row[1] * 100 / maxR * 300).toFixed(1), height: 18, rx: 4, "class": row[2] }, plot);
+      H.text(plot, 52 + row[1] * 100 / maxR * 300, y + 13, (row[1] * 100).toFixed(1) + "% of " + H.fmt(n), "d-mono");
+    });
+    /* CI axis */
+    var R = Math.max(1, Math.ceil(Math.max(Math.abs(lo), Math.abs(hi)) * 2 + 0.4) / 2), X0 = 60, X1 = 560, AY = 150;
+    function xv(v) { return X0 + (v + R) / (2 * R) * (X1 - X0); }
+    S("line", { x1: X0, x2: X1, y1: AY + 30, y2: AY + 30, "class": "d-line" }, plot);
+    S("line", { x1: xv(0), x2: xv(0), y1: AY - 50, y2: AY + 34, "class": "d-line" }, plot);
+    S("line", { x1: xv(0.2), x2: xv(0.2), y1: AY - 50, y2: AY + 34, "class": "d-line-signal d-dash" }, plot);
+    H.text(plot, xv(0.2) + 4, AY - 40, "+0.2 pp worth shipping", "d-label d-text-signal");
+    var cls = tone === "good" ? "d-line-accent" : tone === "signal" ? "d-line-signal" : tone === "accent" ? "d-line-accent" : "d-line";
+    S("line", { x1: xv(Math.max(-R, lo)), x2: xv(Math.min(R, hi)), y1: AY, y2: AY, "class": cls, "stroke-width": 7, "stroke-linecap": "round" }, plot);
+    S("circle", { cx: xv(dd), cy: AY, r: 7, "class": tone === "signal" ? "d-dot-signal" : tone === "muted" ? "d-dot-muted" : "d-dot" }, plot);
+    H.text(plot, xv(dd), AY - 14, "B − A " + H.sgn(dd) + " pp", "d-label", "middle");
+    [-R, 0, R].forEach(function (v) { H.text(plot, xv(v), AY + 46, (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) + (v === R ? " pp" : ""), "d-label", "middle"); });
+    H.text(plot, 580, 32, verdict, "d-title" + (tone === "good" ? " d-text-good" : tone === "signal" ? " d-text-signal" : ""), "end");
+    H.text(plot, 580, 52, "p = " + H.fmtP(p), "d-mono", "end");
+    readout.textContent = "A " + (pa * 100).toFixed(2) + "% · B " + (pb * 100).toFixed(2) + "% · diff " + H.sgn(dd) + " pp · 95% CI [" + H.sgn(lo) + ", " + H.sgn(hi) +
+      "] pp · z " + z.toFixed(2) + " · p " + H.fmtP(p) + " · " + verdict;
+  }
+  [nEl, aEl, bEl].forEach(function (e) { e.addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---------- 09.4 peeking simulator ---------- */
+(function () {
+  if (!document.getElementById("peek-demo")) return;
+  var H = EXP, S = H.svg, SIMS = 1000, KMAX = 20;
+  var plot = document.getElementById("peek-plot"), readout = document.getElementById("peek-readout");
+  var looksEl = document.getElementById("peek-looks"), ruleEl = document.getElementById("peek-rule");
+  /* Pocock constant per K: 95th percentile of max |z| over K looks, from 20,000 separate calibration paths */
+  var pocock = [0], cal = [], i, k;
+  (function () {
+    var r = H.rng(999), maxes = [];
+    for (k = 0; k < KMAX; k++) maxes.push([]);
+    for (i = 0; i < 20000; i++) {
+      var s = 0, m = 0;
+      for (k = 1; k <= KMAX; k++) { s += H.gauss(r); m = Math.max(m, Math.abs(s / Math.sqrt(k))); maxes[k - 1].push(m); }
+    }
+    for (k = 1; k <= KMAX; k++) { var arr = maxes[k - 1].sort(function (a, b) { return a - b; }); pocock.push(arr[Math.floor(0.95 * arr.length)]); }
+  })();
+  var seed = 7, inc = [];
+  function regen() {
+    var r = H.rng(seed); inc = [];
+    for (i = 0; i < SIMS; i++) { var row = []; for (k = 0; k < KMAX; k++) row.push(H.gauss(r)); inc.push(row); }
+  }
+  function draw() {
+    var K = parseInt(looksEl.value, 10), rule = ruleEl.value;
+    document.getElementById("peek-looks-out").textContent = K;
+    var c = rule === "peek" ? 1.96 : rule === "bonf" ? H.qnorm(1 - 0.025 / K) : pocock[K];
+    var fp = 0, paths = [];
+    for (i = 0; i < SIMS; i++) {
+      var s = 0, hit = -1, zs = [];
+      for (k = 1; k <= K; k++) { s += inc[i][k - 1]; var z = s / Math.sqrt(k); zs.push(z); if (hit < 0 && Math.abs(z) > c) hit = k; }
+      if (hit > 0) fp++;
+      if (i < 40) paths.push({ zs: zs, hit: hit });
+    }
+    H.clear(plot);
+    var X0 = 50, X1 = 570, YM = 120, SC = 26;
+    function xk(kk) { return K === 1 ? (X0 + X1) / 2 : X0 + (kk - 1) / (K - 1) * (X1 - X0); }
+    function yz(z) { return YM - Math.max(-4, Math.min(4, z)) * SC; }
+    S("rect", { x: X0, y: yz(4), width: X1 - X0, height: yz(c) - yz(4), "class": "d-fill" }, plot);
+    S("rect", { x: X0, y: yz(-c), width: X1 - X0, height: yz(-4) - yz(-c), "class": "d-fill" }, plot);
+    S("line", { x1: X0, x2: X1, y1: YM, y2: YM, "class": "d-grid" }, plot);
+    [c, -c].forEach(function (v) { S("line", { x1: X0, x2: X1, y1: yz(v), y2: yz(v), "class": "d-line-signal d-dash" }, plot); });
+    H.text(plot, X1, yz(c) - 5, "stop if |z| > " + c.toFixed(2), "d-label d-text-signal", "end");
+    paths.forEach(function (p) {
+      if (K === 1) { S("circle", { cx: xk(1), cy: yz(p.zs[0]), r: 3, "class": p.hit > 0 ? "d-dot-signal" : "d-dot-muted" }, plot); return; }
+      var d = p.zs.map(function (z, j) { return (j ? "L" : "M") + xk(j + 1).toFixed(1) + "," + yz(z).toFixed(1); }).join(" ");
+      var e = S("path", { d: d, "class": p.hit > 0 ? "d-line-signal" : "d-line" }, plot);
+      if (p.hit > 0) { e.setAttribute("stroke-width", "1.6"); S("circle", { cx: xk(p.hit), cy: yz(p.zs[p.hit - 1]), r: 3.5, "class": "d-dot-signal" }, plot); }
+      else { e.setAttribute("stroke-width", "1"); e.setAttribute("opacity", "0.45"); }
+    });
+    H.text(plot, X0 - 6, yz(0) + 4, "0", "d-label", "end");
+    H.text(plot, X0 - 6, yz(2) + 4, "2", "d-label", "end");
+    H.text(plot, X0 - 6, yz(-2) + 4, "−2", "d-label", "end");
+    H.text(plot, X0, 248, "look 1", "d-label");
+    if (K > 1) H.text(plot, X1, 248, "look " + K, "d-label", "end");
+    H.text(plot, (X0 + X1) / 2, 248, "40 of 1,000 A/A tests · red = stopped with a false win", "d-label", "middle");
+    var names = { peek: "naive peeking", bonf: "Bonferroni", pocock: "Pocock boundary" };
+    readout.textContent = K + " looks · 1,000 A/A tests · rule " + names[rule] + " (|z| > " + c.toFixed(2) + ") · false positives " + (100 * fp / SIMS).toFixed(1) + "% (nominal 5%)";
+  }
+  looksEl.addEventListener("input", draw);
+  ruleEl.addEventListener("change", draw);
+  document.getElementById("peek-rerun").addEventListener("click", function () { seed += 101; regen(); draw(); });
+  regen(); draw();
+})();
+
+/* ---------- 09.4 SRM detector ---------- */
+(function () {
+  if (!document.getElementById("srm-demo")) return;
+  var H = EXP, S = H.svg;
+  var plot = document.getElementById("srm-plot"), readout = document.getElementById("srm-readout");
+  var totEl = document.getElementById("srm-total"), shEl = document.getElementById("srm-share");
+  function draw() {
+    var N = parseFloat(totEl.value), sh = parseFloat(shEl.value) / 100;
+    document.getElementById("srm-total-out").textContent = H.fmt(N);
+    document.getElementById("srm-share-out").textContent = (sh * 100).toFixed(1) + "%";
+    var B = Math.round(N * sh), A = N - B, E = N / 2;
+    var chi = (A - E) * (A - E) / E + (B - E) * (B - E) / E, p = H.p2(Math.sqrt(chi)), srm = p < 0.001;
+    H.clear(plot);
+    var maxV = Math.max(A, B) * 1.08;
+    [["A", A], ["B", B]].forEach(function (row, i) {
+      var y = 24 + i * 52, W = 300;
+      H.text(plot, 20, y + 22, row[0], "d-title");
+      S("rect", { x: 44, y: y, width: (E / maxV * W).toFixed(1), height: 14, rx: 3, "class": "d-fill" }, plot);
+      H.text(plot, 50 + E / maxV * W, y + 11, "expected " + H.fmt(E), "d-label");
+      S("rect", { x: 44, y: y + 18, width: (row[1] / maxV * W).toFixed(1), height: 16, rx: 3, "class": i ? "d-signal" : "d-accent" }, plot);
+      H.text(plot, 50 + row[1] / maxV * W, y + 31, "observed " + H.fmt(row[1]) + " (" + H.sgn(row[1] - E, 0) + ")", "d-mono");
+    });
+    /* p-value scale: log10 p from 0 to -8 */
+    var X0 = 60, X1 = 560, Y = 160, lp = Math.max(-8, Math.log10(Math.max(p, 1e-12)));
+    function xp(v) { return X0 + (-v) / 8 * (X1 - X0); }
+    S("rect", { x: xp(-3), y: Y - 8, width: X1 - xp(-3), height: 16, rx: 3, "class": "d-signal", opacity: 0.35 }, plot);
+    S("line", { x1: X0, x2: X1, y1: Y, y2: Y, "class": "d-line" }, plot);
+    [0, -1, -2, -3, -4, -6, -8].forEach(function (v) {
+      S("line", { x1: xp(v), x2: xp(v), y1: Y - 4, y2: Y + 4, "class": "d-line" }, plot);
+      H.text(plot, xp(v), Y + 22, v === 0 ? "1" : "1e" + v, "d-label", "middle");
+    });
+    H.text(plot, xp(-3) + 4, Y - 14, "SRM zone: p < 0.001", "d-label d-text-signal");
+    S("circle", { cx: xp(lp), cy: Y, r: 7, "class": srm ? "d-dot-signal" : "d-dot-good" }, plot);
+    H.text(plot, X0, 206, "χ² = " + chi.toFixed(2) + " · p = " + H.fmtP(p) + (lp <= -8 ? " (off scale)" : ""), "d-mono");
+    H.text(plot, 580, 40, srm ? "SRM: debug before reading" : "split looks healthy", "d-title " + (srm ? "d-text-signal" : "d-text-good"), "end");
+    readout.textContent = "A " + H.fmt(A) + " · B " + H.fmt(B) + " · expected " + H.fmt(E) + " each · χ² " + chi.toFixed(2) + " · p " + H.fmtP(p) +
+      " · " + (srm ? "SRM detected" : "no SRM") + " (threshold p < 0.001)";
+  }
+  [totEl, shEl].forEach(function (e) { e.addEventListener("input", draw); });
+  draw();
+})();
+
+/* ---------- 09.5 segment lottery ---------- */
+(function () {
+  if (!document.getElementById("fdr-demo")) return;
+  var H = EXP, S = H.svg, MAXM = 40, EFFECT = 3.5;
+  var plot = document.getElementById("fdr-plot"), readout = document.getElementById("fdr-readout");
+  var mEl = document.getElementById("fdr-m"), realEl = document.getElementById("fdr-real"), ruleEl = document.getElementById("fdr-rule");
+  var seed = 3, noise = [], order = [];
+  function regen() {
+    var r = H.rng(seed), i;
+    noise = []; for (i = 0; i < MAXM; i++) noise.push(H.gauss(r));
+    order = []; for (i = 0; i < MAXM; i++) order.push(i);
+    for (i = MAXM - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = order[i]; order[i] = order[j]; order[j] = t; }
+  }
+  function draw() {
+    var m = parseInt(mEl.value, 10), real = Math.min(parseInt(realEl.value, 10), m), rule = ruleEl.value, i;
+    document.getElementById("fdr-m-out").textContent = m;
+    document.getElementById("fdr-real-out").textContent = real;
+    /* real effects go to the first `real` segments of a random order among the m shown */
+    var pos = order.filter(function (v) { return v < m; }), isReal = [];
+    for (i = 0; i < m; i++) isReal.push(false);
+    for (i = 0; i < real; i++) isReal[pos[i]] = true;
+    var ps = [];
+    for (i = 0; i < m; i++) ps.push(H.p2(noise[i] + (isReal[i] ? EFFECT : 0)));
+    var cut;
+    if (rule === "none") cut = 0.05;
+    else if (rule === "bonf") cut = 0.05 / m;
+    else {
+      var sorted = ps.slice().sort(function (a, b) { return a - b; }); cut = 0;
+      for (i = 0; i < m; i++) if (sorted[i] <= (i + 1) / m * 0.05) cut = sorted[i];
+    }
+    var tp = 0, fp = 0;
+    H.clear(plot);
+    var X0 = 50, X1 = 580, Y0 = 20, Y1 = 200, CAP = 8;
+    function yv(lp) { return Y1 - Math.min(CAP, lp) / CAP * (Y1 - Y0); }
+    [2, 4, 6, 8].forEach(function (v) { S("line", { x1: X0, x2: X1, y1: yv(v), y2: yv(v), "class": "d-grid" }, plot); H.text(plot, X0 - 6, yv(v) + 4, "1e-" + v, "d-label", "end"); });
+    var bw = (X1 - X0) / m;
+    for (i = 0; i < m; i++) {
+      var lp = -Math.log10(Math.max(ps[i], 1e-12)), flagged = rule === "bh" ? (cut > 0 && ps[i] <= cut) : ps[i] < cut;
+      if (flagged) { if (isReal[i]) tp++; else fp++; }
+      var cls = flagged ? (isReal[i] ? "d-good" : "d-signal") : "d-box";
+      S("rect", { x: (X0 + i * bw + bw * 0.15).toFixed(1), y: yv(lp).toFixed(1), width: (bw * 0.7).toFixed(1), height: Math.max(1, Y1 - yv(lp)).toFixed(1), rx: 2, "class": cls }, plot);
+      if (isReal[i]) S("circle", { cx: (X0 + i * bw + bw / 2).toFixed(1), cy: Y1 + 10, r: Math.min(5, bw * 0.3), "class": "d-dot-good" }, plot);
+    }
+    S("line", { x1: X0, x2: X1, y1: Y1, y2: Y1, "class": "d-line" }, plot);
+    var thr = rule === "bh" ? (cut > 0 ? cut : 0.05 / m) : cut;
+    S("line", { x1: X0, x2: X1, y1: yv(-Math.log10(thr)), y2: yv(-Math.log10(thr)), "class": "d-line-signal d-dash" }, plot);
+    H.text(plot, X1, yv(-Math.log10(thr)) - 5, (rule === "none" ? "p < 0.05" : rule === "bonf" ? "p < 0.05 / " + m : "BH cut-off") + " (" + H.fmtP(thr) + ")", "d-label d-text-signal", "end");
+    H.text(plot, X0, 232, "segments · ● = real effect · green = true discovery · orange = false discovery", "d-label");
+    H.text(plot, 12, 110, "p", "d-label");
+    var names = { none: "none (p < 0.05)", bonf: "Bonferroni", bh: "Benjamini–Hochberg" };
+    readout.textContent = m + " segments · " + real + " real · flagged " + (tp + fp) + " · true discoveries " + tp + " · false discoveries " + fp + " · correction " + names[rule];
+  }
+  [mEl, realEl].forEach(function (e) { e.addEventListener("input", draw); });
+  ruleEl.addEventListener("change", draw);
+  document.getElementById("fdr-rerun").addEventListener("click", function () { seed += 17; regen(); draw(); });
+  regen(); draw();
+})();
+
+/* ---------- 09.6 difference-in-differences lab ---------- */
+(function () {
+  if (!document.getElementById("did-demo")) return;
+  var H = EXP, S = H.svg;
+  var plot = document.getElementById("did-plot"), readout = document.getElementById("did-readout");
+  var effEl = document.getElementById("did-effect"), seaEl = document.getElementById("did-season"), gapEl = document.getElementById("did-gap");
+  function mean(a) { return a.reduce(function (s, v) { return s + v; }, 0) / a.length; }
+  function draw() {
+    var eff = parseFloat(effEl.value), sea = parseFloat(seaEl.value), gap = parseFloat(gapEl.value);
+    document.getElementById("did-effect-out").textContent = H.sgn(eff, 1) + " pp";
+    document.getElementById("did-season-out").textContent = H.sgn(sea, 1) + " pp";
+    document.getElementById("did-gap-out").textContent = H.sgn(gap, 2) + " pp/wk";
+    var C = [], T = [], t;
+    for (t = 1; t <= 8; t++) {
+      C.push(4.0 + sea * (t - 1) / 7);
+      T.push(3.6 + sea * (t - 1) / 7 + gap * (t - 1) + (t >= 5 ? eff : 0));
+    }
+    var Tpre = mean(T.slice(0, 4)), Tpost = mean(T.slice(4)), Cpre = mean(C.slice(0, 4)), Cpost = mean(C.slice(4));
+    var naive = Tpost - Tpre, did = (Tpost - Tpre) - (Cpost - Cpre);
+    /* counterfactual for the treated market: anchored at week 4, then moves exactly like the control */
+    var CF = []; for (t = 5; t <= 8; t++) CF.push(T[3] + C[t - 1] - C[3]);
+    var all = C.concat(T, CF), lo = Math.min.apply(null, all) - 0.15, hi = Math.max.apply(null, all) + 0.15;
+    var X0 = 70, X1 = 470, Y0 = 24, Y1 = 206;
+    function xw(w) { return X0 + (w - 1) / 7 * (X1 - X0); }
+    function yv(v) { return Y1 - (v - lo) / (hi - lo) * (Y1 - Y0); }
+    H.clear(plot);
+    S("line", { x1: X0, x2: X1, y1: Y1, y2: Y1, "class": "d-line" }, plot);
+    S("line", { x1: (xw(4) + xw(5)) / 2, x2: (xw(4) + xw(5)) / 2, y1: Y0 - 6, y2: Y1, "class": "d-line d-dash" }, plot);
+    H.text(plot, (xw(4) + xw(5)) / 2 + 4, Y0 + 2, "launch", "d-label");
+    function line(vals, start, cls) {
+      return S("path", { d: vals.map(function (v, j) { return (j ? "L" : "M") + xw(start + j).toFixed(1) + "," + yv(v).toFixed(1); }).join(" "), "class": cls }, plot);
+    }
+    line(C, 1, "d-line").setAttribute("stroke-width", "2.5");
+    line(T, 1, "d-line-accent").setAttribute("stroke-width", "2.5");
+    line([T[3]].concat(CF), 4, "d-line-signal d-dash");
+    for (t = 1; t <= 8; t++) {
+      S("circle", { cx: xw(t), cy: yv(C[t - 1]), r: 3.5, "class": "d-dot-muted" }, plot);
+      S("circle", { cx: xw(t), cy: yv(T[t - 1]), r: 3.5, "class": "d-dot" }, plot);
+      H.text(plot, xw(t), Y1 + 16, "wk " + t, "d-label", "middle");
+    }
+    H.text(plot, xw(8) + 8, yv(C[7]) + 4, "control", "d-label");
+    H.text(plot, xw(8) + 8, yv(T[7]) + 4, "treated", "d-label d-text-accent");
+    H.text(plot, xw(8) + 8, yv(CF[3]) + 4, "counterfactual", "d-label d-text-signal");
+    H.text(plot, X0 - 6, yv(lo + 0.15) + 4, (lo + 0.15).toFixed(1) + "%", "d-label", "end");
+    H.text(plot, X0 - 6, yv(hi - 0.15) + 4, (hi - 0.15).toFixed(1) + "%", "d-label", "end");
+    /* estimates row */
+    [["true effect", eff, "d-text-good"], ["naive before/after", naive, ""], ["DiD estimate", did, "d-text-accent"]].forEach(function (r, j) {
+      H.text(plot, 70 + j * 180, 252, r[0] + " ", "d-label");
+      H.text(plot, 70 + j * 180 + (r[0].length * 6.2 + 6), 252, H.sgn(r[1]) + " pp", "d-mono " + r[2]);
+    });
+    readout.textContent = "true effect " + H.sgn(eff) + " pp · naive before/after " + H.sgn(naive) + " pp · DiD " + H.sgn(did) + " pp (bias " + H.sgn(did - eff) + ")";
+  }
+  [effEl, seaEl, gapEl].forEach(function (e) { e.addEventListener("input", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

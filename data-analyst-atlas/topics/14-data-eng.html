@@ -1,0 +1,1609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data engineering for analysts · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="data-eng">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Data engineering for analysts</h1>
+    <p class="lede">Every dashboard and analysis sits on plumbing: a warehouse, pipelines that copy data into it, SQL models that clean it, a scheduler that runs it every morning and tests that stop bad numbers from shipping. You don't need to become a data engineer, but you do need to read, change and debug that plumbing yourself.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Follow one order from the moment a customer clicks "Buy" to the revenue chart on Monday's dashboard. A pipeline extracts it from the app database and loads it into a warehouse. SQL models in dbt clean it and shape it into fact and dimension tables. An orchestrator runs the whole chain before the working day starts, and tests at each layer stop broken data before anyone sees it. The six lessons below take each stage in turn.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 270" role="img" aria-label="The analytics data path: the app database is extracted and loaded into raw warehouse tables, dbt models turn raw tables into facts and dimensions, and dashboards read them. An orchestrator above schedules every stage and data tests below gate every layer.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="170" y="16" width="480" height="40" rx="8"/>
+              <text class="d-title" x="410" y="36" text-anchor="middle">Orchestrator · 14.5</text>
+              <text class="d-label" x="410" y="50" text-anchor="middle">runs at 05:00 in dependency order, retries, alerts</text>
+              <line class="d-line d-dash" x1="230" y1="56" x2="230" y2="108" marker-end="url(#ov-arrow)"/>
+              <line class="d-line d-dash" x1="405" y1="56" x2="405" y2="108" marker-end="url(#ov-arrow)"/>
+              <line class="d-line d-dash" x1="585" y1="56" x2="585" y2="108" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="10" y="110" width="110" height="60" rx="8"/>
+              <text class="d-title" x="65" y="136" text-anchor="middle">App database</text>
+              <text class="d-label" x="65" y="154" text-anchor="middle">orders, users</text>
+              <line class="d-line-accent" x1="120" y1="140" x2="168" y2="140" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label" x="144" y="130" text-anchor="middle">EL</text>
+              <rect class="d-accent" x="170" y="110" width="120" height="60" rx="8"/>
+              <text class="d-title" x="230" y="136" text-anchor="middle">Raw tables</text>
+              <text class="d-label" x="230" y="154" text-anchor="middle">14.1 · 14.2</text>
+              <line class="d-line-accent" x1="290" y1="140" x2="338" y2="140" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label" x="314" y="130" text-anchor="middle">ref()</text>
+              <rect class="d-accent" x="340" y="110" width="130" height="60" rx="8"/>
+              <text class="d-title" x="405" y="136" text-anchor="middle">dbt models</text>
+              <text class="d-label" x="405" y="154" text-anchor="middle">14.4 · staging, marts</text>
+              <line class="d-line-accent" x1="470" y1="140" x2="518" y2="140" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-good" x="520" y="110" width="130" height="60" rx="8"/>
+              <text class="d-title" x="585" y="136" text-anchor="middle">Facts + dims</text>
+              <text class="d-label" x="585" y="154" text-anchor="middle">14.3 · star schema</text>
+              <line class="d-line-accent" x1="650" y1="140" x2="688" y2="140" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="690" y="110" width="82" height="60" rx="8"/>
+              <text class="d-title" x="731" y="136" text-anchor="middle">BI</text>
+              <text class="d-label" x="731" y="154" text-anchor="middle">dashboards</text>
+              <line class="d-line d-dash" x1="230" y1="216" x2="230" y2="172" marker-end="url(#ov-arrow)"/>
+              <line class="d-line d-dash" x1="405" y1="216" x2="405" y2="172" marker-end="url(#ov-arrow)"/>
+              <line class="d-line d-dash" x1="585" y1="216" x2="585" y2="172" marker-end="url(#ov-arrow)"/>
+              <rect class="d-good" x="170" y="218" width="480" height="40" rx="8"/>
+              <text class="d-title" x="410" y="238" text-anchor="middle">Data tests · 14.6</text>
+              <text class="d-label" x="410" y="252" text-anchor="middle">freshness, unique, not_null gate each layer</text>
+            </svg>
+          </div>
+          <figcaption>The analytics data path. Data flows left to right; the orchestrator (above) decides when each stage runs, and tests (below) decide whether its output is allowed to move on.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="warehouses">
+        <header class="topic-head">
+          <p class="eyebrow">14.1 · Where analytics data lives</p>
+          <h2>Data warehouses</h2>
+        </header>
+
+        <p class="lead">Your app's database is tuned to read and write one order at a time, thousands of times a second. Analysis does the opposite: it reads millions of orders at once to answer "revenue by month". A <strong>data warehouse</strong> is a database built for that second job. It stores data by column, splits big tables into partitions and charges you for the data your queries touch.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Almost every analyst query runs in a warehouse such as Snowflake, BigQuery, Redshift or Databricks. How you write the query decides whether it reads 200 MB or 700 GB, which is the difference between a 2-second answer and a costly, slow one. Running heavy queries on the production app database can also slow the app down for customers.</p>
+        </div>
+
+        <h3>OLTP versus OLAP</h3>
+        <p>The app database is an <strong>OLTP</strong> system (online transaction processing): short queries such as <code>UPDATE orders SET status = 'paid' WHERE order_id = 1042</code>. The warehouse is an <strong>OLAP</strong> system (online analytical processing): long scans such as <code>SUM(amount) GROUP BY month</code>. The biggest design difference is how rows sit on disk.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="The same four orders stored two ways. A row store keeps each order together, so summing amount reads all 16 values. A column store keeps each column together, so summing amount reads only the 4 amount values.">
+              <text class="d-mono" x="340" y="22" text-anchor="middle">SELECT SUM(amount) FROM orders</text>
+              <text class="d-title" x="150" y="52" text-anchor="middle">Row store (app database)</text>
+              <text class="d-title" x="515" y="52" text-anchor="middle">Column store (warehouse)</text>
+              <text class="d-label" x="52" y="74" text-anchor="middle">id</text>
+              <text class="d-label" x="116" y="74" text-anchor="middle">date</text>
+              <text class="d-label" x="180" y="74" text-anchor="middle">status</text>
+              <text class="d-label" x="244" y="74" text-anchor="middle">amount</text>
+              <rect class="d-accent" x="20" y="80" width="64" height="26"/><rect class="d-accent" x="84" y="80" width="64" height="26"/><rect class="d-accent" x="148" y="80" width="64" height="26"/><rect class="d-accent" x="212" y="80" width="64" height="26"/>
+              <rect class="d-accent" x="20" y="112" width="64" height="26"/><rect class="d-accent" x="84" y="112" width="64" height="26"/><rect class="d-accent" x="148" y="112" width="64" height="26"/><rect class="d-accent" x="212" y="112" width="64" height="26"/>
+              <rect class="d-accent" x="20" y="144" width="64" height="26"/><rect class="d-accent" x="84" y="144" width="64" height="26"/><rect class="d-accent" x="148" y="144" width="64" height="26"/><rect class="d-accent" x="212" y="144" width="64" height="26"/>
+              <rect class="d-accent" x="20" y="176" width="64" height="26"/><rect class="d-accent" x="84" y="176" width="64" height="26"/><rect class="d-accent" x="148" y="176" width="64" height="26"/><rect class="d-accent" x="212" y="176" width="64" height="26"/>
+              <text class="d-mono" x="52" y="98" text-anchor="middle">1042</text><text class="d-mono" x="116" y="98" text-anchor="middle">10-02</text><text class="d-mono" x="180" y="98" text-anchor="middle">paid</text><text class="d-mono" x="244" y="98" text-anchor="middle">45.00</text>
+              <text class="d-mono" x="52" y="130" text-anchor="middle">1043</text><text class="d-mono" x="116" y="130" text-anchor="middle">10-02</text><text class="d-mono" x="180" y="130" text-anchor="middle">refund</text><text class="d-mono" x="244" y="130" text-anchor="middle">12.50</text>
+              <text class="d-mono" x="52" y="162" text-anchor="middle">1044</text><text class="d-mono" x="116" y="162" text-anchor="middle">10-03</text><text class="d-mono" x="180" y="162" text-anchor="middle">paid</text><text class="d-mono" x="244" y="162" text-anchor="middle">88.00</text>
+              <text class="d-mono" x="52" y="194" text-anchor="middle">1045</text><text class="d-mono" x="116" y="194" text-anchor="middle">10-03</text><text class="d-mono" x="180" y="194" text-anchor="middle">shipped</text><text class="d-mono" x="244" y="194" text-anchor="middle">30.00</text>
+              <text class="d-label" x="286" y="98">block 1</text><text class="d-label" x="286" y="130">block 2</text><text class="d-label" x="286" y="162">block 3</text><text class="d-label" x="286" y="194">block 4</text>
+              <text class="d-label d-text-signal" x="150" y="230" text-anchor="middle">reads every block: 16 values to use 4</text>
+              <text class="d-label" x="402" y="74" text-anchor="middle">id</text>
+              <text class="d-label" x="476" y="74" text-anchor="middle">date</text>
+              <text class="d-label" x="550" y="74" text-anchor="middle">status</text>
+              <text class="d-label" x="624" y="74" text-anchor="middle">amount</text>
+              <rect class="d-fill" x="370" y="80" width="64" height="122" rx="4"/>
+              <rect class="d-fill" x="444" y="80" width="64" height="122" rx="4"/>
+              <rect class="d-fill" x="518" y="80" width="64" height="122" rx="4"/>
+              <rect class="d-accent" x="592" y="80" width="64" height="122" rx="4"/>
+              <text class="d-mono" x="402" y="98" text-anchor="middle">1042</text><text class="d-mono" x="402" y="130" text-anchor="middle">1043</text><text class="d-mono" x="402" y="162" text-anchor="middle">1044</text><text class="d-mono" x="402" y="194" text-anchor="middle">1045</text>
+              <text class="d-mono" x="476" y="98" text-anchor="middle">10-02</text><text class="d-mono" x="476" y="130" text-anchor="middle">10-02</text><text class="d-mono" x="476" y="162" text-anchor="middle">10-03</text><text class="d-mono" x="476" y="194" text-anchor="middle">10-03</text>
+              <text class="d-mono" x="550" y="98" text-anchor="middle">paid</text><text class="d-mono" x="550" y="130" text-anchor="middle">refund</text><text class="d-mono" x="550" y="162" text-anchor="middle">paid</text><text class="d-mono" x="550" y="194" text-anchor="middle">shipped</text>
+              <text class="d-mono" x="624" y="98" text-anchor="middle">45.00</text><text class="d-mono" x="624" y="130" text-anchor="middle">12.50</text><text class="d-mono" x="624" y="162" text-anchor="middle">88.00</text><text class="d-mono" x="624" y="194" text-anchor="middle">30.00</text>
+              <text class="d-label d-text-good" x="515" y="230" text-anchor="middle">reads one column block: 4 values</text>
+            </svg>
+          </div>
+          <figcaption>The same four orders stored two ways. A row store keeps each order together, which suits "fetch order 1042". A column store keeps each column together, so a sum over one column skips everything else.</figcaption>
+        </figure>
+
+        <h3>Columnar storage and compression</h3>
+        <p>Because one column holds values of one type, often repeated, it compresses well: a <code>status</code> column with five distinct values shrinks to a fraction of a byte per row. So a columnar scan reads only the columns you name, and those columns are small. <code>SELECT *</code> throws that advantage away.</p>
+
+        <div class="widget" id="wh-demo">
+          <div class="widget-head">
+            <span class="widget-title">What does your query scan?</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="wh-format">Storage <select id="wh-format"><option value="row" selected>Row store</option><option value="col">Columnar</option></select></label>
+            <label for="wh-part"><input type="checkbox" id="wh-part"> Partitioned by day</label>
+            <label for="wh-days">Date filter: last <input type="range" id="wh-days" min="1" max="730" step="1" value="365"><output id="wh-days-out">365</output> days</label>
+          </div>
+          <div class="widget-controls" id="wh-cols" aria-label="Columns in the SELECT list"></div>
+          <svg id="wh-plot" viewBox="0 0 600 200" role="img" aria-label="Bars comparing bytes scanned with the full table size, and a grid of daily partitions showing which ones the query reads."></svg>
+          <p class="readout" id="wh-readout"></p>
+        </div>
+        <p>The example table holds two years of orders at 2 million rows a day (1.46 billion rows). Column widths and compression ratios are illustrative. Try the query "revenue per day for the last 30 days": it only needs <code>order_date</code> and <code>amount</code>.</p>
+
+        <h3>Partitions and clustering</h3>
+        <p>A <strong>partition</strong> splits a table into separate chunks by a column, usually a date. When your <code>WHERE</code> clause filters on that column, the engine skips every partition that cannot match. This is called <strong>partition pruning</strong>. <strong>Clustering</strong> (or sort keys) orders rows inside each partition so the engine can also skip blocks whose min and max values rule them out.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="Twelve monthly partitions of the orders table. A filter on order_date from November onward reads only the November and December partitions and skips the other ten.">
+              <text class="d-mono" x="340" y="22" text-anchor="middle">WHERE order_date &gt;= '2026-11-01'</text>
+              <rect class="d-fill" x="30" y="50" width="44" height="100" rx="4"/><rect class="d-fill" x="82" y="50" width="44" height="100" rx="4"/><rect class="d-fill" x="134" y="50" width="44" height="100" rx="4"/>
+              <rect class="d-fill" x="186" y="50" width="44" height="100" rx="4"/><rect class="d-fill" x="238" y="50" width="44" height="100" rx="4"/><rect class="d-fill" x="290" y="50" width="44" height="100" rx="4"/>
+              <rect class="d-fill" x="342" y="50" width="44" height="100" rx="4"/><rect class="d-fill" x="394" y="50" width="44" height="100" rx="4"/><rect class="d-fill" x="446" y="50" width="44" height="100" rx="4"/>
+              <rect class="d-fill" x="498" y="50" width="44" height="100" rx="4"/>
+              <rect class="d-accent" x="550" y="50" width="44" height="100" rx="4"/><rect class="d-accent" x="602" y="50" width="44" height="100" rx="4"/>
+              <text class="d-label" x="52" y="168" text-anchor="middle">Jan</text><text class="d-label" x="104" y="168" text-anchor="middle">Feb</text><text class="d-label" x="156" y="168" text-anchor="middle">Mar</text><text class="d-label" x="208" y="168" text-anchor="middle">Apr</text>
+              <text class="d-label" x="260" y="168" text-anchor="middle">May</text><text class="d-label" x="312" y="168" text-anchor="middle">Jun</text><text class="d-label" x="364" y="168" text-anchor="middle">Jul</text><text class="d-label" x="416" y="168" text-anchor="middle">Aug</text>
+              <text class="d-label" x="468" y="168" text-anchor="middle">Sep</text><text class="d-label" x="520" y="168" text-anchor="middle">Oct</text>
+              <text class="d-label d-text-accent" x="572" y="168" text-anchor="middle">Nov</text><text class="d-label d-text-accent" x="624" y="168" text-anchor="middle">Dec</text>
+              <text class="d-label" x="270" y="104" text-anchor="middle">10 partitions skipped (pruned)</text>
+              <line class="d-line" x1="40" y1="184" x2="540" y2="184"/>
+              <line class="d-line-accent" x1="552" y1="184" x2="644" y2="184"/>
+              <text class="d-label d-text-good" x="598" y="204" text-anchor="middle">2 of 12 read</text>
+              <text class="d-label" x="290" y="204" text-anchor="middle">same result, about one sixth of the bytes</text>
+            </svg>
+          </div>
+          <figcaption>Partition pruning. The filter is on the partition column, so the engine knows from metadata alone that ten monthly partitions cannot contain matching rows.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- BigQuery syntax: partition by day, cluster by customer inside each day</span>
+CREATE TABLE analytics.orders
+PARTITION BY DATE(created_at)
+CLUSTER BY customer_id AS
+SELECT * FROM raw.orders;
+
+<span class="c">-- Good: names two columns and filters on the partition column</span>
+SELECT DATE(created_at) AS order_date, SUM(amount) AS revenue
+FROM analytics.orders
+WHERE created_at &gt;= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)
+GROUP BY order_date;
+
+<span class="c">-- Costly: every column, every partition. LIMIT does not reduce the scan.</span>
+SELECT * FROM analytics.orders LIMIT 10;</code></pre>
+
+        <h3>Storage and compute are separate</h3>
+        <p>Modern cloud warehouses keep data in cheap object storage and spin up compute only while queries run. You pay for storage and for compute (or bytes scanned), so the cost of a query depends on how much it reads, not on how many rows it returns.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Engine</th><th>How you pay for queries</th><th>How it skips data</th></tr></thead>
+            <tbody>
+              <tr><td>Snowflake</td><td>Compute time of a "virtual warehouse" (credits)</td><td>Automatic micro-partitions, optional clustering keys</td></tr>
+              <tr><td>BigQuery</td><td>Bytes scanned (on-demand) or reserved capacity</td><td>Partitioned and clustered tables</td></tr>
+              <tr><td>Redshift</td><td>Provisioned nodes or serverless compute</td><td>Sort keys and zone maps</td></tr>
+              <tr><td>Databricks SQL</td><td>Compute time of a SQL warehouse</td><td>Delta tables: partitions, data skipping, clustering</td></tr>
+              <tr><td>PostgreSQL</td><td>Your own server</td><td>Indexes; row store, fine up to modest sizes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>OLTP databases serve the app one row at a time; OLAP warehouses scan many rows for analysis.</li>
+            <li>Columnar storage reads only the columns a query names, and those columns compress well.</li>
+            <li>Partition pruning skips whole chunks when you filter on the partition column.</li>
+            <li>Query cost follows bytes read or compute time, not rows returned.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Running <code>SELECT *</code> "just to look" at a billion-row table, then adding <code>LIMIT</code> and expecting a cheap query.</li>
+            <li>Wrapping the partition column in a function the engine can't prune on, or filtering on a different date column.</li>
+            <li>Pointing heavy reports at the production app database instead of the warehouse or a read replica.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="warehouses-1"><span>Explain why summing one column is cheap in a column store and costly in a row store</span></label></li>
+          <li><label><input type="checkbox" data-key="warehouses-2"><span>Rewrite a <code>SELECT *</code> query so it names only the columns it needs and prunes partitions</span></label></li>
+          <li><label><input type="checkbox" data-key="warehouses-3"><span>Estimate how many bytes a query scans from rows, column widths and the date range</span></label></li>
+          <li><label><input type="checkbox" data-key="warehouses-4"><span>Find where your warehouse shows bytes scanned or compute used for a query</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://cloud.google.com/bigquery/docs/partitioned-tables">BigQuery: Introduction to partitioned tables</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.snowflake.com/">Snowflake documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="elt">
+        <header class="topic-head">
+          <p class="eyebrow">14.2 · Moving the data</p>
+          <h2>ETL &amp; ELT pipelines</h2>
+        </header>
+
+        <p class="lead">A pipeline copies data from where it is created (the app database, a payments provider, a CRM) to where you analyse it. It does three things: <strong>extract</strong> the data, <strong>load</strong> it into the warehouse and <strong>transform</strong> it into clean tables. The order of the last two letters is the big design choice.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>When a number looks wrong, the cause is often in the pipeline: a load that ran twice, a late update that was never picked up, or business logic buried in an extraction script nobody can read. With ELT, most of that logic becomes SQL in the warehouse, which you can read and change yourself.</p>
+        </div>
+
+        <h3>ETL versus ELT</h3>
+        <p><strong>ETL</strong> transforms data on the way in, so the warehouse only ever sees finished tables. <strong>ELT</strong> loads a raw, untouched copy first and transforms it later with SQL inside the warehouse. Cheap cloud storage and fast warehouses made ELT the default for analytics, because the raw copy lets you rebuild any table without going back to the source.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="Two pipeline lanes. ETL transforms on a separate server before loading finished tables, so a logic change means re-extracting. ELT loads a raw copy into the warehouse and transforms it there with SQL, so a logic change means re-running SQL.">
+              <defs>
+                <marker id="elt-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="22">ETL: transform, then load</text>
+              <rect class="d-box" x="20" y="34" width="100" height="48" rx="8"/>
+              <text class="d-text" x="70" y="63" text-anchor="middle">Source</text>
+              <line class="d-line-accent" x1="120" y1="58" x2="168" y2="58" marker-end="url(#elt-arrow)"/>
+              <rect class="d-signal" x="170" y="34" width="150" height="48" rx="8"/>
+              <text class="d-text" x="245" y="55" text-anchor="middle">Transform</text>
+              <text class="d-label" x="245" y="72" text-anchor="middle">script or ETL server</text>
+              <line class="d-line-accent" x1="320" y1="58" x2="368" y2="58" marker-end="url(#elt-arrow)"/>
+              <rect class="d-box" x="370" y="34" width="150" height="48" rx="8"/>
+              <text class="d-text" x="445" y="55" text-anchor="middle">Warehouse</text>
+              <text class="d-label" x="445" y="72" text-anchor="middle">finished tables only</text>
+              <line class="d-line-accent" x1="520" y1="58" x2="568" y2="58" marker-end="url(#elt-arrow)"/>
+              <rect class="d-box" x="570" y="34" width="90" height="48" rx="8"/>
+              <text class="d-text" x="615" y="63" text-anchor="middle">BI</text>
+              <text class="d-label d-text-signal" x="20" y="104">change a rule: re-extract history from the source</text>
+              <text class="d-title" x="20" y="140">ELT: load raw, then transform in SQL</text>
+              <rect class="d-box" x="20" y="152" width="100" height="48" rx="8"/>
+              <text class="d-text" x="70" y="181" text-anchor="middle">Source</text>
+              <line class="d-line-accent" x1="120" y1="176" x2="168" y2="176" marker-end="url(#elt-arrow)"/>
+              <rect class="d-accent" x="170" y="152" width="150" height="48" rx="8"/>
+              <text class="d-text" x="245" y="173" text-anchor="middle">Raw tables</text>
+              <text class="d-label" x="245" y="190" text-anchor="middle">1:1 copy in warehouse</text>
+              <line class="d-line-accent" x1="320" y1="176" x2="368" y2="176" marker-end="url(#elt-arrow)"/>
+              <rect class="d-good" x="370" y="152" width="150" height="48" rx="8"/>
+              <text class="d-text" x="445" y="173" text-anchor="middle">Transform</text>
+              <text class="d-label" x="445" y="190" text-anchor="middle">SQL / dbt in warehouse</text>
+              <line class="d-line-accent" x1="520" y1="176" x2="568" y2="176" marker-end="url(#elt-arrow)"/>
+              <rect class="d-box" x="570" y="152" width="90" height="48" rx="8"/>
+              <text class="d-text" x="615" y="181" text-anchor="middle">BI</text>
+              <text class="d-label d-text-good" x="20" y="222">change a rule: re-run SQL on the raw copy</text>
+            </svg>
+          </div>
+          <figcaption>ETL keeps only the transformed result, so new logic needs the source again. ELT keeps the raw copy next to the transformed tables, so new logic is just another SQL run.</figcaption>
+        </figure>
+
+        <div class="widget" id="elt-demo">
+          <div class="widget-head">
+            <span class="widget-title">Design the nightly load</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="elt-mode">Pattern <select id="elt-mode"><option value="etl" selected>ETL</option><option value="elt">ELT</option></select></label>
+            <label for="elt-extract">Extraction <select id="elt-extract"><option value="full" selected>Full copy</option><option value="inc">Incremental</option></select></label>
+            <label for="elt-lb">Lookback <input type="range" id="elt-lb" min="0" max="5" step="1" value="0"><output id="elt-lb-out">0</output> days</label>
+            <button class="btn primary" type="button" id="elt-change">Change a business rule</button>
+          </div>
+          <svg id="elt-plot" viewBox="0 0 600 210" role="img" aria-label="The chosen pipeline drawn as boxes, with bars for rows moved per night and late updates missed."></svg>
+          <p class="readout" id="elt-readout"></p>
+        </div>
+        <p>The example <code>orders</code> table has 18 million rows. Each night about 140,000 rows are new or changed, and a few thousand updates arrive late, committed after the previous load had already read past them. Lookback only applies to incremental loads.</p>
+
+        <h3>Full versus incremental extraction</h3>
+        <p>A <strong>full</strong> load copies the whole table every night: simple, always correct, and slow once tables grow. An <strong>incremental</strong> load copies only rows changed since the last run, using a <strong>high-water mark</strong> such as the largest <code>updated_at</code> already loaded. Re-reading a few days behind the mark (a <strong>lookback window</strong>) catches rows that were committed late. Change data capture (CDC) tools read the database's change log instead and see every insert, update and delete.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="A timeline of rows by updated_at. The high-water mark sits at the last load. A strict incremental load reads only rows after the mark and misses a row committed late just before it; a three-day lookback window re-reads that row.">
+              <rect class="d-fill" x="360" y="44" width="280" height="86" rx="6"/>
+              <text class="d-label" x="500" y="60" text-anchor="middle">3-day lookback window</text>
+              <line class="d-line" x1="40" y1="130" x2="640" y2="130"/>
+              <text class="d-label" x="40" y="150" text-anchor="middle">Nov 12</text><text class="d-label" x="120" y="150" text-anchor="middle">13</text><text class="d-label" x="200" y="150" text-anchor="middle">14</text><text class="d-label" x="280" y="150" text-anchor="middle">15</text>
+              <text class="d-label" x="360" y="150" text-anchor="middle">16</text><text class="d-label" x="440" y="150" text-anchor="middle">17</text><text class="d-label" x="520" y="150" text-anchor="middle">18</text><text class="d-label" x="600" y="150" text-anchor="middle">19</text>
+              <circle class="d-dot-muted" cx="70" cy="110" r="5"/><circle class="d-dot-muted" cx="130" cy="96" r="5"/><circle class="d-dot-muted" cx="190" cy="112" r="5"/><circle class="d-dot-muted" cx="250" cy="100" r="5"/><circle class="d-dot-muted" cx="320" cy="108" r="5"/>
+              <circle class="d-dot-muted" cx="390" cy="98" r="5"/><circle class="d-dot-muted" cx="450" cy="110" r="5"/>
+              <circle class="d-dot-signal" cx="508" cy="92" r="6"/>
+              <text class="d-label d-text-signal" x="500" y="80" text-anchor="end">late row</text>
+              <circle class="d-dot" cx="545" cy="104" r="5"/><circle class="d-dot" cx="575" cy="94" r="5"/><circle class="d-dot" cx="610" cy="110" r="5"/>
+              <line class="d-line-signal d-dash" x1="520" y1="30" x2="520" y2="134"/>
+              <text class="d-label d-text-signal" x="524" y="30">high-water mark</text>
+              <text class="d-label" x="40" y="182">strict incremental: updated_at &gt; mark</text>
+              <text class="d-label d-text-signal" x="300" y="182">misses the late row</text>
+              <text class="d-label" x="40" y="202">with lookback: updated_at &gt; mark − 3 days, then upsert by key</text>
+              <text class="d-label d-text-good" x="470" y="202">catches it</text>
+            </svg>
+          </div>
+          <figcaption>The late row has an <code>updated_at</code> just before the mark but was committed after the last load read the table. Re-reading a window behind the mark and upserting by key catches it without creating duplicates.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Incremental extract with a lookback window (pandas + SQLAlchemy)</span>
+import pandas as pd
+from sqlalchemy import create_engine, text
+
+src = create_engine("postgresql://readonly@app-replica/shop")   <span class="c"># read replica, not the primary</span>
+wh = create_engine("postgresql://loader@warehouse/analytics")
+
+with wh.connect() as c:
+    mark = c.execute(text("SELECT max(updated_at) FROM raw.orders")).scalar()
+
+since = mark - pd.Timedelta(days=3)                               <span class="c"># lookback for late commits</span>
+changes = pd.read_sql(text("SELECT * FROM orders WHERE updated_at &gt; :since"),
+                      src, params={"since": since})
+changes["_loaded_at"] = pd.Timestamp.now(tz="UTC")
+changes.to_sql("orders_changes", wh, schema="raw", if_exists="replace", index=False)</code></pre>
+
+        <h3>Make every load idempotent</h3>
+        <p>A load is <strong>idempotent</strong> when running it twice gives the same result as running it once. Pipelines get retried and re-run all the time, so an <code>INSERT</code> that appends the same rows again will quietly double your revenue. Upsert by the primary key with <code>MERGE</code>, or delete and replace the whole date range you are reloading.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Upsert the night's changes: safe to run twice</span>
+MERGE INTO raw.orders AS t
+USING raw.orders_changes AS s
+  ON t.order_id = s.order_id
+WHEN MATCHED THEN UPDATE SET
+  status = s.status, amount = s.amount, updated_at = s.updated_at, _loaded_at = s._loaded_at
+WHEN NOT MATCHED THEN INSERT (order_id, customer_id, status, amount, updated_at, _loaded_at)
+  VALUES (s.order_id, s.customer_id, s.status, s.amount, s.updated_at, s._loaded_at);</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Extraction pattern</th><th>How it finds new data</th><th>Good for</th><th>Watch out for</th></tr></thead>
+            <tbody>
+              <tr><td>Full copy</td><td>Reads the whole table</td><td>Small tables, lookups</td><td>Runtime and source load grow with the table</td></tr>
+              <tr><td>Incremental by timestamp</td><td><code>updated_at</code> &gt; high-water mark</td><td>Large tables with a reliable <code>updated_at</code></td><td>Late commits, hard deletes are invisible</td></tr>
+              <tr><td>Change data capture</td><td>Reads the database change log</td><td>Large, busy tables; deletes matter</td><td>More setup, needs log access</td></tr>
+              <tr><td>SaaS connector</td><td>Vendor API, managed by an EL tool</td><td>Stripe, CRM, ad platforms</td><td>API limits, schema changes upstream</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>ELT loads a raw copy first and transforms it in the warehouse with SQL; ETL transforms before loading.</li>
+            <li>Keeping raw data lets you rebuild any table when business logic changes.</li>
+            <li>Incremental loads use a high-water mark; a lookback window catches late-arriving rows.</li>
+            <li>Every load should be idempotent: upsert by key or replace whole partitions.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Appending with plain <code>INSERT</code>, so a retried job duplicates rows.</li>
+            <li>Trusting <code>updated_at</code> without checking that every code path in the app actually sets it.</li>
+            <li>Forgetting hard deletes: a timestamp-based incremental load never sees rows that were removed.</li>
+            <li>Extracting from the primary app database at peak hours instead of a replica.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="elt-1"><span>Draw ETL and ELT for the same source and say what a logic change costs in each</span></label></li>
+          <li><label><input type="checkbox" data-key="elt-2"><span>Write an incremental extract with a high-water mark and a lookback window</span></label></li>
+          <li><label><input type="checkbox" data-key="elt-3"><span>Explain why a load must be idempotent and make one with <code>MERGE</code></span></label></li>
+          <li><label><input type="checkbox" data-key="elt-4"><span>Pick full, incremental or CDC extraction for a given table and justify it</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://www.postgresql.org/docs/current/sql-merge.html">PostgreSQL: MERGE</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.getdbt.com/">dbt documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="dimensional">
+        <header class="topic-head">
+          <p class="eyebrow">14.3 · Shaping tables for questions</p>
+          <h2>Dimensional modeling</h2>
+        </header>
+
+        <p class="lead">App tables are shaped for the app: dozens of small, normalized tables joined in complicated ways. <strong>Dimensional modeling</strong>, popularized by Ralph Kimball, reshapes them for questions. Business events go into <strong>fact tables</strong> (one row per order line, with amounts you can add up) and the context you slice by goes into <strong>dimension tables</strong> (customer, product, date). Drawn out, it looks like a star.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>A good star schema makes most questions a single join and a <code>GROUP BY</code>, and BI tools such as Power BI and Looker expect it. Knowing a table's grain stops you from double counting, and knowing how a dimension tracks history tells you whether last year's revenue by region will change when a customer moves.</p>
+        </div>
+
+        <h3>Facts, dimensions and grain</h3>
+        <p>Start by declaring the <strong>grain</strong>: exactly what one row of the fact table means. "One row per order line" is a grain; "orders and some returns" is not. The fact holds numeric <strong>measures</strong> and foreign keys. Each dimension holds descriptive attributes and a <strong>surrogate key</strong>, a warehouse-generated id that stays stable even if the source id changes.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 300" role="img" aria-label="A star schema. The fact table fct_orders sits in the centre with measures and foreign keys; four dimension tables, dim_date, dim_customer, dim_product and dim_channel, surround it, each joined many to one.">
+              <line class="d-line" x1="260" y1="112" x2="180" y2="58"/>
+              <line class="d-line" x1="430" y1="112" x2="500" y2="58"/>
+              <line class="d-line" x1="260" y1="200" x2="180" y2="250"/>
+              <line class="d-line" x1="430" y1="200" x2="500" y2="250"/>
+              <text class="d-label" x="206" y="96" text-anchor="middle">many : 1</text>
+              <text class="d-label" x="474" y="96" text-anchor="middle">many : 1</text>
+              <text class="d-label" x="206" y="216" text-anchor="middle">many : 1</text>
+              <text class="d-label" x="474" y="216" text-anchor="middle">many : 1</text>
+              <rect class="d-accent" x="260" y="95" width="170" height="122" rx="8"/>
+              <text class="d-title" x="345" y="116" text-anchor="middle">fct_orders</text>
+              <text class="d-mono" x="272" y="138">order_line_id</text>
+              <text class="d-mono" x="272" y="155">date_key</text>
+              <text class="d-mono" x="272" y="172">customer_sk</text>
+              <text class="d-mono" x="272" y="189">product_sk</text>
+              <text class="d-mono d-text-accent" x="272" y="206">quantity, amount</text>
+              <rect class="d-good" x="20" y="20" width="160" height="72" rx="8"/>
+              <text class="d-title" x="100" y="42" text-anchor="middle">dim_date</text>
+              <text class="d-label" x="100" y="62" text-anchor="middle">date_key, month</text>
+              <text class="d-label" x="100" y="78" text-anchor="middle">weekday, is_holiday</text>
+              <rect class="d-good" x="500" y="20" width="160" height="72" rx="8"/>
+              <text class="d-title" x="580" y="42" text-anchor="middle">dim_customer</text>
+              <text class="d-label" x="580" y="62" text-anchor="middle">customer_sk, city</text>
+              <text class="d-label" x="580" y="78" text-anchor="middle">segment, valid_from</text>
+              <rect class="d-good" x="20" y="214" width="160" height="72" rx="8"/>
+              <text class="d-title" x="100" y="236" text-anchor="middle">dim_product</text>
+              <text class="d-label" x="100" y="256" text-anchor="middle">product_sk, name</text>
+              <text class="d-label" x="100" y="272" text-anchor="middle">category, brand</text>
+              <rect class="d-good" x="500" y="214" width="160" height="72" rx="8"/>
+              <text class="d-title" x="580" y="236" text-anchor="middle">dim_channel</text>
+              <text class="d-label" x="580" y="256" text-anchor="middle">channel_key</text>
+              <text class="d-label" x="580" y="272" text-anchor="middle">web, app, store</text>
+              <text class="d-label" x="345" y="240" text-anchor="middle">grain: one row per order line</text>
+              <text class="d-label" x="345" y="256" text-anchor="middle">measures here, context outside</text>
+            </svg>
+          </div>
+          <figcaption>A star schema for an online store. Every question such as "revenue by product category and month for app orders" is the fact joined to the dimensions it needs, then grouped.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- One fact, three dimensions, one GROUP BY</span>
+SELECT d.month, p.category, SUM(f.amount) AS revenue
+FROM fct_orders AS f
+JOIN dim_date    AS d ON f.date_key   = d.date_key
+JOIN dim_product AS p ON f.product_sk = p.product_sk
+JOIN dim_channel AS c ON f.channel_key = c.channel_key
+WHERE c.channel = 'app'
+GROUP BY d.month, p.category
+ORDER BY d.month, revenue DESC;</code></pre>
+
+        <h3>Three kinds of fact table</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fact type</th><th>One row per</th><th>Example</th><th>Typical measures</th></tr></thead>
+            <tbody>
+              <tr><td>Transaction</td><td>Event</td><td><code>fct_orders</code>: each order line</td><td>amount, quantity</td></tr>
+              <tr><td>Periodic snapshot</td><td>Entity per period</td><td><code>fct_subscriptions_daily</code>: each subscription each day</td><td>MRR, seats (not additive over time)</td></tr>
+              <tr><td>Accumulating snapshot</td><td>Process instance, updated as it moves</td><td><code>fct_order_fulfilment</code>: ordered, packed, shipped dates</td><td>days between milestones</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Slowly changing dimensions</h3>
+        <p>Dimension attributes change: customers move, products change category. A <strong>slowly changing dimension</strong> (SCD) policy says what happens. <strong>Type 1</strong> overwrites the old value, so history is restated with today's attributes. <strong>Type 2</strong> closes the old row and adds a new one with its own surrogate key and validity dates, so each fact keeps the attributes that were true when it happened. (Type 0 never changes the value; Type 3 keeps a "previous value" column.)</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 250" role="img" aria-label="Customer 7, Ana, moves from Leeds to Bristol. Type 1 overwrites the city, losing Leeds. Type 2 closes the Leeds row with a valid_to date and adds a new Bristol row with a new surrogate key.">
+              <text class="d-title" x="20" y="22">Type 1: overwrite</text>
+              <rect class="d-fill" x="20" y="32" width="320" height="22"/>
+              <text class="d-label" x="30" y="47">customer_id</text><text class="d-label" x="140" y="47">name</text><text class="d-label" x="230" y="47">city</text>
+              <rect class="d-box" x="20" y="54" width="320" height="24"/>
+              <text class="d-mono" x="30" y="70">7</text><text class="d-mono" x="140" y="70">Ana</text>
+              <text class="d-mono d-text-signal" x="230" y="70">Leeds</text>
+              <line class="d-line-signal" x1="228" y1="66" x2="270" y2="66"/>
+              <text class="d-mono" x="278" y="70">Bristol</text>
+              <text class="d-label d-text-signal" x="356" y="62">old value gone: January sales</text>
+              <text class="d-label d-text-signal" x="356" y="78">now report as Bristol</text>
+              <text class="d-title" x="20" y="118">Type 2: add a row, keep history</text>
+              <rect class="d-fill" x="20" y="128" width="640" height="22"/>
+              <text class="d-label" x="30" y="143">customer_sk</text><text class="d-label" x="130" y="143">customer_id</text><text class="d-label" x="230" y="143">city</text>
+              <text class="d-label" x="330" y="143">valid_from</text><text class="d-label" x="440" y="143">valid_to</text><text class="d-label" x="550" y="143">is_current</text>
+              <rect class="d-box" x="20" y="150" width="640" height="24"/>
+              <text class="d-mono" x="30" y="166">101</text><text class="d-mono" x="130" y="166">7</text><text class="d-mono" x="230" y="166">Leeds</text>
+              <text class="d-mono" x="330" y="166">2025-01-01</text><text class="d-mono" x="440" y="166">2026-03-15</text><text class="d-mono" x="550" y="166">false</text>
+              <rect class="d-accent" x="20" y="174" width="640" height="24"/>
+              <text class="d-mono" x="30" y="190">214</text><text class="d-mono" x="130" y="190">7</text><text class="d-mono" x="230" y="190">Bristol</text>
+              <text class="d-mono" x="330" y="190">2026-03-15</text><text class="d-mono" x="440" y="190">9999-12-31</text><text class="d-mono" x="550" y="190">true</text>
+              <text class="d-label d-text-good" x="20" y="226">January order keeps customer_sk 101 (Leeds); April order gets 214 (Bristol)</text>
+            </svg>
+          </div>
+          <figcaption>Ana moves on 15 March. Type 1 rewrites her one row; Type 2 closes the Leeds version and opens a Bristol version. The surrogate key, not the customer id, tells each order which version it belongs to.</figcaption>
+        </figure>
+
+        <div class="widget" id="scd-demo">
+          <div class="widget-head">
+            <span class="widget-title">Step through a customer move</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="scd-type">Dimension policy <select id="scd-type"><option value="1" selected>SCD Type 1 (overwrite)</option><option value="2">SCD Type 2 (new row)</option></select></label>
+            <button class="btn" type="button" id="scd-back">Back</button>
+            <button class="btn primary" type="button" id="scd-next">Next event</button>
+            <label>Event <output id="scd-step-out">1 / 5</output></label>
+          </div>
+          <svg id="scd-plot" viewBox="0 0 600 250" role="img" aria-label="The dim_customer table, the orders fact table and a revenue-by-city bar chart, updated after each event."></svg>
+          <p class="readout" id="scd-readout"></p>
+        </div>
+        <p>Two customers in Leeds place orders, then Ana moves to Bristol and orders again. Watch what the "revenue by city" report says about January under each policy.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Type 2: the fact stored the surrogate key that was current at load time</span>
+SELECT c.city, SUM(f.amount) AS revenue
+FROM fct_orders f
+JOIN dim_customer c ON f.customer_sk = c.customer_sk      <span class="c">-- historical city</span>
+GROUP BY c.city;
+
+<span class="c">-- Same dimension, but report everyone by where they live today</span>
+SELECT cur.city, SUM(f.amount) AS revenue
+FROM fct_orders f
+JOIN dim_customer hist ON f.customer_sk = hist.customer_sk
+JOIN dim_customer cur  ON cur.customer_id = hist.customer_id AND cur.is_current
+GROUP BY cur.city;</code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Declare the grain of every fact table before choosing its columns.</li>
+            <li>Facts hold additive measures and keys; dimensions hold descriptive attributes.</li>
+            <li>Surrogate keys decouple the warehouse from source ids and make Type 2 history possible.</li>
+            <li>Type 1 restates history with current values; Type 2 preserves the values at the time of each fact.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Mixing grains in one fact table, such as order headers and order lines, then summing and double counting.</li>
+            <li>Joining a Type 2 dimension on the natural <code>customer_id</code> alone, which multiplies every fact by the number of versions.</li>
+            <li>Summing a periodic snapshot measure (such as account balance) across days.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="dimensional-1"><span>State the grain of a fact table in one sentence and list its measures and keys</span></label></li>
+          <li><label><input type="checkbox" data-key="dimensional-2"><span>Sketch a star schema for an online store's orders</span></label></li>
+          <li><label><input type="checkbox" data-key="dimensional-3"><span>Predict how a report changes when a customer moves under SCD Type 1 and Type 2</span></label></li>
+          <li><label><input type="checkbox" data-key="dimensional-4"><span>Write the join to a Type 2 dimension that avoids fan-out</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Guide</span><a href="https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/">Kimball Group: Dimensional modeling techniques</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.getdbt.com/docs/build/snapshots">dbt: Snapshots (Type 2 history)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="dbt">
+        <header class="topic-head">
+          <p class="eyebrow">14.4 · Transformations as code</p>
+          <h2>dbt &amp; analytics engineering</h2>
+        </header>
+
+        <p class="lead"><strong>dbt</strong> (data build tool) turns the "T" of ELT into a software project. Each table is a <code>.sql</code> file containing one <code>SELECT</code>. dbt wraps it in the right <code>CREATE TABLE</code> or <code>CREATE VIEW</code>, works out the build order from the <code>ref()</code> calls between files, runs tests and generates documentation. <strong>Analytics engineering</strong> is the job of building these models with software habits: version control, code review and automated tests.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>dbt is plain SQL, so it is often the first piece of the data stack an analyst owns. Moving a metric definition out of twenty dashboards and into one tested dbt model is how a team stops arguing about whose revenue number is right.</p>
+        </div>
+
+        <h3>A model is a SELECT</h3>
+        <p>A staging model reads a raw table through <code>source()</code>, renames and casts columns, and does nothing else. Later models read earlier ones through <code>ref()</code>. The <code>config()</code> block sets how the result is stored.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- models/staging/stg_orders.sql</span>
+select
+    id                         as order_id,
+    user_id                    as customer_id,
+    lower(trim(status))        as status,
+    amount_cents / 100.0       as amount,
+    created_at::date           as order_date,
+    updated_at
+from {{ source('app', 'orders') }}
+
+<span class="c">-- models/marts/fct_orders.sql</span>
+{{ config(materialized='incremental', unique_key='order_id') }}
+
+select o.order_id, o.customer_id, o.order_date, o.status, p.amount_paid
+from {{ ref('stg_orders') }} as o
+left join {{ ref('int_order_payments') }} as p using (order_id)
+{% if is_incremental() %}
+  <span class="c">-- only rows changed since the last build, with a 3-day lookback</span>
+  where o.updated_at &gt; (select max(updated_at) - interval '3 days' from {{ this }})
+{% endif %}</code></pre>
+
+        <h3>ref() builds the DAG</h3>
+        <p>When dbt compiles a model, <code>ref('stg_orders')</code> becomes the real table name for the current environment (your dev schema or production). It also records an edge in a <strong>DAG</strong> (directed acyclic graph) of models. That graph is how dbt knows to build <code>stg_orders</code> before <code>fct_orders</code>, and it is the lineage graph in the generated docs.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="dbt compile turns ref of int_order_payments into the real table name analytics.prod.int_order_payments, and records the edge from int_order_payments to fct_orders in the DAG.">
+              <defs>
+                <marker id="dbt-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="10" y="30" width="290" height="90" rx="8"/>
+              <text class="d-label" x="22" y="50">models/marts/fct_orders.sql</text>
+              <text class="d-mono" x="22" y="78">select order_id, amount</text>
+              <text class="d-mono" x="22" y="98">from {{ ref('int_order_payments') }}</text>
+              <line class="d-line-accent" x1="300" y1="75" x2="358" y2="75" marker-end="url(#dbt-arrow)"/>
+              <text class="d-label" x="329" y="66" text-anchor="middle">compile</text>
+              <rect class="d-accent" x="360" y="30" width="310" height="90" rx="8"/>
+              <text class="d-label" x="372" y="50">compiled SQL sent to the warehouse</text>
+              <text class="d-mono" x="372" y="78">select order_id, amount</text>
+              <text class="d-mono" x="372" y="98">from analytics.prod.int_order_payments</text>
+              <rect class="d-box" x="150" y="150" width="170" height="36" rx="8"/>
+              <text class="d-mono" x="235" y="173" text-anchor="middle">int_order_payments</text>
+              <line class="d-line-accent" x1="320" y1="168" x2="408" y2="168" marker-end="url(#dbt-arrow)"/>
+              <rect class="d-good" x="410" y="150" width="140" height="36" rx="8"/>
+              <text class="d-mono" x="480" y="173" text-anchor="middle">fct_orders</text>
+              <text class="d-label" x="350" y="208" text-anchor="middle">the same ref() also adds this edge to the DAG, so build order is automatic</text>
+            </svg>
+          </div>
+          <figcaption>One function does two jobs: it resolves the right table name for each environment, and it declares a dependency. You never hard-code schema names or write the build order by hand.</figcaption>
+        </figure>
+
+        <h3>Layers: staging, intermediate, marts</h3>
+        <p>Most dbt projects follow three layers. <strong>Staging</strong> models map one-to-one to source tables and only clean them. <strong>Intermediate</strong> models combine and reshape. <strong>Marts</strong> are the facts and dimensions that BI tools and analysts query.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="Sources raw.orders, raw.customers and raw.payments feed staging models one to one; stg_orders and stg_payments feed int_order_payments; marts fct_orders and dim_customers are built from them.">
+              <text class="d-title" x="80" y="22" text-anchor="middle">sources</text>
+              <text class="d-title" x="250" y="22" text-anchor="middle">staging</text>
+              <text class="d-title" x="420" y="22" text-anchor="middle">intermediate</text>
+              <text class="d-title" x="590" y="22" text-anchor="middle">marts</text>
+              <rect class="d-fill" x="20" y="40" width="120" height="30" rx="6"/><text class="d-mono" x="80" y="60" text-anchor="middle">raw.orders</text>
+              <rect class="d-fill" x="20" y="100" width="120" height="30" rx="6"/><text class="d-mono" x="80" y="120" text-anchor="middle">raw.customers</text>
+              <rect class="d-fill" x="20" y="160" width="120" height="30" rx="6"/><text class="d-mono" x="80" y="180" text-anchor="middle">raw.payments</text>
+              <line class="d-line-accent" x1="140" y1="55" x2="188" y2="55"/>
+              <line class="d-line-accent" x1="140" y1="115" x2="188" y2="115"/>
+              <line class="d-line-accent" x1="140" y1="175" x2="188" y2="175"/>
+              <rect class="d-box" x="190" y="40" width="120" height="30" rx="6"/><text class="d-mono" x="250" y="60" text-anchor="middle">stg_orders</text>
+              <rect class="d-box" x="190" y="100" width="120" height="30" rx="6"/><text class="d-mono" x="250" y="120" text-anchor="middle">stg_customers</text>
+              <rect class="d-box" x="190" y="160" width="120" height="30" rx="6"/><text class="d-mono" x="250" y="180" text-anchor="middle">stg_payments</text>
+              <line class="d-line-accent" x1="310" y1="55" x2="350" y2="140"/>
+              <line class="d-line-accent" x1="310" y1="175" x2="350" y2="148"/>
+              <rect class="d-accent" x="350" y="130" width="140" height="30" rx="6"/><text class="d-mono" x="420" y="150" text-anchor="middle">int_order_pay</text>
+              <line class="d-line-accent" x1="490" y1="145" x2="530" y2="62"/>
+              <line class="d-line-accent" x1="310" y1="115" x2="530" y2="115"/>
+              <line class="d-line" x1="310" y1="55" x2="530" y2="108"/>
+              <rect class="d-good" x="530" y="40" width="120" height="30" rx="6"/><text class="d-mono" x="590" y="60" text-anchor="middle">fct_orders</text>
+              <rect class="d-good" x="530" y="100" width="120" height="30" rx="6"/><text class="d-mono" x="590" y="120" text-anchor="middle">dim_customers</text>
+              <text class="d-label" x="80" y="218" text-anchor="middle">loaded by EL</text>
+              <text class="d-label" x="250" y="218" text-anchor="middle">rename, cast, 1:1</text>
+              <text class="d-label" x="420" y="218" text-anchor="middle">join, reshape</text>
+              <text class="d-label" x="590" y="218" text-anchor="middle">facts, dims for BI</text>
+            </svg>
+          </div>
+          <figcaption>The conventional layers. Each layer only reads from the layer to its left, which keeps the graph easy to follow and every cleaning rule in exactly one place.</figcaption>
+        </figure>
+
+        <div class="widget" id="dbt-demo">
+          <div class="widget-head">
+            <span class="widget-title">Change a model: what rebuilds?</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="dbt-model">Changed model <select id="dbt-model"></select></label>
+            <label for="dbt-sel">Selector <select id="dbt-sel"><option value="only" selected>model</option><option value="down">model+ (downstream)</option><option value="up">+model (upstream)</option><option value="both">+model+ (both)</option></select></label>
+          </div>
+          <svg id="dbt-plot" viewBox="0 0 600 250" role="img" aria-label="A DAG of sources and dbt models; the selected model and everything the selector includes are highlighted. Click a model to select it."></svg>
+          <p class="readout" id="dbt-readout"></p>
+        </div>
+        <p>Click any model in the graph (or pick it from the list). The <code>+</code> after a name selects everything downstream, and a <code>+</code> before it selects everything upstream. Build times are illustrative.</p>
+
+        <h3>Materializations</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Materialization</th><th>What dbt creates</th><th>Use for</th></tr></thead>
+            <tbody>
+              <tr><td><code>view</code></td><td>A view; the query runs whenever someone reads it</td><td>Staging models, light logic</td></tr>
+              <tr><td><code>table</code></td><td>A table rebuilt in full on every run</td><td>Marts that are read often</td></tr>
+              <tr><td><code>incremental</code></td><td>A table where each run only inserts or merges new rows</td><td>Large event and order facts</td></tr>
+              <tr><td><code>ephemeral</code></td><td>Nothing; the SQL is inlined as a CTE where it's referenced</td><td>Small reusable steps</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>The analytics engineering workflow</h3>
+        <p>You develop in your own schema, open a pull request, and continuous integration builds only the models you changed plus everything downstream. Production runs the whole project on a schedule.</p>
+
+        <pre class="code" data-lang="bash"><code>dbt build --select stg_orders              <span class="c"># build and test one model</span>
+dbt build --select stg_orders+             <span class="c"># ...and everything downstream of it</span>
+dbt build --select +fct_orders             <span class="c"># fct_orders and everything it depends on</span>
+dbt build --select state:modified+ --state prod-artifacts/   <span class="c"># CI: only what this PR changed</span>
+dbt source freshness                       <span class="c"># are the raw tables up to date?</span>
+dbt docs generate &amp;&amp; dbt docs serve        <span class="c"># browse docs and the lineage graph</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A dbt model is a SELECT statement; dbt handles the DDL, the order and the environment.</li>
+            <li><code>ref()</code> and <code>source()</code> resolve table names and build the DAG at the same time.</li>
+            <li>Staging cleans, intermediate combines, marts serve BI.</li>
+            <li>Graph selectors such as <code>model+</code> rebuild exactly the affected part of the project.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Hard-coding <code>analytics.prod.stg_orders</code> instead of using <code>ref()</code>, which breaks lineage and dev environments.</li>
+            <li>Putting business logic in staging models, so the same rule is repeated in several marts.</li>
+            <li>Changing a model and building only that model, leaving downstream tables stale.</li>
+            <li>Making a large fact incremental without a <code>unique_key</code> or lookback, so updates duplicate or go missing.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="dbt-1"><span>Write a staging model with <code>source()</code> and a mart with <code>ref()</code></span></label></li>
+          <li><label><input type="checkbox" data-key="dbt-2"><span>Predict which models <code>stg_orders+</code> and <code>+fct_orders</code> select in a given DAG</span></label></li>
+          <li><label><input type="checkbox" data-key="dbt-3"><span>Choose a materialization for a model and explain the trade-off</span></label></li>
+          <li><label><input type="checkbox" data-key="dbt-4"><span>Configure an incremental model with a unique key and a lookback filter</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.getdbt.com/">dbt documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.getdbt.com/reference/node-selection/syntax">dbt: Node selection syntax</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="orchestration">
+        <header class="topic-head">
+          <p class="eyebrow">14.5 · Running it every morning</p>
+          <h2>Scheduling &amp; orchestration</h2>
+        </header>
+
+        <p class="lead">A pipeline is several steps that must run in order: extract three sources, build the dbt models, refresh the dashboard. An <strong>orchestrator</strong> such as Airflow, Dagster or Prefect runs those steps on a schedule, starts each one only when the steps it depends on have succeeded, retries failures and alerts someone when it gives up.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>When the 9 a.m. dashboard shows yesterday's numbers, the answer is in the orchestrator: which task failed, whether it retried, and what was skipped because of it. Reading a run, re-running a task and asking for a backfill are everyday analyst skills.</p>
+        </div>
+
+        <h3>From cron times to dependencies</h3>
+        <p>The simplest schedule is a set of <strong>cron</strong> jobs at fixed times: extract at 05:00, dbt at 06:00, dashboard at 06:30. It works until the extract runs long one morning and dbt starts on half-loaded data. An orchestrator replaces guessed start times with explicit <strong>dependencies</strong>, a DAG of tasks.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 240" role="img" aria-label="Two timelines. With fixed cron times, a slow extract that runs until 06:10 overlaps the dbt job that starts at 06:00 and reads half-loaded data. With dependencies, dbt starts at 06:10 when the extract finishes and the dashboard follows.">
+              <text class="d-title" x="20" y="20">Cron: fixed start times</text>
+              <text class="d-label" x="20" y="47">extract</text><text class="d-label" x="20" y="71">dbt</text><text class="d-label" x="20" y="95">dashboard</text>
+              <rect class="d-accent" x="120" y="34" width="130" height="18" rx="3"/>
+              <rect class="d-signal" x="250" y="34" width="173" height="18" rx="3"/>
+              <text class="d-label" x="430" y="47">ran long, until 06:10</text>
+              <rect class="d-signal" x="380" y="58" width="108" height="18" rx="3"/>
+              <text class="d-label d-text-signal" x="496" y="71">reads half-loaded data</text>
+              <rect class="d-box" x="510" y="82" width="22" height="18" rx="3"/>
+              <text class="d-label" x="540" y="95">wrong numbers</text>
+              <text class="d-title" x="20" y="128">DAG: start when upstream succeeds</text>
+              <text class="d-label" x="20" y="155">extract</text><text class="d-label" x="20" y="179">dbt</text><text class="d-label" x="20" y="203">dashboard</text>
+              <rect class="d-accent" x="120" y="142" width="303" height="18" rx="3"/>
+              <rect class="d-good" x="423" y="166" width="108" height="18" rx="3"/>
+              <rect class="d-good" x="531" y="190" width="22" height="18" rx="3"/>
+              <text class="d-label d-text-good" x="560" y="203">right, a bit later</text>
+              <line class="d-line" x1="120" y1="218" x2="640" y2="218"/>
+              <text class="d-label" x="120" y="234" text-anchor="middle">05:00</text><text class="d-label" x="250" y="234" text-anchor="middle">05:30</text>
+              <text class="d-label" x="380" y="234" text-anchor="middle">06:00</text><text class="d-label" x="510" y="234" text-anchor="middle">06:30</text><text class="d-label" x="640" y="234" text-anchor="middle">07:00</text>
+            </svg>
+          </div>
+          <figcaption>A slow morning. Fixed times let dbt start before the extract finished; dependencies make dbt wait, so the dashboard is a little later but correct.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># Airflow 2.x style; Airflow 3 moves these imports to airflow.sdk and the standard provider</span>
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+
+with DAG(
+    dag_id="morning_analytics",
+    schedule="0 5 * * *",                  <span class="c"># 05:00 every day</span>
+    start_date=datetime(2026, 1, 1),
+    catchup=False,
+    default_args={"retries": 2, "retry_delay": timedelta(minutes=10)},
+) as dag:
+    extract = [BashOperator(task_id=f"extract_{s}",
+                            bash_command=f"python extract.py {s} {{{{ ds }}}}")
+               for s in ("orders", "payments", "crm")]
+    dbt_build = BashOperator(task_id="dbt_build", bash_command="dbt build --target prod")
+    refresh = BashOperator(task_id="refresh_dashboard", bash_command="python refresh_bi.py")
+
+    extract &gt;&gt; dbt_build &gt;&gt; refresh          <span class="c"># all extracts, then dbt, then the dashboard</span></code></pre>
+
+        <h3>Task states, retries and alerts</h3>
+        <p>Every task run moves through states. A failure with retries left waits <code>retry_delay</code> and runs again, which fixes <strong>transient</strong> problems such as a timeout. A <strong>persistent</strong> problem, such as a renamed column, fails every attempt. When a task finally fails, its downstream tasks are marked <code>upstream_failed</code> and never run, which is exactly what you want: no partial data reaches the dashboard.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="Task states: scheduled, queued, running, then success. A running task that fails goes to up_for_retry if retries remain and back to queued after the retry delay; when retries run out it is failed and its downstream tasks become upstream_failed.">
+              <defs>
+                <marker id="orch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="orch-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="30" width="100" height="36" rx="18"/><text class="d-mono" x="70" y="52" text-anchor="middle">scheduled</text>
+              <line class="d-line" x1="120" y1="48" x2="148" y2="48" marker-end="url(#orch-arrow)"/>
+              <rect class="d-box" x="150" y="30" width="100" height="36" rx="18"/><text class="d-mono" x="200" y="52" text-anchor="middle">queued</text>
+              <line class="d-line" x1="250" y1="48" x2="278" y2="48" marker-end="url(#orch-arrow)"/>
+              <rect class="d-accent" x="280" y="30" width="100" height="36" rx="18"/><text class="d-mono" x="330" y="52" text-anchor="middle">running</text>
+              <line class="d-line" x1="380" y1="48" x2="438" y2="48" marker-end="url(#orch-arrow)"/>
+              <rect class="d-good" x="440" y="30" width="100" height="36" rx="18"/><text class="d-mono" x="490" y="52" text-anchor="middle">success</text>
+              <line class="d-line-signal" x1="360" y1="66" x2="438" y2="118" marker-end="url(#orch-arrow-s)"/>
+              <text class="d-label d-text-signal" x="404" y="86">error</text>
+              <rect class="d-signal" x="440" y="110" width="100" height="36" rx="18"/><text class="d-mono" x="490" y="132" text-anchor="middle">failed</text>
+              <line class="d-line" x1="440" y1="140" x2="372" y2="166" marker-end="url(#orch-arrow)"/>
+              <text class="d-label" x="420" y="174">retries left</text>
+              <rect class="d-box" x="250" y="156" width="120" height="36" rx="18"/><text class="d-mono" x="310" y="178" text-anchor="middle">up_for_retry</text>
+              <path class="d-line d-dash" d="M250 174 H200 V68" marker-end="url(#orch-arrow)"/>
+              <text class="d-label" x="110" y="130">after retry_delay</text>
+              <line class="d-line-signal" x1="540" y1="128" x2="568" y2="128" marker-end="url(#orch-arrow-s)"/>
+              <rect class="d-fill" x="570" y="104" width="100" height="48" rx="8"/>
+              <text class="d-label" x="620" y="124" text-anchor="middle">downstream</text>
+              <text class="d-mono d-text-signal" x="620" y="142" text-anchor="middle" font-size="10">upstream_failed</text>
+              <text class="d-label" x="490" y="170" text-anchor="middle">no retries left</text>
+            </svg>
+          </div>
+          <figcaption>Airflow-style task states. Retries absorb transient errors; once a task finally fails, everything downstream is held back instead of running on incomplete data.</figcaption>
+        </figure>
+
+        <div class="widget" id="orch-demo">
+          <div class="widget-head">
+            <span class="widget-title">Simulate this morning's run</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="orch-scn">Scenario <select id="orch-scn"><option value="ok">All sources healthy</option><option value="transient" selected>Payments API times out twice</option><option value="persistent">Orders column renamed</option></select></label>
+            <label for="orch-retries">Retries <input type="range" id="orch-retries" min="0" max="3" step="1" value="0"><output id="orch-retries-out">0</output></label>
+            <label for="orch-delay">Retry delay <input type="range" id="orch-delay" min="5" max="30" step="5" value="30"><output id="orch-delay-out">30</output> min</label>
+          </div>
+          <svg id="orch-plot" viewBox="0 0 600 240" role="img" aria-label="A Gantt chart of the morning run from 05:00 to 07:30 with each task's attempts, retry waits and states, and a 07:00 deadline line."></svg>
+          <p class="readout" id="orch-readout"></p>
+        </div>
+        <p>The run starts at 05:00 and the sales team opens the dashboard at 07:00. A payments timeout lasts the full 15-minute task, and each retry waits the retry delay first. Durations are illustrative.</p>
+
+        <h3>Backfills and idempotent tasks</h3>
+        <p>Each run processes a <strong>logical date</strong> (Airflow's <code>{{ ds }}</code>), not "whatever time it is now". That lets you <strong>backfill</strong>: re-run last Tuesday after fixing a bug and get exactly Tuesday's data. It only works if each task is idempotent, as in 14.2: running it twice for the same date replaces that date's data instead of appending.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Option</th><th>What it is</th><th>Fits when</th></tr></thead>
+            <tbody>
+              <tr><td>cron</td><td>Fixed start times on one machine</td><td>One or two independent scripts</td></tr>
+              <tr><td>Airflow</td><td>Python DAGs of tasks, large ecosystem of operators</td><td>Many sources and teams, existing data platform</td></tr>
+              <tr><td>Dagster</td><td>Orchestrates data assets (tables) rather than tasks</td><td>dbt-heavy projects that want lineage and asset checks</td></tr>
+              <tr><td>Prefect</td><td>Python functions turned into flows</td><td>Python-first teams wanting light setup</td></tr>
+              <tr><td>dbt platform jobs</td><td>Scheduled <code>dbt build</code> runs</td><td>Loading is handled by a managed EL tool</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Orchestrators run tasks by dependency, not by guessed clock times.</li>
+            <li>Retries fix transient failures; persistent failures need a code or data fix.</li>
+            <li>A failed task blocks its downstream tasks (<code>upstream_failed</code>), so bad data does not spread.</li>
+            <li>Runs process a logical date, which makes idempotent backfills possible.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Chaining jobs by start time ("dbt at 06:00 should be late enough").</li>
+            <li>Setting many retries with long delays, so a real failure is discovered after the deadline.</li>
+            <li>Using <code>now()</code> inside tasks instead of the run's logical date, which breaks backfills.</li>
+            <li>No alert on failure, so the first person to notice is the stakeholder.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="orchestration-1"><span>Read a failed run and name the root task and the tasks it blocked</span></label></li>
+          <li><label><input type="checkbox" data-key="orchestration-2"><span>Choose retries and a retry delay that fit a deadline</span></label></li>
+          <li><label><input type="checkbox" data-key="orchestration-3"><span>Write a three-step Airflow DAG with a daily schedule and dependencies</span></label></li>
+          <li><label><input type="checkbox" data-key="orchestration-4"><span>Explain what a backfill does and why it needs idempotent tasks</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://airflow.apache.org/docs/">Apache Airflow documentation</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.dagster.io/">Dagster documentation</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="data-testing">
+        <header class="topic-head">
+          <p class="eyebrow">14.6 · Trusting the numbers</p>
+          <h2>Data quality &amp; testing</h2>
+        </header>
+
+        <p class="lead">Code tests check that logic is right. <strong>Data tests</strong> check that the data itself is right, every time it loads: no duplicate order ids, no orders without a customer, only known status values, and a load that actually happened today. Each test is a query that looks for bad rows. Zero rows means pass.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for data analysts</span>
+          <p>Trust in a dashboard takes months to build and one wrong number to lose. A failed test at 05:30 that you fix before anyone looks is far cheaper than a sales director spotting doubled revenue in a meeting. Tests also document what "correct" means for each table.</p>
+        </div>
+
+        <h3>Four tests that catch most problems</h3>
+        <p>Most real incidents are caught by a handful of generic tests. <strong>unique</strong> and <strong>not_null</strong> on primary keys catch duplicate loads and broken joins. <strong>accepted_values</strong> catches typos and new categories the app introduced without telling you. <strong>freshness</strong> catches the silent killer: a load that stopped, leaving yesterday's data on display.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="Four test cards with a failing example each: unique finds order 1042 twice, not_null finds an order with no customer, accepted_values finds the status 'Shipped ' with a capital and a trailing space, and freshness finds the last load 30 hours old.">
+              <rect class="d-box" x="10" y="10" width="155" height="200" rx="8"/>
+              <text class="d-mono d-text-accent" x="87" y="34" text-anchor="middle">unique</text>
+              <text class="d-label" x="30" y="56">order_id</text>
+              <rect class="d-fill" x="25" y="62" width="125" height="24"/><text class="d-mono" x="35" y="79">1041</text>
+              <rect class="d-signal" x="25" y="86" width="125" height="24"/><text class="d-mono" x="35" y="103">1042</text>
+              <rect class="d-signal" x="25" y="110" width="125" height="24"/><text class="d-mono" x="35" y="127">1042</text>
+              <text class="d-label" x="87" y="164" text-anchor="middle">same order</text>
+              <text class="d-label" x="87" y="180" text-anchor="middle">loaded twice</text>
+              <rect class="d-box" x="180" y="10" width="155" height="200" rx="8"/>
+              <text class="d-mono d-text-accent" x="257" y="34" text-anchor="middle">not_null</text>
+              <text class="d-label" x="200" y="56">customer_id</text>
+              <rect class="d-fill" x="195" y="62" width="125" height="24"/><text class="d-mono" x="205" y="79">88</text>
+              <rect class="d-signal" x="195" y="86" width="125" height="24"/><text class="d-mono" x="205" y="103">NULL</text>
+              <rect class="d-fill" x="195" y="110" width="125" height="24"/><text class="d-mono" x="205" y="127">91</text>
+              <text class="d-label" x="257" y="164" text-anchor="middle">order with no</text>
+              <text class="d-label" x="257" y="180" text-anchor="middle">customer</text>
+              <rect class="d-box" x="350" y="10" width="155" height="200" rx="8"/>
+              <text class="d-mono d-text-accent" x="427" y="34" text-anchor="middle">accepted_values</text>
+              <text class="d-label" x="370" y="56">status</text>
+              <rect class="d-fill" x="365" y="62" width="125" height="24"/><text class="d-mono" x="375" y="79">paid</text>
+              <rect class="d-fill" x="365" y="86" width="125" height="24"/><text class="d-mono" x="375" y="103">shipped</text>
+              <rect class="d-signal" x="365" y="110" width="125" height="24"/><text class="d-mono" x="375" y="127">'Shipped '</text>
+              <text class="d-label" x="427" y="164" text-anchor="middle">typo, or a new</text>
+              <text class="d-label" x="427" y="180" text-anchor="middle">status nobody mapped</text>
+              <rect class="d-box" x="520" y="10" width="155" height="200" rx="8"/>
+              <text class="d-mono d-text-accent" x="597" y="34" text-anchor="middle">freshness</text>
+              <text class="d-label" x="540" y="56">max(_loaded_at)</text>
+              <rect class="d-signal" x="535" y="62" width="125" height="24"/><text class="d-mono" x="545" y="79">Nov 18 05:12</text>
+              <text class="d-label" x="540" y="104">now: Nov 19 11:00</text>
+              <text class="d-mono d-text-signal" x="545" y="127">30 h old</text>
+              <text class="d-label" x="597" y="164" text-anchor="middle">load stopped,</text>
+              <text class="d-label" x="597" y="180" text-anchor="middle">nobody noticed</text>
+            </svg>
+          </div>
+          <figcaption>Each test is a question with an expected answer of "no rows". The highlighted cells are the rows each test would return.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="yaml"><code><span class="c"># models/staging/_stg_app.yml  (dbt 1.8+ uses data_tests; older versions use tests)</span>
+sources:
+  - name: app
+    schema: raw
+    loaded_at_field: _loaded_at
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    tables:
+      - name: orders
+
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: status
+        data_tests:
+          - accepted_values:
+              values: ['pending', 'paid', 'shipped', 'refunded']
+              config:
+                severity: warn          <span class="c"># alert, but don't stop the run</span></code></pre>
+
+        <div class="widget" id="dq-demo">
+          <div class="widget-head">
+            <span class="widget-title">Run the tests on tonight's load</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <span>Problems in the load:</span>
+            <label for="dq-dup"><input type="checkbox" id="dq-dup" checked> duplicate order 1046</label>
+            <label for="dq-null"><input type="checkbox" id="dq-null"> missing customer_id</label>
+            <label for="dq-val"><input type="checkbox" id="dq-val"> status 'Shipped '</label>
+            <label for="dq-stale"><input type="checkbox" id="dq-stale" checked> load is 30 h old</label>
+          </div>
+          <div class="widget-controls">
+            <span>Severity:</span>
+            <label for="dq-sev-unique">unique <select id="dq-sev-unique"><option value="error" selected>error</option><option value="warn">warn</option></select></label>
+            <label for="dq-sev-notnull">not_null <select id="dq-sev-notnull"><option value="error" selected>error</option><option value="warn">warn</option></select></label>
+            <label for="dq-sev-values">accepted_values <select id="dq-sev-values"><option value="error" selected>error</option><option value="warn">warn</option></select></label>
+            <label for="dq-sev-fresh">freshness <select id="dq-sev-fresh"><option value="error" selected>error</option><option value="warn">warn</option></select></label>
+          </div>
+          <svg id="dq-plot" viewBox="0 0 600 260" role="img" aria-label="The orders table with failing cells highlighted, the result of each test, and whether the build publishes to the dashboard."></svg>
+          <p class="readout" id="dq-readout"></p>
+        </div>
+        <p>Untick a problem to "fix" it upstream, or change a test's severity. A failing test with severity <code>error</code> stops the build, so the dashboard keeps yesterday's good data. A failing <code>warn</code> test lets the build publish and posts an alert.</p>
+
+        <h3>Where to test, and what a failure does</h3>
+        <p>Test at every layer, but test different things. Check <strong>freshness</strong> on sources before spending compute on stale data. Check keys and accepted values in <strong>staging</strong>, where problems are closest to their cause. Check <strong>relationships</strong> and business rules (row counts, revenue within a sane range) in <strong>marts</strong>. Choose a severity per test: <code>error</code> for anything that would make a number wrong, <code>warn</code> for things a human should look at.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="A pipeline from raw to staging to marts to BI with a test gate before each step: freshness, then unique and not_null, then relationships and row counts. Error severity stops the run; warn lets it continue and sends an alert.">
+              <defs>
+                <marker id="dq-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="10" y="50" width="100" height="44" rx="8"/><text class="d-text" x="60" y="77" text-anchor="middle">raw</text>
+              <line class="d-line-accent" x1="110" y1="72" x2="140" y2="72"/>
+              <polygon class="d-good" points="160,54 178,72 160,90 142,72"/>
+              <line class="d-line-accent" x1="178" y1="72" x2="198" y2="72" marker-end="url(#dq-arrow)"/>
+              <rect class="d-box" x="200" y="50" width="110" height="44" rx="8"/><text class="d-text" x="255" y="77" text-anchor="middle">staging</text>
+              <line class="d-line-accent" x1="310" y1="72" x2="332" y2="72"/>
+              <polygon class="d-good" points="350,54 368,72 350,90 332,72"/>
+              <line class="d-line-accent" x1="368" y1="72" x2="388" y2="72" marker-end="url(#dq-arrow)"/>
+              <rect class="d-box" x="390" y="50" width="110" height="44" rx="8"/><text class="d-text" x="445" y="77" text-anchor="middle">marts</text>
+              <line class="d-line-accent" x1="500" y1="72" x2="522" y2="72"/>
+              <polygon class="d-good" points="540,54 558,72 540,90 522,72"/>
+              <line class="d-line-accent" x1="558" y1="72" x2="578" y2="72" marker-end="url(#dq-arrow)"/>
+              <rect class="d-box" x="580" y="50" width="90" height="44" rx="8"/><text class="d-text" x="625" y="77" text-anchor="middle">BI</text>
+              <text class="d-label" x="160" y="114" text-anchor="middle">freshness</text>
+              <text class="d-label" x="350" y="114" text-anchor="middle">unique, not_null,</text>
+              <text class="d-label" x="350" y="128" text-anchor="middle">accepted_values</text>
+              <text class="d-label" x="540" y="114" text-anchor="middle">relationships,</text>
+              <text class="d-label" x="540" y="128" text-anchor="middle">row counts</text>
+              <rect class="d-signal" x="10" y="150" width="320" height="44" rx="8"/>
+              <text class="d-text" x="24" y="168">severity error: stop here</text>
+              <text class="d-label" x="24" y="185">downstream keeps yesterday's good data</text>
+              <rect class="d-accent" x="350" y="150" width="320" height="44" rx="8"/>
+              <text class="d-text" x="364" y="168">severity warn: continue</text>
+              <text class="d-label" x="364" y="185">publish, and post an alert to the team</text>
+            </svg>
+          </div>
+          <figcaption>Tests act as gates between layers. A gate set to <code>error</code> holds bad data back; a gate set to <code>warn</code> lets it through with an alert.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Roughly what dbt runs for the unique test on stg_orders.order_id.</span>
+<span class="c">-- The test passes when this returns zero rows.</span>
+select order_id, count(*) as n_records
+from analytics.stg_orders
+where order_id is not null
+group by order_id
+having count(*) &gt; 1;</code></pre>
+
+        <h3>Dimensions of data quality</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Dimension</th><th>Question</th><th>Example test</th></tr></thead>
+            <tbody>
+              <tr><td>Completeness</td><td>Is anything missing?</td><td><code>not_null</code>, row count vs yesterday</td></tr>
+              <tr><td>Uniqueness</td><td>Is anything counted twice?</td><td><code>unique</code> on the grain</td></tr>
+              <tr><td>Validity</td><td>Are values allowed?</td><td><code>accepted_values</code>, amount &gt;= 0</td></tr>
+              <tr><td>Consistency</td><td>Do tables agree?</td><td><code>relationships</code>, mart total equals source total</td></tr>
+              <tr><td>Timeliness</td><td>Is it up to date?</td><td>source <code>freshness</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A data test is a query for bad rows; zero rows means pass.</li>
+            <li>unique, not_null, accepted_values, relationships and freshness catch most incidents.</li>
+            <li>Test each layer for the problems that start there.</li>
+            <li>Severity decides what a failure does: <code>error</code> blocks, <code>warn</code> alerts.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Testing only the final mart, so you learn something broke but not where.</li>
+            <li>Setting everything to <code>warn</code> until the alert channel is noise nobody reads.</li>
+            <li>No freshness check, so a stopped load shows stale data that passes every other test.</li>
+            <li>Fixing a failing test by deleting it instead of fixing the data or the logic.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="data-testing-1"><span>Write unique, not_null, accepted_values and relationships tests in a dbt YAML file</span></label></li>
+          <li><label><input type="checkbox" data-key="data-testing-2"><span>Configure source freshness with warn and error thresholds</span></label></li>
+          <li><label><input type="checkbox" data-key="data-testing-3"><span>Write the SQL a unique test runs and explain why zero rows means pass</span></label></li>
+          <li><label><input type="checkbox" data-key="data-testing-4"><span>Decide which tests should block a run and which should only warn</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.getdbt.com/docs/build/data-tests">dbt: Data tests</a></li>
+          <li><span class="kind">Docs</span><a href="https://docs.getdbt.com/docs/build/sources">dbt: Sources and freshness</a></li>
+        </ul>
+      </section>
+
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>A local warehouse in DuckDB</h4><p>Download a public online-store dataset as CSV files, load them into DuckDB as raw tables and write three SQL views: cleaned orders, cleaned customers and revenue by day. Compare query speed on the raw CSV and on a Parquet copy.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>A dbt project with a star schema</h4><p>Turn the same data into a dbt project with sources, staging models, <code>fct_orders</code> and a Type 2 <code>dim_customers</code> built from a snapshot. Add unique, not_null, relationships and freshness tests, and generate the docs site with its lineage graph.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>A morning pipeline that heals itself</h4><p>Schedule extraction and <code>dbt build</code> daily with Airflow or Dagster. Make the orders model incremental with a three-day lookback, add retries and a failure alert, then break an upstream file on purpose and show that bad data never reaches the dashboard.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Explain why a columnar, partitioned warehouse scans less data, and write queries that take advantage of it</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Choose between full and incremental loads and make a load idempotent</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Design a star schema at a stated grain, including a Type 2 dimension</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Build, test and document a small dbt project and predict what a change will rebuild</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Read a failed pipeline run, find the root task and decide between retry, fix and backfill</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 14. Shared helpers first, then one IIFE per widget. */
+var ATLAS14 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k) && attrs[k] != null) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor, size) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start", "font-size": size || null }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+  function hhmm(m) { var h = Math.floor(m / 60), mm = Math.round(m % 60); return (h < 10 ? "0" : "") + h + ":" + (mm < 10 ? "0" : "") + mm; }
+  return { svg: svg, text: text, clear: clear, fmt: fmt, hhmm: hhmm };
+})();
+
+/* ---------- 14.1 warehouse scan cost ---------- */
+(function () {
+  if (!document.getElementById("wh-demo")) return;
+  var H = ATLAS14, S = H.svg;
+  var plot = document.getElementById("wh-plot"), readout = document.getElementById("wh-readout");
+  var fmtSel = document.getElementById("wh-format"), part = document.getElementById("wh-part");
+  var days = document.getElementById("wh-days"), daysOut = document.getElementById("wh-days-out");
+  var box = document.getElementById("wh-cols");
+  /* illustrative bytes per row: uncompressed in the row store, compressed in the column store */
+  var COLS = [["order_id", 8, 5], ["customer_id", 8, 3], ["order_date", 4, 0.1], ["status", 8, 0.3],
+    ["amount", 8, 3], ["channel", 10, 0.3], ["ship_address", 90, 30], ["items_json", 380, 95]];
+  var ROW_W = COLS.reduce(function (s, c) { return s + c[1]; }, 0);
+  var COL_W = COLS.reduce(function (s, c) { return s + c[2]; }, 0);
+  var PER_DAY = 2e6, TOTAL_DAYS = 730;
+  var label = document.createElement("span"); label.textContent = "SELECT"; box.appendChild(label);
+  var checks = COLS.map(function (c) {
+    var l = document.createElement("label"), i = document.createElement("input");
+    i.type = "checkbox"; i.id = "wh-col-" + c[0]; i.checked = true; l.htmlFor = i.id;
+    l.appendChild(i); l.appendChild(document.createTextNode(" " + c[0])); box.appendChild(l);
+    return i;
+  });
+  function lx(gb) { var v = Math.max(-2, Math.min(3, Math.log10(Math.max(gb, 1e-6)))); return 110 + (v + 2) * 96; }
+  function draw() {
+    var d = parseInt(days.value, 10), col = fmtSel.value === "col", pruned = part.checked;
+    daysOut.textContent = d;
+    if (!checks.some(function (c) { return c.checked; })) checks[4].checked = true;
+    var parts = pruned ? d : TOTAL_DAYS, rows = parts * PER_DAY;
+    var width = col ? COLS.reduce(function (s, c, i) { return s + (checks[i].checked ? c[2] : 0); }, 0) : ROW_W;
+    var gb = rows * width / 1e9, full = PER_DAY * TOTAL_DAYS * (col ? COL_W : ROW_W) / 1e9;
+    H.clear(plot);
+    H.text(plot, 12, 13, "Columns the engine reads", "d-label");
+    COLS.forEach(function (c, i) {
+      var sel = checks[i].checked, read = col ? sel : true;
+      var cls = read ? (sel ? "d-accent" : "d-signal") : "d-fill";
+      S("rect", { x: 12 + i * 72, y: 20, width: 68, height: 22, rx: 4, "class": cls }, plot);
+      H.text(plot, 46 + i * 72, 35, c[0], "d-mono", "middle", 9.5);
+    });
+    H.text(plot, 12, 62, "Bytes scanned (log scale)", "d-label");
+    [-2, -1, 0, 1, 2, 3].forEach(function (p) {
+      var x = 110 + (p + 2) * 96;
+      S("line", { x1: x, y1: 68, x2: x, y2: 118, "class": "d-grid" }, plot);
+      H.text(plot, x, 130, p < 0 ? (p === -2 ? "10 MB" : "100 MB") : (p === 0 ? "1 GB" : p === 1 ? "10 GB" : p === 2 ? "100 GB" : "1 TB"), "d-label", "middle", 10);
+    });
+    H.text(plot, 104, 85, "whole table", "d-label", "end", 10.5);
+    S("rect", { x: 110, y: 74, width: Math.max(2, lx(full) - 110), height: 16, rx: 3, "class": "d-fill" }, plot);
+    H.text(plot, 104, 108, "this query", "d-label", "end", 10.5);
+    S("rect", { x: 110, y: 97, width: Math.max(2, lx(gb) - 110), height: 16, rx: 3, "class": gb < 1 ? "d-good" : gb < 50 ? "d-accent" : "d-signal" }, plot);
+    H.text(plot, Math.min(lx(gb) + 6, 540), 109, gb.toFixed(2) + " GB", "d-mono", "start", 10);
+    H.text(plot, 12, 152, "Daily partitions, oldest to newest (each cell = 10 days)", "d-label");
+    var cells = 73, readCells = pruned ? Math.ceil(d / 10) : cells;
+    for (var k = 0; k < cells; k++) {
+      var on = k >= cells - readCells;
+      S("rect", { x: 12 + k * 7.9, y: 158, width: 6.6, height: 18, rx: 1.5, "class": on ? "d-accent" : "d-fill" }, plot);
+    }
+    H.text(plot, 12, 192, "read " + parts + " of 730 partitions" + (pruned ? "" : " (no partitioning: the date filter can't skip anything)"), "d-label", "start", 10.5);
+    readout.textContent = "scanned " + gb.toFixed(2) + " GB · rows read " + H.fmt(rows) + " · partitions " + parts + "/730 · example cost $" + (gb / 1000 * 5).toFixed(2) + " at $5 per TB";
+  }
+  [fmtSel, part, days].concat(checks).forEach(function (c) { c.addEventListener("input", draw); c.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 14.2 ETL vs ELT nightly load ---------- */
+(function () {
+  if (!document.getElementById("elt-demo")) return;
+  var H = ATLAS14, S = H.svg;
+  var plot = document.getElementById("elt-plot"), readout = document.getElementById("elt-readout");
+  var mode = document.getElementById("elt-mode"), ex = document.getElementById("elt-extract");
+  var lb = document.getElementById("elt-lb"), lbOut = document.getElementById("elt-lb-out"), btn = document.getElementById("elt-change");
+  var MISSED = [2400, 600, 90, 0, 0, 0], changed = false;
+  function box(x, label, sub, cls) {
+    S("rect", { x: x, y: 20, width: 104, height: 46, rx: 8, "class": cls }, plot);
+    H.text(plot, x + 52, 40, label, "d-text", "middle", 12);
+    H.text(plot, x + 52, 56, sub, "d-label", "middle", 10);
+  }
+  function draw() {
+    var elt = mode.value === "elt", inc = ex.value === "inc", l = parseInt(lb.value, 10);
+    lb.disabled = !inc; lbOut.textContent = inc ? l : "n/a";
+    var rows = inc ? 140000 * (1 + l) : 18000000, mins = inc ? Math.round(1.5 * (1 + l)) : 95, missed = inc ? MISSED[l] : 0;
+    H.clear(plot);
+    var defs = S("defs", {}, plot), mk = S("marker", { id: "elt-demo-arrow", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+    S("path", { d: "M0,0 L10,5 L0,10 z", "class": "d-head-accent" }, mk);
+    var hiSrc = changed && !elt, hiT = changed;
+    box(10, "Source", "app DB", hiSrc ? "d-signal" : "d-box");
+    if (elt) { box(160, "Raw copy", "in warehouse", "d-accent"); box(310, "Transform", "SQL / dbt", hiT ? "d-good" : "d-box"); }
+    else { box(160, "Transform", "ETL script", hiT ? "d-signal" : "d-box"); box(310, "Warehouse", "final tables", "d-box"); }
+    box(460, "BI", "dashboards", "d-box");
+    [[114, 158], [264, 308], [414, 458]].forEach(function (a) { S("line", { x1: a[0], y1: 43, x2: a[1], y2: 43, "class": "d-line-accent", "marker-end": "url(#elt-demo-arrow)" }, plot); });
+    H.text(plot, 136, 36, inc ? "changes" : "everything", "d-label", "middle", 9.5);
+    if (changed) {
+      H.text(plot, 10, 88, elt ? "Rule changed: re-run the SQL on the raw copy. The source is not touched." : "Rule changed: the warehouse has no raw copy, so history must be re-extracted from the source.", elt ? "d-label d-text-good" : "d-label d-text-signal", "start", 11);
+    } else {
+      H.text(plot, 10, 88, "Press \"Change a business rule\" to see what has to re-run.", "d-label", "start", 11);
+    }
+    H.text(plot, 10, 118, "Rows moved per night (log scale)", "d-label", "start", 11);
+    var lx = function (v) { return 10 + (Math.log10(v) - 4) / 4 * 470; };
+    S("rect", { x: 10, y: 126, width: 470, height: 18, rx: 3, "class": "d-fill" }, plot);
+    S("rect", { x: 10, y: 126, width: Math.max(2, lx(rows) - 10), height: 18, rx: 3, "class": inc ? "d-good" : "d-signal" }, plot);
+    H.text(plot, 488, 140, H.fmt(rows), "d-mono", "start", 10.5);
+    H.text(plot, 10, 168, "Late updates missed per night", "d-label", "start", 11);
+    S("rect", { x: 10, y: 176, width: 470, height: 18, rx: 3, "class": "d-fill" }, plot);
+    if (missed) S("rect", { x: 10, y: 176, width: 470 * missed / 2400, height: 18, rx: 3, "class": "d-signal" }, plot);
+    H.text(plot, 488, 190, H.fmt(missed), "d-mono", "start", 10.5);
+    readout.textContent = (elt ? "ELT" : "ETL") + " · rows moved " + H.fmt(rows) + " per night · source query ≈ " + mins + " min · missed late updates " + missed +
+      " · on a rule change: " + (elt ? "re-run SQL on the raw copy" : "re-extract history from the source");
+  }
+  [mode, ex, lb].forEach(function (c) { c.addEventListener("input", function () { changed = false; draw(); }); c.addEventListener("change", function () { changed = false; draw(); }); });
+  btn.addEventListener("click", function () { changed = true; draw(); });
+  draw();
+})();
+
+/* ---------- 14.3 SCD Type 1 vs Type 2 stepper ---------- */
+(function () {
+  if (!document.getElementById("scd-demo")) return;
+  var H = ATLAS14, S = H.svg;
+  var plot = document.getElementById("scd-plot"), readout = document.getElementById("scd-readout");
+  var typeSel = document.getElementById("scd-type"), back = document.getElementById("scd-back"), next = document.getElementById("scd-next"), out = document.getElementById("scd-step-out");
+  var EV = [
+    { d: "Jan 1", t: "Ana and Ben sign up, both in Leeds" },
+    { d: "Jan 20", t: "Ana orders £120", order: ["Ana", 120] },
+    { d: "Feb 9", t: "Ben orders £60", order: ["Ben", 60] },
+    { d: "Mar 15", t: "Ana moves to Bristol", move: ["Ana", "Bristol"] },
+    { d: "Apr 2", t: "Ana orders £80", order: ["Ana", 80] }
+  ];
+  var step = 0;
+  function replay(t2) {
+    var dim = [], facts = [], nextSk = 1;
+    for (var i = 0; i <= step; i++) {
+      var e = EV[i];
+      if (i === 0) { dim.push({ sk: nextSk++, name: "Ana", city: "Leeds", from: "Jan 1", to: "9999-12-31", cur: true, t: 0 }); dim.push({ sk: nextSk++, name: "Ben", city: "Leeds", from: "Jan 1", to: "9999-12-31", cur: true, t: 0 }); }
+      if (e.order) { var cur = dim.filter(function (r) { return r.name === e.order[0] && r.cur; })[0]; facts.push({ d: e.d, sk: cur.sk, amt: e.order[1], t: i }); }
+      if (e.move) {
+        var row = dim.filter(function (r) { return r.name === e.move[0] && r.cur; })[0];
+        if (t2) { row.cur = false; row.to = e.d; row.t = i; dim.push({ sk: nextSk++, name: row.name, city: e.move[1], from: e.d, to: "9999-12-31", cur: true, t: i }); }
+        else { row.city = e.move[1]; row.t = i; }
+      }
+    }
+    return { dim: dim, facts: facts };
+  }
+  function draw() {
+    var t2 = typeSel.value === "2", st = replay(t2);
+    out.textContent = (step + 1) + " / " + EV.length;
+    back.disabled = step === 0; next.disabled = step === EV.length - 1;
+    H.clear(plot);
+    H.text(plot, 10, 16, EV[step].d + ": " + EV[step].t, "d-title", "start", 13);
+    H.text(plot, 10, 40, "dim_customer", "d-mono d-text-accent", "start", 11);
+    var cols = t2 ? [["sk", 10], ["name", 46], ["city", 100], ["valid_from", 166], ["valid_to", 240]] : [["sk", 10], ["name", 46], ["city", 100]];
+    var tw = t2 ? 330 : 200;
+    S("rect", { x: 6, y: 46, width: tw, height: 20, "class": "d-fill" }, plot);
+    cols.forEach(function (c) { H.text(plot, c[1] + 2, 60, c[0], "d-label", "start", 10); });
+    st.dim.forEach(function (r, i) {
+      var y = 66 + i * 22;
+      S("rect", { x: 6, y: y, width: tw, height: 22, "class": r.t === step && step > 0 ? "d-accent" : "d-box" }, plot);
+      var v = t2 ? [r.sk, r.name, r.city, r.from, r.to] : [r.sk, r.name, r.city];
+      v.forEach(function (val, k) { H.text(plot, cols[k][1] + 2, y + 15, String(val), "d-mono", "start", 10.5); });
+    });
+    H.text(plot, 370, 40, "fct_orders", "d-mono d-text-accent", "start", 11);
+    S("rect", { x: 366, y: 46, width: 226, height: 20, "class": "d-fill" }, plot);
+    [["date", 370], ["customer_sk", 430], ["amount", 520]].forEach(function (c) { H.text(plot, c[1], 60, c[0], "d-label", "start", 10); });
+    st.facts.forEach(function (f, i) {
+      var y = 66 + i * 22;
+      S("rect", { x: 366, y: y, width: 226, height: 22, "class": f.t === step ? "d-accent" : "d-box" }, plot);
+      H.text(plot, 370, y + 15, f.d, "d-mono", "start", 10.5);
+      H.text(plot, 430, y + 15, String(f.sk), "d-mono", "start", 10.5);
+      H.text(plot, 520, y + 15, "£" + f.amt, "d-mono", "start", 10.5);
+    });
+    if (!st.facts.length) H.text(plot, 370, 82, "no orders yet", "d-label", "start", 10.5);
+    var rev = { Leeds: 0, Bristol: 0 };
+    st.facts.forEach(function (f) { var r = st.dim.filter(function (x) { return x.sk === f.sk; })[0]; rev[r.city] += f.amt; });
+    H.text(plot, 10, 180, "Report: revenue by city (join on customer_sk)", "d-label", "start", 11);
+    ["Leeds", "Bristol"].forEach(function (c, i) {
+      var y = 190 + i * 26;
+      H.text(plot, 70, y + 14, c, "d-text", "end", 12);
+      S("rect", { x: 78, y: y, width: 420, height: 18, rx: 3, "class": "d-fill" }, plot);
+      if (rev[c]) S("rect", { x: 78, y: y, width: 420 * rev[c] / 260, height: 18, rx: 3, "class": i ? "d-good" : "d-accent" }, plot);
+      H.text(plot, 506, y + 14, "£" + rev[c], "d-mono", "start", 11);
+    });
+    readout.textContent = "SCD type " + (t2 ? 2 : 1) + " · event " + (step + 1) + "/" + EV.length + " · dim rows " + st.dim.length + " · revenue Leeds £" + rev.Leeds + " · Bristol £" + rev.Bristol;
+  }
+  typeSel.addEventListener("change", draw);
+  back.addEventListener("click", function () { if (step > 0) { step--; draw(); } });
+  next.addEventListener("click", function () { if (step < EV.length - 1) { step++; draw(); } });
+  draw();
+})();
+
+/* ---------- 14.4 dbt DAG: what rebuilds? ---------- */
+(function () {
+  if (!document.getElementById("dbt-demo")) return;
+  var H = ATLAS14, S = H.svg;
+  var plot = document.getElementById("dbt-plot"), readout = document.getElementById("dbt-readout");
+  var modelSel = document.getElementById("dbt-model"), sel = document.getElementById("dbt-sel");
+  var X = [5, 125, 245, 365, 485];
+  var N = {
+    "raw.orders": { c: 0, y: 30, src: true }, "raw.customers": { c: 0, y: 95, src: true }, "raw.payments": { c: 0, y: 175, src: true },
+    stg_orders: { c: 1, y: 30, m: 1 }, stg_customers: { c: 1, y: 95, m: 1 }, stg_payments: { c: 1, y: 175, m: 1 },
+    int_order_payments: { c: 2, y: 150, m: 2 },
+    dim_customers: { c: 3, y: 60, m: 1 }, fct_orders: { c: 3, y: 150, m: 4 },
+    customer_ltv: { c: 4, y: 95, m: 2 }, revenue_daily: { c: 4, y: 195, m: 1 }
+  };
+  var E = [["raw.orders", "stg_orders"], ["raw.customers", "stg_customers"], ["raw.payments", "stg_payments"],
+    ["stg_orders", "int_order_payments"], ["stg_payments", "int_order_payments"], ["stg_orders", "fct_orders"], ["int_order_payments", "fct_orders"],
+    ["stg_customers", "dim_customers"], ["stg_orders", "dim_customers"],
+    ["fct_orders", "customer_ltv"], ["dim_customers", "customer_ltv"], ["fct_orders", "revenue_daily"]];
+  Object.keys(N).forEach(function (k) {
+    if (N[k].src) return;
+    var o = document.createElement("option"); o.value = k; o.textContent = k; modelSel.appendChild(o);
+  });
+  modelSel.value = "customer_ltv";
+  function walk(start, dir) {
+    var seen = {}, stack = [start];
+    while (stack.length) {
+      var n = stack.pop();
+      E.forEach(function (e) {
+        var a = dir > 0 ? e[0] : e[1], b = dir > 0 ? e[1] : e[0];
+        if (a === n && !seen[b]) { seen[b] = 1; stack.push(b); }
+      });
+    }
+    return seen;
+  }
+  function draw() {
+    var m = modelSel.value, s = sel.value, inc = {};
+    inc[m] = 1;
+    if (s === "down" || s === "both") Object.assign(inc, walk(m, 1));
+    if (s === "up" || s === "both") Object.assign(inc, walk(m, -1));
+    var models = Object.keys(inc).filter(function (k) { return !N[k].src; });
+    var mins = models.reduce(function (a, k) { return a + N[k].m; }, 0);
+    H.clear(plot);
+    var defs = S("defs", {}, plot);
+    [["dbt-demo-arrow", "d-head"], ["dbt-demo-arrow-a", "d-head-accent"]].forEach(function (d) {
+      var mk = S("marker", { id: d[0], viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto-start-reverse" }, defs);
+      S("path", { d: "M0,0 L10,5 L0,10 z", "class": d[1] }, mk);
+    });
+    ["sources", "staging", "intermediate", "marts", "reporting"].forEach(function (t, i) { H.text(plot, X[i] + 55, 14, t, "d-label", "middle", 10.5); });
+    E.forEach(function (e) {
+      var a = N[e[0]], b = N[e[1]], x1 = X[a.c] + 110, y1 = a.y + 14, x2 = X[b.c] - 2, y2 = b.y + 14, mx = (x1 + x2) / 2;
+      var on = inc[e[0]] && inc[e[1]] && !a.src;
+      S("path", { d: "M" + x1 + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + x2 + "," + y2, "class": on ? "d-line-accent" : "d-line", "marker-end": on ? "url(#dbt-demo-arrow-a)" : "url(#dbt-demo-arrow)" }, plot);
+    });
+    Object.keys(N).forEach(function (k) {
+      var n = N[k], g = S("g", { tabindex: n.src ? null : 0, role: n.src ? null : "button", "aria-label": n.src ? null : "Select " + k, style: n.src ? null : "cursor:pointer" }, plot);
+      var cls = n.src ? "d-fill" : k === m ? "d-signal" : inc[k] ? "d-accent" : "d-box";
+      S("rect", { x: X[n.c], y: n.y, width: 110, height: 28, rx: 6, "class": cls }, g);
+      H.text(g, X[n.c] + 55, n.y + 18, k, "d-mono", "middle", k.length > 15 ? 9 : 10);
+      if (!n.src) {
+        var pick = function () { modelSel.value = k; draw(); };
+        g.addEventListener("click", pick);
+        g.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); pick(); } });
+      }
+    });
+    var expr = (s === "up" || s === "both" ? "+" : "") + m + (s === "down" || s === "both" ? "+" : "");
+    H.text(plot, 5, 242, "dbt build --select " + expr, "d-mono", "start", 11);
+    readout.textContent = "dbt build --select " + expr + " · " + models.length + " model" + (models.length === 1 ? "" : "s") + " rebuilt · about " + mins + " min (example timings)";
+  }
+  modelSel.addEventListener("change", draw); sel.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 14.5 orchestration run simulator ---------- */
+(function () {
+  if (!document.getElementById("orch-demo")) return;
+  var H = ATLAS14, S = H.svg;
+  var plot = document.getElementById("orch-plot"), readout = document.getElementById("orch-readout");
+  var scn = document.getElementById("orch-scn"), rt = document.getElementById("orch-retries"), rtOut = document.getElementById("orch-retries-out");
+  var dl = document.getElementById("orch-delay"), dlOut = document.getElementById("orch-delay-out");
+  var T0 = 300, T1 = 450, DEADLINE = 420;
+  function X(t) { return 130 + (Math.min(t, T1) - T0) * 460 / (T1 - T0); }
+  function run(start, dur, failN, failDur, retries, delay) {
+    var segs = [], t = start;
+    for (var a = 1; a <= retries + 1; a++) {
+      if (a <= failN) {
+        segs.push({ s: t, e: t + failDur, k: "fail" }); t += failDur;
+        if (a < retries + 1) { segs.push({ s: t, e: t + delay, k: "wait" }); t += delay; }
+        else return { ok: false, end: t, segs: segs, attempts: a };
+      } else { segs.push({ s: t, e: t + dur, k: "ok" }); return { ok: true, end: t + dur, segs: segs, attempts: a }; }
+    }
+  }
+  function draw() {
+    var sc = scn.value, r = parseInt(rt.value, 10), d = parseInt(dl.value, 10);
+    rtOut.textContent = r; dlOut.textContent = d;
+    var ex = [
+      ["extract_orders", 20, sc === "persistent" ? Infinity : 0, 3],
+      ["extract_payments", 15, sc === "transient" ? 2 : 0, 15],
+      ["extract_crm", 10, 0, 10]
+    ].map(function (t) { var res = run(T0, t[1], t[2], t[3], r, d); res.name = t[0]; return res; });
+    var allOk = ex.every(function (e) { return e.ok; });
+    var dStart = Math.max.apply(null, ex.map(function (e) { return e.end; }));
+    var rows = ex.slice();
+    if (allOk) {
+      rows.push({ name: "dbt_build", ok: true, segs: [{ s: dStart, e: dStart + 25, k: "ok" }], end: dStart + 25 });
+      rows.push({ name: "refresh_dashboard", ok: true, segs: [{ s: dStart + 25, e: dStart + 30, k: "ok" }], end: dStart + 30 });
+    } else {
+      rows.push({ name: "dbt_build", up: true, segs: [] }); rows.push({ name: "refresh_dashboard", up: true, segs: [] });
+    }
+    H.clear(plot);
+    for (var t = T0; t <= T1; t += 30) {
+      S("line", { x1: X(t), y1: 22, x2: X(t), y2: 206, "class": "d-grid" }, plot);
+      H.text(plot, X(t), 222, H.hhmm(t), "d-label", "middle", 10);
+    }
+    S("line", { x1: X(DEADLINE), y1: 14, x2: X(DEADLINE), y2: 208, "class": "d-line-signal d-dash" }, plot);
+    H.text(plot, X(DEADLINE) + 4, 14, "07:00 deadline", "d-label d-text-signal", "start", 10);
+    rows.forEach(function (row, i) {
+      var y = 30 + i * 36;
+      H.text(plot, 122, y + 13, row.name, "d-mono", "end", 10);
+      if (row.up) {
+        S("rect", { x: X(dStart), y: y, width: 90, height: 18, rx: 3, "class": "d-box d-dash" }, plot);
+        H.text(plot, X(dStart) + 96, y + 13, "upstream_failed", "d-label d-text-signal", "start", 10);
+        return;
+      }
+      row.segs.forEach(function (sg) {
+        if (sg.k === "wait") { S("line", { x1: X(sg.s), y1: y + 9, x2: X(sg.e), y2: y + 9, "class": "d-line d-dash" }, plot); return; }
+        S("rect", { x: X(sg.s), y: y, width: Math.max(3, X(sg.e) - X(sg.s)), height: 18, rx: 3, "class": sg.k === "ok" ? "d-good" : "d-signal" }, plot);
+      });
+      if (row.attempts > 1 || row.ok === false) H.text(plot, X(row.end) + 5, y + 13, row.ok ? "ok on try " + row.attempts : "failed (" + row.attempts + " tr" + (row.attempts > 1 ? "ies" : "y") + ")", row.ok ? "d-label d-text-good" : "d-label d-text-signal", "start", 10);
+    });
+    var msg;
+    if (allOk) {
+      var done = dStart + 30, met = done <= DEADLINE;
+      var bad = ex.filter(function (e) { return e.attempts > 1; })[0];
+      msg = (bad ? bad.name + ": success on attempt " + bad.attempts : "all tasks succeeded") + " · dashboard refreshed " + H.hhmm(done) + " · deadline 07:00 " + (met ? "met" : "missed");
+    } else {
+      var f = ex.filter(function (e) { return !e.ok; })[0];
+      msg = f.name + ": failed after " + f.attempts + " attempt" + (f.attempts > 1 ? "s" : "") + " · dbt_build, refresh_dashboard: upstream_failed · dashboard still shows yesterday · deadline 07:00 missed";
+    }
+    readout.textContent = msg;
+  }
+  [scn, rt, dl].forEach(function (c) { c.addEventListener("input", draw); c.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 14.6 data test runner ---------- */
+(function () {
+  if (!document.getElementById("dq-demo")) return;
+  var H = ATLAS14, S = H.svg;
+  var plot = document.getElementById("dq-plot"), readout = document.getElementById("dq-readout");
+  var ids = ["dup", "null", "val", "stale"], cb = {};
+  ids.forEach(function (k) { cb[k] = document.getElementById("dq-" + k); });
+  var sev = { unique: document.getElementById("dq-sev-unique"), not_null: document.getElementById("dq-sev-notnull"),
+    accepted_values: document.getElementById("dq-sev-values"), freshness: document.getElementById("dq-sev-fresh") };
+  var OK = ["pending", "paid", "shipped", "refunded"];
+  function draw() {
+    var rows = [[1041, 88, "paid", "45.00"], [1042, 91, "shipped", "12.50"], [1043, 88, "refunded", "30.00"],
+      [1044, 102, "pending", "88.00"], [1045, 77, "paid", "19.99"], [1046, 91, "shipped", "64.00"]];
+    if (cb.null.checked) rows[3][1] = null;
+    if (cb.val.checked) rows[1][2] = "Shipped ";
+    if (cb.dup.checked) rows.push([1046, 91, "shipped", "64.00"]);
+    var counts = {}; rows.forEach(function (r) { counts[r[0]] = (counts[r[0]] || 0) + 1; });
+    var hours = cb.stale.checked ? 30 : 2;
+    var res = {
+      unique: rows.filter(function (r) { return counts[r[0]] > 1; }).length,
+      not_null: rows.filter(function (r) { return r[1] === null; }).length,
+      accepted_values: rows.filter(function (r) { return OK.indexOf(r[2]) < 0; }).length,
+      freshness: hours > 24 ? 1 : 0
+    };
+    H.clear(plot);
+    var cx = [14, 90, 180, 270];
+    S("rect", { x: 8, y: 8, width: 322, height: 22, "class": "d-fill" }, plot);
+    ["order_id", "customer_id", "status", "amount"].forEach(function (h, i) { H.text(plot, cx[i], 23, h, "d-label", "start", 10.5); });
+    rows.forEach(function (r, i) {
+      var y = 30 + i * 26;
+      S("rect", { x: 8, y: y, width: 322, height: 26, "class": "d-box" }, plot);
+      var bad = [counts[r[0]] > 1, r[1] === null, OK.indexOf(r[2]) < 0, false];
+      r.forEach(function (v, k) {
+        if (bad[k]) S("rect", { x: cx[k] - 5, y: y + 3, width: k === 2 ? 84 : 74, height: 20, rx: 3, "class": "d-signal" }, plot);
+        H.text(plot, cx[k], y + 17, v === null ? "NULL" : k === 2 ? "'" + v + "'" : String(v), "d-mono", "start", 10.5);
+      });
+    });
+    var yl = 30 + rows.length * 26 + 20;
+    H.text(plot, 10, yl, "max(_loaded_at): " + hours + " h ago", hours > 24 ? "d-label d-text-signal" : "d-label", "start", 11);
+    var errors = 0, warns = 0, parts = [];
+    Object.keys(res).forEach(function (k, i) {
+      var y = 10 + i * 46, fail = res[k] > 0, s = sev[k].value;
+      var state = !fail ? "PASS" : s === "error" ? "FAIL" : "WARN";
+      if (state === "FAIL") errors++; if (state === "WARN") warns++;
+      S("rect", { x: 350, y: y, width: 240, height: 38, rx: 8, "class": state === "PASS" ? "d-good" : state === "FAIL" ? "d-signal" : "d-accent" }, plot);
+      H.text(plot, 362, y + 16, k, "d-mono", "start", 11);
+      H.text(plot, 362, y + 31, fail ? (k === "freshness" ? hours + " h old, limit 24 h" : res[k] + " failing row" + (res[k] > 1 ? "s" : "")) : "0 rows returned", "d-label", "start", 10);
+      H.text(plot, 580, y + 24, state, "d-title", "end", 13);
+      parts.push(k + ": " + (fail ? state + " (" + (k === "freshness" ? hours + " h" : res[k] + " row" + (res[k] > 1 ? "s" : "")) + ")" : "pass"));
+    });
+    var blocked = errors > 0;
+    S("rect", { x: 350, y: 198, width: 240, height: 48, rx: 8, "class": blocked ? "d-signal" : "d-good" }, plot);
+    H.text(plot, 470, 218, blocked ? "BLOCKED" : warns ? "PUBLISHED + ALERT" : "PUBLISHED", "d-title", "middle", 13);
+    H.text(plot, 470, 236, blocked ? "dashboard keeps yesterday's data" : "dashboard updated", "d-label", "middle", 10.5);
+    readout.textContent = parts.join(" · ") + " · " + errors + " error" + (errors === 1 ? "" : "s") + ", " + warns + " warning" + (warns === 1 ? "" : "s") + " · publish " + (blocked ? "BLOCKED" : "OK");
+  }
+  ids.forEach(function (k) { cb[k].addEventListener("change", draw); });
+  Object.keys(sev).forEach(function (k) { sev[k].addEventListener("change", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

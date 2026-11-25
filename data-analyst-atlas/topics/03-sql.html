@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SQL · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="sql">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>SQL for Analysts</h1>
+    <p class="lede">SQL is the foundational lingua franca of data analytics. From querying transaction tables and joining dimension models to calculating rolling cohort retention with advanced window functions, mastering SQL allows you to extract precise, trustworthy answers from relational databases and cloud data warehouses at scale.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Writing production SQL requires thinking in sets and understanding the query engine's logical order of operations. The diagram below illustrates how SQL clauses transform raw tables through joins, filters, grouping, and analytical window frames into business metrics.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 210" role="img" aria-label="SQL query execution lifecycle: FROM/JOIN -> WHERE -> GROUP BY / HAVING -> WINDOW / SELECT -> ORDER BY / LIMIT">
+              <rect class="d-box" x="20" y="30" width="120" height="54" rx="6"/>
+              <text class="d-title" x="80" y="52" text-anchor="middle">1. FROM &amp; JOIN</text>
+              <text class="d-label" x="80" y="70" text-anchor="middle">Tables in scope</text>
+
+              <line class="d-line-accent" x1="140" y1="57" x2="170" y2="57"/>
+
+              <rect class="d-box" x="170" y="30" width="120" height="54" rx="6"/>
+              <text class="d-title" x="230" y="52" text-anchor="middle">2. WHERE</text>
+              <text class="d-label" x="230" y="70" text-anchor="middle">Row filtering</text>
+
+              <line class="d-line-accent" x1="290" y1="57" x2="320" y2="57"/>
+
+              <rect class="d-accent" x="320" y="30" width="130" height="54" rx="6"/>
+              <text class="d-title" x="385" y="52" text-anchor="middle">3. GROUP BY</text>
+              <text class="d-label" x="385" y="70" text-anchor="middle">Aggregation + HAVING</text>
+
+              <line class="d-line-accent" x1="450" y1="57" x2="480" y2="57"/>
+
+              <rect class="d-box" x="480" y="30" width="120" height="54" rx="6"/>
+              <text class="d-title" x="540" y="52" text-anchor="middle">4. WINDOW &amp; SELECT</text>
+              <text class="d-label" x="540" y="70" text-anchor="middle">Expressions &amp; grain</text>
+
+              <line class="d-line-accent" x1="600" y1="57" x2="630" y2="57"/>
+
+              <rect class="d-good" x="630" y="30" width="110" height="54" rx="6"/>
+              <text class="d-title" x="685" y="52" text-anchor="middle">5. ORDER &amp; LIMIT</text>
+              <text class="d-label" x="685" y="70" text-anchor="middle">Final presentation</text>
+
+              <rect class="d-fill" x="20" y="115" width="720" height="65" rx="8"/>
+              <text class="d-title" x="40" y="138">Logical order vs Syntax order:</text>
+              <text class="d-label" x="40" y="158">Even though queries start with the keyword SELECT, the engine evaluates FROM and WHERE first.</text>
+              <text class="d-label" x="40" y="174">That is why aliases defined in SELECT cannot be referenced in WHERE or GROUP BY in standard SQL.</text>
+            </svg>
+          </div>
+          <figcaption>The logical pipeline of SQL execution: identifying sources, filtering candidate rows, aggregating groups, computing window metrics, and projecting the final dataset.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="select">
+        <header class="topic-head">
+          <p class="eyebrow">03.1 · Query foundations</p>
+          <h2>SELECT, filtering &amp; sorting</h2>
+        </header>
+
+        <p class="lead">The SELECT statement retrieves rows and columns from database tables. Writing disciplined queries requires understanding three-valued logic, explicit column projection, and deterministic sorting.</p>
+
+        <h3>Column Projection and Three-Valued Logic</h3>
+        <p>In production analytics, avoid <code>SELECT *</code>. Explicitly naming required columns reduces network bandwidth, memory consumption, and I/O costs. In columnar data warehouses (Snowflake, BigQuery, Redshift), reading unneeded columns directly inflates query billing.</p>
+
+        <div class="callout trap">
+          <h4>The NULL and Three-Valued Logic Trap</h4>
+          <p>In SQL, comparisons with <code>NULL</code> evaluate neither to <code>TRUE</code> nor to <code>FALSE</code>, but to <code>UNKNOWN</code>. Writing <code>WHERE status != 'cancelled'</code> will <strong>drop all rows where status is NULL</strong>! To safely include them, write <code>WHERE status != 'cancelled' OR status IS NULL</code>, or use <code>COALESCE(status, '') != 'cancelled'</code>.</p>
+        </div>
+
+        <h3>Deterministic Ordering</h3>
+        <p>Without an explicit <code>ORDER BY</code> clause, relational database tables are unordered mathematical sets. The order in which rows return is non-deterministic and can vary between identical query runs. For predictable pagination with <code>LIMIT</code> and <code>OFFSET</code>, always include a unique tie-breaker column (such as primary key <code>id</code>) in the sort list.</p>
+      </section>
+
+      <section class="topic" id="aggregation">
+        <header class="topic-head">
+          <p class="eyebrow">03.2 · Summarizing sets</p>
+          <h2>Aggregation &amp; GROUP BY</h2>
+        </header>
+
+        <p class="lead">Aggregations collapse multiple rows into single summary metrics. Mastering GROUP BY semantics and distinguishing between row-level filters and group-level filters is vital for metric computation.</p>
+
+        <h3>The Mechanics of GROUP BY</h3>
+        <p>The <code>GROUP BY</code> clause defines the grain of the output. In standard SQL, every column in the <code>SELECT</code> clause must either be listed in the <code>GROUP BY</code> clause or wrapped inside an aggregate function (e.g. <code>SUM</code>, <code>AVG</code>, <code>COUNT</code>, <code>MIN</code>, <code>MAX</code>).</p>
+
+        <pre class="code"><code>SELECT 
+  channel,
+  DATE_TRUNC('month', order_date) AS order_month,
+  COUNT(DISTINCT customer_id)      AS active_customers,
+  SUM(revenue)                     AS total_revenue,
+  ROUND(AVG(revenue), 2)           AS aov
+FROM orders
+WHERE status = 'completed'
+GROUP BY 1, 2
+HAVING SUM(revenue) >= 10000;</code></pre>
+
+        <div class="callout why">
+          <h4>WHERE vs HAVING</h4>
+          <ul>
+            <li><strong>WHERE:</strong> Filters individual candidate rows <em>before</em> aggregation takes place. Cannot contain aggregate functions.</li>
+            <li><strong>HAVING:</strong> Filters aggregated group buckets <em>after</em> the grouping and aggregation are computed.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="topic" id="joins">
+        <header class="topic-head">
+          <p class="eyebrow">03.3 · Combining relations</p>
+          <h2>Joins</h2>
+        </header>
+
+        <p class="lead">Real business data is normalized across relational entities. Joins allow you to stitch tables together based on shared keys. Knowing the differences between join types prevents subtle data loss and accidental duplicate fan-outs.</p>
+
+        <h3>Join Archetypes</h3>
+        <ul>
+          <li><strong>INNER JOIN:</strong> Returns rows only when the join condition matches in both the left and right tables. Unmatched rows in either table are discarded.</li>
+          <li><strong>LEFT (OUTER) JOIN:</strong> Preserves all rows from the left table. If no matching row exists on the right, right-side columns are filled with <code>NULL</code>.</li>
+          <li><strong>FULL OUTER JOIN:</strong> Preserves all rows from both tables, filling unmatched columns on either side with <code>NULL</code>.</li>
+          <li><strong>CROSS JOIN:</strong> Computes the Cartesian product, pairing every row of the left table with every row of the right table (\(N \times M\) rows).</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>The Fan-Out Multiplication Bug</h4>
+          <p>If you join an <code>orders</code> table (1 row per order) to an <code>order_items</code> table (multiple rows per order) on <code>order_id</code>, and then sum <code>orders.total_amount</code>, each order's total is multiplied by its number of items! Always aggregate the child table to the parent grain before joining, or calculate measures at the item grain.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="subqueries">
+        <header class="topic-head">
+          <p class="eyebrow">03.4 · Modular query architecture</p>
+          <h2>Subqueries &amp; CTEs</h2>
+        </header>
+
+        <p class="lead">Complex analytical questions require multi-stage data processing. Common Table Expressions (CTEs) transform unreadable nested subqueries into clean, modular, top-down pipelines.</p>
+
+        <h3>Common Table Expressions (WITH Clauses)</h3>
+        <p>CTEs create named temporary result sets that exist only within the execution scope of a single query. They improve maintainability and enable recursive processing:</p>
+
+        <pre class="code"><code>WITH first_orders AS (
+  SELECT 
+    customer_id, 
+    MIN(order_date) AS first_order_date
+  FROM orders
+  GROUP BY customer_id
+),
+cohort_size AS (
+  SELECT 
+    DATE_TRUNC('month', first_order_date) AS cohort_month,
+    COUNT(customer_id)                    AS new_users
+  FROM first_orders
+  GROUP BY 1
+)
+SELECT * FROM cohort_size ORDER BY cohort_month;</code></pre>
+
+        <div class="callout why">
+          <h4>NOT EXISTS vs NOT IN with NULLs</h4>
+          <p>Always prefer <code>WHERE NOT EXISTS (...)</code> over <code>WHERE id NOT IN (...)</code> when testing for non-existence. If the subquery in a <code>NOT IN</code> statement returns even a single row with a <code>NULL</code> value, the entire predicate evaluates to <code>UNKNOWN</code>, returning zero rows.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="window">
+        <header class="topic-head">
+          <p class="eyebrow">03.5 · Advanced analytical calculations</p>
+          <h2>Window functions</h2>
+        </header>
+
+        <p class="lead">Unlike GROUP BY, which collapses individual rows into a single summary row, window functions compute metrics across sets of rows that are related to the current row <strong>without collapsing the underlying row grain</strong>.</p>
+
+        <h3>Core Window Function Classes</h3>
+        <ul>
+          <li><strong>Ranking Functions:</strong>
+            <ul>
+              <li><code>ROW_NUMBER()</code>: Assigns a unique sequential integer (1, 2, 3...) to each row in the partition.</li>
+              <li><code>RANK()</code>: Assigns ranks with gaps for ties (e.g. 1, 2, 2, 4).</li>
+              <li><code>DENSE_RANK()</code>: Assigns ranks without gaps for ties (e.g. 1, 2, 2, 3).</li>
+            </ul>
+          </li>
+          <li><strong>Value Navigation Functions:</strong>
+            <ul>
+              <li><code>LAG(col, 1)</code>: Fetches the value from 1 row prior in the partition (ideal for day-over-day growth).</li>
+              <li><code>LEAD(col, 1)</code>: Fetches the value from the next row in the partition (ideal for sessionization).</li>
+            </ul>
+          </li>
+          <li><strong>Frame-Bounded Aggregates:</strong>
+            <p>Compute rolling totals and moving averages with explicit window frames:</p>
+            <pre class="code"><code>SUM(revenue) OVER (
+  PARTITION BY customer_id
+  ORDER BY order_date
+  ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+) AS cumulative_customer_spend</code></pre>
+          </li>
+        </ul>
+      </section>
+
+      <section class="topic" id="performance">
+        <header class="topic-head">
+          <p class="eyebrow">03.6 · Scale &amp; optimization</p>
+          <h2>Query performance</h2>
+        </header>
+
+        <p class="lead">An analytical query that runs in 2 seconds on a test laptop can bring down a production warehouse when executed against a billion rows. Understanding query planning, indexing, and columnar storage transforms slow queries into snappy pipelines.</p>
+
+        <h3>Reading Execution Plans (EXPLAIN ANALYZE)</h3>
+        <p>Using <code>EXPLAIN ANALYZE</code> reveals how the optimizer executes your SQL. Look out for:</p>
+        <ul>
+          <li><strong>Seq Scan (Full Table Scan):</strong> The engine reads every page on disk because no suitable index exists.</li>
+          <li><strong>Index Scan / Index Only Scan:</strong> The engine traverses a B-tree index directly to the target rows, minimizing I/O.</li>
+          <li><strong>Hash Join vs Nested Loop:</strong> Nested loops scale as \(O(N \times M)\) on unindexed columns. Hash joins build an in-memory hash table of the smaller relation for linear \(O(N + M)\) performance.</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>Non-Sargable Predicates</h4>
+          <p>Wrapping an indexed column inside a function prevents the query engine from using an index seek:</p>
+          <pre class="code"><code>-- SLOW: forces full table scan
+WHERE YEAR(created_at) = 2026;
+
+-- FAST: sargable range seek on B-tree index
+WHERE created_at >= '2026-01-01' AND created_at < '2027-01-01';</code></pre>
+        </div>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>E-commerce Funnel Breakdown</h4><p>Write a query joining sessions, cart adds, checkouts, and orders. Compute step-by-step conversion drop-offs by device category and traffic channel.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Cohort Retention Matrix</h4><p>Using CTEs and window functions, group users by their signup month and compute their monthly active retention rates across subsequent months (Month 0 to Month 12).</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Sessionization &amp; Rolling LTV</h4><p>Build a single-pass analytical query using <code>LAG()</code> and window sums that identifies user session boundaries (inactivity > 30 minutes) and computes running lifetime spend per session.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="sql-1"><span>Trace the logical order of SQL execution from FROM to ORDER BY</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-2"><span>Handle NULL comparisons and three-valued logic without dropping records</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-3"><span>Select correct join types and prevent Cartesian product row duplication</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-4"><span>Structure complex multi-stage pipelines using Common Table Expressions</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-5"><span>Calculate rolling metrics, rankings, and lead/lag differences using window functions</span></label></li>
+          <li><label><input type="checkbox" data-key="sql-6"><span>Diagnose query bottlenecks using EXPLAIN plans and write sargable predicates</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+</body>
+</html>

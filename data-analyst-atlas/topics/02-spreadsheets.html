@@ -1,0 +1,1679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spreadsheets · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="spreadsheets">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Spreadsheets</h1>
+    <p class="lede">Excel and Google Sheets are where most analysis starts and where most reports end up. This area teaches you to use them like an analyst: formulas that copy correctly, lookups that join tables, pivots that summarize in seconds, clean inputs, honest charts and models you can question.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">A typical spreadsheet job follows one path. A raw export arrives, you clean it, enrich it with lookups from other tables, compute new columns with formulas, summarize with a pivot, picture the result in a chart and, when someone asks "what if?", wrap the numbers in a small model. The six lessons follow that path, using one running example: the order export of a small online store that sells mugs, apparel and prints.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 780 250" role="img" aria-label="The spreadsheet workflow: a raw export is cleaned, enriched with lookups, calculated with formulas, summarized in a pivot, charted, modeled with what-if analysis and delivered as a monthly report, which is refreshed with next month's export.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="40" width="120" height="58" rx="8"/>
+              <text class="d-title" x="70" y="65" text-anchor="middle">Raw export</text>
+              <text class="d-label" x="70" y="84" text-anchor="middle">orders.csv</text>
+              <line class="d-line-accent" x1="130" y1="69" x2="163" y2="69" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="165" y="40" width="120" height="58" rx="8"/>
+              <text class="d-title" x="225" y="65" text-anchor="middle">Clean</text>
+              <text class="d-label" x="225" y="84" text-anchor="middle">04 · TRIM, SPLIT</text>
+              <line class="d-line-accent" x1="285" y1="69" x2="318" y2="69" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="320" y="40" width="120" height="58" rx="8"/>
+              <text class="d-title" x="380" y="65" text-anchor="middle">Enrich</text>
+              <text class="d-label" x="380" y="84" text-anchor="middle">02 · XLOOKUP</text>
+              <line class="d-line-accent" x1="440" y1="69" x2="473" y2="69" marker-end="url(#ov-arrow)"/>
+              <rect class="d-box" x="475" y="40" width="120" height="58" rx="8"/>
+              <text class="d-title" x="535" y="65" text-anchor="middle">Calculate</text>
+              <text class="d-label" x="535" y="84" text-anchor="middle">01 · formulas</text>
+              <line class="d-line-accent" x1="595" y1="69" x2="628" y2="69" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="630" y="40" width="130" height="58" rx="8"/>
+              <text class="d-title" x="695" y="65" text-anchor="middle">Summarize</text>
+              <text class="d-label" x="695" y="84" text-anchor="middle">03 · pivot table</text>
+              <line class="d-line-accent" x1="695" y1="98" x2="695" y2="160" marker-end="url(#ov-arrow)"/>
+              <text class="d-label" x="703" y="134">group by</text>
+              <rect class="d-accent" x="630" y="162" width="130" height="58" rx="8"/>
+              <text class="d-title" x="695" y="187" text-anchor="middle">Chart</text>
+              <text class="d-label" x="695" y="206" text-anchor="middle">05 · picture it</text>
+              <line class="d-line-accent" x1="630" y1="191" x2="597" y2="191" marker-end="url(#ov-arrow)"/>
+              <rect class="d-signal" x="475" y="162" width="120" height="58" rx="8"/>
+              <text class="d-title" x="535" y="187" text-anchor="middle">Model</text>
+              <text class="d-label" x="535" y="206" text-anchor="middle">06 · what-if</text>
+              <line class="d-line-accent" x1="475" y1="191" x2="442" y2="191" marker-end="url(#ov-arrow)"/>
+              <rect class="d-good" x="320" y="162" width="120" height="58" rx="8"/>
+              <text class="d-title" x="380" y="187" text-anchor="middle">Report</text>
+              <text class="d-label" x="380" y="206" text-anchor="middle">monthly pack</text>
+              <path class="d-line-signal d-dash" d="M320 191 H70 V100" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="190" y="182" text-anchor="middle">next month: paste, refresh</text>
+            </svg>
+          </div>
+          <figcaption>The spreadsheet workflow. Each box is one lesson, and the dashed loop is the reason to build it properly: next month you paste a new export and every step refreshes.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="formulas">
+        <header class="topic-head">
+          <p class="eyebrow">02.1 · How cells compute</p>
+          <h2>Formulas &amp; references</h2>
+        </header>
+
+        <p class="lead">A formula is a recipe that points at other cells. Type <code>=B2*C2</code> once, drag it down 4,000 rows, and every row computes its own revenue. That drag only works because the spreadsheet rewrites each <strong>reference</strong> as it copies, and the dollar signs you add decide which parts it may rewrite.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Most spreadsheet errors that reach a manager are reference errors: a tax rate that drifted to an empty cell, a total that stops three rows short. If you can read <code>$A2</code> and <code>A$2</code> at a glance, you can write a formula once and trust every copy of it.</p>
+        </div>
+
+        <h3>Relative and absolute references</h3>
+        <p>A plain reference like <code>A2</code> is <strong>relative</strong>. The spreadsheet stores it as "two columns left, same row", so copying it one row down turns it into <code>A3</code>. That is exactly what you want for per-row inputs such as units and price.</p>
+        <p>A tax rate or exchange rate lives in one cell. Lock it with dollar signs, <code>$F$1</code>, and it becomes <strong>absolute</strong>: every copy points at the same cell.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 215" role="img" aria-label="A formula in column C multiplies units and price on its own row and the tax rate in F1. Filled down, the row numbers of A and B shift, while every copy points at the fixed cell F1.">
+              <defs>
+                <marker id="formulas-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="formulas-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="84" y="28" text-anchor="middle">A</text>
+              <text class="d-label" x="164" y="28" text-anchor="middle">B</text>
+              <text class="d-label" x="294" y="28" text-anchor="middle">C</text>
+              <text class="d-label" x="32" y="54" text-anchor="middle">1</text>
+              <text class="d-label" x="32" y="84" text-anchor="middle">2</text>
+              <text class="d-label" x="32" y="114" text-anchor="middle">3</text>
+              <text class="d-label" x="32" y="144" text-anchor="middle">4</text>
+              <rect class="d-fill" x="44" y="34" width="340" height="30"/>
+              <rect class="d-box" x="44" y="64" width="80" height="30"/><rect class="d-box" x="124" y="64" width="80" height="30"/><rect class="d-box" x="204" y="64" width="180" height="30"/>
+              <rect class="d-box" x="44" y="94" width="80" height="30"/><rect class="d-box" x="124" y="94" width="80" height="30"/><rect class="d-box" x="204" y="94" width="180" height="30"/>
+              <rect class="d-box" x="44" y="124" width="80" height="30"/><rect class="d-box" x="124" y="124" width="80" height="30"/><rect class="d-box" x="204" y="124" width="180" height="30"/>
+              <text class="d-title" x="52" y="54">Units</text>
+              <text class="d-title" x="132" y="54">Price</text>
+              <text class="d-title" x="212" y="54">Revenue incl. tax</text>
+              <text class="d-mono" x="116" y="84" text-anchor="end">3</text><text class="d-mono" x="196" y="84" text-anchor="end">12.00</text>
+              <text class="d-mono" x="116" y="114" text-anchor="end">5</text><text class="d-mono" x="196" y="114" text-anchor="end">8.50</text>
+              <text class="d-mono" x="116" y="144" text-anchor="end">2</text><text class="d-mono" x="196" y="144" text-anchor="end">20.00</text>
+              <text class="d-mono" x="212" y="84">=A2*B2*(1+<tspan class="d-text-accent">$F$1</tspan>)</text>
+              <text class="d-mono" x="212" y="114">=A3*B3*(1+<tspan class="d-text-accent">$F$1</tspan>)</text>
+              <text class="d-mono" x="212" y="144">=A4*B4*(1+<tspan class="d-text-accent">$F$1</tspan>)</text>
+              <line class="d-line-signal" x1="368" y1="70" x2="368" y2="150" marker-end="url(#formulas-arrow-s)"/>
+              <text class="d-label d-text-signal" x="368" y="170" text-anchor="middle">fill down</text>
+              <text class="d-label" x="515" y="28" text-anchor="middle">F</text>
+              <rect class="d-accent" x="470" y="34" width="90" height="30" rx="4"/>
+              <text class="d-mono" x="515" y="54" text-anchor="middle">8%</text>
+              <text class="d-label" x="515" y="82" text-anchor="middle">tax rate, one cell</text>
+              <line class="d-line-accent" x1="384" y1="79" x2="468" y2="52" marker-end="url(#formulas-arrow)"/>
+              <line class="d-line-accent" x1="384" y1="109" x2="468" y2="56" marker-end="url(#formulas-arrow)"/>
+              <line class="d-line-accent" x1="384" y1="139" x2="468" y2="60" marker-end="url(#formulas-arrow)"/>
+              <text class="d-label" x="44" y="192">Relative A2, B2: the row number moves with each copy (A2, A3, A4).</text>
+              <text class="d-label d-text-accent" x="44" y="208">Absolute $F$1: every copy still points at the same tax cell.</text>
+            </svg>
+          </div>
+          <figcaption>Filling a formula down rewrites relative references row by row, while the absolute reference $F$1 stays pinned to the tax-rate cell.</figcaption>
+        </figure>
+
+        <h3>Mixed references for two-way tables</h3>
+        <p>A dollar sign locks only the part that follows it. <code>$A2</code> locks the column and lets the row move; <code>A$1</code> locks the row and lets the column move. You need these <strong>mixed references</strong> whenever one formula fills a grid in both directions, such as units down the side times prices across the top.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="The four reference types and what each becomes when copied one cell down or one cell right, plus the F4 key cycle between them.">
+              <defs>
+                <marker id="formulas-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="16" width="135" height="122" rx="8"/>
+              <rect class="d-accent" x="175" y="16" width="135" height="122" rx="8"/>
+              <rect class="d-accent" x="330" y="16" width="135" height="122" rx="8"/>
+              <rect class="d-signal" x="485" y="16" width="135" height="122" rx="8"/>
+              <text class="d-title" x="87" y="44" text-anchor="middle">A1</text>
+              <text class="d-title" x="242" y="44" text-anchor="middle">$A1</text>
+              <text class="d-title" x="397" y="44" text-anchor="middle">A$1</text>
+              <text class="d-title" x="552" y="44" text-anchor="middle">$A$1</text>
+              <text class="d-label" x="87" y="62" text-anchor="middle">relative</text>
+              <text class="d-label" x="242" y="62" text-anchor="middle">column locked</text>
+              <text class="d-label" x="397" y="62" text-anchor="middle">row locked</text>
+              <text class="d-label" x="552" y="62" text-anchor="middle">absolute</text>
+              <text class="d-label" x="32" y="94">down ↓</text><text class="d-mono d-text-accent" x="143" y="94" text-anchor="end">A2</text>
+              <text class="d-label" x="32" y="122">right →</text><text class="d-mono d-text-accent" x="143" y="122" text-anchor="end">B1</text>
+              <text class="d-label" x="187" y="94">down ↓</text><text class="d-mono d-text-accent" x="298" y="94" text-anchor="end">$A2</text>
+              <text class="d-label" x="187" y="122">right →</text><text class="d-mono" x="298" y="122" text-anchor="end">$A1</text>
+              <text class="d-label" x="342" y="94">down ↓</text><text class="d-mono" x="453" y="94" text-anchor="end">A$1</text>
+              <text class="d-label" x="342" y="122">right →</text><text class="d-mono d-text-accent" x="453" y="122" text-anchor="end">B$1</text>
+              <text class="d-label" x="497" y="94">down ↓</text><text class="d-mono" x="608" y="94" text-anchor="end">$A$1</text>
+              <text class="d-label" x="497" y="122">right →</text><text class="d-mono" x="608" y="122" text-anchor="end">$A$1</text>
+              <text class="d-label" x="20" y="168">Press F4 on a reference to cycle (Cmd+T in Excel for Mac):</text>
+              <rect class="d-fill" x="20" y="182" width="80" height="30" rx="6"/><text class="d-mono" x="60" y="202" text-anchor="middle">A1</text>
+              <line class="d-line" x1="100" y1="197" x2="138" y2="197" marker-end="url(#formulas-arrow2)"/>
+              <rect class="d-fill" x="140" y="182" width="80" height="30" rx="6"/><text class="d-mono" x="180" y="202" text-anchor="middle">$A$1</text>
+              <line class="d-line" x1="220" y1="197" x2="258" y2="197" marker-end="url(#formulas-arrow2)"/>
+              <rect class="d-fill" x="260" y="182" width="80" height="30" rx="6"/><text class="d-mono" x="300" y="202" text-anchor="middle">A$1</text>
+              <line class="d-line" x1="340" y1="197" x2="378" y2="197" marker-end="url(#formulas-arrow2)"/>
+              <rect class="d-fill" x="380" y="182" width="80" height="30" rx="6"/><text class="d-mono" x="420" y="202" text-anchor="middle">$A1</text>
+              <line class="d-line" x1="460" y1="197" x2="498" y2="197" marker-end="url(#formulas-arrow2)"/>
+              <rect class="d-fill" x="500" y="182" width="80" height="30" rx="6"/><text class="d-mono" x="540" y="202" text-anchor="middle">A1</text>
+            </svg>
+          </div>
+          <figcaption>A dollar sign freezes the column letter or row number right after it. Highlighted values are the parts that changed when the reference was copied.</figcaption>
+        </figure>
+
+        <p>Units run down column A and unit prices across row 1. The formula in B2 is copied to all twelve cells. Toggle the dollar signs and watch which references each copy points at: green cells hold the right units × price, red cells picked up the wrong neighbours.</p>
+        <div class="widget" id="formulas-demo">
+          <div class="widget-head">
+            <span class="widget-title">Fill one formula across a revenue grid</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="formulas-ca"><input type="checkbox" id="formulas-ca"> $ before A</label>
+            <label for="formulas-ra"><input type="checkbox" id="formulas-ra"> $ before 2</label>
+            <label for="formulas-cb"><input type="checkbox" id="formulas-cb"> $ before B</label>
+            <label for="formulas-rb"><input type="checkbox" id="formulas-rb"> $ before 1</label>
+            <label>Formula in B2 <output id="formulas-f">=A2*B1</output></label>
+            <button class="btn" type="button" id="formulas-play">Animate the fill</button>
+          </div>
+          <svg id="formulas-grid" viewBox="0 0 580 246" role="img" aria-label="A 4 by 3 grid where the formula typed in B2 is filled across B2 to D5. Each cell shows its copied formula and result, marked correct or wrong."></svg>
+          <p class="readout" id="formulas-readout"></p>
+        </div>
+
+        <h3>Functions, order and errors</h3>
+        <p>Formulas follow the usual order of operations: brackets, then <code>^</code>, then <code>*</code> and <code>/</code>, then <code>+</code> and <code>-</code>. So <code>=A2*B2*1+F1</code> adds the raw tax rate instead of applying it. Functions such as <code>SUM</code>, <code>ROUND</code>, <code>IF</code> and <code>SUMIFS</code> take ranges like <code>B2:B500</code>. When something breaks, the error code tells you where to look.</p>
+
+        <pre class="code" data-lang="excel"><code><span class="c">' Row 2 of an orders table: A = units, B = unit price, F1 = tax rate</span>
+=A2*B2                     <span class="c">' revenue, relative: becomes A3*B3 on the next row</span>
+=A2*B2*(1+$F$1)            <span class="c">' revenue incl. tax, tax cell locked</span>
+=ROUND(A2*B2*(1+$F$1), 2)  <span class="c">' round to cents for display and totals</span>
+=IF(A2=0, "", B2/A2)       <span class="c">' avoid #DIV/0! on empty rows</span>
+=SUMIFS($C:$C, $D:$D, "North", $E:$E, "&gt;=2026-01-01")  <span class="c">' conditional total</span>
+=$A2*B$1                   <span class="c">' mixed: fills a units x price grid in both directions</span></code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Error</th><th>What it means</th><th>Usual cause</th></tr></thead>
+            <tbody>
+              <tr><td><code>#DIV/0!</code></td><td>Division by zero or by an empty cell</td><td>A rate or average on a blank row</td></tr>
+              <tr><td><code>#VALUE!</code></td><td>Wrong type of input</td><td>Text such as <code>"1,200 "</code> used in arithmetic</td></tr>
+              <tr><td><code>#REF!</code></td><td>The referenced cell no longer exists</td><td>A row or column was deleted under the formula</td></tr>
+              <tr><td><code>#NAME?</code></td><td>Unknown function or name</td><td>A typo, or a function your version does not have</td></tr>
+              <tr><td><code>#N/A</code></td><td>A lookup found no match</td><td>A missing key or a stray space (lesson 02.2)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Relative references move with the formula; absolute references (<code>$F$1</code>) stay put.</li>
+            <li>A dollar sign locks only the column letter or row number that follows it.</li>
+            <li>A two-way table needs mixed references: <code>=$A2*B$1</code>.</li>
+            <li>Put constants such as rates in their own labelled cell, never inside formulas.</li>
+            <li>Error codes are clues: #REF! means a deleted cell, #VALUE! means text in arithmetic.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Forgetting to lock a rate cell, so row 3 multiplies by an empty F2 and silently returns 0.</li>
+            <li>Hard-coding numbers such as <code>*1.08</code> into formulas, so nobody can see or change the assumption.</li>
+            <li>Totals like <code>=SUM(C2:C500)</code> that stop short when new rows are added. Use a Table (Ctrl+T) or a whole-column range.</li>
+            <li>Typing over one formula cell with a number, which breaks the pattern without any warning.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>Press <kbd>Ctrl</kbd>+<kbd>`</kbd> in Excel (or View › Show formulas in Sheets) to see every formula at once. An inconsistent cell in a column of identical formulas stands out immediately.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="formulas-1"><span>Predict what <code>=$A2*B$1</code> becomes when copied to D5</span></label></li>
+          <li><label><input type="checkbox" data-key="formulas-2"><span>Fill a units × price grid from one formula without any wrong cells</span></label></li>
+          <li><label><input type="checkbox" data-key="formulas-3"><span>Move an assumption out of a formula into its own labelled input cell</span></label></li>
+          <li><label><input type="checkbox" data-key="formulas-4"><span>Explain what causes #REF!, #VALUE! and #DIV/0! and fix each one</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://support.microsoft.com/en-us/excel">Excel help &amp; learning (Microsoft Support)</a></li>
+          <li><span class="kind">Docs</span><a href="https://support.google.com/docs/table/25273">Google Sheets function list</a></li>
+          <li><span class="kind">Guide</span><a href="https://exceljet.net/">Exceljet: formula and function guides</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="lookups">
+        <header class="topic-head">
+          <p class="eyebrow">02.2 · Joining tables in a sheet</p>
+          <h2>Lookups (XLOOKUP &amp; INDEX/MATCH)</h2>
+        </header>
+
+        <p class="lead">Your orders tab has a SKU on every row, but the product name, category and list price live in a separate products tab. A <strong>lookup</strong> fetches them: for each order, find the SKU in the products table and bring back the matching value. It is the spreadsheet version of a SQL join, done one cell at a time.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Almost every report combines two tables: orders with products, tickets with agents, campaigns with spend. Lookups are how you do that in a sheet, and a wrong lookup quietly attaches the wrong price to thousands of rows. Knowing how each function matches is what keeps the join honest.</p>
+        </div>
+
+        <h3>How a lookup works: find, then return</h3>
+        <p>Every lookup does two things. It searches a <strong>lookup array</strong> (the SKU column) for your value and notes the position of the first match. Then it returns the item at that same position from a <strong>return array</strong> (the price column). <code>XLOOKUP</code> does both in one function; <code>INDEX</code>/<code>MATCH</code> splits them into two.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 240" role="img" aria-label="XLOOKUP finds P-103 at position 3 of the SKU column, then returns item 3 of the Price column, 24 dollars.">
+              <defs>
+                <marker id="lookups-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="50" y="104" text-anchor="middle">lookup_value</text>
+              <rect class="d-accent" x="10" y="113" width="80" height="36" rx="6"/>
+              <text class="d-mono" x="50" y="136" text-anchor="middle">P-103</text>
+              <text class="d-label d-text-accent" x="170" y="22" text-anchor="middle">lookup_array</text>
+              <text class="d-label d-text-good" x="450" y="22" text-anchor="middle">return_array</text>
+              <rect class="d-fill" x="130" y="30" width="360" height="26"/>
+              <text class="d-title" x="138" y="48">SKU</text><text class="d-title" x="218" y="48">Product</text><text class="d-title" x="328" y="48">Category</text><text class="d-title" x="418" y="48">Price</text>
+              <rect class="d-box" x="130" y="56" width="80" height="150"/>
+              <rect class="d-box" x="210" y="56" width="110" height="150"/>
+              <rect class="d-box" x="320" y="56" width="90" height="150"/>
+              <rect class="d-box" x="410" y="56" width="80" height="150"/>
+              <rect class="d-accent" x="130" y="116" width="80" height="30"/>
+              <rect class="d-good" x="410" y="116" width="80" height="30"/>
+              <line class="d-grid" x1="130" y1="86" x2="490" y2="86"/><line class="d-grid" x1="130" y1="116" x2="490" y2="116"/><line class="d-grid" x1="130" y1="146" x2="490" y2="146"/><line class="d-grid" x1="130" y1="176" x2="490" y2="176"/>
+              <text class="d-mono" x="138" y="76">P-101</text><text class="d-text" x="218" y="76">Ceramic mug</text><text class="d-text" x="328" y="76">Mugs</text><text class="d-mono" x="482" y="76" text-anchor="end">14.00</text>
+              <text class="d-mono" x="138" y="106">P-102</text><text class="d-text" x="218" y="106">Logo tee</text><text class="d-text" x="328" y="106">Apparel</text><text class="d-mono" x="482" y="106" text-anchor="end">22.00</text>
+              <text class="d-mono" x="138" y="136">P-103</text><text class="d-text" x="218" y="136">Art print</text><text class="d-text" x="328" y="136">Prints</text><text class="d-mono" x="482" y="136" text-anchor="end">24.00</text>
+              <text class="d-mono" x="138" y="166">P-104</text><text class="d-text" x="218" y="166">Travel mug</text><text class="d-text" x="328" y="166">Mugs</text><text class="d-mono" x="482" y="166" text-anchor="end">18.00</text>
+              <text class="d-mono" x="138" y="196">P-105</text><text class="d-text" x="218" y="196">Hoodie</text><text class="d-text" x="328" y="196">Apparel</text><text class="d-mono" x="482" y="196" text-anchor="end">45.00</text>
+              <line class="d-line-accent" x1="90" y1="131" x2="128" y2="131" marker-end="url(#lookups-arrow)"/>
+              <text class="d-label d-text-accent" x="110" y="164" text-anchor="middle">1. find</text>
+              <text class="d-label d-text-accent" x="110" y="178" text-anchor="middle">pos 3</text>
+              <line class="d-line-accent" x1="490" y1="131" x2="536" y2="131" marker-end="url(#lookups-arrow)"/>
+              <text class="d-label d-text-good" x="513" y="120" text-anchor="middle">2. return</text>
+              <rect class="d-good" x="538" y="113" width="90" height="36" rx="6"/>
+              <text class="d-mono" x="583" y="136" text-anchor="middle">24.00</text>
+              <text class="d-mono" x="10" y="230">=XLOOKUP("P-103", A2:A6, D2:D6, "Not found")</text>
+            </svg>
+          </div>
+          <figcaption>XLOOKUP finds the position of P-103 in the SKU column (3), then returns item 3 from the price column. The fourth argument is what to show when nothing matches.</figcaption>
+        </figure>
+
+        <h3>XLOOKUP, INDEX/MATCH and VLOOKUP</h3>
+        <p><code>XLOOKUP</code> (Excel 2021 and Microsoft 365, and Google Sheets) is the modern default: exact match unless told otherwise, a built-in "not found" value, and it can look left. <code>INDEX(return, MATCH(value, lookup, 0))</code> does the same job in every version. <code>VLOOKUP</code> still fills old workbooks, but it identifies the return column by a typed number, and that number does not move when the table changes.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="Before inserting a column, VLOOKUP column index 4 returns the price. After a Supplier column is inserted, index 4 now points at Category and returns the wrong value, while XLOOKUP still returns the price.">
+              <defs>
+                <marker id="lookups-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="20">Before</text>
+              <text class="d-label" x="53" y="42" text-anchor="middle">1</text><text class="d-label" x="120" y="42" text-anchor="middle">2</text><text class="d-label" x="187" y="42" text-anchor="middle">3</text><text class="d-label d-text-good" x="254" y="42" text-anchor="middle">4</text>
+              <rect class="d-fill" x="20" y="48" width="268" height="26"/>
+              <rect class="d-good" x="221" y="48" width="67" height="56"/>
+              <rect class="d-box" x="20" y="74" width="201" height="30"/>
+              <text class="d-label" x="26" y="66">SKU</text><text class="d-label" x="93" y="66">Product</text><text class="d-label" x="160" y="66">Category</text><text class="d-label" x="227" y="66">Price</text>
+              <text class="d-label" x="26" y="94">P-103</text><text class="d-label" x="93" y="94">Art print</text><text class="d-label" x="160" y="94">Prints</text><text class="d-label" x="227" y="94">24.00</text>
+              <line class="d-line" x1="296" y1="76" x2="326" y2="76" marker-end="url(#lookups-arrow2)"/>
+              <text class="d-title" x="330" y="20">After inserting a column</text>
+              <text class="d-label" x="360" y="42" text-anchor="middle">1</text><text class="d-label" x="420" y="42" text-anchor="middle">2</text><text class="d-label" x="480" y="42" text-anchor="middle">3</text><text class="d-label d-text-signal" x="540" y="42" text-anchor="middle">4</text><text class="d-label d-text-good" x="600" y="42" text-anchor="middle">5</text>
+              <rect class="d-fill" x="330" y="48" width="300" height="26"/>
+              <rect class="d-signal" x="510" y="48" width="60" height="56"/>
+              <rect class="d-good" x="570" y="48" width="60" height="56"/>
+              <rect class="d-box" x="330" y="74" width="180" height="30"/>
+              <text class="d-label" x="335" y="66">SKU</text><text class="d-label" x="395" y="66">Supplier</text><text class="d-label" x="455" y="66">Product</text><text class="d-label" x="515" y="66">Category</text><text class="d-label" x="575" y="66">Price</text>
+              <text class="d-label" x="335" y="94">P-103</text><text class="d-label" x="395" y="94">PrintHub</text><text class="d-label" x="455" y="94">Art print</text><text class="d-label" x="515" y="94">Prints</text><text class="d-label" x="575" y="94">24.00</text>
+              <text class="d-mono" x="20" y="136">=VLOOKUP("P-103", A:D, 4, FALSE)</text>
+              <text class="d-mono d-text-good" x="20" y="156">→ 24.00 (correct)</text>
+              <text class="d-mono" x="330" y="136">=VLOOKUP("P-103", A:E, 4, FALSE)</text>
+              <text class="d-mono d-text-signal" x="330" y="156">→ "Prints" (wrong column)</text>
+              <text class="d-mono" x="330" y="180">=XLOOKUP("P-103", A:A, E:E)</text>
+              <text class="d-mono d-text-good" x="330" y="200">→ 24.00 (range moved with it)</text>
+            </svg>
+          </div>
+          <figcaption>VLOOKUP's column number is typed in, so inserting a column silently shifts it onto the wrong field. XLOOKUP and INDEX/MATCH reference the price column itself, which moves with the insert.</figcaption>
+        </figure>
+
+        <p>Try a lowercase key (<code>p-103</code>), a key with a trailing space (<code>P-103 </code>) and a SKU that does not exist. Then insert the Supplier column and compare the three functions.</p>
+        <div class="widget" id="lookups-demo">
+          <div class="widget-head">
+            <span class="widget-title">Lookup explorer</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="lookups-key">Lookup value <input type="text" id="lookups-key" value="P-103" size="8" spellcheck="false"></label>
+            <label for="lookups-fn">Function <select id="lookups-fn"><option value="vlookup" selected>VLOOKUP</option><option value="index">INDEX / MATCH</option><option value="xlookup">XLOOKUP</option></select></label>
+            <label for="lookups-field">Return <select id="lookups-field"><option value="product">Product</option><option value="category">Category</option><option value="price" selected>Price</option></select></label>
+            <label for="lookups-nf">If not found <input type="text" id="lookups-nf" value="" size="13" placeholder="XLOOKUP only"></label>
+            <label for="lookups-insert"><input type="checkbox" id="lookups-insert"> Insert a Supplier column</label>
+          </div>
+          <svg id="lookups-svg" viewBox="0 0 580 250" role="img" aria-label="The products table with the lookup column, the matched row and the returned cell highlighted, plus the formula and its result."></svg>
+          <p class="readout" id="lookups-readout"></p>
+        </div>
+
+        <h3>When lookups fail</h3>
+        <p><code>#N/A</code> means "no match", and the cause is usually the data, not the formula: a trailing space, a SKU stored as a number in one table and as text in the other, or a genuinely new product. Lookups in Excel and Sheets ignore letter case, so <code>p-103</code> matches <code>P-103</code>, but they never ignore spaces. Approximate match is for ranges such as discount tiers, where you want the largest threshold that does not exceed the value.</p>
+
+        <pre class="code" data-lang="excel"><code><span class="c">' Orders tab: B2 = SKU. Products tab: A = SKU, B = Product, C = Category, D = Price</span>
+=XLOOKUP(B2, Products!A:A, Products!D:D, "Not found")      <span class="c">' exact match by default</span>
+=INDEX(Products!D:D, MATCH(B2, Products!A:A, 0))            <span class="c">' 0 = exact match</span>
+=VLOOKUP(B2, Products!A:D, 4, FALSE)                        <span class="c">' FALSE = exact; omit it and you get approximate</span>
+=XLOOKUP(TRIM(B2), Products!A:A, Products!D:D, "Not found") <span class="c">' strip stray spaces first</span>
+
+<span class="c">' Approximate match: discount tier for an order value in E2 (tier table sorted by Min)</span>
+=XLOOKUP(E2, Tiers!A:A, Tiers!B:B, 0, -1)                   <span class="c">' -1 = exact or next smaller</span>
+=COUNTIF(Products!A:A, B2)                                   <span class="c">' 0 means the SKU is missing, 2+ means duplicates</span></code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Function</th><th>Default match</th><th>Survives inserted columns</th><th>Not-found handling</th></tr></thead>
+            <tbody>
+              <tr><td><code>XLOOKUP</code></td><td>Exact</td><td>Yes</td><td>Built-in 4th argument</td></tr>
+              <tr><td><code>INDEX</code>/<code>MATCH</code></td><td>Whatever you pass to MATCH (use 0)</td><td>Yes</td><td>Wrap in <code>IFNA</code></td></tr>
+              <tr><td><code>VLOOKUP</code></td><td>Approximate if the last argument is omitted</td><td>No, the column number is typed</td><td>Wrap in <code>IFNA</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A lookup finds a position in one column and returns the same position from another.</li>
+            <li>Prefer XLOOKUP, or INDEX/MATCH where XLOOKUP is not available.</li>
+            <li>VLOOKUP without <code>FALSE</code> does an approximate match and can return a wrong value with no error.</li>
+            <li>Every #N/A is a data question: missing key, stray space or mismatched type.</li>
+            <li>A lookup returns the first match only, so check the lookup table for duplicate keys.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Wrapping every lookup in <code>IFERROR(…, 0)</code>, which turns missing products into zero revenue that nobody notices.</li>
+            <li>Leaving VLOOKUP's last argument out and getting approximate matches on unsorted IDs.</li>
+            <li>Looking up a number against text ("1042" vs 1042): they look identical and never match.</li>
+            <li>Duplicate keys in the lookup table, so the second product's price is never used.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="lookups-1"><span>Write the same lookup with XLOOKUP and with INDEX/MATCH</span></label></li>
+          <li><label><input type="checkbox" data-key="lookups-2"><span>Diagnose an #N/A caused by a trailing space or a number stored as text</span></label></li>
+          <li><label><input type="checkbox" data-key="lookups-3"><span>Explain why VLOOKUP breaks when a column is inserted</span></label></li>
+          <li><label><input type="checkbox" data-key="lookups-4"><span>Use an approximate-match lookup to assign discount tiers</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://support.microsoft.com/en-us/excel">Excel help &amp; learning (Microsoft Support)</a></li>
+          <li><span class="kind">Docs</span><a href="https://support.google.com/docs/table/25273">Google Sheets function list</a></li>
+          <li><span class="kind">Guide</span><a href="https://exceljet.net/">Exceljet: formula and function guides</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="pivots">
+        <header class="topic-head">
+          <p class="eyebrow">02.3 · Summarize in seconds</p>
+          <h2>Pivot tables</h2>
+        </header>
+
+        <p class="lead">A <strong>pivot table</strong> groups rows and aggregates them without a single formula. You drop Region into Rows, Month into Columns and Revenue into Values, and 5,000 order lines become a 4 × 12 grid of totals. Under the hood it is a <code>GROUP BY</code> query with a drag-and-drop interface.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>"Revenue by region by month", "tickets per agent per week", "average order value by channel": most ad-hoc questions are group-and-aggregate questions. A pivot answers them in under a minute, and it is the fastest way to sanity-check a dataset before you build anything bigger.</p>
+        </div>
+
+        <h3>From flat rows to a grid</h3>
+        <p>The source must be a flat table: one row per order, one column per field, a header on every column. The pivot splits rows into groups by the Rows field, splits again by the Columns field, and runs one aggregation per cell. It adds grand totals on both edges for free.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 230" role="img" aria-label="Six flat order rows are grouped by region and month and summed into a two by two pivot grid with totals.">
+              <defs>
+                <marker id="pivots-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="22">Source: one row per order</text>
+              <rect class="d-fill" x="20" y="30" width="210" height="24"/>
+              <text class="d-title" x="28" y="47">Region</text><text class="d-title" x="108" y="47">Month</text><text class="d-title" x="222" y="47" text-anchor="end">Revenue</text>
+              <rect class="d-accent" x="20" y="54" width="80" height="24"/><rect class="d-box" x="100" y="54" width="130" height="24"/>
+              <rect class="d-signal" x="20" y="78" width="80" height="24"/><rect class="d-box" x="100" y="78" width="130" height="24"/>
+              <rect class="d-accent" x="20" y="102" width="80" height="24"/><rect class="d-box" x="100" y="102" width="130" height="24"/>
+              <rect class="d-accent" x="20" y="126" width="80" height="24"/><rect class="d-box" x="100" y="126" width="130" height="24"/>
+              <rect class="d-signal" x="20" y="150" width="80" height="24"/><rect class="d-box" x="100" y="150" width="130" height="24"/>
+              <rect class="d-signal" x="20" y="174" width="80" height="24"/><rect class="d-box" x="100" y="174" width="130" height="24"/>
+              <text class="d-text" x="28" y="71">North</text><text class="d-text" x="108" y="71">Jan</text><text class="d-mono" x="222" y="71" text-anchor="end">140</text>
+              <text class="d-text" x="28" y="95">South</text><text class="d-text" x="108" y="95">Jan</text><text class="d-mono" x="222" y="95" text-anchor="end">144</text>
+              <text class="d-text" x="28" y="119">North</text><text class="d-text" x="108" y="119">Jan</text><text class="d-mono" x="222" y="119" text-anchor="end">180</text>
+              <text class="d-text" x="28" y="143">North</text><text class="d-text" x="108" y="143">Feb</text><text class="d-mono" x="222" y="143" text-anchor="end">120</text>
+              <text class="d-text" x="28" y="167">South</text><text class="d-text" x="108" y="167">Feb</text><text class="d-mono" x="222" y="167" text-anchor="end">168</text>
+              <text class="d-text" x="28" y="191">South</text><text class="d-text" x="108" y="191">Feb</text><text class="d-mono" x="222" y="191" text-anchor="end">112</text>
+              <line class="d-line-accent" x1="240" y1="114" x2="334" y2="114" marker-end="url(#pivots-arrow)"/>
+              <text class="d-label d-text-accent" x="287" y="104" text-anchor="middle">group + SUM</text>
+              <text class="d-label" x="340" y="48">Sum of Revenue</text>
+              <rect class="d-fill" x="340" y="56" width="280" height="28"/>
+              <text class="d-title" x="348" y="75">Region</text><text class="d-title" x="478" y="75" text-anchor="end">Jan</text><text class="d-title" x="544" y="75" text-anchor="end">Feb</text><text class="d-title" x="612" y="75" text-anchor="end">Total</text>
+              <rect class="d-accent" x="340" y="84" width="80" height="30"/><rect class="d-box" x="420" y="84" width="200" height="30"/>
+              <rect class="d-signal" x="340" y="114" width="80" height="30"/><rect class="d-box" x="420" y="114" width="200" height="30"/>
+              <rect class="d-fill" x="340" y="144" width="280" height="30"/>
+              <text class="d-text" x="348" y="104">North</text><text class="d-mono" x="478" y="104" text-anchor="end">320</text><text class="d-mono" x="544" y="104" text-anchor="end">120</text><text class="d-mono" x="612" y="104" text-anchor="end">440</text>
+              <text class="d-text" x="348" y="134">South</text><text class="d-mono" x="478" y="134" text-anchor="end">144</text><text class="d-mono" x="544" y="134" text-anchor="end">280</text><text class="d-mono" x="612" y="134" text-anchor="end">424</text>
+              <text class="d-title" x="348" y="164">Total</text><text class="d-mono" x="478" y="164" text-anchor="end">464</text><text class="d-mono" x="544" y="164" text-anchor="end">400</text><text class="d-mono" x="612" y="164" text-anchor="end">864</text>
+              <text class="d-label" x="340" y="200">North, Jan = 140 + 180 = 320</text>
+              <text class="d-label" x="340" y="218">Rows: Region · Columns: Month · Values: SUM</text>
+            </svg>
+          </div>
+          <figcaption>Six orders become a 2 × 2 grid. Every cell is one group (a region-month pair) with its revenue summed, and the edges are grand totals.</figcaption>
+        </figure>
+
+        <h3>Four drop zones, one query</h3>
+        <p>The field list has four zones. Each maps to part of a SQL query, which is a useful way to check that you asked the question you meant.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 200" role="img" aria-label="Pivot zones map to SQL: Filters to WHERE, Rows to GROUP BY down the side, Columns to GROUP BY across the top, Values to an aggregate function.">
+              <defs>
+                <marker id="pivots-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-box" x="20" y="14" width="150" height="36" rx="6"/><text class="d-title" x="95" y="37" text-anchor="middle">Filters</text>
+              <rect class="d-accent" x="20" y="60" width="150" height="36" rx="6"/><text class="d-title" x="95" y="83" text-anchor="middle">Rows</text>
+              <rect class="d-accent" x="20" y="106" width="150" height="36" rx="6"/><text class="d-title" x="95" y="129" text-anchor="middle">Columns</text>
+              <rect class="d-good" x="20" y="152" width="150" height="36" rx="6"/><text class="d-title" x="95" y="175" text-anchor="middle">Values</text>
+              <line class="d-line" x1="170" y1="32" x2="238" y2="32" marker-end="url(#pivots-arrow2)"/>
+              <line class="d-line" x1="170" y1="78" x2="238" y2="78" marker-end="url(#pivots-arrow2)"/>
+              <line class="d-line" x1="170" y1="124" x2="238" y2="124" marker-end="url(#pivots-arrow2)"/>
+              <line class="d-line" x1="170" y1="170" x2="238" y2="170" marker-end="url(#pivots-arrow2)"/>
+              <text class="d-mono" x="248" y="36">WHERE channel = 'Web'</text>
+              <text class="d-mono" x="248" y="82">GROUP BY region</text><text class="d-label" x="420" y="82">one row per region</text>
+              <text class="d-mono" x="248" y="128">GROUP BY month</text><text class="d-label" x="420" y="128">spread across the top</text>
+              <text class="d-mono" x="248" y="174">SUM(revenue)</text><text class="d-label" x="420" y="174">or COUNT, AVERAGE, MAX</text>
+            </svg>
+          </div>
+          <figcaption>A pivot is a GROUP BY with the second grouping field spread into columns. Filters remove rows before anything is grouped.</figcaption>
+        </figure>
+
+        <p>The twelve cards are the source orders, coloured by the field in Rows. Change the zones and watch the same rows regroup. The readout shows the SQL your pivot is running.</p>
+        <div class="widget" id="pivots-demo">
+          <div class="widget-head">
+            <span class="widget-title">Pivot builder</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="pivots-rows">Rows <select id="pivots-rows"><option value="region" selected>Region</option><option value="month">Month</option><option value="category">Category</option></select></label>
+            <label for="pivots-cols">Columns <select id="pivots-cols"><option value="none" selected>(none)</option><option value="region">Region</option><option value="month">Month</option><option value="category">Category</option></select></label>
+            <label for="pivots-val">Values <select id="pivots-val"><option value="sumrev" selected>Sum of Revenue</option><option value="sumunits">Sum of Units</option><option value="count">Count of Orders</option><option value="avgrev">Average of Revenue</option></select></label>
+            <label for="pivots-filter">Filter region <select id="pivots-filter"><option value="all" selected>(All)</option><option value="North">North</option><option value="South">South</option><option value="West">West</option></select></label>
+          </div>
+          <svg id="pivots-src" viewBox="0 0 580 112" role="img" aria-label="The twelve source orders, coloured by the current row group, with filtered-out orders faded."></svg>
+          <div class="table-wrap" id="pivots-out"></div>
+          <p class="readout" id="pivots-readout"></p>
+        </div>
+
+        <h3>Pick the right aggregation</h3>
+        <p>Sum is the default for numbers, but it is not always the question. Average order value needs Average, "how many orders" needs Count, and "how many customers" needs a distinct count, which in Excel means ticking "Add this data to the Data Model" when you create the pivot.</p>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- The pivot "Rows: region, Columns: month, Values: Sum of revenue" as SQL</span>
+SELECT region,
+       SUM(CASE WHEN month = 'Jan' THEN revenue END) AS jan,
+       SUM(CASE WHEN month = 'Feb' THEN revenue END) AS feb,
+       SUM(revenue)                                  AS total
+FROM orders
+GROUP BY region
+ORDER BY region;</code></pre>
+
+        <pre class="code" data-lang="excel"><code><span class="c">' The same single cell (North, Jan) as a formula, useful for fixed report layouts</span>
+=SUMIFS(Orders[Revenue], Orders[Region], "North", Orders[Month], "Jan")
+<span class="c">' Average order value per region without a pivot</span>
+=AVERAGEIFS(Orders[Revenue], Orders[Region], A2)</code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Question</th><th>Values field</th><th>Aggregation</th></tr></thead>
+            <tbody>
+              <tr><td>How much did we sell?</td><td>Revenue</td><td>Sum</td></tr>
+              <tr><td>How many orders?</td><td>Order ID</td><td>Count</td></tr>
+              <tr><td>What does a typical order look like?</td><td>Revenue</td><td>Average (check the median too)</td></tr>
+              <tr><td>How many customers bought?</td><td>Customer ID</td><td>Distinct count (Data Model)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A pivot is GROUP BY plus an aggregate, with an optional second grouping spread across columns.</li>
+            <li>The source must be flat: one row per record, one header per column, no blank rows or subtotals.</li>
+            <li>Choose the aggregation from the question: sum, count, average or distinct count.</li>
+            <li>Pivots do not update on their own: refresh after the source changes.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Forgetting to refresh, then presenting last week's numbers.</li>
+            <li>A source range of <code>A1:F500</code> that misses new rows. Format the source as a Table so the range grows.</li>
+            <li>Averaging an average: a pivot of "average revenue" over pre-averaged rows weights small groups like big ones.</li>
+            <li>Leaving subtotal rows inside the source data, so every total is counted twice.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="pivots-1"><span>Build a region-by-month revenue pivot and read off one cell</span></label></li>
+          <li><label><input type="checkbox" data-key="pivots-2"><span>Translate any pivot layout into the equivalent SQL</span></label></li>
+          <li><label><input type="checkbox" data-key="pivots-3"><span>Choose Sum, Count, Average or Distinct count for a given question</span></label></li>
+          <li><label><input type="checkbox" data-key="pivots-4"><span>Explain why a pivot shows stale numbers and how to fix it</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://support.microsoft.com/en-us/excel">Excel help &amp; learning (Microsoft Support)</a></li>
+          <li><span class="kind">Docs</span><a href="https://support.google.com/docs">Google Docs Editors Help (Sheets)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="cleaning-sheets">
+        <header class="topic-head">
+          <p class="eyebrow">02.4 · Tidy before you sum</p>
+          <h2>Cleaning data in sheets</h2>
+        </header>
+
+        <p class="lead">Exports from shop platforms, CRMs and survey tools arrive with stray spaces, inconsistent capitals, two fields jammed into one column and numbers stored as text. None of that shows on screen, yet every pivot, lookup and total downstream depends on it. Cleaning is a sequence of small, visible formula steps applied to a copy of the raw data.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>A region typed as "North " with a trailing space becomes its own row in a pivot, and a revenue column stored as text sums to zero. Analysts often spend more time cleaning than analysing, so doing it with repeatable formulas instead of manual edits saves hours every month.</p>
+        </div>
+
+        <h3>One cell, step by step</h3>
+        <p>Build each fix as a helper column so you can see what changed. <code>TEXTSPLIT</code> (Excel 365) or <code>SPLIT</code> (Sheets) breaks "name, city" at the comma. <code>TRIM</code> removes leading and trailing spaces and collapses double spaces inside. <code>PROPER</code> capitalizes each word, while <code>UPPER</code> and <code>LOWER</code> force one case.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 245" role="img" aria-label="A raw cell with extra spaces and mixed case is split at the comma into two cells, trimmed, then converted to proper case, giving Jane Smith and London.">
+              <defs>
+                <marker id="cleaning-sheets-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="37">raw export</text>
+              <rect class="d-signal" x="200" y="16" width="320" height="32" rx="5"/>
+              <text class="d-mono" x="214" y="37"><tspan class="d-text-signal">··</tspan>jane SMITH ,<tspan class="d-text-signal">··</tspan>london<tspan class="d-text-signal">·</tspan></text>
+              <line class="d-line-accent" x1="330" y1="48" x2="277" y2="70" marker-end="url(#cleaning-sheets-arrow)"/>
+              <line class="d-line-accent" x1="390" y1="48" x2="443" y2="70" marker-end="url(#cleaning-sheets-arrow)"/>
+              <text class="d-mono" x="20" y="93">TEXTSPLIT(A2, ",")</text>
+              <rect class="d-box" x="200" y="72" width="150" height="32" rx="5"/><rect class="d-box" x="370" y="72" width="150" height="32" rx="5"/>
+              <text class="d-mono" x="210" y="93"><tspan class="d-text-signal">··</tspan>jane SMITH<tspan class="d-text-signal">·</tspan></text>
+              <text class="d-mono" x="380" y="93"><tspan class="d-text-signal">··</tspan>london<tspan class="d-text-signal">·</tspan></text>
+              <line class="d-line-accent" x1="275" y1="104" x2="275" y2="126" marker-end="url(#cleaning-sheets-arrow)"/>
+              <line class="d-line-accent" x1="445" y1="104" x2="445" y2="126" marker-end="url(#cleaning-sheets-arrow)"/>
+              <text class="d-mono" x="20" y="149">TRIM(…)</text>
+              <rect class="d-box" x="200" y="128" width="150" height="32" rx="5"/><rect class="d-box" x="370" y="128" width="150" height="32" rx="5"/>
+              <text class="d-mono" x="210" y="149">jane SMITH</text>
+              <text class="d-mono" x="380" y="149">london</text>
+              <line class="d-line-accent" x1="275" y1="160" x2="275" y2="182" marker-end="url(#cleaning-sheets-arrow)"/>
+              <line class="d-line-accent" x1="445" y1="160" x2="445" y2="182" marker-end="url(#cleaning-sheets-arrow)"/>
+              <text class="d-mono" x="20" y="205">PROPER(…)</text>
+              <rect class="d-good" x="200" y="184" width="150" height="32" rx="5"/><rect class="d-good" x="370" y="184" width="150" height="32" rx="5"/>
+              <text class="d-mono" x="210" y="205">Jane Smith</text>
+              <text class="d-mono" x="380" y="205">London</text>
+              <text class="d-label" x="540" y="37">· = a space</text>
+              <text class="d-label" x="20" y="236">Each step lives in a helper column, so the raw value is never overwritten.</text>
+            </svg>
+          </div>
+          <figcaption>One messy cell becomes two clean fields: split at the comma, trim the spaces, then fix the capitals. Dots mark the invisible spaces that break matching.</figcaption>
+        </figure>
+
+        <h3>Why invisible differences matter</h3>
+        <p>To a pivot or a lookup, "North" and "North " are different values. A few hundred rows with a trailing space or a typo split one region into several, and each piece looks plausible on its own. Clean the key columns before you group or join on them.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 175" role="img" aria-label="Before cleaning, a pivot shows five region labels including North with a trailing space and a typo Nrth. After TRIM and a typo fix there are two regions, North 52.1 thousand and South 46.0 thousand.">
+              <defs>
+                <marker id="cleaning-sheets-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="20" y="20">Pivot on raw Region ($k)</text>
+              <text class="d-mono" x="82" y="46" text-anchor="end">North</text><rect class="d-dot" x="90" y="35" width="136" height="14" rx="3"/><text class="d-label" x="232" y="46">41.2</text>
+              <text class="d-mono" x="82" y="72" text-anchor="end">North<tspan class="d-text-signal">·</tspan></text><rect class="d-dot-signal" x="90" y="61" width="32" height="14" rx="3"/><text class="d-label" x="128" y="72">9.8</text>
+              <text class="d-mono" x="82" y="98" text-anchor="end">Nrth</text><rect class="d-dot-signal" x="90" y="87" width="4" height="14" rx="2"/><text class="d-label" x="100" y="98">1.1</text>
+              <text class="d-mono" x="82" y="124" text-anchor="end">South</text><rect class="d-dot" x="90" y="113" width="127" height="14" rx="3"/><text class="d-label" x="223" y="124">38.5</text>
+              <text class="d-mono" x="82" y="150" text-anchor="end">South<tspan class="d-text-signal">·</tspan></text><rect class="d-dot-signal" x="90" y="139" width="25" height="14" rx="3"/><text class="d-label" x="121" y="150">7.5</text>
+              <line class="d-line-accent" x1="276" y1="94" x2="336" y2="94" marker-end="url(#cleaning-sheets-arrow2)"/>
+              <text class="d-label d-text-accent" x="306" y="84" text-anchor="middle">TRIM, fix typo</text>
+              <text class="d-title" x="350" y="20">After cleaning ($k)</text>
+              <text class="d-mono" x="402" y="72" text-anchor="end">North</text><rect class="d-dot-good" x="410" y="61" width="172" height="14" rx="3"/><text class="d-label" x="588" y="72">52.1</text>
+              <text class="d-mono" x="402" y="98" text-anchor="end">South</text><rect class="d-dot-good" x="410" y="87" width="152" height="14" rx="3"/><text class="d-label" x="568" y="98">46.0</text>
+              <text class="d-label" x="350" y="140">5 labels become 2 regions.</text>
+              <text class="d-label" x="350" y="158">Totals were never wrong, only split.</text>
+            </svg>
+          </div>
+          <figcaption>Example numbers. Trailing spaces and typos split one region into several pivot rows, so "North" looks 21% smaller than it really is.</figcaption>
+        </figure>
+
+        <p>Six rows from a customer export, with every space that would break matching shown as a dot. Steps run in the order listed. Watch the distinct-city count and the total: <code>SUM</code> skips numbers stored as text, so the total stays at zero until step 4.</p>
+        <div class="widget" id="cleaning-sheets-demo">
+          <div class="widget-head">
+            <span class="widget-title">Cleaning stepper</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="cleaning-split"><input type="checkbox" id="cleaning-split"> 1 · Split at comma</label>
+            <label for="cleaning-trim"><input type="checkbox" id="cleaning-trim"> 2 · TRIM</label>
+            <label for="cleaning-proper"><input type="checkbox" id="cleaning-proper"> 3 · PROPER</label>
+            <label for="cleaning-value"><input type="checkbox" id="cleaning-value"> 4 · Amount to number</label>
+            <label for="cleaning-dedupe"><input type="checkbox" id="cleaning-dedupe"> 5 · Remove duplicates</label>
+            <button class="btn primary" type="button" id="cleaning-next">Apply next step</button>
+            <button class="btn" type="button" id="cleaning-reset">Reset</button>
+          </div>
+          <svg id="cleaning-svg" viewBox="0 0 580 280" role="img" aria-label="A small customer export shown as a table after the selected cleaning steps, with invisible spaces shown as dots, plus the distinct city count and the amount total."></svg>
+          <p class="readout" id="cleaning-readout"></p>
+        </div>
+
+        <h3>Numbers, dates and duplicates</h3>
+        <p>A number stored as text is left-aligned and often shows a small green triangle in Excel. Convert it with <code>VALUE</code> after stripping symbols with <code>SUBSTITUTE</code>. Dates that arrive as text need <code>DATEVALUE</code> or <code>DATE</code> built from pieces. Remove duplicates only after cleaning, otherwise "jane smith" and "Jane Smith" survive as two customers.</p>
+
+        <pre class="code" data-lang="excel"><code><span class="c">' A2 = "  jane SMITH ,  london ", B2 = "$1,200" (text)</span>
+=TRIM(A2)                                           <span class="c">' "jane SMITH , london"</span>
+=PROPER(TRIM(INDEX(TEXTSPLIT(A2, ","), 1)))         <span class="c">' "Jane Smith"  (Excel 365)</span>
+=PROPER(TRIM(INDEX(SPLIT(A2, ","), 1, 2)))          <span class="c">' "London"      (Google Sheets)</span>
+=TRIM(TEXTBEFORE(A2, ","))                          <span class="c">' first part, Excel 365</span>
+=VALUE(SUBSTITUTE(SUBSTITUTE(B2, "$", ""), ",", "")) <span class="c">' 1200 as a real number</span>
+=TRIM(SUBSTITUTE(A2, CHAR(160), " "))               <span class="c">' non-breaking spaces from web pages</span>
+=UNIQUE(C2:C500)                                    <span class="c">' list the distinct cleaned values</span>
+=COUNTIF(C:C, C2) &gt; 1                               <span class="c">' TRUE on rows whose value repeats</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Never edit the raw tab. Clean in helper columns or a second tab so every step can be checked and repeated.</li>
+            <li>TRIM, then fix case, then split or combine, then convert types, then remove duplicates.</li>
+            <li>Invisible differences (spaces, non-breaking spaces, text vs number) break pivots and lookups.</li>
+            <li>Check your work: count distinct values and compare totals before and after.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Fixing values by hand, so next month's export has the same problems and nobody remembers the fixes.</li>
+            <li>Running Remove Duplicates before trimming, so near-duplicates survive.</li>
+            <li>Trusting <code>PROPER</code> blindly: it turns "McDonald" into "Mcdonald" and "IBM" into "Ibm".</li>
+            <li>TRIM not removing a web page's non-breaking space (character 160). Substitute it first.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>For a cleanup you will repeat every month, record the steps once in Power Query (Excel's Data › Get &amp; Transform). Next month you replace the file and click Refresh. The formula approach on this page is the same logic, done by hand.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="cleaning-sheets-1"><span>Split a "name, city" column into two clean columns with formulas</span></label></li>
+          <li><label><input type="checkbox" data-key="cleaning-sheets-2"><span>Spot and convert numbers stored as text</span></label></li>
+          <li><label><input type="checkbox" data-key="cleaning-sheets-3"><span>Explain why trimming must come before removing duplicates</span></label></li>
+          <li><label><input type="checkbox" data-key="cleaning-sheets-4"><span>Verify a cleanup by comparing distinct counts and totals before and after</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://support.microsoft.com/en-us/excel">Excel help &amp; learning (Microsoft Support)</a></li>
+          <li><span class="kind">Docs</span><a href="https://support.google.com/docs/table/25273">Google Sheets function list</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="charts-sheets">
+        <header class="topic-head">
+          <p class="eyebrow">02.5 · Picture the table</p>
+          <h2>Charts in spreadsheets</h2>
+        </header>
+
+        <p class="lead">A chart answers one question about a table. Before you click Insert › Chart, say the question out loud: is it about change over time, comparing categories, parts of a whole or a relationship between two numbers? The question picks the chart type, and the table layout decides what lands on each axis.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Most stakeholders read your chart, not your table. A line chart of monthly revenue makes a dip obvious in a second, while the same numbers in a pie hide it completely. Choosing well and cleaning up the defaults is the cheapest way to make an analysis land.</p>
+        </div>
+
+        <h3>Let the question pick the chart</h3>
+        <p>Four questions cover most business charts. Time goes left to right on a line. Comparisons use bars sorted by size, starting at zero. Parts of a whole use a pie or a 100% bar, and only with two or three parts. Relationships use a scatter plot with one dot per row.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 225" role="img" aria-label="Four questions mapped to chart types: change over time to a line chart, comparing categories to a bar chart, share of a whole to a pie or 100 percent bar, and two numbers moving together to a scatter plot.">
+              <defs>
+                <marker id="charts-sheets-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <text class="d-text" x="20" y="41">How did it change over time?</text>
+              <text class="d-text" x="20" y="93">Which category is bigger?</text>
+              <text class="d-text" x="20" y="145">What share of the whole?</text>
+              <text class="d-text" x="20" y="197">Do two numbers move together?</text>
+              <line class="d-line" x1="280" y1="36" x2="340" y2="36" marker-end="url(#charts-sheets-arrow)"/>
+              <line class="d-line" x1="280" y1="88" x2="340" y2="88" marker-end="url(#charts-sheets-arrow)"/>
+              <line class="d-line" x1="280" y1="140" x2="340" y2="140" marker-end="url(#charts-sheets-arrow)"/>
+              <line class="d-line" x1="280" y1="192" x2="340" y2="192" marker-end="url(#charts-sheets-arrow)"/>
+              <rect class="d-box" x="350" y="14" width="80" height="44" rx="6"/>
+              <polyline class="d-line-accent" points="358,50 378,40 398,44 420,24"/>
+              <rect class="d-box" x="350" y="66" width="80" height="44" rx="6"/>
+              <rect class="d-dot" x="360" y="80" width="12" height="24" rx="2"/><rect class="d-dot" x="378" y="86" width="12" height="18" rx="2"/><rect class="d-dot" x="396" y="92" width="12" height="12" rx="2"/><rect class="d-dot" x="414" y="96" width="12" height="8" rx="2"/>
+              <rect class="d-box" x="350" y="118" width="80" height="44" rx="6"/>
+              <circle class="d-accent" cx="390" cy="140" r="16"/>
+              <path class="d-dot" d="M390,140 L390,124 A16,16 0 0,1 405.2,144.9 Z"/>
+              <rect class="d-box" x="350" y="170" width="80" height="44" rx="6"/>
+              <circle class="d-dot" cx="362" cy="204" r="2.8"/><circle class="d-dot" cx="372" cy="198" r="2.8"/><circle class="d-dot" cx="382" cy="200" r="2.8"/><circle class="d-dot" cx="392" cy="190" r="2.8"/><circle class="d-dot" cx="404" cy="186" r="2.8"/><circle class="d-dot" cx="414" cy="180" r="2.8"/><circle class="d-dot" cx="420" cy="184" r="2.8"/>
+              <text class="d-title" x="446" y="34">Line chart</text><text class="d-label" x="446" y="50">time on the x-axis</text>
+              <text class="d-title" x="446" y="86">Bar / column</text><text class="d-label" x="446" y="102">sorted, axis starts at 0</text>
+              <text class="d-title" x="446" y="138">Pie or 100% bar</text><text class="d-label" x="446" y="154">two or three parts only</text>
+              <text class="d-title" x="446" y="190">Scatter plot</text><text class="d-label" x="446" y="206">one dot per row</text>
+            </svg>
+          </div>
+          <figcaption>Name the question first. Each of the four common business questions has one chart that answers it best.</figcaption>
+        </figure>
+
+        <h3>Lay out the data so the chart reads it right</h3>
+        <p>Spreadsheets build a chart from the selected block. By default, the first column becomes the categories on the x-axis and each header in the top row becomes a series in the legend. If months end up in the legend, use Switch Row/Column in Excel or "Switch rows / columns" in the Sheets chart editor.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 210" role="img" aria-label="A table with months in the first column and Web and Store in the header row becomes a column chart with months on the x-axis and Web and Store as two series.">
+              <defs>
+                <marker id="charts-sheets-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label d-text-accent" x="125" y="22">series → legend</text>
+              <rect class="d-fill" x="20" y="30" width="70" height="26"/>
+              <rect class="d-accent" x="90" y="30" width="70" height="26"/><rect class="d-accent" x="160" y="30" width="70" height="26"/>
+              <text class="d-title" x="28" y="48">Month</text><text class="d-title" x="98" y="48">Web</text><text class="d-title" x="168" y="48">Store</text>
+              <rect class="d-good" x="20" y="56" width="70" height="104"/>
+              <rect class="d-box" x="90" y="56" width="140" height="104"/>
+              <text class="d-text" x="28" y="74">Jan</text><text class="d-mono" x="150" y="74" text-anchor="end">42</text><text class="d-mono" x="220" y="74" text-anchor="end">38</text>
+              <text class="d-text" x="28" y="100">Feb</text><text class="d-mono" x="150" y="100" text-anchor="end">45</text><text class="d-mono" x="220" y="100" text-anchor="end">36</text>
+              <text class="d-text" x="28" y="126">Mar</text><text class="d-mono" x="150" y="126" text-anchor="end">51</text><text class="d-mono" x="220" y="126" text-anchor="end">37</text>
+              <text class="d-text" x="28" y="152">Apr</text><text class="d-mono" x="150" y="152" text-anchor="end">48</text><text class="d-mono" x="220" y="152" text-anchor="end">35</text>
+              <text class="d-label d-text-good" x="20" y="180">categories → x-axis</text>
+              <text class="d-label" x="20" y="198">Revenue, $k (example)</text>
+              <line class="d-line-accent" x1="240" y1="110" x2="310" y2="110" marker-end="url(#charts-sheets-arrow2)"/>
+              <text class="d-label" x="275" y="100" text-anchor="middle">Insert › Chart</text>
+              <line class="d-line" x1="330" y1="170" x2="620" y2="170"/>
+              <line class="d-line" x1="330" y1="50" x2="330" y2="170"/>
+              <rect class="d-dot" x="350" y="86" width="20" height="84"/><rect class="d-dot-signal" x="372" y="94" width="20" height="76"/>
+              <rect class="d-dot" x="420" y="80" width="20" height="90"/><rect class="d-dot-signal" x="442" y="98" width="20" height="72"/>
+              <rect class="d-dot" x="490" y="68" width="20" height="102"/><rect class="d-dot-signal" x="512" y="96" width="20" height="74"/>
+              <rect class="d-dot" x="560" y="74" width="20" height="96"/><rect class="d-dot-signal" x="582" y="100" width="20" height="70"/>
+              <text class="d-label" x="371" y="186" text-anchor="middle">Jan</text><text class="d-label" x="441" y="186" text-anchor="middle">Feb</text><text class="d-label" x="511" y="186" text-anchor="middle">Mar</text><text class="d-label" x="581" y="186" text-anchor="middle">Apr</text>
+              <rect class="d-dot" x="500" y="28" width="10" height="10"/><text class="d-label" x="514" y="37">Web</text>
+              <rect class="d-dot-signal" x="556" y="28" width="10" height="10"/><text class="d-label" x="570" y="37">Store</text>
+            </svg>
+          </div>
+          <figcaption>First column → categories, header row → series. Keep the table tidy (one header row, no merged cells, no totals row) and the chart builds itself correctly.</figcaption>
+        </figure>
+
+        <p>The data is six months of example revenue for two channels, web and store, in $k. Each question uses the slice of the table it needs. Try every chart type on every question and read the verdict.</p>
+        <div class="widget" id="charts-sheets-demo">
+          <div class="widget-head">
+            <span class="widget-title">Chart-type picker</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="charts-q">Question <select id="charts-q"><option value="trend" selected>How did revenue change, Jan to Jun?</option><option value="compare">Which channel sold more in total?</option><option value="share">What share of June revenue was web?</option><option value="relation">When web is high, is store low?</option></select></label>
+            <label for="charts-type">Chart <select id="charts-type"><option value="column">Column</option><option value="line">Line</option><option value="pie" selected>Pie</option><option value="scatter">Scatter</option></select></label>
+          </div>
+          <svg id="charts-svg" viewBox="0 0 580 260" role="img" aria-label="The small sales table drawn as the selected chart type for the selected question, with a verdict on how well it fits."></svg>
+          <p class="readout" id="charts-readout"></p>
+        </div>
+
+        <h3>Strip the defaults</h3>
+        <p>Default charts carry clutter: gridlines, a legend you could replace with direct labels, a title that names the data instead of the finding. Rename the title to the takeaway ("Web revenue grew 50% while store slipped"), label the series at the line ends, and remove anything that does not help the reader compare.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Chart</th><th>Use for</th><th>Avoid when</th></tr></thead>
+            <tbody>
+              <tr><td>Line</td><td>Trends over ordered time</td><td>Categories have no natural order</td></tr>
+              <tr><td>Column / bar</td><td>Comparing categories or a few periods</td><td>The axis does not start at zero</td></tr>
+              <tr><td>Stacked or 100% bar</td><td>Composition across groups</td><td>You need to compare the middle segments</td></tr>
+              <tr><td>Pie</td><td>One whole split into 2–3 parts</td><td>More than 3 slices or comparing pies</td></tr>
+              <tr><td>Scatter</td><td>Relationship between two measures</td><td>One axis is time (use a line)</td></tr>
+              <tr><td>Combo (two axes)</td><td>Two units, e.g. revenue and conversion rate</td><td>It invites false visual correlations</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre class="code" data-lang="excel"><code><span class="c">' Google Sheets: tiny in-cell charts next to each row of a table</span>
+=SPARKLINE(B2:G2)                                   <span class="c">' line by default</span>
+=SPARKLINE(B2:G2, {"charttype", "column"})
+=SPARKLINE(H2, {"charttype", "bar"; "max", MAX(H$2:H$20)})  <span class="c">' share-of-max bar</span>
+<span class="c">' Excel: Insert › Sparklines › Line, then pick the data range B2:G2</span></code></pre>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Choose the chart from the question: time → line, compare → bar, share → pie or 100% bar, relationship → scatter.</li>
+            <li>First column becomes categories, header row becomes series; switch rows and columns if they land wrong.</li>
+            <li>Bars start at zero. Lines may zoom in, but say so.</li>
+            <li>Make the title the finding, and label series directly instead of using a legend.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>A pie with ten slices, where nobody can tell 11% from 13%.</li>
+            <li>A column chart with a truncated axis that makes a 3% difference look like 300%.</li>
+            <li>Charting a range that includes the totals row, so the last bar dwarfs the rest.</li>
+            <li>3-D effects, which distort the sizes you are asking people to compare.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="charts-sheets-1"><span>Name the right chart for a trend, a comparison, a share and a relationship</span></label></li>
+          <li><label><input type="checkbox" data-key="charts-sheets-2"><span>Fix a chart whose series and categories came out swapped</span></label></li>
+          <li><label><input type="checkbox" data-key="charts-sheets-3"><span>Rewrite a default chart title as a one-line finding</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://support.microsoft.com/en-us/excel">Excel help &amp; learning (Microsoft Support)</a></li>
+          <li><span class="kind">Docs</span><a href="https://support.google.com/docs">Google Docs Editors Help (Sheets)</a></li>
+          <li><span class="kind">Book</span><a href="https://www.storytellingwithdata.com/">Storytelling with Data (Cole Nussbaumer Knaflic)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="what-if">
+        <header class="topic-head">
+          <p class="eyebrow">02.6 · Model the decision</p>
+          <h2>What-if analysis &amp; models</h2>
+        </header>
+
+        <p class="lead">A spreadsheet model turns a few assumptions into an answer: price, cost and demand go in, monthly profit comes out. Once it is built, you can ask "what if?" by changing one input, by laying out a whole table of inputs at once, or by working backwards from the answer you need to the input that produces it.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>"Should we raise the price?", "how many customers do we need to break even?", "what if shipping costs go up 10%?" These questions come to analysts constantly. A small, transparent model lets you answer in minutes and show exactly which assumption drives the result.</p>
+        </div>
+
+        <h3>Inputs, calculations, outputs</h3>
+        <p>Keep the three apart. <strong>Inputs</strong> are typed numbers, coloured so everyone knows they may be changed. <strong>Calculations</strong> are formulas that only reference inputs or other calculations. <strong>Outputs</strong> are the few numbers the decision depends on. Never type a number into a calculation cell.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 215" role="img" aria-label="A pricing model: five input cells feed three calculation cells, units, revenue and costs, which feed one output cell, profit of 5,000 dollars a month.">
+              <defs>
+                <marker id="what-if-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-title d-text-accent" x="20" y="22">Inputs</text>
+              <rect class="d-accent" x="20" y="32" width="190" height="26" rx="4"/><text class="d-text" x="28" y="50">B2 Price</text><text class="d-mono" x="202" y="50" text-anchor="end">$25</text>
+              <rect class="d-accent" x="20" y="62" width="190" height="26" rx="4"/><text class="d-text" x="28" y="80">B3 Unit cost</text><text class="d-mono" x="202" y="80" text-anchor="end">$12</text>
+              <rect class="d-accent" x="20" y="92" width="190" height="26" rx="4"/><text class="d-text" x="28" y="110">B4 Fixed cost</text><text class="d-mono" x="202" y="110" text-anchor="end">$8,000</text>
+              <rect class="d-accent" x="20" y="122" width="190" height="26" rx="4"/><text class="d-text" x="28" y="140">B5 Base demand</text><text class="d-mono" x="202" y="140" text-anchor="end">2,000</text>
+              <rect class="d-accent" x="20" y="152" width="190" height="26" rx="4"/><text class="d-text" x="28" y="170">B6 Lost per $1</text><text class="d-mono" x="202" y="170" text-anchor="end">40</text>
+              <line class="d-line-accent" x1="210" y1="105" x2="248" y2="105" marker-end="url(#what-if-arrow)"/>
+              <text class="d-title" x="250" y="22">Calculations</text>
+              <rect class="d-box" x="250" y="56" width="200" height="30" rx="4"/><text class="d-text" x="258" y="76">Units</text><text class="d-mono" x="308" y="76">=B5-B6*B2</text><text class="d-mono" x="442" y="76" text-anchor="end">1,000</text>
+              <rect class="d-box" x="250" y="92" width="200" height="30" rx="4"/><text class="d-text" x="258" y="112">Revenue</text><text class="d-mono" x="322" y="112">=B2*D2</text><text class="d-mono" x="442" y="112" text-anchor="end">25,000</text>
+              <rect class="d-box" x="250" y="128" width="200" height="30" rx="4"/><text class="d-text" x="258" y="148">Costs</text><text class="d-mono" x="308" y="148">=B3*D2+B4</text><text class="d-mono" x="442" y="148" text-anchor="end">20,000</text>
+              <line class="d-line-accent" x1="450" y1="107" x2="488" y2="107" marker-end="url(#what-if-arrow)"/>
+              <text class="d-title d-text-good" x="490" y="22">Output</text>
+              <rect class="d-good" x="490" y="76" width="130" height="62" rx="6"/>
+              <text class="d-title" x="555" y="98" text-anchor="middle">Profit / month</text>
+              <text class="d-mono" x="555" y="126" text-anchor="middle">$5,000</text>
+              <text class="d-label" x="20" y="204">Example model. Change only the input cells; every calculation downstream updates.</text>
+            </svg>
+          </div>
+          <figcaption>A pricing model laid out as inputs → calculations → output. The demand assumption (2,000 units at $0, minus 40 units per $1 of price) is illustrative.</figcaption>
+        </figure>
+
+        <div class="formula">
+          \[ \text{profit}(p) = (p - c)\,(2000 - 40p) - F \qquad p^{*} = \frac{50 + c}{2} \]
+          <span class="formula-note">\(p\) is price, \(c\) unit cost, \(F\) fixed cost per month. Setting the derivative to zero gives the profit-maximizing price \(p^{*}\): with \(c = 12\) it is $31, and only half of any cost increase is passed on to the price.</span>
+        </div>
+
+        <h3>Data tables and Goal Seek</h3>
+        <p>A <strong>data table</strong> (Data › What-If Analysis › Data Table in Excel) recalculates the model for a whole column of input values, so you see profit at $20, $25, $30 and beyond at once. <strong>Goal Seek</strong> runs the model backwards: set profit to $3,000 by changing price, and Excel searches for the price that gets there. Because profit rises and then falls, two prices work, and Goal Seek returns the one nearest your starting value.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 228" role="img" aria-label="Profit plotted against price is an arch peaking at 6,440 dollars at a price of 31. A target line at 3,000 dollars crosses the curve twice, near 21.73 and 40.27 dollars.">
+              <line class="d-grid" x1="60" y1="20" x2="600" y2="20"/>
+              <line class="d-line" x1="60" y1="92" x2="600" y2="92"/>
+              <line class="d-line" x1="60" y1="20" x2="60" y2="200"/>
+              <line class="d-line-signal d-dash" x1="60" y1="65" x2="600" y2="65"/>
+              <text class="d-label d-text-signal" x="596" y="59" text-anchor="end">target $3,000</text>
+              <path class="d-line-accent" d="M60.0,192.8 L73.5,178.0 L87.0,164.0 L100.5,150.7 L114.0,138.1 L127.5,126.2 L141.0,115.0 L154.5,104.6 L168.0,94.9 L181.5,85.9 L195.0,77.6 L208.5,70.0 L222.0,63.2 L235.5,57.1 L249.0,51.7 L262.5,47.0 L276.0,43.0 L289.5,39.8 L303.0,37.3 L316.5,35.5 L330.0,34.4 L343.5,34.0 L357.0,34.4 L370.5,35.5 L384.0,37.3 L397.5,39.8 L411.0,43.0 L424.5,47.0 L438.0,51.7 L451.5,57.1 L465.0,63.2 L478.5,70.0 L492.0,77.6 L505.5,85.9 L519.0,94.9 L532.5,104.6 L546.0,115.0 L559.5,126.2 L573.0,138.1 L586.5,150.7 L600.0,164.0"/>
+              <circle class="d-dot-good" cx="343.5" cy="34" r="5"/>
+              <text class="d-label d-text-good" x="343.5" y="16" text-anchor="middle">max $6,440 at $31</text>
+              <circle class="d-dot-signal" cx="218.4" cy="65" r="5"/>
+              <circle class="d-dot-signal" cx="468.6" cy="65" r="5"/>
+              <text class="d-label" x="212" y="84" text-anchor="end">$21.73</text>
+              <text class="d-label" x="476" y="84">$40.27</text>
+              <circle class="d-dot" cx="262.5" cy="47" r="4"/>
+              <text class="d-label" x="256" y="40" text-anchor="end">now: $25</text>
+              <text class="d-label" x="54" y="24" text-anchor="end">$8k</text>
+              <text class="d-label" x="54" y="96" text-anchor="end">$0</text>
+              <text class="d-label" x="54" y="200" text-anchor="end">−$12k</text>
+              <text class="d-label" x="60" y="216" text-anchor="middle">$10</text><text class="d-label" x="195" y="216" text-anchor="middle">$20</text><text class="d-label" x="330" y="216" text-anchor="middle">$30</text><text class="d-label" x="465" y="216" text-anchor="middle">$40</text><text class="d-label" x="600" y="216" text-anchor="middle">$50</text>
+            </svg>
+          </div>
+          <figcaption>Profit against price for the example model. Goal Seek for $3,000 can land on either crossing, depending on where it starts; the peak is where a data table shows profit flattening out.</figcaption>
+        </figure>
+
+        <p>Drag the price and watch the dot ride the curve; the table on the right is a one-variable data table that refreshes with every input. Then set a profit goal and press Goal Seek to see the search home in on a price.</p>
+        <div class="widget" id="what-if-demo">
+          <div class="widget-head">
+            <span class="widget-title">Pricing model with data table and Goal Seek</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="whatif-price">Price <input type="range" id="whatif-price" min="10" max="50" step="0.01" value="25"><output id="whatif-price-out">$25.00</output></label>
+            <label for="whatif-cost">Unit cost <input type="range" id="whatif-cost" min="6" max="20" step="1" value="12"><output id="whatif-cost-out">$12</output></label>
+            <label for="whatif-fixed">Fixed cost <input type="range" id="whatif-fixed" min="4000" max="12000" step="500" value="8000"><output id="whatif-fixed-out">$8,000</output></label>
+            <label for="whatif-target">Goal: profit = <input type="number" id="whatif-target" value="0" step="500" style="width:7em"></label>
+            <button class="btn primary" type="button" id="whatif-seek">Goal Seek price</button>
+          </div>
+          <svg id="whatif-svg" viewBox="0 0 580 260" role="img" aria-label="Profit against price for the current inputs, with the current price marked, the goal line, and a one-variable data table of profit at six prices."></svg>
+          <p class="readout" id="whatif-readout"></p>
+        </div>
+
+        <pre class="code" data-lang="excel"><code><span class="c">' Inputs in B2:B6 as in the diagram. Calculations:</span>
+D2: =B5-B6*B2          <span class="c">' units sold</span>
+D3: =B2*D2             <span class="c">' revenue</span>
+D4: =B3*D2+B4          <span class="c">' total cost</span>
+F2: =D3-D4             <span class="c">' profit (the output)</span>
+
+<span class="c">' One-variable data table: prices in H3:H8, a link to the output above the results</span>
+I2: =F2
+<span class="c">' Select H2:I8 › Data › What-If Analysis › Data Table › Column input cell: B2</span>
+
+<span class="c">' Goal Seek: Data › What-If Analysis › Goal Seek</span>
+<span class="c">'   Set cell: F2   To value: 3000   By changing cell: B2</span></code></pre>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tool</th><th>Answers</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Data table</td><td>"What is profit at each of these prices?"</td><td>One or two inputs; recalculates live. Sheets has no built-in command, so build the grid with formulas.</td></tr>
+              <tr><td>Goal Seek</td><td>"Which price gives exactly $3,000?"</td><td>One input, one target; returns one solution near the start value.</td></tr>
+              <tr><td>Scenario Manager</td><td>"Best, base and worst case side by side"</td><td>Saves named sets of inputs; a simple scenarios table works too.</td></tr>
+              <tr><td>Solver (add-in)</td><td>"Best price under constraints"</td><td>Optimizes several inputs with limits, e.g. price ≤ $40.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Separate inputs, calculations and outputs, and colour the inputs.</li>
+            <li>A data table shows the output across many input values at once.</li>
+            <li>Goal Seek works backwards from a target to one input, and returns only one of possibly several answers.</li>
+            <li>The model is only as good as its assumptions: say which ones are guesses.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Hard-coding an assumption inside a formula, where nobody can find or change it.</li>
+            <li>Reporting Goal Seek's answer without noticing a second, better solution on the other side of the peak.</li>
+            <li>Presenting a model's output to the dollar when the demand assumption is a rough guess.</li>
+            <li>Leaving a large data table on automatic calculation, which slows every edit in a big workbook.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="what-if-1"><span>Lay out a small model with clearly separate inputs, calculations and outputs</span></label></li>
+          <li><label><input type="checkbox" data-key="what-if-2"><span>Build a one-variable data table for profit across six prices</span></label></li>
+          <li><label><input type="checkbox" data-key="what-if-3"><span>Use Goal Seek for a break-even price and explain why there may be two answers</span></label></li>
+          <li><label><input type="checkbox" data-key="what-if-4"><span>Say which assumption in your model moves the output the most</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://support.microsoft.com/en-us/excel">Excel help &amp; learning (Microsoft Support)</a></li>
+          <li><span class="kind">Guide</span><a href="https://exceljet.net/">Exceljet: formula and function guides</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Clean and summarize a sales export</h4><p>Download a public sample sales dataset (or export your own bank transactions). Keep the raw tab untouched, build a cleaned tab with TRIM, PROPER and VALUE, then answer three questions with one pivot table each.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>A refreshable monthly report</h4><p>Build a workbook where you paste a new month's export into one tab and the lookups, pivots and charts update after a refresh. Add a one-line takeaway above each chart and a data-check cell that flags blanks, #N/A values and row-count changes.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>A pricing what-if model</h4><p>Model a subscription product with clearly separated inputs, calculations and outputs. Add a two-variable data table for price and churn, three named scenarios, and a Goal Seek answer to "what price breaks even?". Write half a page explaining which assumption matters most.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Write a formula once and fill it across a whole table, choosing relative, absolute and mixed references on purpose</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Join two tables with XLOOKUP or INDEX/MATCH and explain every #N/A you get</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Answer a "by region by month" question with a pivot in under a minute, and say what SQL it equals</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Turn a messy export into a clean table without touching the raw data</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Pick a chart that fits the question and strip its defaults down to the message</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Build a small model with separate inputs and use a data table and Goal Seek to answer what-if questions</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 02. Shared helpers first, then one IIFE per widget. */
+var DA02 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function num(v, d) { return Number(v).toLocaleString("en-US", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+  function money(v, d) { return (v < 0 ? "−$" : "$") + num(Math.abs(v), d); }
+  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  function marker(defs, id, cls) {
+    var m = svg("marker", { id: id, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+    svg("path", { d: "M0,0 L10,5 L0,10 z", "class": cls }, m);
+  }
+  return { svg: svg, text: text, clear: clear, num: num, money: money, reduced: reduced, marker: marker };
+})();
+
+/* ---------- 02.1 relative / absolute / mixed references ---------- */
+(function () {
+  if (!document.getElementById("formulas-demo")) return;
+  var H = DA02, S = H.svg, w = document.getElementById("formulas-demo");
+  var plot = document.getElementById("formulas-grid"), fOut = document.getElementById("formulas-f"), ro = document.getElementById("formulas-readout");
+  var box = { ca: document.getElementById("formulas-ca"), ra: document.getElementById("formulas-ra"), cb: document.getElementById("formulas-cb"), rb: document.getElementById("formulas-rb") };
+  var units = [10, 20, 50, 100], prices = [4, 5, 6], COLS = "ABCD";
+  var shown = 12, sel = { c: 3, r: 5 }, timer = null;
+  var X = [34, 124, 264, 404, 544], Y0 = 26, RH = 42;
+  function st() { return { ca: box.ca.checked, ra: box.ra.checked, cb: box.cb.checked, rb: box.rb.checked }; }
+  function ref(colAbs, col, rowAbs, row) { return (colAbs ? "$" : "") + COLS[col] + (rowAbs ? "$" : "") + row; }
+  function refsFor(c, r, s) {
+    var dc = c - 1, dr = r - 2;
+    return [{ col: s.ca ? 0 : dc, row: s.ra ? 2 : 2 + dr }, { col: s.cb ? 1 : 1 + dc, row: s.rb ? 1 : 1 + dr }];
+  }
+  function val(col, row, s, memo, depth) {
+    if (depth > 30) return { err: "#REF!" };
+    if (col === 0 && row === 1) return { err: "#VALUE!" };
+    if (col === 0 && row >= 2 && row <= 5) return { v: units[row - 2] };
+    if (row === 1 && col >= 1 && col <= 3) return { v: prices[col - 1] };
+    if (col >= 1 && col <= 3 && row >= 2 && row <= 5) return cell(col, row, s, memo, depth + 1);
+    return { v: 0 };
+  }
+  function cell(c, r, s, memo, depth) {
+    var k = c + "," + r;
+    if (memo[k]) return memo[k];
+    var rf = refsFor(c, r, s), a = val(rf[0].col, rf[0].row, s, memo, depth || 0), b = val(rf[1].col, rf[1].row, s, memo, depth || 0);
+    var res = a.err ? { err: a.err } : b.err ? { err: b.err } : { v: a.v * b.v };
+    res.f = "=" + ref(s.ca, rf[0].col, s.ra, rf[0].row) + "*" + ref(s.cb, rf[1].col, s.rb, rf[1].row);
+    res.refs = rf;
+    memo[k] = res;
+    return res;
+  }
+  function fmt(r) {
+    if (r.err) return r.err;
+    var v = r.v;
+    if (Math.abs(v) >= 1e9) return v.toExponential(1);
+    if (Math.abs(v) >= 1e6) return (v / 1e6).toFixed(1) + "M";
+    return H.num(v);
+  }
+  function cx(col) { return (X[col] + X[col + 1]) / 2; }
+  function cy(row) { return Y0 + (row - 1) * RH + RH / 2; }
+  function draw() {
+    var s = st(), memo = {}, correct = 0, order = 0;
+    fOut.textContent = "=" + ref(s.ca, 0, s.ra, 2) + "*" + ref(s.cb, 1, s.rb, 1);
+    H.clear(plot);
+    var defs = S("defs", {}, plot);
+    H.marker(defs, "formulas-demo-arrow", "d-head-accent");
+    for (var col = 0; col < 4; col++) H.text(plot, cx(col), 20, COLS[col], "d-label", "middle");
+    for (var row = 1; row <= 5; row++) H.text(plot, 22, cy(row) + 4, String(row), "d-label", "middle");
+    S("rect", { x: X[0], y: Y0, width: X[1] - X[0], height: RH, "class": "d-fill" }, plot);
+    H.text(plot, X[0] + 8, Y0 + 17, "units ↓", "d-label");
+    H.text(plot, X[0] + 8, Y0 + 33, "price →", "d-label");
+    prices.forEach(function (p, i) {
+      S("rect", { x: X[i + 1], y: Y0, width: X[i + 2] - X[i + 1], height: RH, "class": "d-accent" }, plot);
+      H.text(plot, cx(i + 1), cy(1) + 5, "$" + p, "d-title", "middle");
+    });
+    units.forEach(function (u, i) {
+      S("rect", { x: X[0], y: Y0 + (i + 1) * RH, width: X[1] - X[0], height: RH, "class": "d-accent" }, plot);
+      H.text(plot, cx(0), cy(i + 2) + 5, String(u), "d-title", "middle");
+    });
+    for (var r = 2; r <= 5; r++) {
+      for (var c = 1; c <= 3; c++) {
+        var res = cell(c, r, s, memo), ok = !res.err && res.v === units[r - 2] * prices[c - 1];
+        if (ok) correct++;
+        var vis = order++ < shown;
+        var g = S("g", { "data-c": c, "data-r": r, tabindex: 0, role: "button", "aria-label": "Cell " + COLS[c] + r, style: "cursor:pointer" }, plot);
+        S("rect", { x: X[c], y: Y0 + (r - 1) * RH, width: X[c + 1] - X[c], height: RH, "class": vis ? (ok ? "d-good" : "d-signal") : "d-box" }, g);
+        if (vis) {
+          H.text(g, X[c] + 7, Y0 + (r - 1) * RH + 16, res.f, "d-mono");
+          H.text(g, X[c + 1] - 7, Y0 + (r - 1) * RH + 34, fmt(res) + (ok ? " ✓" : " ✗"), ok ? "d-label d-text-good" : "d-label d-text-signal", "end");
+        }
+        if (sel.c === c && sel.r === r) S("rect", { x: X[c] + 1.5, y: Y0 + (r - 1) * RH + 1.5, width: X[c + 1] - X[c] - 3, height: RH - 3, fill: "none", "class": "d-line-accent" }, g);
+      }
+    }
+    var sr = cell(sel.c, sel.r, s, memo);
+    if (order > 0 && (sel.r - 2) * 3 + sel.c - 1 < shown) {
+      sr.refs.forEach(function (q) {
+        S("line", { x1: cx(sel.c), y1: cy(sel.r), x2: cx(q.col), y2: cy(q.row), "class": "d-line-accent", "stroke-dasharray": "4 3", "marker-end": "url(#formulas-demo-arrow)" }, plot);
+      });
+    }
+    w.dataset.correct = shown >= 12 ? String(correct) : "0";
+    var want = units[sel.r - 2] * prices[sel.c - 1];
+    ro.textContent = COLS[sel.c] + sel.r + " holds " + sr.f + " = " + fmt(sr) + " (should be " + H.num(want) + "). Correct cells: " + correct + " of 12." + (correct === 12 ? " Every copy points at its own row's units and its own column's price." : " Click any cell to see where its references point.");
+  }
+  plot.addEventListener("click", function (e) {
+    var g = e.target.closest && e.target.closest("g[data-c]");
+    if (!g) return;
+    sel = { c: +g.getAttribute("data-c"), r: +g.getAttribute("data-r") };
+    draw();
+  });
+  plot.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var g = e.target.closest && e.target.closest("g[data-c]");
+    if (!g) return;
+    e.preventDefault();
+    sel = { c: +g.getAttribute("data-c"), r: +g.getAttribute("data-r") };
+    draw();
+  });
+  Object.keys(box).forEach(function (k) { box[k].addEventListener("change", function () { shown = 12; draw(); }); });
+  document.getElementById("formulas-play").addEventListener("click", function () {
+    if (timer) clearInterval(timer);
+    if (H.reduced()) { shown = 12; draw(); return; }
+    shown = 0; draw();
+    timer = setInterval(function () { shown++; draw(); if (shown >= 12) { clearInterval(timer); timer = null; } }, 230);
+  });
+  draw();
+})();
+
+/* ---------- 02.2 lookup explorer ---------- */
+(function () {
+  if (!document.getElementById("lookups-demo")) return;
+  var H = DA02, S = H.svg, w = document.getElementById("lookups-demo");
+  var plot = document.getElementById("lookups-svg"), ro = document.getElementById("lookups-readout");
+  var keyIn = document.getElementById("lookups-key"), fnSel = document.getElementById("lookups-fn"), fieldSel = document.getElementById("lookups-field"),
+      nfIn = document.getElementById("lookups-nf"), ins = document.getElementById("lookups-insert");
+  var rows = [["P-101", "Kiln Co", "Ceramic mug", "Mugs", 14], ["P-102", "Loom Ltd", "Logo tee", "Apparel", 22], ["P-103", "PrintHub", "Art print", "Prints", 24],
+    ["P-104", "Kiln Co", "Travel mug", "Mugs", 18], ["P-105", "Loom Ltd", "Hoodie", "Apparel", 45]];
+  var NAMES = ["SKU", "Supplier", "Product", "Category", "Price"], FIELD = { product: 2, category: 3, price: 4 }, ORIG = { product: 2, category: 3, price: 4 };
+  function show(v, k) { return k === 4 ? v.toFixed(2) : v; }
+  function draw() {
+    var key = keyIn.value, fn = fnSel.value, field = fieldSel.value, nf = nfIn.value, inserted = ins.checked;
+    var cols = inserted ? [0, 1, 2, 3, 4] : [0, 2, 3, 4], widths = inserted ? [70, 90, 110, 100, 80] : [80, 130, 110, 90];
+    var letters = "ABCDE", last = letters[cols.length - 1];
+    var hit = -1;
+    rows.forEach(function (r, i) { if (hit < 0 && r[0].toLowerCase() === key.toLowerCase()) hit = i; });
+    var retPos = fn === "vlookup" ? ORIG[field] - 1 : cols.indexOf(FIELD[field]);
+    var retKey = cols[retPos], retLetter = letters[retPos];
+    var formula, result, ok = false;
+    var q = '"' + key + '"';
+    if (fn === "vlookup") formula = "=VLOOKUP(" + q + ", A2:" + last + "6, " + ORIG[field] + ", FALSE)";
+    else if (fn === "index") formula = "=INDEX(" + retLetter + "2:" + retLetter + "6, MATCH(" + q + ", A2:A6, 0))";
+    else formula = "=XLOOKUP(" + q + ", A2:A6, " + retLetter + "2:" + retLetter + "6" + (nf !== "" ? ', "' + nf + '"' : "") + ")";
+    if (hit < 0) result = (fn === "xlookup" && nf !== "") ? nf : "#N/A";
+    else { result = String(show(rows[hit][retKey], retKey)); ok = retKey === FIELD[field]; }
+    H.clear(plot);
+    var x0 = 20, x = x0, xs = [];
+    widths.forEach(function (wd) { xs.push(x); x += wd; });
+    var tw = x - x0, top = 40, rh = 28;
+    cols.forEach(function (k, i) {
+      H.text(plot, xs[i] + widths[i] / 2, 18, letters[i], "d-label", "middle");
+      if (fn === "vlookup") H.text(plot, xs[i] + widths[i] / 2, 33, "col " + (i + 1), i === retPos ? "d-label d-text-accent" : "d-label", "middle");
+    });
+    S("rect", { x: x0, y: top, width: tw, height: rh, "class": "d-fill" }, plot);
+    S("rect", { x: xs[0], y: top + rh, width: widths[0], height: rh * 5, "class": "d-accent", "fill-opacity": 0.5 }, plot);
+    if (hit >= 0) S("rect", { x: x0, y: top + rh * (hit + 1), width: tw, height: rh, "class": "d-accent", "fill-opacity": 0.35 }, plot);
+    if (hit >= 0) S("rect", { x: xs[retPos], y: top + rh * (hit + 1), width: widths[retPos], height: rh, "class": ok ? "d-good" : "d-signal" }, plot);
+    S("rect", { x: x0, y: top, width: tw, height: rh * 6, fill: "none", "class": "d-line" }, plot);
+    for (var i = 1; i <= 5; i++) S("line", { x1: x0, x2: x0 + tw, y1: top + rh * i, y2: top + rh * i, "class": "d-grid" }, plot);
+    cols.forEach(function (k, ci) {
+      if (ci) S("line", { x1: xs[ci], x2: xs[ci], y1: top, y2: top + rh * 6, "class": "d-grid" }, plot);
+      H.text(plot, xs[ci] + 7, top + 18, NAMES[k], k === 1 ? "d-title d-text-signal" : "d-title");
+      rows.forEach(function (r, ri) {
+        var t = String(show(r[k], k));
+        if (k === 4) H.text(plot, xs[ci] + widths[ci] - 7, top + rh * (ri + 1) + 18, t, "d-mono", "end");
+        else H.text(plot, xs[ci] + 7, top + rh * (ri + 1) + 18, t, k === 0 ? "d-mono" : "d-text");
+      });
+    });
+    var bx = x0 + tw + 14, bw = 556 - bx + 14;
+    H.text(plot, bx + bw / 2, 104, "result", "d-label", "middle");
+    S("rect", { x: bx, y: 112, width: bw, height: 40, rx: 6, "class": hit < 0 ? (result === "#N/A" ? "d-signal" : "d-box") : ok ? "d-good" : "d-signal" }, plot);
+    H.text(plot, bx + bw / 2, 137, result, "d-mono", "middle");
+    H.text(plot, x0, 236, formula, "d-mono");
+    var msg;
+    if (hit < 0) {
+      var near = -1;
+      rows.forEach(function (r, ri) { if (r[0].toLowerCase() === key.trim().toLowerCase()) near = ri; });
+      if (near >= 0) msg = 'No match: "' + key + '" has extra spaces, so it is not equal to "' + rows[near][0] + '". Wrap the key in TRIM().';
+      else msg = 'No SKU "' + key + '" in the table. ' + (fn === "xlookup" ? (nf !== "" ? "XLOOKUP shows your not-found text instead of #N/A." : "Fill in the if_not_found argument to replace #N/A.") : "Only XLOOKUP has a built-in not-found argument; others need IFNA().");
+    } else if (!ok) msg = "Wrong column. VLOOKUP still says column " + ORIG[field] + ", which is now " + NAMES[retKey] + " because a column was inserted. No error, just a wrong answer.";
+    else msg = "Found " + rows[hit][0] + " at position " + (hit + 1) + " and returned item " + (hit + 1) + " of the " + NAMES[retKey] + " column." + (key !== rows[hit][0] ? " (Lookups ignore letter case.)" : "");
+    ro.textContent = msg;
+    w.dataset.result = result;
+    w.dataset.ok = ok ? "1" : "0";
+  }
+  [keyIn, nfIn].forEach(function (el) { el.addEventListener("input", draw); });
+  [fnSel, fieldSel, ins].forEach(function (el) { el.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 02.3 pivot builder ---------- */
+(function () {
+  if (!document.getElementById("pivots-demo")) return;
+  var H = DA02, S = H.svg, w = document.getElementById("pivots-demo");
+  var src = document.getElementById("pivots-src"), out = document.getElementById("pivots-out"), ro = document.getElementById("pivots-readout");
+  var rowsSel = document.getElementById("pivots-rows"), colsSel = document.getElementById("pivots-cols"), valSel = document.getElementById("pivots-val"), fSel = document.getElementById("pivots-filter");
+  var data = [["North", "Jan", "Mugs", 10, 140], ["North", "Jan", "Apparel", 4, 180], ["South", "Jan", "Prints", 6, 144], ["West", "Jan", "Apparel", 8, 176],
+    ["North", "Feb", "Prints", 5, 120], ["South", "Feb", "Mugs", 12, 168], ["West", "Feb", "Mugs", 9, 162], ["West", "Feb", "Apparel", 3, 135],
+    ["North", "Mar", "Apparel", 10, 220], ["South", "Mar", "Apparel", 6, 270], ["West", "Mar", "Prints", 7, 168], ["South", "Mar", "Mugs", 8, 112]];
+  var IDX = { region: 0, month: 1, category: 2 }, LABEL = { region: "Region", month: "Month", category: "Category" };
+  var ORDER = { region: ["North", "South", "West"], month: ["Jan", "Feb", "Mar"], category: ["Mugs", "Apparel", "Prints"] };
+  var VAL = { sumrev: ["Sum of Revenue", "SUM(revenue)"], sumunits: ["Sum of Units", "SUM(units)"], count: ["Count of Orders", "COUNT(*)"], avgrev: ["Average of Revenue", "AVG(revenue)"] };
+  var CLS = ["d-accent", "d-signal", "d-good"];
+  function agg(list, v) {
+    if (!list.length) return "";
+    if (v === "count") return String(list.length);
+    if (v === "sumunits") return H.num(list.reduce(function (s, d) { return s + d[3]; }, 0));
+    var sum = list.reduce(function (s, d) { return s + d[4]; }, 0);
+    return v === "avgrev" ? H.money(sum / list.length, 2) : H.money(sum);
+  }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  function draw() {
+    var rf = rowsSel.value, cf = colsSel.value, v = valSel.value, flt = fSel.value;
+    var rows = data.filter(function (d) { return flt === "all" || d[0] === flt; });
+    H.clear(src);
+    data.forEach(function (d, i) {
+      var x = 8 + (i % 6) * 95, y = 6 + Math.floor(i / 6) * 52, inc = flt === "all" || d[0] === flt;
+      var g = S("g", { opacity: inc ? 1 : 0.22 }, src);
+      S("rect", { x: x, y: y, width: 88, height: 44, rx: 6, "class": CLS[ORDER[rf].indexOf(d[IDX[rf]])] }, g);
+      H.text(g, x + 7, y + 18, d[0] + " · " + d[1], "d-label");
+      H.text(g, x + 7, y + 35, d[2] + " · $" + d[4], "d-label");
+    });
+    var html, sql;
+    var where = flt === "all" ? "" : " WHERE region = '" + flt + "'";
+    if (cf === rf) {
+      html = "<table><tbody><tr><td>Rows and Columns need different fields.</td></tr></tbody></table>";
+      sql = "Pick different fields for Rows and Columns.";
+    } else {
+      var rv = ORDER[rf].filter(function (x) { return rows.some(function (d) { return d[IDX[rf]] === x; }); });
+      var cv = cf === "none" ? [] : ORDER[cf].filter(function (x) { return rows.some(function (d) { return d[IDX[cf]] === x; }); });
+      html = "<table><thead><tr><th>" + LABEL[rf] + "</th>";
+      cv.forEach(function (c) { html += '<th style="text-align:right">' + c + "</th>"; });
+      html += '<th style="text-align:right">' + (cv.length ? "Total" : VAL[v][0]) + "</th></tr></thead><tbody>";
+      rv.forEach(function (r) {
+        var inRow = rows.filter(function (d) { return d[IDX[rf]] === r; });
+        html += "<tr><td>" + r + "</td>";
+        cv.forEach(function (c) { html += '<td style="text-align:right">' + agg(inRow.filter(function (d) { return d[IDX[cf]] === c; }), v) + "</td>"; });
+        html += '<td style="text-align:right"><b>' + agg(inRow, v) + "</b></td></tr>";
+      });
+      html += "<tr><td><b>Grand total</b></td>";
+      cv.forEach(function (c) { html += '<td style="text-align:right"><b>' + agg(rows.filter(function (d) { return d[IDX[cf]] === c; }), v) + "</b></td>"; });
+      html += '<td style="text-align:right"><b>' + agg(rows, v) + "</b></td></tr></tbody></table>";
+      var by = cf === "none" ? rf : rf + ", " + cf;
+      sql = "SQL: SELECT " + by + ", " + VAL[v][1] + " FROM orders" + where + " GROUP BY " + by + (cf === "none" ? "" : "  (" + cf + " spread across columns)");
+    }
+    out.innerHTML = html;
+    ro.textContent = sql + "  ·  " + rows.length + " of 12 orders after the filter.";
+    w.dataset.layout = rf + "|" + cf + "|" + v + "|" + flt;
+  }
+  [rowsSel, colsSel, valSel, fSel].forEach(function (el) { el.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 02.4 cleaning stepper ---------- */
+(function () {
+  if (!document.getElementById("cleaning-sheets-demo")) return;
+  var H = DA02, S = H.svg, w = document.getElementById("cleaning-sheets-demo");
+  var plot = document.getElementById("cleaning-svg"), ro = document.getElementById("cleaning-readout");
+  var steps = ["split", "trim", "proper", "value", "dedupe"].map(function (k) { return document.getElementById("cleaning-" + k); });
+  var raw = [["  jane smith, london", "$1,200"], ["RAVI PATEL ,London ", "$850"], ["ana  lopez,  leeds", "$430"], ["Tom Reed,LEEDS", "$1,050"], ["mei chen , york", "$610"], ["jane smith,London", "$1,200"]];
+  function trim(s) { return s.replace(/^ +| +$/g, "").replace(/ {2,}/g, " "); }
+  function proper(s) { return s.toLowerCase().replace(/(^|[^a-z])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
+  function drawStr(parent, x, y, s, cls, anchor) {
+    var t = S("text", { x: x, y: y, "class": cls, "text-anchor": anchor || "start" }, parent);
+    var lead = s.match(/^ */)[0].length, tail = s.match(/ *$/)[0].length, buf = "", bad = false;
+    function flush() { if (!buf) return; var sp = S("tspan", bad ? { "class": "d-text-signal" } : {}, t); sp.textContent = buf; buf = ""; }
+    for (var i = 0; i < s.length; i++) {
+      var ch = s[i], isBad = ch === " " && (i < lead || i >= s.length - tail || s[i - 1] === " " || s[i + 1] === " ");
+      if (isBad !== bad) { flush(); bad = isBad; }
+      buf += ch === " " ? (isBad ? "·" : " ") : ch;
+    }
+    flush();
+    return t;
+  }
+  function draw() {
+    var on = steps.map(function (s) { return s.checked; });
+    var split = on[0], doTrim = on[1], doProper = on[2], doValue = on[3], dedupe = on[4];
+    var seen = {}, out = raw.map(function (r) {
+      var cells = split ? r[0].split(",") : [r[0]];
+      if (doTrim) cells = cells.map(trim);
+      if (doProper) cells = cells.map(proper);
+      var amt = doValue ? Number(r[1].replace(/[$,]/g, "")) : r[1];
+      var key = cells.join("|") + "|" + amt, dup = dedupe && seen[key];
+      seen[key] = true;
+      return { cells: cells, amt: amt, dup: !!dup };
+    });
+    var kept = out.filter(function (o) { return !o.dup; });
+    var cities = {}, nc = 0;
+    if (split) kept.forEach(function (o) { if (!cities[o.cells[1]]) { cities[o.cells[1]] = 1; nc++; } });
+    var sum = doValue ? kept.reduce(function (s, o) { return s + o.amt; }, 0) : 0;
+    H.clear(plot);
+    var xs = split ? [20, 220, 400, 560] : [20, 400, 560], heads = split ? ["Name", "City", "Amount"] : ["Customer, city (raw column)", "Amount"];
+    S("rect", { x: 20, y: 8, width: 540, height: 28, "class": "d-fill" }, plot);
+    heads.forEach(function (h, i) { H.text(plot, i === heads.length - 1 ? xs[i + 1] - 8 : xs[i] + 8, 27, h, "d-title", i === heads.length - 1 ? "end" : "start"); });
+    out.forEach(function (o, ri) {
+      var y = 36 + ri * 32, g = S("g", { opacity: o.dup ? 0.35 : 1 }, plot);
+      S("rect", { x: 20, y: y, width: 540, height: 32, "class": "d-box" }, g);
+      o.cells.forEach(function (c, ci) { drawStr(g, xs[ci] + 8, y + 21, c, "d-mono"); });
+      if (typeof o.amt === "number") H.text(g, 552, y + 21, H.num(o.amt), "d-mono d-text-good", "end");
+      else { H.text(g, xs[xs.length - 2] + 8, y + 21, o.amt, "d-mono d-text-signal"); H.text(g, 552, y + 21, "text", "d-label d-text-signal", "end"); }
+      if (o.dup) { S("line", { x1: 28, x2: 552, y1: y + 16, y2: y + 16, "class": "d-line-signal" }, g); H.text(g, xs[1] - 8, y + 21, "duplicate removed", "d-label d-text-signal", "end"); }
+    });
+    for (var i = 1; i < xs.length - 1; i++) S("line", { x1: xs[i], x2: xs[i], y1: 8, y2: 228, "class": "d-grid" }, plot);
+    H.text(plot, 20, 252, "Rows: " + kept.length, "d-title");
+    H.text(plot, 130, 252, "Distinct cities: " + (split ? nc : "split first"), split && nc === 3 ? "d-title d-text-good" : "d-title");
+    H.text(plot, 560, 252, "SUM(Amount): " + H.money(sum), doValue ? "d-title d-text-good" : "d-title d-text-signal", "end");
+    H.text(plot, 20, 272, "· = a space that breaks matching (leading, trailing or doubled)", "d-label");
+    var inner = split ? 'INDEX(TEXTSPLIT(A2, ","), 2)' : "A2";
+    if (doTrim) inner = "TRIM(" + inner + ")";
+    if (doProper) inner = "PROPER(" + inner + ")";
+    ro.textContent = (split ? "City column: =" : "Column: =") + inner + (doValue ? '  ·  Amount: =VALUE(SUBSTITUTE(SUBSTITUTE(B2,"$",""),",",""))' : "  ·  Amount is still text, so SUM ignores it.");
+    w.dataset.rows = String(kept.length);
+    w.dataset.cities = split ? String(nc) : "";
+    w.dataset.sum = String(sum);
+  }
+  steps.forEach(function (s) { s.addEventListener("change", draw); });
+  document.getElementById("cleaning-next").addEventListener("click", function () {
+    for (var i = 0; i < steps.length; i++) if (!steps[i].checked) { steps[i].checked = true; break; }
+    draw();
+  });
+  document.getElementById("cleaning-reset").addEventListener("click", function () { steps.forEach(function (s) { s.checked = false; }); draw(); });
+  draw();
+})();
+
+/* ---------- 02.5 chart-type picker ---------- */
+(function () {
+  if (!document.getElementById("charts-sheets-demo")) return;
+  var H = DA02, S = H.svg, w = document.getElementById("charts-sheets-demo");
+  var plot = document.getElementById("charts-svg"), ro = document.getElementById("charts-readout");
+  var qSel = document.getElementById("charts-q"), tSel = document.getElementById("charts-type");
+  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"], web = [42, 45, 51, 48, 56, 63], store = [38, 36, 37, 35, 34, 33];
+  var trend = { cats: months, series: [{ name: "Web", vals: web }, { name: "Store", vals: store }] };
+  var DATA = {
+    trend: trend,
+    compare: { cats: ["Web", "Store"], series: [{ name: "Total Jan–Jun", vals: [305, 213] }] },
+    share: { cats: ["Web", "Store"], series: [{ name: "June", vals: [63, 33] }] },
+    relation: trend
+  };
+  var V = {
+    trend: { line: ["good", "Time runs left to right and each slope shows the change: web up 50%, store slowly down."], column: ["ok", "Readable, but 12 bars make the trend harder to follow than two lines."], pie: ["poor", "A pie of months throws away their order, which is the whole question."], scatter: ["poor", "Web against store loses the time order you asked about."] },
+    compare: { column: ["good", "Two bars from zero: web's $305k vs store's $213k is obvious at a glance."], pie: ["ok", "Works with two parts, but lengths compare more precisely than angles."], line: ["poor", "A line from Web to Store suggests a trend between two unrelated categories."], scatter: ["poor", "Two dots on a meaningless axis."] },
+    share: { pie: ["good", "One whole, two slices: web is about two thirds of June."], column: ["ok", "Shows both values, but leaves the share of the whole for the reader to work out."], line: ["poor", "A line implies change over time; this is one month."], scatter: ["poor", "There is no second measure to plot against."] },
+    relation: { scatter: ["good", "One dot per month: as web revenue rises, store revenue tends to fall."], line: ["ok", "You can see them diverge over time, but not the relationship itself."], column: ["poor", "Twelve bars by month hide how the two channels relate."], pie: ["poor", "Slices of months say nothing about how web and store relate."] }
+  };
+  var matched = {};
+  function corr(a, b) {
+    var n = a.length, ma = 0, mb = 0, i, sab = 0, saa = 0, sbb = 0;
+    for (i = 0; i < n; i++) { ma += a[i] / n; mb += b[i] / n; }
+    for (i = 0; i < n; i++) { sab += (a[i] - ma) * (b[i] - mb); saa += (a[i] - ma) * (a[i] - ma); sbb += (b[i] - mb) * (b[i] - mb); }
+    return sab / Math.sqrt(saa * sbb);
+  }
+  var PX0 = 70, PX1 = 540, PY0 = 50, PY1 = 220, SCLS = ["d-dot", "d-dot-signal"], LCLS = ["d-line-accent", "d-line-signal"];
+  function axes(maxV, step) {
+    for (var v = 0; v <= maxV; v += step) {
+      var y = PY1 - (PY1 - PY0) * v / maxV;
+      S("line", { x1: PX0, x2: PX1, y1: y, y2: y, "class": "d-grid" }, plot);
+      H.text(plot, PX0 - 6, y + 4, String(v), "d-label", "end");
+    }
+    S("line", { x1: PX0, x2: PX1, y1: PY1, y2: PY1, "class": "d-line" }, plot);
+  }
+  function legend(series) {
+    series.forEach(function (s, i) {
+      S("rect", { x: PX0 + i * 90, y: 30, width: 10, height: 10, "class": SCLS[i] }, plot);
+      H.text(plot, PX0 + 14 + i * 90, 39, s.name, "d-label");
+    });
+  }
+  function draw() {
+    var q = qSel.value, t = tSel.value, d = DATA[q], verdict = V[q][t];
+    H.clear(plot);
+    var maxAll = 0;
+    d.series.forEach(function (s) { s.vals.forEach(function (v) { maxAll = Math.max(maxAll, v); }); });
+    var step = maxAll > 200 ? 100 : 20, maxV = Math.ceil(maxAll * 1.1 / step) * step;
+    var n = d.cats.length, bw = (PX1 - PX0) / n;
+    if (t === "column") {
+      axes(maxV, step); if (d.series.length > 1) legend(d.series);
+      var gw = Math.min(bw * 0.7, 120), sw = gw / d.series.length;
+      d.cats.forEach(function (c, i) {
+        d.series.forEach(function (s, si) {
+          var h = (PY1 - PY0) * s.vals[i] / maxV;
+          S("rect", { x: PX0 + i * bw + (bw - gw) / 2 + si * sw, y: PY1 - h, width: sw - 2, height: h, "class": SCLS[si] }, plot);
+        });
+        H.text(plot, PX0 + i * bw + bw / 2, PY1 + 16, c, "d-label", "middle");
+      });
+    } else if (t === "line") {
+      axes(maxV, step); if (d.series.length > 1) legend(d.series);
+      d.series.forEach(function (s, si) {
+        var pts = s.vals.map(function (v, i) { return (PX0 + i * bw + bw / 2).toFixed(1) + "," + (PY1 - (PY1 - PY0) * v / maxV).toFixed(1); });
+        S("polyline", { points: pts.join(" "), "class": LCLS[si] }, plot);
+        s.vals.forEach(function (v, i) { S("circle", { cx: PX0 + i * bw + bw / 2, cy: PY1 - (PY1 - PY0) * v / maxV, r: 3.5, "class": SCLS[si] }, plot); });
+      });
+      d.cats.forEach(function (c, i) { H.text(plot, PX0 + i * bw + bw / 2, PY1 + 16, c, "d-label", "middle"); });
+    } else if (t === "pie") {
+      var vals = d.series.length === 1 ? d.series[0].vals.slice() : d.cats.map(function (c, i) { return d.series.reduce(function (s, se) { return s + se.vals[i]; }, 0); });
+      var tot = vals.reduce(function (a, b) { return a + b; }, 0), a0 = -Math.PI / 2, cx = 300, cy = 140, R = 90;
+      var pcls = ["d-accent", "d-signal", "d-good", "d-box", "d-fill", "d-accent"];
+      vals.forEach(function (v, i) {
+        var a1 = a0 + 2 * Math.PI * v / tot, large = a1 - a0 > Math.PI ? 1 : 0;
+        S("path", { d: "M" + cx + "," + cy + " L" + (cx + R * Math.cos(a0)).toFixed(1) + "," + (cy + R * Math.sin(a0)).toFixed(1) + " A" + R + "," + R + " 0 " + large + ",1 " + (cx + R * Math.cos(a1)).toFixed(1) + "," + (cy + R * Math.sin(a1)).toFixed(1) + " Z", "class": pcls[i % pcls.length] }, plot);
+        var am = (a0 + a1) / 2;
+        H.text(plot, cx + (R + 18) * Math.cos(am), cy + (R + 18) * Math.sin(am) + 4, d.cats[i] + " " + Math.round(100 * v / tot) + "%", "d-label", Math.cos(am) > 0.2 ? "start" : Math.cos(am) < -0.2 ? "end" : "middle");
+        a0 = a1;
+      });
+    } else {
+      var xs, ys, xl, yl;
+      if (d.series.length > 1) { xs = d.series[0].vals; ys = d.series[1].vals; xl = d.series[0].name + " ($k)"; yl = d.series[1].name + " ($k)"; }
+      else { xs = d.series[0].vals.map(function (v, i) { return i + 1; }); ys = d.series[0].vals; xl = "category number"; yl = d.series[0].name; }
+      var xmin = Math.min.apply(null, xs), xmax = Math.max.apply(null, xs), ymin = Math.min.apply(null, ys), ymax = Math.max.apply(null, ys);
+      var xp = (xmax - xmin) * 0.15 || 1, yp = (ymax - ymin) * 0.15 || 1;
+      xmin -= xp; xmax += xp; ymin -= yp; ymax += yp;
+      S("line", { x1: PX0, x2: PX1, y1: PY1, y2: PY1, "class": "d-line" }, plot);
+      S("line", { x1: PX0, x2: PX0, y1: PY0, y2: PY1, "class": "d-line" }, plot);
+      xs.forEach(function (xv, i) {
+        var px = PX0 + (PX1 - PX0) * (xv - xmin) / (xmax - xmin), py = PY1 - (PY1 - PY0) * (ys[i] - ymin) / (ymax - ymin);
+        S("circle", { cx: px, cy: py, r: 6, "class": "d-dot" }, plot);
+        if (d === trend) H.text(plot, px + 9, py - 6, months[i], "d-label");
+      });
+      H.text(plot, PX1, PY1 + 18, xl + " →", "d-label", "end");
+      H.text(plot, PX0 + 6, PY0 - 6, "↑ " + yl, "d-label");
+    }
+    var tone = verdict[0] === "good" ? "d-good" : verdict[0] === "ok" ? "d-accent" : "d-signal";
+    S("rect", { x: 450, y: 6, width: 120, height: 24, rx: 12, "class": tone }, plot);
+    H.text(plot, 510, 23, verdict[0] === "good" ? "Good fit" : verdict[0] === "ok" ? "Works, not best" : "Poor fit", "d-label", "middle");
+    if (verdict[0] === "good") matched[q] = 1;
+    var count = Object.keys(matched).length;
+    var extra = q === "relation" && t === "scatter" ? " Correlation r ≈ " + corr(web, store).toFixed(2) + "." : "";
+    ro.textContent = verdict[1] + extra + "  ·  Questions matched with their best chart: " + count + " of 4.";
+    w.dataset.matched = String(count);
+  }
+  [qSel, tSel].forEach(function (el) { el.addEventListener("change", draw); });
+  draw();
+})();
+
+/* ---------- 02.6 pricing model, data table and Goal Seek ---------- */
+(function () {
+  if (!document.getElementById("what-if-demo")) return;
+  var H = DA02, S = H.svg, w = document.getElementById("what-if-demo");
+  var plot = document.getElementById("whatif-svg"), ro = document.getElementById("whatif-readout");
+  var pIn = document.getElementById("whatif-price"), cIn = document.getElementById("whatif-cost"), fIn = document.getElementById("whatif-fixed"), tIn = document.getElementById("whatif-target");
+  var pOut = document.getElementById("whatif-price-out"), cOut = document.getElementById("whatif-cost-out"), fOut = document.getElementById("whatif-fixed-out");
+  var BASE = 2000, SLOPE = 40, seekMsg = "", trial = null, timer = null;
+  function profit(p, c, F) { return (p - c) * (BASE - SLOPE * p) - F; }
+  function draw() {
+    var p = +pIn.value, c = +cIn.value, F = +fIn.value, target = parseFloat(tIn.value);
+    pOut.textContent = "$" + p.toFixed(2); cOut.textContent = "$" + c; fOut.textContent = H.money(F);
+    H.clear(plot);
+    var X0 = 62, X1 = 360, Y0 = 20, Y1 = 220, lo = Infinity, hi = -Infinity, pts = [];
+    for (var q = 10; q <= 50.0001; q += 0.5) { var v = profit(q, c, F); pts.push([q, v]); lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    if (isFinite(target)) { lo = Math.min(lo, target); hi = Math.max(hi, target); }
+    lo = Math.min(lo, 0); hi = Math.max(hi, 0);
+    var pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+    function px(q) { return X0 + (X1 - X0) * (q - 10) / 40; }
+    function py(v) { return Y0 + (Y1 - Y0) * (hi - v) / (hi - lo); }
+    S("line", { x1: X0, x2: X1, y1: py(0), y2: py(0), "class": "d-line" }, plot);
+    S("line", { x1: X0, x2: X0, y1: Y0, y2: Y1, "class": "d-line" }, plot);
+    H.text(plot, X0 - 5, py(0) + 4, "$0", "d-label", "end");
+    H.text(plot, X0 - 5, Y0 + 8, H.money(Math.round(hi / 1000)) + "k", "d-label", "end");
+    H.text(plot, X0 - 5, Y1, H.money(Math.round(lo / 1000)) + "k", "d-label", "end");
+    [10, 20, 30, 40, 50].forEach(function (q) { H.text(plot, px(q), Y1 + 16, "$" + q, "d-label", "middle"); });
+    H.text(plot, X1, Y1 + 32, "price →", "d-label", "end");
+    if (isFinite(target)) {
+      S("line", { x1: X0, x2: X1, y1: py(target), y2: py(target), "class": "d-line-signal", "stroke-dasharray": "5 4" }, plot);
+      H.text(plot, X1, py(target) - 5, "goal " + H.money(target), "d-label d-text-signal", "end");
+    }
+    S("path", { d: pts.map(function (a, i) { return (i ? "L" : "M") + px(a[0]).toFixed(1) + "," + py(a[1]).toFixed(1); }).join(" "), "class": "d-line-accent" }, plot);
+    if (trial != null) S("circle", { cx: px(trial), cy: py(profit(trial, c, F)), r: 6, "class": "d-dot-signal" }, plot);
+    var cur = profit(p, c, F);
+    S("circle", { cx: px(p), cy: py(cur), r: 6, "class": "d-dot" }, plot);
+    H.text(plot, px(p), py(cur) - 11, H.money(Math.round(cur)), "d-label d-text-accent", "middle");
+    /* data table */
+    var tx = 384, prices = [20, 25, 30, 35, 40, 45], best = 0;
+    var profits = prices.map(function (q) { return profit(q, c, F); });
+    profits.forEach(function (v, i) { if (v > profits[best]) best = i; });
+    H.text(plot, tx, 16, "Data table (column input: price)", "d-label");
+    S("rect", { x: tx, y: 24, width: 186, height: 26, "class": "d-fill" }, plot);
+    H.text(plot, tx + 8, 42, "Price", "d-title"); H.text(plot, tx + 104, 42, "Units", "d-title", "end"); H.text(plot, tx + 178, 42, "Profit", "d-title", "end");
+    prices.forEach(function (q, i) {
+      var y = 50 + i * 28;
+      S("rect", { x: tx, y: y, width: 186, height: 28, "class": i === best ? "d-good" : "d-box" }, plot);
+      H.text(plot, tx + 8, y + 19, "$" + q, "d-mono");
+      H.text(plot, tx + 104, y + 19, H.num(BASE - SLOPE * q), "d-mono", "end");
+      H.text(plot, tx + 178, y + 19, H.money(Math.round(profits[i])), profits[i] < 0 ? "d-mono d-text-signal" : "d-mono", "end");
+    });
+    H.text(plot, tx, 236, "Best row highlighted. The true", "d-label");
+    H.text(plot, tx, 252, "peak may sit between rows.", "d-label");
+    var units = BASE - SLOPE * p;
+    ro.textContent = "Units " + H.num(units) + " · Revenue " + H.money(Math.round(p * units)) + " · Costs " + H.money(Math.round(c * units + F)) + " · Profit " + H.money(Math.round(cur)) + (seekMsg ? "  ·  " + seekMsg : "");
+  }
+  function seek() {
+    var c = +cIn.value, F = +fIn.value, target = parseFloat(tIn.value), p0 = +pIn.value;
+    if (!isFinite(target)) { seekMsg = "Type a target profit first."; draw(); return; }
+    function f(q) { return profit(q, c, F) - target; }
+    var br = null, d;
+    for (d = 0; d <= 40 && !br; d += 0.05) {
+      [p0 - d, p0 + d].forEach(function (a) {
+        if (br) return;
+        var b = a + (a < p0 ? 0.05 : -0.05);
+        if (a < 10 || a > 50 || b < 10 || b > 50) return;
+        if (f(a) === 0) br = [a, a];
+        else if (f(a) * f(b) < 0) br = [Math.min(a, b), Math.max(a, b)];
+      });
+    }
+    if (!br) { seekMsg = "Goal Seek may not have found a solution: no price between $10 and $50 reaches " + H.money(target) + "."; trial = null; draw(); return; }
+    var iters = [], a = br[0], b = br[1], m = a;
+    for (var k = 0; k < 24; k++) { m = (a + b) / 2; iters.push(m); if (f(a) * f(m) <= 0) b = m; else a = m; }
+    var root = Math.round(m * 100) / 100;
+    if (timer) clearInterval(timer);
+    function finish() {
+      trial = null; pIn.value = root.toFixed(2);
+      seekMsg = "Goal Seek: price $" + root.toFixed(2) + " gives profit " + H.money(Math.round(profit(root, c, F))) + " (target " + H.money(target) + ").";
+      w.dataset.seek = target + ":" + root.toFixed(2);
+      draw();
+      w.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (H.reduced()) { finish(); return; }
+    var i = 0, path = [p0].concat(iters.slice(0, 10));
+    timer = setInterval(function () {
+      trial = path[i]; seekMsg = "Goal Seek searching… trying $" + trial.toFixed(2); draw();
+      if (++i >= path.length) { clearInterval(timer); timer = null; setTimeout(finish, 200); }
+    }, 160);
+  }
+  [pIn, cIn, fIn, tIn].forEach(function (el) { el.addEventListener("input", function () { seekMsg = ""; draw(); }); });
+  document.getElementById("whatif-seek").addEventListener("click", seek);
+  draw();
+})();
+</script>
+</body>
+</html>

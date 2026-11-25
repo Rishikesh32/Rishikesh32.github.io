@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data visualization · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="visualization">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Data visualization</h1>
+    <p class="lede">Data visualization is the interface between complex quantitative calculations and human decision-making. Picking the right chart, choosing perceptually accurate visual encodings, designing accessible color palettes, and annotating clear takeaways turns dense tables into compelling, trustworthy insights.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Effective data visualization is grounded in perceptual psychology and graphical integrity. The diagram below illustrates how chart choice, perceptual hierarchy, color encoding, and direct annotation work together to communicate insights clearly.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 210" role="img" aria-label="Data visualization principles: chart choice to perceptual ranking to color encoding to direct annotations.">
+              <rect class="d-accent" x="20" y="30" width="160" height="58" rx="8"/>
+              <text class="d-title" x="100" y="54" text-anchor="middle">1. Chart Choice</text>
+              <text class="d-label" x="100" y="72" text-anchor="middle">Match relationship</text>
+
+              <line class="d-line-accent" x1="180" y1="59" x2="210" y2="59"/>
+
+              <rect class="d-box" x="210" y="30" width="160" height="58" rx="8"/>
+              <text class="d-title" x="290" y="54" text-anchor="middle">2. Perceptual Rank</text>
+              <text class="d-label" x="290" y="72" text-anchor="middle">Position > Length > Angle</text>
+
+              <line class="d-line-accent" x1="370" y1="59" x2="400" y2="59"/>
+
+              <rect class="d-box" x="400" y="30" width="160" height="58" rx="8"/>
+              <text class="d-title" x="480" y="54" text-anchor="middle">3. Accessible Color</text>
+              <text class="d-label" x="480" y="72" text-anchor="middle">Sequential / Diverging</text>
+
+              <line class="d-line-accent" x1="560" y1="59" x2="590" y2="59"/>
+
+              <rect class="d-good" x="590" y="30" width="150" height="58" rx="8"/>
+              <text class="d-title" x="665" y="54" text-anchor="middle">4. Clear Takeaway</text>
+              <text class="d-label" x="665" y="72" text-anchor="middle">Direct labels + title</text>
+
+              <rect class="d-fill" x="20" y="115" width="720" height="65" rx="8"/>
+              <text class="d-title" x="40" y="138">Cleveland &amp; McGill's Law of Perception:</text>
+              <text class="d-label" x="40" y="158">The human visual cortex decodes position along a common aligned scale with the highest accuracy.</text>
+              <text class="d-label" x="40" y="174">Angles, 2D areas, and color saturations introduce significant cognitive error when decoding quantitative values.</text>
+            </svg>
+          </div>
+          <figcaption>The visual pipeline: selecting the correct visual form, choosing high-accuracy visual encodings, ensuring accessible palette choices, and guiding attention with active annotations.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="chart-choice">
+        <header class="topic-head">
+          <p class="eyebrow">07.1 · Form follows function</p>
+          <h2>Choosing the right chart</h2>
+        </header>
+
+        <p class="lead">Selecting the wrong chart type distorts the message before the reader has even read a label. The business question you are answering dictates the visual structure you must use.</p>
+
+        <h3>Core Chart Families &amp; Their Purpose</h3>
+        <ul>
+          <li><strong>Comparison across categories:</strong> Horizontal bar chart or column chart sorted by value. Bars start at zero to maintain proportional fidelity.</li>
+          <li><strong>Change over continuous time:</strong> Line chart with time on the horizontal axis. Emphasizes rate of change, trends, and turning points.</li>
+          <li><strong>Distribution &amp; spread:</strong> Histograms (for single variables), box plots, or violin plots (for comparing distributions across cohorts).</li>
+          <li><strong>Correlation &amp; relationship:</strong> Scatter plot with optional trend lines, highlighting clusters, outliers, and variance.</li>
+          <li><strong>Part-to-whole share:</strong> Stacked 100% bar chart or waterfall chart. Avoid pie charts with more than 3 slices.</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>The Multi-Slice Pie Chart Trap</h4>
+          <p>Pie charts with 8 or 10 slices force readers to compare subtle angular differences between curved wedges. Converting that same data into a descending horizontal bar chart lets the reader instantly rank items from top to bottom and judge exact differences in length effortlessly.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="perception">
+        <header class="topic-head">
+          <p class="eyebrow">07.2 · Visual psychology</p>
+          <h2>Perception &amp; encoding</h2>
+        </header>
+
+        <p class="lead">Graphical perception is the visual decoding of quantitative information. Seminal research by William Cleveland and Robert McGill ranked visual encodings from most accurate to least accurate.</p>
+
+        <h3>The Visual Encoding Hierarchy</h3>
+        <ol>
+          <li><strong>Position along a common aligned scale</strong> (e.g. standard bar chart, scatter plot) — <em>Highest accuracy</em></li>
+          <li><strong>Position along non-aligned scales</strong> (e.g. small multiples panels)</li>
+          <li><strong>Length / direction</strong> (e.g. gauge lines, slope charts)</li>
+          <li><strong>Angle / slope</strong> (e.g. pie chart wedges, radar charts)</li>
+          <li><strong>Area</strong> (e.g. bubble charts, treemaps) — <em>Moderate error</em></li>
+          <li><strong>Volume / 3D depth</strong> (e.g. 3D rendered bars) — <em>Severe perceptual distortion</em></li>
+          <li><strong>Color saturation &amp; hue</strong> — <em>Lowest accuracy for numbers; excellent for categories</em></li>
+        </ol>
+
+        <div class="callout why">
+          <h4>Preattentive Attributes</h4>
+          <p>Certain visual properties—such as color hue, stroke thickness, and spatial position—are processed by the human visual cortex in under 200 milliseconds before conscious focus occurs. Use a single pop of vibrant accent color against muted gray bars to guide the viewer's eye directly to the insight.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="color">
+        <header class="topic-head">
+          <p class="eyebrow">07.3 · Communicating with color</p>
+          <h2>Color &amp; accessibility</h2>
+        </header>
+
+        <p class="lead">Color is one of the most powerful communication tools in analytics, but also the most frequently abused. Using color with purpose requires understanding palette types and designing for accessibility.</p>
+
+        <h3>The Three Palette Archetypes</h3>
+        <ul>
+          <li><strong>Categorical (Qualitative):</strong> Distinct hues with equal visual weight (e.g. blue, amber, teal) to distinguish unrelated groups like channels or operating systems.</li>
+          <li><strong>Sequential:</strong> A single hue varying smoothly in lightness and saturation (e.g. light blue to dark blue) to encode ordered numerical values like population density or order frequency.</li>
+          <li><strong>Diverging:</strong> Two contrasting hues meeting at a neutral, light midpoint (e.g. dark red to white/gray to dark teal) to display deviation from a baseline (such as net margin, budget variance, or growth rate).</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>Color Vision Deficiency (CVD) Awareness</h4>
+          <p>Roughly 8% of men and 0.5% of women have red-green color blindness (deuteranomaly or protanomaly). Relying solely on pure red and pure green to indicate negative and positive ensures that 1 in 12 viewers cannot distinguish success from failure. Always pair color with secondary visual cues (icons like ▲ / ▼, direct text labels) or use accessible palettes like Viridis or ColorBrewer blue-orange.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="python-viz">
+        <header class="topic-head">
+          <p class="eyebrow">07.4 · Code-driven graphics</p>
+          <h2>Plotting in Python</h2>
+        </header>
+
+        <p class="lead">Python offers a rich ecosystem of visualization libraries. Modern analysts match the tool to the task: Matplotlib for granular layout control, Seaborn for statistical exploration, and Plotly for interactive web delivery.</p>
+
+        <h3>The Python Visualization Toolkit</h3>
+        <ul>
+          <li><strong>Matplotlib:</strong> The foundation of scientific plotting. Uses an object-oriented canvas (<code>Figure</code> and <code>Axes</code>) that grants pixel-perfect control over spine visibility, tick formatting, custom annotations, and publication figures.</li>
+          <li><strong>Seaborn:</strong> High-level statistical library built on Matplotlib. Integrates seamlessly with Pandas DataFrames to plot confidence intervals, categorical facet grids, and regression distributions with single function calls.</li>
+          <li><strong>Plotly:</strong> Declarative interactive plotting library rendering via WebGL/D3. Powers responsive hover tooltips, zoom/pan exploration, and interactive filtering in web applications and notebooks.</li>
+        </ul>
+
+        <pre class="code"><code>import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Clean, decluttered publication styling
+fig, ax = plt.subplots(figsize=(8, 4.5), dpi=150)
+sns.lineplot(data=df, x='month', y='mrr', hue='tier', ax=ax, palette='viridis')
+
+# Direct labeling and decluttering
+ax.spines[['top', 'right']].set_visible(False)
+ax.set_title("Enterprise MRR Grew 42% in H2", fontsize=12, fontweight='bold', loc='left')
+plt.show()</code></pre>
+      </section>
+
+      <section class="topic" id="misleading">
+        <header class="topic-head">
+          <p class="eyebrow">07.5 · Graphical integrity</p>
+          <h2>Misleading charts</h2>
+        </header>
+
+        <p class="lead">Misleading visualizations can be intentional manipulation or accidental carelessness. A professional analyst maintains strict graphical integrity to preserve stakeholder trust.</p>
+
+        <h3>Common Visualization Traps to Avoid</h3>
+        <ul>
+          <li><strong>Truncated Bar Baselines:</strong> Cutting the y-axis on a bar chart distorts visual proportions. If Company A has $100M and Company B has $105M, starting the y-axis at $95M makes Company B look three times larger.</li>
+          <li><strong>3D Perspective Distortion:</strong> Tilting a pie or bar chart in 3D perspective foreshortens items in the background and magnifies slices in the foreground, corrupting human area perception.</li>
+          <li><strong>Dual-Axis Manipulation:</strong> Pairing two unrelated metrics on separate left and right y-axes allows the author to arbitrarily scale and shift lines to imply causal correlation or false intersection points.</li>
+          <li><strong>Area Scaling of 1D Quantities:</strong> Doubling the diameter of a circle quadruples its area (\(A = \pi r^2\)), visually exaggerating a 2x change into a 4x perception.</li>
+        </ul>
+      </section>
+
+      <section class="topic" id="chart-stories">
+        <header class="topic-head">
+          <p class="eyebrow">07.6 · Framing and takeaway</p>
+          <h2>Annotating &amp; telling the story</h2>
+        </header>
+
+        <p class="lead">A chart without context is a puzzle the reader has to solve. Visual storytelling guides the viewer's attention directly to the insight through decluttering, direct labeling, and active headlines.</p>
+
+        <h3>Principles of Visual Storytelling</h3>
+        <ol>
+          <li><strong>The Active Headline:</strong> Replace passive titles like <em>"Revenue by Region Q1-Q4"</em> with active takeaways: <em>"West Region led annual growth (+24%) following store expansion"</em>.</li>
+          <li><strong>Direct Labeling:</strong> Eliminate disconnected legend boxes. Place category names and values directly at the end of lines or adjacent to bars to remove ocular gymnastics.</li>
+          <li><strong>Maximize the Data-Ink Ratio:</strong> Remove heavy border boxes, saturated backgrounds, zebra striping, and redundant gridlines so the data itself is the highest-contrast element.</li>
+          <li><strong>Call Out the Inflection Point:</strong> Use subtle callout lines or shaded background zones to explain why a line jumped or dipped (e.g. "Pricing change launched on March 15th").</li>
+        </ol>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Chart Redesign Challenge</h4><p>Take a cluttered, multi-colored 3D pie chart or truncated-axis chart. Redesign it as a clean, accessible, horizontal bar chart with direct labeling, sorted categories, and an active headline.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Interactive Cohort Heatmap</h4><p>Build a Seaborn or Plotly cohort retention heatmap with custom diverging formatting. Ensure color choices pass WCAG AA accessibility standards for color blindness.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Executive Briefing Slide</h4><p>Create an annotated multi-line trend graphic tracking product KPIs over 24 months. Add event callout markers, direct line labels, and an executive summary callout explaining root cause variance.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="viz-1"><span>Match the business question to the optimal visual chart family</span></label></li>
+          <li><label><input type="checkbox" data-key="viz-2"><span>Apply Cleveland &amp; McGill's hierarchy of perceptual encodings</span></label></li>
+          <li><label><input type="checkbox" data-key="viz-3"><span>Select perceptually uniform, color-blind accessible sequential and diverging palettes</span></label></li>
+          <li><label><input type="checkbox" data-key="viz-4"><span>Generate clean, publication-ready figures using Python visualization libraries</span></label></li>
+          <li><label><input type="checkbox" data-key="viz-5"><span>Audit and eliminate deceptive chart mechanics (truncated bars, dual axes)</span></label></li>
+          <li><label><input type="checkbox" data-key="viz-6"><span>Structure chart annotations and active headlines to communicate takeaways under 3 seconds</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+</body>
+</html>

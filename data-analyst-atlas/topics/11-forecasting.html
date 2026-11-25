@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Time series &amp; forecasting · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="forecasting">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Time series &amp; forecasting</h1>
+    <p class="lede">Businesses run on forward projections: inventory planning, staffing schedules, infrastructure capacity, and revenue targets. Time series forecasting breaks temporal data down into trend, seasonality, and residuals to make honest predictions with realistic confidence intervals while catching operational anomalies before they escalate.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Forecasting requires treating time as an ordered, non-random axis. The diagram below illustrates how raw time series are decomposed, benchmarked against naive baselines, modeled with statistical algorithms (ARIMA/ETS), and validated through chronological backtesting.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 210" role="img" aria-label="Time series pipeline: Decomposition to Baseline benchmarking to ARIMA/ETS to Backtesting & Anomaly Detection.">
+              <rect class="d-accent" x="20" y="30" width="160" height="58" rx="8"/>
+              <text class="d-title" x="100" y="54" text-anchor="middle">1. Decomposition</text>
+              <text class="d-label" x="100" y="72" text-anchor="middle">Trend + Seasonality</text>
+
+              <line class="d-line-accent" x1="180" y1="59" x2="210" y2="59"/>
+
+              <rect class="d-box" x="210" y="30" width="160" height="58" rx="8"/>
+              <text class="d-title" x="290" y="54" text-anchor="middle">2. Baselines</text>
+              <text class="d-label" x="290" y="72" text-anchor="middle">Seasonal Naive &amp; Drift</text>
+
+              <line class="d-line-accent" x1="370" y1="59" x2="400" y2="59"/>
+
+              <rect class="d-box" x="400" y="30" width="160" height="58" rx="8"/>
+              <text class="d-title" x="480" y="54" text-anchor="middle">3. ARIMA / ETS</text>
+              <text class="d-label" x="480" y="72" text-anchor="middle">Autoregression &amp; Smoothing</text>
+
+              <line class="d-line-accent" x1="560" y1="59" x2="590" y2="59"/>
+
+              <rect class="d-good" x="590" y="30" width="150" height="58" rx="8"/>
+              <text class="d-title" x="665" y="54" text-anchor="middle">4. Backtesting</text>
+              <text class="d-label" x="665" y="72" text-anchor="middle">Rolling CV &amp; Anomalies</text>
+
+              <rect class="d-fill" x="20" y="115" width="720" height="65" rx="8"/>
+              <text class="d-title" x="40" y="138">The Golden Rule of Time Series Validation:</text>
+              <text class="d-label" x="40" y="158">Never use random k-fold splits. Shuffling time leaks the future into the past.</text>
+              <text class="d-label" x="40" y="174">Always evaluate models on chronological hold-out windows using forward rolling cross-validation.</text>
+            </svg>
+          </div>
+          <figcaption>The forecasting lifecycle: decomposing components, establishing persistence baselines, fitting statistical models, and evaluating prediction intervals through historical backtesting.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="ts-components">
+        <header class="topic-head">
+          <p class="eyebrow">11.1 · Deconstructing time</p>
+          <h2>Trend, seasonality &amp; noise</h2>
+        </header>
+
+        <p class="lead">A raw time series graph is a composite of multiple distinct behavioral forces. Decomposing the series isolates underlying momentum from calendar cycles and random noise.</p>
+
+        <h3>The Classical Decomposition Framework</h3>
+        <p>A time series \(Y_t\) can be decomposed into:</p>
+        <ul>
+          <li><strong>Trend-Cycle (\(T_t\)):</strong> The long-term progression or direction of the series over multiple years, reflecting organic growth, adoption, or decline.</li>
+          <li><strong>Seasonality (\(S_t\)):</strong> Repeating fluctuations influenced by calendar factors with a known, fixed period (e.g. daily day-of-week dips on weekends, annual holiday retail spikes in Q4).</li>
+          <li><strong>Residual / Noise (\(R_t\)):</strong> Irregular, unpredictable random variations remaining after removing trend and seasonality.</li>
+        </ul>
+
+        <h3>Additive vs Multiplicative Models</h3>
+        <ul>
+          <li><strong>Additive:</strong> \(Y_t = T_t + S_t + R_t\). Used when seasonal swings remain roughly constant in magnitude regardless of whether the trend is high or low.</li>
+          <li><strong>Multiplicative:</strong> \(Y_t = T_t \times S_t \times R_t\). Used when the amplitude of seasonal fluctuations grows proportionally as the overall level of the series rises.</li>
+        </ul>
+      </section>
+
+      <section class="topic" id="smoothing">
+        <header class="topic-head">
+          <p class="eyebrow">11.2 · Filtering noise</p>
+          <h2>Moving averages &amp; smoothing</h2>
+        </header>
+
+        <p class="lead">Smoothing techniques average out short-term volatility to reveal underlying momentum and generate straightforward, responsive baseline forecasts.</p>
+
+        <h3>Moving Averages</h3>
+        <p>A simple moving average calculates the arithmetic mean of the last \(k\) periods. While effective for filtering noise, simple moving averages give equal weight to events yesterday and events 30 days ago, lagging behind rapid trend shifts.</p>
+
+        <h3>Exponential Smoothing Family</h3>
+        <ul>
+          <li><strong>Simple Exponential Smoothing (SES):</strong> Assigns exponentially decreasing weights to past observations via smoothing parameter \(\alpha \in [0, 1]\):
+            $$\hat{y}_{t+1} = \alpha y_t + (1 - \alpha)\hat{y}_t$$
+          </li>
+          <li><strong>Holt's Linear Trend:</strong> Adds a slope equation with parameter \(\beta\) to model ongoing linear growth or decline.</li>
+          <li><strong>Holt-Winters Triple Smoothing:</strong> Extends Holt's model with a seasonal equation parameter \(\gamma\), updating level, trend, and repeating seasonal patterns simultaneously.</li>
+        </ul>
+      </section>
+
+      <section class="topic" id="baselines">
+        <header class="topic-head">
+          <p class="eyebrow">11.3 · Honest benchmarks</p>
+          <h2>Baseline forecasts</h2>
+        </header>
+
+        <p class="lead">Before training machine learning algorithms or tuning ARIMA hyperparameters, you must evaluate simple heuristic baselines. If a complex model cannot comfortably beat a seasonal naïve baseline, deploying it is an expensive operational liability.</p>
+
+        <h3>Essential Baseline Methods</h3>
+        <ul>
+          <li><strong>Naïve Forecast (Persistence):</strong> Assumes the next period will equal the most recent period: \(\hat{y}_{t+h} = y_t\). Extremely effective for financial random walks.</li>
+          <li><strong>Seasonal Naïve:</strong> Sets the forecast equal to the value from the identical season of the previous cycle: \(\hat{y}_{t+h} = y_{t+h-m}\) (e.g. this Tuesday will equal last Tuesday).</li>
+          <li><strong>Drift Method:</strong> Extrapolates the average historical change over time from the beginning to the end of the observed history.</li>
+        </ul>
+
+        <div class="callout why">
+          <h4>The Benchmark Discipline</h4>
+          <p>Always compute the Mean Absolute Scaled Error (MASE). MASE divides your model's MAE by the MAE of a simple seasonal naïve baseline. If \(\text{MASE} \ge 1.0\), your model performs <em>worse</em> than simply repeating last year's numbers!</p>
+        </div>
+      </section>
+
+      <section class="topic" id="arima-ets">
+        <header class="topic-head">
+          <p class="eyebrow">11.4 · Statistical time series modeling</p>
+          <h2>ETS &amp; ARIMA</h2>
+        </header>
+
+        <p class="lead">ARIMA and ETS are the twin pillars of classical statistical forecasting. They describe autocorrelation structures in stationary series to produce mathematically rigorous forecasts with prediction intervals.</p>
+
+        <h3>Stationarity and Differencing</h3>
+        <p>ARIMA models require the series to be <strong>stationary</strong>: its mean, variance, and autocovariance must remain constant over time. Non-stationary trends are eliminated through differencing (\(y'_t = y_t - y_{t-1}\)).</p>
+
+        <h3>The Anatomy of ARIMA(p, d, q)</h3>
+        <ul>
+          <li><strong>\(p\) (Autoregressive - AR):</strong> Regresses the variable against its own past lag values: \(\phi_1 y_{t-1} + \dots + \phi_p y_{t-p}\).</li>
+          <li><strong>\(d\) (Integrated - I):</strong> The order of differencing applied to make the series stationary.</li>
+          <li><strong>\(q\) (Moving Average - MA):</strong> Regresses against past forecast residual errors: \(\theta_1 \epsilon_{t-1} + \dots + \theta_q \epsilon_{t-q}\).</li>
+        </ul>
+        <p>For seasonal data, <strong>SARIMA\((p,d,q)(P,D,Q)_m\)</strong> incorporates seasonal lag terms matching the cycle length \(m\).</p>
+      </section>
+
+      <section class="topic" id="forecast-eval">
+        <header class="topic-head">
+          <p class="eyebrow">11.5 · Validating predictions</p>
+          <h2>Backtesting &amp; forecast error</h2>
+        </header>
+
+        <p class="lead">Evaluating a time series model requires forward rolling cross-validation (backtesting). Measuring forecast accuracy across multiple test horizons ensures your models remain dependable when deployed.</p>
+
+        <h3>Core Error Metrics</h3>
+        <ul>
+          <li><strong>MAE (Mean Absolute Error):</strong> \(\frac{1}{n}\sum |y_t - \hat{y}_t|\). Intuitive and directly expressed in business units (e.g. ±$150).</li>
+          <li><strong>RMSE (Root Mean Squared Error):</strong> \(\sqrt{\frac{1}{n}\sum (y_t - \hat{y}_t)^2}\). Squares errors before averaging, penalizing catastrophic forecast misses heavily.</li>
+          <li><strong>MAPE (Mean Absolute Percentage Error):</strong> \(\frac{1}{n}\sum \left|\frac{y_t - \hat{y}_t}{y_t}\right|\). Expressed as a percentage, but explodes when actuals are near zero.</li>
+          <li><strong>WAPE (Weighted Absolute Percentage Error):</strong> \(\frac{\sum |y_t - \hat{y}_t|}{\sum y_t}\). Stable across intermittent demand and zero values.</li>
+        </ul>
+
+        <div class="callout trap">
+          <h4>Data Leakage via Shuffling</h4>
+          <p>Never apply standard scikit-learn <code>train_test_split(shuffle=True)</code> to time series. Shuffling allows models to peek at tomorrow's data to predict yesterday, yielding unrealistically perfect accuracy that collapses in production.</p>
+        </div>
+      </section>
+
+      <section class="topic" id="anomalies">
+        <header class="topic-head">
+          <p class="eyebrow">11.6 · Operational alerting</p>
+          <h2>Anomaly detection</h2>
+        </header>
+
+        <p class="lead">Anomalies are unexpected events that deviate significantly from expected temporal behavior. Effective monitoring separates genuine system outages from normal seasonal variations.</p>
+
+        <h3>Dynamic Bounds vs Static Thresholds</h3>
+        <p>Static thresholds (e.g. "alert if traffic drops below 5,000 requests/sec") fail because normal traffic is lower at 3:00 AM than at 2:00 PM. Dynamic anomaly detection models expected value \(\hat{y}_t\) and constructs confidence bands:</p>
+        <p>$$\text{Alert if } y_t \notin \left[\hat{y}_t - 3\sigma_t, \; \hat{y}_t + 3\sigma_t\right]$$</p>
+
+        <h3>Decomposition-Based Anomaly Detection</h3>
+        <p>By fitting an STL decomposition, you remove predictable weekly seasonality and long-term trend. Outlier detection is then performed on the isolated <strong>residuals</strong> \(R_t\), catching subtle percentage drops during peak hours that static alerts completely miss.</p>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Classical Decomposition</h4><p>Load 3 years of daily web traffic or sales data. Decompose it into trend, day-of-week seasonality, and residuals. Identify historical dates with the largest residual spikes.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>Rolling Backtest Benchmark</h4><p>Implement a forward-chaining rolling backtest in Python. Compare Holt-Winters, Auto-ARIMA, and a Seasonal Naïve baseline across 12 forward-week horizons using MAE and WAPE.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Automated Anomaly Alerting Engine</h4><p>Build an anomaly detector with dynamic rolling prediction intervals that ingests hourly transaction logs, filters out day-of-week patterns, and sends simulated alerts for statistical drops.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="fc-1"><span>Decompose a time series into trend, seasonal cycles, and residuals</span></label></li>
+          <li><label><input type="checkbox" data-key="fc-2"><span>Select between additive and multiplicative seasonal structures</span></label></li>
+          <li><label><input type="checkbox" data-key="fc-3"><span>Benchmark advanced models against naive and seasonal naive baselines</span></label></li>
+          <li><label><input type="checkbox" data-key="fc-4"><span>Difference non-stationary series and interpret ACF/PACF autocorrelation plots</span></label></li>
+          <li><label><input type="checkbox" data-key="fc-5"><span>Validate forecasts using temporal rolling cross-validation without lookahead bias</span></label></li>
+          <li><label><input type="checkbox" data-key="fc-6"><span>Construct dynamic anomaly detection bounds over seasonal residuals</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+</body>
+</html>

@@ -1,0 +1,1659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data cleaning &amp; preparation · Data Analyst Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="../assets/data.js"></script>
+<script src="../assets/app.js"></script>
+</head>
+<body data-area="cleaning">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--accent)"/>
+        <rect x="6" y="13" width="3.2" height="7" rx="1" fill="var(--accent-ink)"/><rect x="11.4" y="8" width="3.2" height="12" rx="1" fill="var(--accent-ink)"/><rect x="16.8" y="11" width="3.2" height="9" rx="1" fill="var(--accent-ink)"/>
+      </svg>
+      Data Analyst Atlas
+    </a>
+    <span class="crumb" data-fill="crumb"></span>
+    <span class="spacer"></span>
+    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="progress-bar"></i></span><span class="num" data-fill="progress-text"></span></div>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow" data-fill="eyebrow"></p>
+    <h1>Data cleaning &amp; preparation</h1>
+    <p class="lede">Real exports arrive with blanks, repeated customers, impossible values, three date formats and five spellings of the same city. Cleaning turns that mess into a table whose numbers you can defend. Most analysts spend a large share of every project here, and the decisions you make quietly change every result downstream.</p>
+    <div class="meta" data-fill="meta"></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="toc" aria-label="Subtopics">
+      <p class="eyebrow">In this area</p>
+      <ol data-fill="toc"></ol>
+    </nav>
+
+    <main class="content">
+
+      <div class="overview">
+        <p class="lead">Every cleaning job follows the same path. You profile the raw export to see what is wrong, fix each kind of problem with a rule you can explain (missing values, duplicates, outliers, types and dates, messy text), and then run automated checks before anyone uses the table. When a check fails, you go back and fix the rule, not the number. The six lessons below follow that path, using one running example: a customer and order export from an online store's CRM.</p>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 760 262" role="img" aria-label="The cleaning path: a raw CRM export is profiled, then five fixes are applied (missing values, duplicates, outliers, types and dates, text), then quality checks gate the result into a trusted table. Failing checks loop back to the fixes.">
+              <defs>
+                <marker id="ov-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+                <marker id="ov-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="ov-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="10" y="97" width="104" height="60" rx="8"/>
+              <text class="d-title" x="62" y="122" text-anchor="middle">CRM export</text>
+              <text class="d-label" x="62" y="141" text-anchor="middle">12,480 rows</text>
+              <line class="d-line-accent" x1="114" y1="127" x2="150" y2="127" marker-end="url(#ov-arrow-a)"/>
+              <rect class="d-box" x="152" y="97" width="104" height="60" rx="8"/>
+              <text class="d-title" x="204" y="122" text-anchor="middle">Profile</text>
+              <text class="d-label" x="204" y="141" text-anchor="middle">nulls, types</text>
+              <line class="d-line" x1="256" y1="127" x2="302" y2="37" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="256" y1="127" x2="302" y2="82" marker-end="url(#ov-arrow)"/>
+              <line class="d-line-accent" x1="256" y1="127" x2="302" y2="127" marker-end="url(#ov-arrow-a)"/>
+              <line class="d-line" x1="256" y1="127" x2="302" y2="172" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="256" y1="127" x2="302" y2="217" marker-end="url(#ov-arrow)"/>
+              <rect class="d-accent" x="304" y="20" width="176" height="34" rx="7"/>
+              <text class="d-text" x="392" y="42" text-anchor="middle">05.1 Missing values</text>
+              <rect class="d-accent" x="304" y="65" width="176" height="34" rx="7"/>
+              <text class="d-text" x="392" y="87" text-anchor="middle">05.2 Duplicates &amp; keys</text>
+              <rect class="d-accent" x="304" y="110" width="176" height="34" rx="7"/>
+              <text class="d-text" x="392" y="132" text-anchor="middle">05.3 Outliers</text>
+              <rect class="d-accent" x="304" y="155" width="176" height="34" rx="7"/>
+              <text class="d-text" x="392" y="177" text-anchor="middle">05.4 Types &amp; dates</text>
+              <rect class="d-accent" x="304" y="200" width="176" height="34" rx="7"/>
+              <text class="d-text" x="392" y="222" text-anchor="middle">05.5 Text &amp; categories</text>
+              <line class="d-line" x1="480" y1="37" x2="524" y2="118" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="480" y1="82" x2="524" y2="122" marker-end="url(#ov-arrow)"/>
+              <line class="d-line-accent" x1="480" y1="127" x2="524" y2="127" marker-end="url(#ov-arrow-a)"/>
+              <line class="d-line" x1="480" y1="172" x2="524" y2="132" marker-end="url(#ov-arrow)"/>
+              <line class="d-line" x1="480" y1="217" x2="524" y2="136" marker-end="url(#ov-arrow)"/>
+              <rect class="d-signal" x="526" y="97" width="96" height="60" rx="8"/>
+              <text class="d-title" x="574" y="122" text-anchor="middle">Checks</text>
+              <text class="d-label" x="574" y="141" text-anchor="middle">05.6 · gate</text>
+              <line class="d-line-accent" x1="622" y1="127" x2="652" y2="127" marker-end="url(#ov-arrow-a)"/>
+              <text class="d-label d-text-good" x="637" y="117" text-anchor="middle">pass</text>
+              <rect class="d-good" x="654" y="97" width="98" height="60" rx="8"/>
+              <text class="d-title" x="703" y="122" text-anchor="middle">Trusted</text>
+              <text class="d-label" x="703" y="141" text-anchor="middle">11,893 rows</text>
+              <path class="d-line-signal d-dash" d="M574 157 V250 H392 V238" marker-end="url(#ov-arrow-s)"/>
+              <text class="d-label d-text-signal" x="586" y="246">fail: fix the rule, rerun</text>
+            </svg>
+          </div>
+          <figcaption>The cleaning path used throughout this area. Each fix is a rule you can rerun on next week's export, and the checks in 05.6 decide whether the table is ready to publish. Row counts are an example.</figcaption>
+        </figure>
+      </div>
+
+      <section class="topic" id="missing">
+        <header class="topic-head">
+          <p class="eyebrow">05.1 · Blanks have a story</p>
+          <h2>Missing values</h2>
+        </header>
+
+        <p class="lead">A blank cell is a fact about how the data was collected. Before you fill or drop anything, ask <em>why</em> the value is missing, because the answer decides which fix keeps your averages honest and which one quietly bends them.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Pandas, SQL and spreadsheets all skip blanks in <code>AVG</code> by default, so a column with 20% missing values silently becomes an average of the other 80%. If the missing rows are your biggest customers, every revenue-per-customer number you report will be too low.</p>
+        </div>
+
+        <h3>Three reasons a value goes missing</h3>
+        <p>Statisticians name three patterns. <strong>MCAR</strong> (missing completely at random) means the gaps are pure accident, like a form that crashed now and then. <strong>MAR</strong> (missing at random) means the gaps depend on <em>another</em> column you can see, such as enterprise accounts that are invoiced offline. <strong>MNAR</strong> (missing not at random) means the gap depends on the hidden value itself, such as people with high incomes skipping the income field.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 250" role="img" aria-label="Three small customer tables. MCAR: gaps fall on random rows. MAR: gaps fall only on Enterprise rows, which you can see. MNAR: gaps fall on the highest spend values, which you cannot see.">
+              <text class="d-title" x="110" y="22" text-anchor="middle">MCAR</text>
+              <text class="d-label" x="110" y="38" text-anchor="middle">random accidents</text>
+              <text class="d-title" x="330" y="22" text-anchor="middle">MAR</text>
+              <text class="d-label" x="330" y="38" text-anchor="middle">depends on a visible column</text>
+              <text class="d-title" x="550" y="22" text-anchor="middle">MNAR</text>
+              <text class="d-label" x="550" y="38" text-anchor="middle">depends on the hidden value</text>
+              <g>
+                <rect class="d-box" x="30" y="50" width="160" height="150" rx="6"/>
+                <text class="d-label" x="44" y="68">plan</text><text class="d-label" x="176" y="68" text-anchor="end">spend</text>
+                <text class="d-mono" x="44" y="90">Basic</text><text class="d-mono" x="176" y="90" text-anchor="end">420</text>
+                <text class="d-mono" x="44" y="112">Pro</text><rect class="d-signal" x="130" y="99" width="50" height="17" rx="3"/><text class="d-mono d-text-signal" x="176" y="112" text-anchor="end">null</text>
+                <text class="d-mono" x="44" y="134">Basic</text><text class="d-mono" x="176" y="134" text-anchor="end">510</text>
+                <text class="d-mono" x="44" y="156">Enterprise</text><text class="d-mono" x="176" y="156" text-anchor="end">10,900</text>
+                <text class="d-mono" x="44" y="178">Basic</text><rect class="d-signal" x="130" y="165" width="50" height="17" rx="3"/><text class="d-mono d-text-signal" x="176" y="178" text-anchor="end">null</text>
+              </g>
+              <g>
+                <rect class="d-box" x="250" y="50" width="160" height="150" rx="6"/>
+                <text class="d-label" x="264" y="68">plan</text><text class="d-label" x="396" y="68" text-anchor="end">spend</text>
+                <text class="d-mono" x="264" y="90">Basic</text><text class="d-mono" x="396" y="90" text-anchor="end">420</text>
+                <text class="d-mono d-text-accent" x="264" y="112">Enterprise</text><rect class="d-signal" x="350" y="99" width="50" height="17" rx="3"/><text class="d-mono d-text-signal" x="396" y="112" text-anchor="end">null</text>
+                <text class="d-mono" x="264" y="134">Pro</text><text class="d-mono" x="396" y="134" text-anchor="end">1,800</text>
+                <text class="d-mono d-text-accent" x="264" y="156">Enterprise</text><rect class="d-signal" x="350" y="143" width="50" height="17" rx="3"/><text class="d-mono d-text-signal" x="396" y="156" text-anchor="end">null</text>
+                <text class="d-mono" x="264" y="178">Basic</text><text class="d-mono" x="396" y="178" text-anchor="end">510</text>
+              </g>
+              <g>
+                <rect class="d-box" x="470" y="50" width="160" height="150" rx="6"/>
+                <text class="d-label" x="484" y="68">plan</text><text class="d-label" x="616" y="68" text-anchor="end">income</text>
+                <text class="d-mono" x="484" y="90">Basic</text><text class="d-mono" x="616" y="90" text-anchor="end">48k</text>
+                <text class="d-mono" x="484" y="112">Pro</text><rect class="d-signal" x="570" y="99" width="50" height="17" rx="3"/><text class="d-mono d-text-signal" x="616" y="112" text-anchor="end">null</text>
+                <text class="d-mono" x="484" y="134">Basic</text><text class="d-mono" x="616" y="134" text-anchor="end">52k</text>
+                <text class="d-mono" x="484" y="156">Pro</text><text class="d-mono" x="616" y="156" text-anchor="end">61k</text>
+                <text class="d-mono" x="484" y="178">Basic</text><rect class="d-signal" x="570" y="165" width="50" height="17" rx="3"/><text class="d-mono d-text-signal" x="616" y="178" text-anchor="end">null</text>
+              </g>
+              <text class="d-label" x="110" y="222" text-anchor="middle">drop or fill: little bias</text>
+              <text class="d-label d-text-accent" x="330" y="222" text-anchor="middle">fill within each plan</text>
+              <text class="d-label d-text-signal" x="550" y="222" text-anchor="middle">hidden values were high (240k, 310k)</text>
+              <text class="d-label d-text-signal" x="550" y="240" text-anchor="middle">flag it, never fill blindly</text>
+            </svg>
+          </div>
+          <figcaption>The same blank means different things. Under MAR you can repair the gap with the column that explains it; under MNAR no fill is safe, so you flag the rows and say so in your write-up.</figcaption>
+        </figure>
+
+        <h3>Count before you fix</h3>
+        <p>Always measure the damage per column first. A column with 0.3% blanks and one with 40% blanks need different treatment, and a sudden jump in blanks after a release is often a tracking bug, not customer behaviour.</p>
+
+        <pre class="code" data-lang="python"><code>import pandas as pd
+
+customers = pd.read_csv("crm_export.csv")
+<span class="c"># share of missing values per column, worst first</span>
+print(customers.isna().mean().sort_values(ascending=False).round(3))
+
+<span class="c"># is missingness linked to another column? (MAR check)</span>
+print(customers["annual_spend"].isna().groupby(customers["plan"]).mean())
+
+<span class="c"># fill within each plan, and keep a flag so the fill stays visible</span>
+customers["spend_was_missing"] = customers["annual_spend"].isna()
+customers["annual_spend"] = customers["annual_spend"].fillna(
+    customers.groupby("plan")["annual_spend"].transform("median"))</code></pre>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- COUNT(col) skips NULLs, so the difference is the number of blanks</span>
+SELECT plan,
+       COUNT(*)                       AS customers,
+       COUNT(*) - COUNT(annual_spend) AS missing_spend,
+       ROUND(AVG(annual_spend), 0)    AS avg_spend_known_only
+FROM crm_customers
+GROUP BY plan;</code></pre>
+
+        <h3>Compare the strategies on one column</h3>
+        <p>Below, 25 customers have a known true <code>annual_spend</code>, but the export lost 5 values. Three of the five are Enterprise accounts. Switch strategies and watch the mean, median and spread move compared with the truth, which you never get to see in real life.</p>
+
+        <div class="widget" id="missing-demo">
+          <div class="widget-head">
+            <span class="widget-title">Missing-value strategy comparer</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="missing-strategy">Strategy
+              <select id="missing-strategy">
+                <option value="drop" selected>Drop rows with blanks</option>
+                <option value="zero">Fill with 0</option>
+                <option value="mean">Fill with overall mean</option>
+                <option value="median">Fill with overall median</option>
+                <option value="group">Fill with median of the same plan</option>
+              </select>
+            </label>
+            <label for="missing-flag"><input type="checkbox" id="missing-flag"> Add a <code>was_missing</code> flag</label>
+          </div>
+          <svg id="missing-plot" viewBox="0 0 640 300" role="img" aria-label="Spend of 25 customers in three plan rows. Filled-in values are drawn as rings. Below, the estimated mean, median and standard deviation are compared with the true values."></svg>
+          <p class="readout" id="missing-readout"></p>
+        </div>
+
+        <h3>What each fill does to your numbers</h3>
+        <p>Every fill trades one distortion for another. Mean and median fills keep row counts but pile values onto one number, which shrinks the spread and weakens correlations. Filling with 0 is right only when blank truly means zero, such as "no refunds".</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Two histograms of session length. Left, the observed values form a smooth hump. Right, after mean imputation, a tall spike appears at the mean and the spread shrinks.">
+              <text class="d-title" x="160" y="20" text-anchor="middle">Observed (80% of rows)</text>
+              <text class="d-title" x="480" y="20" text-anchor="middle">After mean fill</text>
+              <line class="d-line" x1="30" y1="180" x2="290" y2="180"/>
+              <line class="d-line" x1="350" y1="180" x2="610" y2="180"/>
+              <rect class="d-box" x="40" y="160" width="24" height="20"/><rect class="d-box" x="66" y="138" width="24" height="42"/>
+              <rect class="d-box" x="92" y="112" width="24" height="68"/><rect class="d-box" x="118" y="90" width="24" height="90"/>
+              <rect class="d-box" x="144" y="82" width="24" height="98"/><rect class="d-box" x="170" y="96" width="24" height="84"/>
+              <rect class="d-box" x="196" y="120" width="24" height="60"/><rect class="d-box" x="222" y="146" width="24" height="34"/>
+              <rect class="d-box" x="248" y="164" width="24" height="16"/>
+              <rect class="d-box" x="360" y="160" width="24" height="20"/><rect class="d-box" x="386" y="138" width="24" height="42"/>
+              <rect class="d-box" x="412" y="112" width="24" height="68"/><rect class="d-box" x="438" y="90" width="24" height="90"/>
+              <rect class="d-signal" x="464" y="34" width="24" height="146"/><rect class="d-box" x="490" y="96" width="24" height="84"/>
+              <rect class="d-box" x="516" y="120" width="24" height="60"/><rect class="d-box" x="542" y="146" width="24" height="34"/>
+              <rect class="d-box" x="568" y="164" width="24" height="16"/>
+              <text class="d-label d-text-signal" x="494" y="44">+20% of rows</text>
+              <text class="d-label d-text-signal" x="494" y="58">all at the mean</text>
+              <text class="d-label" x="160" y="200" text-anchor="middle">std 6.1 min</text>
+              <text class="d-label d-text-signal" x="480" y="200" text-anchor="middle">std 5.5 min (too small)</text>
+              <line class="d-line-accent" x1="300" y1="120" x2="342" y2="120"/>
+              <text class="d-label" x="321" y="110" text-anchor="middle">fill</text>
+            </svg>
+          </div>
+          <figcaption>Mean imputation adds a spike and shrinks the standard deviation by roughly the square root of the observed share (here \(\sqrt{0.8} \approx 0.89\)), so confidence intervals built on it are too narrow. Numbers are an example.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Strategy</th><th>Use when</th><th>Cost</th></tr></thead>
+            <tbody>
+              <tr><td>Drop rows</td><td>Few blanks (under ~5%) and MCAR</td><td>Smaller sample; biased if not MCAR</td></tr>
+              <tr><td>Fill with 0 or a constant</td><td>Blank really means "none"</td><td>Wrong anywhere else</td></tr>
+              <tr><td>Mean / median</td><td>Quick model input, MCAR</td><td>Shrinks spread, adds a spike</td></tr>
+              <tr><td>Group median</td><td>MAR on a column you have</td><td>Needs enough rows per group</td></tr>
+              <tr><td>Flag + fill</td><td>Missingness itself might matter</td><td>One more column to explain</td></tr>
+              <tr><td>Leave null, report it</td><td>MNAR or a key business figure</td><td>Honest but less convenient</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Measure blanks per column and per segment before choosing a fix.</li>
+            <li>MCAR, MAR and MNAR describe why values are missing, and that decides which fix is safe.</li>
+            <li><code>AVG</code>, <code>mean()</code> and spreadsheet <code>AVERAGE</code> silently ignore blanks.</li>
+            <li>Mean and median fills keep rows but shrink spread; group-wise fills use the column that explains the gap.</li>
+            <li>A <code>was_missing</code> flag keeps the fix visible to anyone who uses the table later.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Filling with 0 when blank means "unknown", which drags averages down.</li>
+            <li>Dropping rows without checking who gets dropped (often your biggest or newest customers).</li>
+            <li>Treating the strings <code>"N/A"</code>, <code>"-"</code> or <code>""</code> as real values instead of nulls.</li>
+            <li>Filling before splitting train and test data for a model, which leaks information.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="missing-1"><span>Report the share of blanks per column and per segment in pandas and SQL</span></label></li>
+          <li><label><input type="checkbox" data-key="missing-2"><span>Classify a missing-data situation as MCAR, MAR or MNAR and justify it</span></label></li>
+          <li><label><input type="checkbox" data-key="missing-3"><span>Explain why mean imputation shrinks the standard deviation</span></label></li>
+          <li><label><input type="checkbox" data-key="missing-4"><span>Fill a column with a group median and add a <code>was_missing</code> flag</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/user_guide/missing_data.html">pandas: Working with missing data</a></li>
+          <li><span class="kind">Book</span><a href="https://stefvanbuuren.name/fimd/">Flexible Imputation of Missing Data (Stef van Buuren, free online)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="duplicates">
+        <header class="topic-head">
+          <p class="eyebrow">05.2 · One row per thing</p>
+          <h2>Duplicates &amp; keys</h2>
+        </header>
+
+        <p class="lead">Every table should have a <strong>grain</strong>: a sentence that says what one row is, such as "one row per customer" or "one row per order line". The <strong>key</strong> is the column, or set of columns, that makes each row unique at that grain. Duplicates are rows that break the grain, and they inflate every count and sum built on top.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>A CRM where sales reps re-enter the same customer will report more customers than you have. Worse, joining orders to a customer table with duplicate keys multiplies order rows, so revenue doubles on the dashboard without anyone noticing.</p>
+        </div>
+
+        <h3>Exact duplicates and fuzzy duplicates</h3>
+        <p><strong>Exact duplicates</strong> are identical rows, usually from an export or load that ran twice. <strong>Fuzzy duplicates</strong> are the same real-world entity typed differently: <code>ANA.LOPEZ@mail.com</code> and <code>ana.lopez@mail.com </code>. To catch those you normalize the key first, then group, then keep one <em>survivor</em> per group with an explicit rule such as "most recently updated".</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Three CRM rows for Ana Lopez with different casing and spacing in the email are normalized to the same key, grouped, and reduced to one survivor row chosen by the latest updated_at.">
+              <defs>
+                <marker id="duplicates-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="20" y="22">raw rows (email, updated_at)</text>
+              <rect class="d-box" x="20" y="32" width="214" height="34" rx="6"/>
+              <text class="d-mono" x="30" y="54">ANA.LOPEZ@mail.com</text><text class="d-mono" x="226" y="54" text-anchor="end">Jan 9</text>
+              <rect class="d-box" x="20" y="76" width="214" height="34" rx="6"/>
+              <text class="d-mono" x="30" y="98">ana.lopez@mail.com␣</text><text class="d-mono" x="226" y="98" text-anchor="end">Mar 2</text>
+              <rect class="d-box" x="20" y="120" width="214" height="34" rx="6"/>
+              <text class="d-mono" x="30" y="142">ana.lopez@mail.com</text><text class="d-mono" x="226" y="142" text-anchor="end">Feb 14</text>
+              <line class="d-line-accent" x1="234" y1="93" x2="282" y2="93" marker-end="url(#duplicates-arrow)"/>
+              <rect class="d-accent" x="284" y="62" width="150" height="62" rx="8"/>
+              <text class="d-title" x="359" y="86" text-anchor="middle">normalize key</text>
+              <text class="d-mono" x="359" y="106" text-anchor="middle">lower(trim(email))</text>
+              <line class="d-line-accent" x1="434" y1="93" x2="476" y2="93" marker-end="url(#duplicates-arrow)"/>
+              <rect class="d-box" x="478" y="52" width="80" height="82" rx="8"/>
+              <text class="d-title" x="518" y="80" text-anchor="middle">1 key</text>
+              <text class="d-label" x="518" y="98" text-anchor="middle">3 rows</text>
+              <text class="d-label" x="518" y="116" text-anchor="middle">sort by date</text>
+              <line class="d-line-accent" x1="558" y1="93" x2="590" y2="93" marker-end="url(#duplicates-arrow)"/>
+              <rect class="d-good" x="592" y="62" width="78" height="62" rx="8"/>
+              <text class="d-title" x="631" y="86" text-anchor="middle">survivor</text>
+              <text class="d-label" x="631" y="106" text-anchor="middle">Mar 2 row</text>
+              <text class="d-label" x="20" y="186">␣ = trailing space</text>
+              <text class="d-label" x="284" y="160">Rule: rows that share the normalized key are one customer.</text>
+              <text class="d-label" x="284" y="180">Keep the most recently updated row; log the other two ids.</text>
+              <text class="d-label d-text-signal" x="284" y="210">Never keep "whichever row came first": export order is arbitrary.</text>
+            </svg>
+          </div>
+          <figcaption>Deduplication is three explicit choices: how to normalize the key, which columns define "same", and which row survives.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- 1. Is customer_id really unique? Any row returned breaks the grain.</span>
+SELECT customer_id, COUNT(*) AS n
+FROM crm_customers
+GROUP BY customer_id
+HAVING COUNT(*) &gt; 1;
+
+<span class="c">-- 2. Keep one survivor per normalized email: the latest update wins</span>
+WITH ranked AS (
+  SELECT *,
+         ROW_NUMBER() OVER (
+           PARTITION BY LOWER(TRIM(email))
+           ORDER BY updated_at DESC, customer_id
+         ) AS rn
+  FROM crm_customers
+)
+SELECT * FROM ranked WHERE rn = 1;</code></pre>
+
+        <pre class="code" data-lang="python"><code>df["email_key"] = df["email"].str.strip().str.lower()
+print(df.duplicated(subset="email_key").sum(), "duplicate rows")
+
+clean = (df.sort_values("updated_at")
+           .drop_duplicates(subset="email_key", keep="last"))
+assert clean["email_key"].is_unique</code></pre>
+
+        <h3>Pick the key, see what collapses</h3>
+        <p>Ten rows from the CRM describe six real people. Two different people are both called Alex Kim. Choose which columns form the key and whether to normalize text, then check which rows merge. The right key merges every true duplicate and never merges two different people.</p>
+
+        <div class="widget" id="dupes-demo">
+          <div class="widget-head">
+            <span class="widget-title">Dedupe-key chooser</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="dupes-k-id"><input type="checkbox" id="dupes-k-id" checked> customer_id</label>
+            <label for="dupes-k-email"><input type="checkbox" id="dupes-k-email"> email</label>
+            <label for="dupes-k-name"><input type="checkbox" id="dupes-k-name"> name</label>
+            <label for="dupes-k-phone"><input type="checkbox" id="dupes-k-phone"> phone</label>
+            <label for="dupes-norm"><input type="checkbox" id="dupes-norm"> normalize (trim + lowercase)</label>
+          </div>
+          <svg id="dupes-plot" viewBox="0 0 660 330" role="img" aria-label="Ten CRM rows with a group number per row. Rows that share the chosen key get the same group. Wrong merges are marked in red and missed duplicates are counted below."></svg>
+          <p class="readout" id="dupes-readout"></p>
+        </div>
+
+        <h3>Duplicate keys multiply joins</h3>
+        <p>A duplicate on the "one" side of a join turns every matching row on the "many" side into two. The query still runs, the totals just grow. Check key uniqueness before every join you did not build yourself.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 220" role="img" aria-label="Three orders for customer C7 totalling 300 are joined to a customer table where C7 appears twice. The result has six rows and a revenue total of 600.">
+              <defs>
+                <marker id="duplicates-arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <text class="d-title" x="90" y="22" text-anchor="middle">orders</text>
+              <rect class="d-box" x="20" y="34" width="140" height="28" rx="5"/><text class="d-mono" x="30" y="53">C7  $100</text>
+              <rect class="d-box" x="20" y="66" width="140" height="28" rx="5"/><text class="d-mono" x="30" y="85">C7  $120</text>
+              <rect class="d-box" x="20" y="98" width="140" height="28" rx="5"/><text class="d-mono" x="30" y="117">C7  $80</text>
+              <text class="d-label" x="90" y="148" text-anchor="middle">total $300</text>
+              <text class="d-title" x="275" y="22" text-anchor="middle">customers</text>
+              <rect class="d-box" x="205" y="50" width="140" height="28" rx="5"/><text class="d-mono" x="215" y="69">C7  Ana</text>
+              <rect class="d-signal" x="205" y="82" width="140" height="28" rx="5"/><text class="d-mono" x="215" y="101">C7  Ana (dup)</text>
+              <line class="d-line-signal" x1="345" y1="80" x2="408" y2="80" marker-end="url(#duplicates-arrow2)"/>
+              <text class="d-label" x="376" y="70" text-anchor="middle">JOIN</text>
+              <text class="d-title" x="530" y="22" text-anchor="middle">result: 6 rows</text>
+              <g>
+                <rect class="d-box" x="412" y="34" width="118" height="24" rx="4"/><text class="d-mono" x="420" y="51">$100 Ana</text>
+                <rect class="d-signal" x="536" y="34" width="124" height="24" rx="4"/><text class="d-mono" x="544" y="51">$100 Ana</text>
+                <rect class="d-box" x="412" y="62" width="118" height="24" rx="4"/><text class="d-mono" x="420" y="79">$120 Ana</text>
+                <rect class="d-signal" x="536" y="62" width="124" height="24" rx="4"/><text class="d-mono" x="544" y="79">$120 Ana</text>
+                <rect class="d-box" x="412" y="90" width="118" height="24" rx="4"/><text class="d-mono" x="420" y="107">$80 Ana</text>
+                <rect class="d-signal" x="536" y="90" width="124" height="24" rx="4"/><text class="d-mono" x="544" y="107">$80 Ana</text>
+              </g>
+              <text class="d-label d-text-signal" x="536" y="148" text-anchor="middle">SUM(amount) = $600</text>
+              <text class="d-label" x="340" y="190" text-anchor="middle">Test before joining: SELECT key, COUNT(*) … HAVING COUNT(*) &gt; 1 must return nothing.</text>
+            </svg>
+          </div>
+          <figcaption>One duplicate customer row doubled this customer's revenue. Row counts before and after a join are the cheapest check you can run.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Write the grain of every table in one sentence, then test that the key is unique at that grain.</li>
+            <li>Normalize text keys (trim, lowercase) before comparing them.</li>
+            <li>Choose the survivor with an explicit rule such as latest <code>updated_at</code>, and log merged ids.</li>
+            <li>A key that is too loose (name only) merges different people; one that is too strict (raw email) misses duplicates.</li>
+            <li>Duplicate keys on the "one" side of a join silently multiply sums.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Running <code>SELECT DISTINCT *</code> and calling it deduplicated; fuzzy duplicates survive.</li>
+            <li>Deduplicating on name alone, which merges different people with common names.</li>
+            <li>Letting nulls match each other: two blank phone numbers are not the same phone.</li>
+            <li>Keeping the first row in export order instead of a reproducible rule.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="duplicates-1"><span>State the grain of a table and write a query that proves its key is unique</span></label></li>
+          <li><label><input type="checkbox" data-key="duplicates-2"><span>Deduplicate with <code>ROW_NUMBER()</code> and a survivor rule</span></label></li>
+          <li><label><input type="checkbox" data-key="duplicates-3"><span>Explain why a duplicate dimension key inflates revenue after a join</span></label></li>
+          <li><label><input type="checkbox" data-key="duplicates-4"><span>Spot a false merge caused by a key that is too loose</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://www.postgresql.org/docs/current/tutorial-window.html">PostgreSQL tutorial: Window functions</a></li>
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop_duplicates.html">pandas: DataFrame.drop_duplicates</a></li>
+          <li><span class="kind">Paper</span><a href="https://www.jstatsoft.org/article/view/v059i10">Tidy Data (Hadley Wickham, 2014)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="outliers">
+        <header class="topic-head">
+          <p class="eyebrow">05.3 · Errors or extremes</p>
+          <h2>Outliers</h2>
+        </header>
+
+        <p class="lead">An <strong>outlier</strong> is a value far from the rest. Some are errors (a price typed in cents, an age of 212) and should be fixed. Others are real and important (a B2B customer who orders 40 laptops) and should be kept. A rule can find candidates; only you can decide which kind each one is.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>In the example below, one order of 12,500 plus two large B2B orders push the average order value of forty orders to 519, while the median stays at 97. Report that mean and the business thinks customers spend five times what they do. Delete the B2B orders by reflex and you hide your most valuable segment.</p>
+        </div>
+
+        <h3>Two standard rules</h3>
+        <p>The <strong>IQR rule</strong> flags values more than \(k\) interquartile ranges beyond the middle half of the data. It uses quartiles, so the outliers themselves barely move the fences. The <strong>z-score rule</strong> flags values many standard deviations from the mean. It is simple but fragile, because a huge outlier inflates the standard deviation and hides itself and its neighbours.</p>
+
+        <div class="formula">
+          \[ \text{fences} = \big[\,Q_1 - k\cdot\text{IQR},\;\; Q_3 + k\cdot\text{IQR}\,\big], \qquad \text{IQR} = Q_3 - Q_1, \qquad z_i = \frac{x_i - \bar{x}}{s} \]
+          <span class="formula-note">Tukey's convention is \(k = 1.5\) for "outlier" and \(k = 3\) for "far out". A common z-score cut-off is \(|z| &gt; 3\).</span>
+        </div>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="A box plot of 40 order values. Q1 is 71.5, the median 96.5, Q3 149.75, so the IQR is 78.25 and the upper fence at k equals 1.5 is 267. Four values lie beyond it: 268, 1,850, 2,400 and 12,500, drawn past an axis break.">
+              <line class="d-line" x1="30" y1="150" x2="420" y2="150"/>
+              <text class="d-label" x="40" y="168" text-anchor="middle">0</text>
+              <text class="d-label" x="140" y="168" text-anchor="middle">100</text>
+              <text class="d-label" x="240" y="168" text-anchor="middle">200</text>
+              <text class="d-label" x="340" y="168" text-anchor="middle">300</text>
+              <line class="d-grid" x1="140" y1="40" x2="140" y2="150"/><line class="d-grid" x1="240" y1="40" x2="240" y2="150"/><line class="d-grid" x1="340" y1="40" x2="340" y2="150"/>
+              <line class="d-line" x1="74" y1="95" x2="111.5" y2="95"/>
+              <line class="d-line" x1="74" y1="83" x2="74" y2="107"/>
+              <rect class="d-accent" x="111.5" y="75" width="78.25" height="40" rx="3"/>
+              <line class="d-line" x1="136.5" y1="75" x2="136.5" y2="115" stroke-width="2.5"/>
+              <line class="d-line" x1="189.75" y1="95" x2="275" y2="95"/>
+              <line class="d-line" x1="275" y1="83" x2="275" y2="107"/>
+              <line class="d-line-signal d-dash" x1="307" y1="40" x2="307" y2="150"/>
+              <text class="d-label d-text-signal" x="307" y="34" text-anchor="middle">fence 267</text>
+              <circle class="d-dot-signal" cx="308" cy="95" r="4.5"/>
+              <text class="d-label" x="111.5" y="64" text-anchor="middle">Q1 71.5</text>
+              <text class="d-label" x="150" y="130" text-anchor="middle">median 96.5</text>
+              <text class="d-label" x="189.75" y="64" text-anchor="middle">Q3 149.75</text>
+              <text class="d-label" x="150" y="190" text-anchor="middle">IQR = 78.25 · fence = 149.75 + 1.5 × 78.25</text>
+              <path class="d-line" d="M420 150 l8 -8 M428 150 l8 -8"/>
+              <line class="d-line" x1="440" y1="150" x2="660" y2="150"/>
+              <circle class="d-dot-signal" cx="480" cy="95" r="5"/><text class="d-label" x="480" y="80" text-anchor="middle">1,850</text>
+              <circle class="d-dot-signal" cx="540" cy="95" r="5"/><text class="d-label" x="540" y="80" text-anchor="middle">2,400</text>
+              <text class="d-label" x="510" y="125" text-anchor="middle">B2B orders</text>
+              <circle class="d-dot-signal" cx="630" cy="95" r="5"/><text class="d-label" x="630" y="80" text-anchor="middle">12,500</text>
+              <text class="d-label d-text-signal" x="630" y="125" text-anchor="middle">cents bug?</text>
+              <text class="d-label" x="550" y="168" text-anchor="middle">(axis break)</text>
+            </svg>
+          </div>
+          <figcaption>Anatomy of the IQR rule on the example orders. At \(k = 1.5\) the fence also catches 268, an ordinary large basket, which is why the threshold is a choice, not a law.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>amt = orders["amount"]
+q1, q3 = amt.quantile([0.25, 0.75])
+iqr = q3 - q1
+lo, hi = q1 - 3 * iqr, q3 + 3 * iqr           <span class="c"># k = 3: "far out" only</span>
+
+orders["amount_outlier"] = ~amt.between(lo, hi)
+print(orders.loc[orders["amount_outlier"], ["order_id", "customer_id", "amount"]])
+
+<span class="c"># robust summary that outliers barely move</span>
+print(amt.median(), amt.clip(lower=lo, upper=hi).mean())   <span class="c"># capped (winsorized) mean</span></code></pre>
+
+        <pre class="code" data-lang="sql"><code>WITH q AS (
+  SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY amount) AS q1,
+         PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY amount) AS q3
+  FROM orders
+)
+SELECT o.order_id, o.amount
+FROM orders o CROSS JOIN q
+WHERE o.amount &gt; q.q3 + 3 * (q.q3 - q.q1)
+   OR o.amount &lt; q.q1 - 3 * (q.q3 - q.q1);</code></pre>
+
+        <h3>Switch the rule, watch what gets caught</h3>
+        <p>The 40 orders below include a suspected cents bug (12,500) and two genuine B2B orders. Try each rule and threshold. Notice that the z-score rule struggles: the 12,500 order inflates the standard deviation so much that the B2B orders look normal.</p>
+
+        <div class="widget" id="outliers-demo">
+          <div class="widget-head">
+            <span class="widget-title">Outlier rule switcher</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="outliers-rule">Rule
+              <select id="outliers-rule">
+                <option value="iqr" selected>IQR fences</option>
+                <option value="z">z-score</option>
+                <option value="pct">Percentile cut-off</option>
+              </select>
+            </label>
+            <label for="outliers-k"><span id="outliers-k-name">k</span> <input type="range" id="outliers-k" min="1" max="3" step="0.25" value="1.5"><output id="outliers-k-out">1.5</output></label>
+            <label for="outliers-action">Then
+              <select id="outliers-action">
+                <option value="flag" selected>flag only</option>
+                <option value="cap">cap at the cut-off</option>
+                <option value="drop">drop</option>
+              </select>
+            </label>
+          </div>
+          <svg id="outliers-plot" viewBox="0 0 640 230" role="img" aria-label="Forty order values on a logarithmic axis. Flagged orders are highlighted beyond a dashed cut-off line."></svg>
+          <p class="readout" id="outliers-readout"></p>
+        </div>
+
+        <h3>Decide what each outlier is</h3>
+        <p>Investigate every flagged value before acting. Look at the raw row, the customer and the source system. The decision then follows from what you found, not from the rule.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Decision flow for a flagged value. If it is impossible, fix it at the source or set it to null. If it is real but extreme, keep it and use robust statistics, cap it for models, or report its segment separately.">
+              <defs>
+                <marker id="outliers-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head"/>
+                </marker>
+              </defs>
+              <rect class="d-signal" x="20" y="90" width="120" height="50" rx="8"/>
+              <text class="d-title" x="80" y="112" text-anchor="middle">Flagged</text>
+              <text class="d-label" x="80" y="129" text-anchor="middle">value</text>
+              <line class="d-line" x1="140" y1="115" x2="188" y2="115" marker-end="url(#outliers-arrow)"/>
+              <rect class="d-box" x="190" y="86" width="150" height="58" rx="8"/>
+              <text class="d-title" x="265" y="110" text-anchor="middle">Possible in</text>
+              <text class="d-title" x="265" y="128" text-anchor="middle">real life?</text>
+              <line class="d-line" x1="340" y1="105" x2="398" y2="52" marker-end="url(#outliers-arrow)"/>
+              <text class="d-label" x="356" y="70">no</text>
+              <line class="d-line" x1="340" y1="125" x2="398" y2="178" marker-end="url(#outliers-arrow)"/>
+              <text class="d-label" x="356" y="168">yes</text>
+              <rect class="d-signal" x="400" y="20" width="260" height="62" rx="8"/>
+              <text class="d-title" x="412" y="42">Error: fix it</text>
+              <text class="d-label" x="412" y="60">cents bug → divide by 100 at source</text>
+              <text class="d-label" x="412" y="75">unknowable → set to null, log it</text>
+              <rect class="d-good" x="400" y="146" width="260" height="76" rx="8"/>
+              <text class="d-title" x="412" y="168">Real: keep it</text>
+              <text class="d-label" x="412" y="186">report the median, or a capped mean</text>
+              <text class="d-label" x="412" y="201">cap only as a model input</text>
+              <text class="d-label" x="412" y="216">or split B2B into its own segment</text>
+            </svg>
+          </div>
+          <figcaption>Rules find candidates; context classifies them. The 12,500 order traced to a checkout bug that wrote cents; the two B2B orders were real and went into a separate segment.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Outliers are either errors to fix or real extremes to keep; a rule cannot tell which.</li>
+            <li>IQR fences use quartiles, so they are robust; z-scores use the mean and standard deviation, which outliers distort.</li>
+            <li>Capping (winsorizing) limits influence without deleting rows, but changes the data, so say so.</li>
+            <li>Report the median or a segment split when a few large values dominate the mean.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Dropping every value beyond 1.5 × IQR on skewed data such as revenue, which removes your best customers.</li>
+            <li>Trusting <code>|z| &gt; 3</code> when one giant value has inflated the standard deviation (masking).</li>
+            <li>Removing outliers until the result looks the way you expected.</li>
+            <li>Silently capping values in a table that others will use for totals.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="outliers-1"><span>Compute IQR fences by hand from Q1 and Q3</span></label></li>
+          <li><label><input type="checkbox" data-key="outliers-2"><span>Explain masking and why z-scores fail on heavy-tailed data</span></label></li>
+          <li><label><input type="checkbox" data-key="outliers-3"><span>Choose between fixing, keeping, capping and segmenting for a flagged value</span></label></li>
+          <li><label><input type="checkbox" data-key="outliers-4"><span>Flag outliers in SQL with <code>PERCENTILE_CONT</code></span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Book</span><a href="https://www.itl.nist.gov/div898/handbook/">NIST/SEMATECH e-Handbook of Statistical Methods</a></li>
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/reference/api/pandas.Series.clip.html">pandas: Series.clip</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="types-dates">
+        <header class="topic-head">
+          <p class="eyebrow">05.4 · Make the computer agree</p>
+          <h2>Types, dates &amp; parsing</h2>
+        </header>
+
+        <p class="lead">A CSV is just text. Until you <strong>parse</strong> each column into a real type (number, date, boolean, category), sums fail, sorts go alphabetical and dates compare as strings. Dates are the hardest: the same characters can mean two different days, and the same moment falls on different days in different time zones.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Daily revenue, signups per week and "orders on Black Friday" all depend on which day a timestamp belongs to. Parse <code>03/04/2026</code> the wrong way and March becomes April. Ignore time zones and your daily totals disagree with finance's by every late-evening order.</p>
+        </div>
+
+        <h3>One string, two dates</h3>
+        <p>US systems usually write month first (<code>MM/DD/YYYY</code>); most of the rest of the world writes day first. For the first 12 days of every month both readings are valid, so a parser that guesses will not raise an error. Tell it the format explicitly, and store results in <strong>ISO 8601</strong> (<code>YYYY-MM-DD</code>), which has only one reading.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 200" role="img" aria-label="The string 03/04/2026 read month-first is 4 March 2026; read day-first it is 3 April 2026. 03/13/2026 fails day-first parsing because 13 is not a month. The ISO form 2026-03-04 has a single reading.">
+              <defs>
+                <marker id="types-dates-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="62" width="150" height="46" rx="8"/>
+              <text class="d-mono" x="95" y="90" text-anchor="middle">"03/04/2026"</text>
+              <line class="d-line-accent" x1="170" y1="78" x2="246" y2="42" marker-end="url(#types-dates-arrow)"/>
+              <text class="d-label" x="196" y="50" text-anchor="middle">MM/DD</text>
+              <line class="d-line-accent" x1="170" y1="92" x2="246" y2="128" marker-end="url(#types-dates-arrow)"/>
+              <text class="d-label" x="196" y="128" text-anchor="middle">DD/MM</text>
+              <rect class="d-good" x="248" y="20" width="170" height="44" rx="8"/>
+              <text class="d-title" x="333" y="47" text-anchor="middle">4 March 2026</text>
+              <rect class="d-signal" x="248" y="106" width="170" height="44" rx="8"/>
+              <text class="d-title" x="333" y="133" text-anchor="middle">3 April 2026</text>
+              <text class="d-label" x="333" y="172" text-anchor="middle">no error either way</text>
+              <rect class="d-box" x="460" y="20" width="180" height="44" rx="8"/>
+              <text class="d-mono" x="550" y="38" text-anchor="middle">"03/13/2026" + DD/MM</text>
+              <text class="d-label d-text-signal" x="550" y="55" text-anchor="middle">fails: month 13</text>
+              <rect class="d-accent" x="460" y="106" width="180" height="44" rx="8"/>
+              <text class="d-mono" x="550" y="124" text-anchor="middle">2026-03-04</text>
+              <text class="d-label" x="550" y="141" text-anchor="middle">ISO 8601: one reading</text>
+              <text class="d-label" x="550" y="88" text-anchor="middle">a failure is a clue</text>
+            </svg>
+          </div>
+          <figcaption>Ambiguous dates parse silently. Look for a value with a day above 12 to discover which format a source really uses.</figcaption>
+        </figure>
+
+        <h3>Time zones move orders between days</h3>
+        <p>A timestamp without a zone is a guess. Store event times in <strong>UTC</strong>, keep the source zone, and convert only when you report. Then decide, and write down, which zone defines "a day" for each report.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 190" role="img" aria-label="Two time axes. In New York, an order at 20:15 on March 4 is before midnight. On the UTC axis, the same moment is 01:15 on March 5, after midnight, so it counts toward March 5.">
+              <text class="d-title" x="20" y="44">New York</text>
+              <text class="d-label" x="20" y="60">UTC−5 (winter)</text>
+              <line class="d-line" x1="130" y1="50" x2="640" y2="50"/>
+              <line class="d-line" x1="510" y1="38" x2="510" y2="62"/>
+              <text class="d-label" x="510" y="30" text-anchor="middle">midnight</text>
+              <text class="d-label" x="320" y="78" text-anchor="middle">Mar 4</text>
+              <text class="d-label" x="580" y="78" text-anchor="middle">Mar 5</text>
+              <circle class="d-dot" cx="435" cy="50" r="6"/>
+              <text class="d-mono" x="435" y="30" text-anchor="middle">20:15</text>
+              <text class="d-title" x="20" y="134">UTC</text>
+              <text class="d-label" x="20" y="150">stored value</text>
+              <line class="d-line" x1="130" y1="140" x2="640" y2="140"/>
+              <line class="d-line" x1="360" y1="128" x2="360" y2="152"/>
+              <text class="d-label" x="360" y="170" text-anchor="middle">midnight</text>
+              <text class="d-label" x="245" y="170" text-anchor="middle">Mar 4</text>
+              <text class="d-label" x="500" y="170" text-anchor="middle">Mar 5</text>
+              <circle class="d-dot-signal" cx="435" cy="140" r="6"/>
+              <text class="d-mono d-text-signal" x="435" y="124" text-anchor="middle">01:15</text>
+              <line class="d-line-accent d-dash" x1="435" y1="58" x2="435" y2="132"/>
+              <text class="d-label" x="443" y="98">same moment</text>
+            </svg>
+          </div>
+          <figcaption>The same order lands on March 4 in a New York report and on March 5 in a UTC report. Neither is wrong, but mixing them makes totals disagree.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code><span class="c"># explicit format: never let the parser guess</span>
+orders["ordered_at"] = (
+    pd.to_datetime(orders["ordered_at_raw"], format="%m/%d/%Y %H:%M", errors="coerce")
+      .dt.tz_localize("America/New_York")      <span class="c"># the zone the CRM wrote in</span>
+      .dt.tz_convert("UTC"))                    <span class="c"># store in UTC</span>
+print(orders["ordered_at"].isna().sum(), "rows failed to parse")
+
+<span class="c"># "$1,299.00" and "N/A" to numbers; failures become NaN you can count</span>
+orders["amount"] = pd.to_numeric(
+    orders["amount_raw"].str.replace(r"[$,]", "", regex=True), errors="coerce")
+orders["zip"] = orders["zip"].astype("string")  <span class="c"># keep leading zeros: "02139"</span></code></pre>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- PostgreSQL: parse text, attach the source zone, report by New York day</span>
+SET TIME ZONE 'UTC';   <span class="c">-- so the ::timestamp cast keeps the wall-clock text</span>
+SELECT (TO_TIMESTAMP(ordered_at_raw, 'MM/DD/YYYY HH24:MI')::timestamp
+          AT TIME ZONE 'America/New_York')            AS ordered_at_utc,
+       ((TO_TIMESTAMP(ordered_at_raw, 'MM/DD/YYYY HH24:MI')::timestamp
+          AT TIME ZONE 'America/New_York')
+          AT TIME ZONE 'America/New_York')::date      AS ny_day
+FROM raw_orders;</code></pre>
+
+        <h3>Parse a messy export</h3>
+        <p>Twelve order timestamps arrive as text. Finance counts orders per <em>UTC</em> day and says 5 orders landed on March 5. Choose the date order and the zone the CRM wrote in, and find the only combination that parses every row and matches finance.</p>
+
+        <div class="widget" id="dates-demo">
+          <div class="widget-head">
+            <span class="widget-title">Messy-date parser</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="dates-order">Date order
+              <select id="dates-order">
+                <option value="dmy" selected>Day first (DD/MM)</option>
+                <option value="mdy">Month first (MM/DD)</option>
+              </select>
+            </label>
+            <label for="dates-tz">Source zone
+              <select id="dates-tz">
+                <option value="0" selected>UTC</option>
+                <option value="-300">New York (UTC−5)</option>
+                <option value="330">Kolkata (UTC+5:30)</option>
+              </select>
+            </label>
+          </div>
+          <svg id="dates-plot" viewBox="0 0 660 300" role="img" aria-label="A table of twelve raw timestamps with their parsed UTC values, and a bar chart counting orders per UTC day from March 3 to March 6."></svg>
+          <p class="readout" id="dates-readout"></p>
+        </div>
+
+        <h3>Other types that bite</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Raw value</th><th>Problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr><td><code>"$1,299.00"</code></td><td>Text, so sums fail or concatenate</td><td>Strip symbols, <code>to_numeric</code>, count failures</td></tr>
+              <tr><td><code>"N/A"</code>, <code>"-"</code>, <code>""</code></td><td>Placeholder strings, not nulls</td><td><code>na_values=[…]</code> when reading</td></tr>
+              <tr><td><code>02139</code> → <code>2139</code></td><td>ZIP or ID read as a number loses zeros</td><td>Read IDs and codes as text</td></tr>
+              <tr><td><code>"yes"</code>, <code>"Y"</code>, <code>1</code>, <code>TRUE</code></td><td>Four spellings of one boolean</td><td>Map to true / false explicitly</td></tr>
+              <tr><td><code>45351</code> in Excel</td><td>A date stored as a serial number</td><td>Convert from the 1899-12-30 origin</td></tr>
+              <tr><td><code>1.299,00</code></td><td>European decimal comma</td><td>Set <code>decimal=","</code>, <code>thousands="."</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Parse every column into an explicit type and count the values that failed.</li>
+            <li>Give date parsers the exact format; ambiguous dates parse wrongly without an error.</li>
+            <li>Store timestamps in UTC with the source zone known; convert only for reporting.</li>
+            <li>Decide which zone defines "a day" for each report and write it on the chart.</li>
+            <li>Keep IDs, ZIP codes and phone numbers as text.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Using <code>errors="coerce"</code> and never checking how many values became NaN or NaT.</li>
+            <li>Treating naive timestamps from different systems as if they share a zone.</li>
+            <li>Applying a fixed offset across a daylight-saving change instead of a named zone like <code>America/New_York</code>.</li>
+            <li>Sorting dates stored as <code>DD/MM/YYYY</code> text, which sorts by day number.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="types-dates-1"><span>Parse a date column with an explicit format and count failures</span></label></li>
+          <li><label><input type="checkbox" data-key="types-dates-2"><span>Convert local timestamps to UTC and back with named time zones</span></label></li>
+          <li><label><input type="checkbox" data-key="types-dates-3"><span>Explain why the same order can fall on different days in two reports</span></label></li>
+          <li><label><input type="checkbox" data-key="types-dates-4"><span>Turn currency strings into numbers without losing rows silently</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/user_guide/timeseries.html">pandas: Time series / date functionality</a></li>
+          <li><span class="kind">Docs</span><a href="https://www.postgresql.org/docs/current/datatype-datetime.html">PostgreSQL: Date/Time types</a></li>
+          <li><span class="kind">Reference</span><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 (Wikipedia)</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="text">
+        <header class="topic-head">
+          <p class="eyebrow">05.5 · Same thing, many spellings</p>
+          <h2>Cleaning text &amp; categories</h2>
+        </header>
+
+        <p class="lead">Free-text fields collect every variation people can type: <code>New York</code>, <code>new york</code>, <code>NYC</code>, <code>N.Y.</code> and <code> New York </code> with stray spaces. To a <code>GROUP BY</code> those are five different cities. Cleaning text means mapping every variant to one <strong>canonical value</strong> with rules you can review.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Split categories change rankings. In the example below, the raw data says Los Angeles is the top city; after cleaning, New York has 76 customers against Los Angeles' 56. Any "top regions" slide built on raw text would have been wrong.</p>
+        </div>
+
+        <h3>A pipeline of small, ordered steps</h3>
+        <p>Apply cheap, safe steps first: trim spaces, lowercase, strip punctuation. Only then look values up in an <strong>alias map</strong>, a reviewed table from variant to canonical value. Order matters: an alias map keyed on <code>nyc</code> never matches <code>NYC</code> unless you lowercased first.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="Two raw values pass through trim, lowercase, strip punctuation and an alias map. ' N.Y. ' becomes 'N.Y.', then 'n.y.', then 'ny', then 'New York'. 'NYC' becomes 'nyc' and then 'New York'.">
+              <defs>
+                <marker id="text-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+              </defs>
+              <text class="d-label" x="70" y="26" text-anchor="middle">raw</text>
+              <text class="d-label" x="190" y="26" text-anchor="middle">trim</text>
+              <text class="d-label" x="310" y="26" text-anchor="middle">lowercase</text>
+              <text class="d-label" x="430" y="26" text-anchor="middle">strip . , -</text>
+              <text class="d-label" x="575" y="26" text-anchor="middle">alias map</text>
+              <rect class="d-fill" x="20" y="40" width="100" height="36" rx="6"/><text class="d-mono" x="70" y="63" text-anchor="middle">"␣N.Y.␣"</text>
+              <rect class="d-box" x="140" y="40" width="100" height="36" rx="6"/><text class="d-mono" x="190" y="63" text-anchor="middle">"N.Y."</text>
+              <rect class="d-box" x="260" y="40" width="100" height="36" rx="6"/><text class="d-mono" x="310" y="63" text-anchor="middle">"n.y."</text>
+              <rect class="d-box" x="380" y="40" width="100" height="36" rx="6"/><text class="d-mono" x="430" y="63" text-anchor="middle">"ny"</text>
+              <rect class="d-good" x="510" y="40" width="130" height="36" rx="6"/><text class="d-title" x="575" y="63" text-anchor="middle">New York</text>
+              <line class="d-line-accent" x1="120" y1="58" x2="138" y2="58" marker-end="url(#text-arrow)"/>
+              <line class="d-line-accent" x1="240" y1="58" x2="258" y2="58" marker-end="url(#text-arrow)"/>
+              <line class="d-line-accent" x1="360" y1="58" x2="378" y2="58" marker-end="url(#text-arrow)"/>
+              <line class="d-line-accent" x1="480" y1="58" x2="508" y2="58" marker-end="url(#text-arrow)"/>
+              <rect class="d-fill" x="20" y="100" width="100" height="36" rx="6"/><text class="d-mono" x="70" y="123" text-anchor="middle">"NYC"</text>
+              <rect class="d-box" x="140" y="100" width="100" height="36" rx="6"/><text class="d-mono" x="190" y="123" text-anchor="middle">"NYC"</text>
+              <rect class="d-box" x="260" y="100" width="100" height="36" rx="6"/><text class="d-mono" x="310" y="123" text-anchor="middle">"nyc"</text>
+              <rect class="d-box" x="380" y="100" width="100" height="36" rx="6"/><text class="d-mono" x="430" y="123" text-anchor="middle">"nyc"</text>
+              <rect class="d-good" x="510" y="100" width="130" height="36" rx="6"/><text class="d-title" x="575" y="123" text-anchor="middle">New York</text>
+              <line class="d-line-accent" x1="120" y1="118" x2="138" y2="118" marker-end="url(#text-arrow)"/>
+              <line class="d-line-accent" x1="240" y1="118" x2="258" y2="118" marker-end="url(#text-arrow)"/>
+              <line class="d-line-accent" x1="360" y1="118" x2="378" y2="118" marker-end="url(#text-arrow)"/>
+              <line class="d-line-accent" x1="480" y1="118" x2="508" y2="118" marker-end="url(#text-arrow)"/>
+              <rect class="d-box" x="380" y="156" width="260" height="44" rx="6"/>
+              <text class="d-mono" x="392" y="174">ny → New York · nyc → New York</text>
+              <text class="d-mono" x="392" y="192">la → Los Angeles · sf → San Francisco</text>
+              <line class="d-line d-dash" x1="575" y1="156" x2="575" y2="138"/>
+            </svg>
+          </div>
+          <figcaption>Each step is small and safe on its own. The alias map is the only step that encodes judgement, so keep it in a reviewed file or table, not buried in code.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="python"><code>ALIASES = {"ny": "new york", "nyc": "new york",
+           "la": "los angeles", "sf": "san francisco"}
+
+city = (df["city"].str.strip()
+                  .str.lower()
+                  .str.replace(r"[^\w\s]", "", regex=True)   <span class="c"># drop . , - etc.</span>
+                  .str.replace(r"\s+", " ", regex=True))     <span class="c"># collapse inner spaces</span>
+df["city_clean"] = city.replace(ALIASES).str.title()
+
+<span class="c"># what is still unmapped? review the long tail by hand</span>
+print(df["city_clean"].value_counts().tail(20))</code></pre>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- a reviewed mapping table beats a 200-line CASE statement</span>
+SELECT COALESCE(m.canonical, INITCAP(c.city_norm)) AS city,
+       COUNT(*)                                     AS customers
+FROM (SELECT LOWER(TRIM(REGEXP_REPLACE(city, '[^A-Za-z ]', '', 'g'))) AS city_norm
+      FROM crm_customers) c
+LEFT JOIN city_aliases m ON m.variant = c.city_norm
+GROUP BY 1
+ORDER BY customers DESC;</code></pre>
+
+        <h3>Normalize a city column</h3>
+        <p>Here are 188 customers whose city was typed by hand. Turn the steps on one at a time and watch the categories merge. The fuzzy-match slider merges near-identical spellings such as typos. Push it too far and it merges <code>Newark</code>, a different city, into New York.</p>
+
+        <div class="widget" id="text-demo">
+          <div class="widget-head">
+            <span class="widget-title">Category normalizer</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="text-trim"><input type="checkbox" id="text-trim"> trim</label>
+            <label for="text-lower"><input type="checkbox" id="text-lower"> lowercase</label>
+            <label for="text-punct"><input type="checkbox" id="text-punct"> strip punctuation</label>
+            <label for="text-alias"><input type="checkbox" id="text-alias"> alias map</label>
+            <label for="text-fuzzy">Fuzzy match ≥ <input type="range" id="text-fuzzy" min="0.5" max="1" step="0.05" value="1"><output id="text-fuzzy-out">off</output></label>
+          </div>
+          <svg id="text-plot" viewBox="0 0 640 340" role="img" aria-label="Horizontal bars, one per distinct city value, sorted by count. Bars merge as cleaning steps are switched on."></svg>
+          <p class="readout" id="text-readout"></p>
+        </div>
+
+        <h3>Cleaning can change the answer</h3>
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 660 220" role="img" aria-label="Before cleaning, the top five raw city values are Los Angeles 35, San Francisco 30, New York 28, NYC 18 and new york 12. After cleaning, New York leads with 76, then Los Angeles 56, San Francisco 49 and Newark 7.">
+              <text class="d-title" x="20" y="22">Raw: top 5 values</text>
+              <text class="d-label" x="120" y="50" text-anchor="end">Los Angeles</text><rect class="d-box" x="128" y="39" width="140" height="14" rx="3"/><text class="d-mono" x="274" y="50">35</text>
+              <text class="d-label" x="120" y="76" text-anchor="end">San Francisco</text><rect class="d-box" x="128" y="65" width="120" height="14" rx="3"/><text class="d-mono" x="254" y="76">30</text>
+              <text class="d-label" x="120" y="102" text-anchor="end">New York</text><rect class="d-signal" x="128" y="91" width="112" height="14" rx="3"/><text class="d-mono" x="246" y="102">28</text>
+              <text class="d-label" x="120" y="128" text-anchor="end">NYC</text><rect class="d-signal" x="128" y="117" width="72" height="14" rx="3"/><text class="d-mono" x="206" y="128">18</text>
+              <text class="d-label" x="120" y="154" text-anchor="end">new york</text><rect class="d-signal" x="128" y="143" width="48" height="14" rx="3"/><text class="d-mono" x="182" y="154">12</text>
+              <text class="d-label d-text-signal" x="20" y="190">New York is split into 6 spellings,</text>
+              <text class="d-label d-text-signal" x="20" y="206">so Los Angeles looks biggest.</text>
+              <text class="d-title" x="360" y="22">Cleaned</text>
+              <text class="d-label" x="460" y="50" text-anchor="end">New York</text><rect class="d-good" x="468" y="39" width="152" height="14" rx="3"/><text class="d-mono" x="626" y="50" text-anchor="end">76</text>
+              <text class="d-label" x="460" y="76" text-anchor="end">Los Angeles</text><rect class="d-box" x="468" y="65" width="112" height="14" rx="3"/><text class="d-mono" x="586" y="76">56</text>
+              <text class="d-label" x="460" y="102" text-anchor="end">San Francisco</text><rect class="d-box" x="468" y="91" width="98" height="14" rx="3"/><text class="d-mono" x="572" y="102">49</text>
+              <text class="d-label" x="460" y="128" text-anchor="end">Newark</text><rect class="d-box" x="468" y="117" width="14" height="14" rx="3"/><text class="d-mono" x="488" y="128">7</text>
+              <text class="d-label" x="360" y="190">16 raw values → 4 real cities.</text>
+              <text class="d-label" x="360" y="206">The ranking flips.</text>
+            </svg>
+          </div>
+          <figcaption>The same 188 customers before and after cleaning. Bar lengths use the same scale within each panel; counts are an example.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>Run cheap, safe steps first (trim, lowercase, punctuation), then the alias map.</li>
+            <li>Keep the alias map as reviewed data, and report how many rows it changed.</li>
+            <li>Fuzzy matching catches typos but can merge distinct values; always review its merges.</li>
+            <li>Keep the raw column next to the clean one so anyone can audit the mapping.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Applying the alias map before lowercasing, so half the variants never match.</li>
+            <li>Setting a loose fuzzy threshold that merges different entities (Newark into New York, Austria into Australia).</li>
+            <li>Overwriting the raw column, which makes mistakes impossible to undo.</li>
+            <li>Fixing variants by hand in a spreadsheet, so next month's export needs the same work again.</li>
+          </ul>
+        </div>
+
+        <div class="callout tip">
+          <span class="callout-title">In practice</span>
+          <p>In spreadsheets, <code>=PROPER(TRIM(SUBSTITUTE(A2,".","")))</code> handles the safe steps, and an <code>XLOOKUP</code> against an alias tab handles the rest. OpenRefine's clustering feature is a good way to discover variants in a new column.</p>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="text-1"><span>Normalize a text column with trim, lowercase and a regex in pandas or SQL</span></label></li>
+          <li><label><input type="checkbox" data-key="text-2"><span>Build and maintain an alias table and join it in SQL</span></label></li>
+          <li><label><input type="checkbox" data-key="text-3"><span>Explain why the order of cleaning steps matters</span></label></li>
+          <li><label><input type="checkbox" data-key="text-4"><span>Spot a false merge caused by fuzzy matching</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://pandas.pydata.org/docs/user_guide/text.html">pandas: Working with text data</a></li>
+          <li><span class="kind">Tool</span><a href="https://openrefine.org/">OpenRefine</a></li>
+        </ul>
+      </section>
+
+      <section class="topic" id="quality-checks">
+        <header class="topic-head">
+          <p class="eyebrow">05.6 · Trust, but verify</p>
+          <h2>Data quality checks</h2>
+        </header>
+
+        <p class="lead">Cleaning once is not enough, because next week's export will bring new problems. <strong>Data quality checks</strong> are small automated tests that run every time the data loads. Each one states a rule the table must obey ("<code>order_id</code> is unique", "shipped after ordered") and returns the rows that break it.</p>
+
+        <div class="callout why">
+          <span class="callout-title">Why it matters for analysts</span>
+          <p>Stakeholders lose trust after one wrong number, and they rarely forgive it quickly. A check that fails before the dashboard refreshes turns "why is revenue doubled?" in a leadership meeting into a quiet alert you fix on Tuesday morning.</p>
+        </div>
+
+        <h3>Six kinds of check</h3>
+        <p>Most useful checks fall into six families. Start with uniqueness and not-null on keys, because they catch the most damaging problems for the least effort, then add rules that encode business logic.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Six check families with an example rule each: completeness, uniqueness, validity, consistency, freshness and volume.">
+              <rect class="d-accent" x="20" y="20" width="200" height="88" rx="8"/>
+              <text class="d-title" x="34" y="44">Completeness</text>
+              <text class="d-label" x="34" y="64">required fields are filled</text>
+              <text class="d-mono" x="34" y="90">customer_id IS NOT NULL</text>
+              <rect class="d-accent" x="240" y="20" width="200" height="88" rx="8"/>
+              <text class="d-title" x="254" y="44">Uniqueness</text>
+              <text class="d-label" x="254" y="64">the key matches the grain</text>
+              <text class="d-mono" x="254" y="90">1 row per order_id</text>
+              <rect class="d-box" x="460" y="20" width="200" height="88" rx="8"/>
+              <text class="d-title" x="474" y="44">Validity</text>
+              <text class="d-label" x="474" y="64">values in range or allowed set</text>
+              <text class="d-mono" x="474" y="90">status IN (paid, …)</text>
+              <rect class="d-box" x="20" y="124" width="200" height="88" rx="8"/>
+              <text class="d-title" x="34" y="148">Consistency</text>
+              <text class="d-label" x="34" y="168">columns agree with each other</text>
+              <text class="d-mono" x="34" y="194">shipped_at ≥ ordered_at</text>
+              <rect class="d-box" x="240" y="124" width="200" height="88" rx="8"/>
+              <text class="d-title" x="254" y="148">Freshness</text>
+              <text class="d-label" x="254" y="168">data is recent enough</text>
+              <text class="d-mono" x="254" y="194">max(loaded_at) &gt; now − 1 day</text>
+              <rect class="d-box" x="460" y="124" width="200" height="88" rx="8"/>
+              <text class="d-title" x="474" y="148">Volume</text>
+              <text class="d-label" x="474" y="168">row count is plausible</text>
+              <text class="d-mono" x="474" y="194">within ±30% of last week</text>
+            </svg>
+          </div>
+          <figcaption>Highlighted: the two checks to add first on any table. The rest encode what "valid" means for your business.</figcaption>
+        </figure>
+
+        <pre class="code" data-lang="sql"><code><span class="c">-- Each check returns the failing rows. Zero rows = pass.</span>
+<span class="c">-- validity, with a business exception for refunds</span>
+SELECT order_id, amount, status
+FROM orders
+WHERE amount &lt; 0 AND status &lt;&gt; 'refunded';
+
+<span class="c">-- consistency between two columns</span>
+SELECT order_id, ordered_at, shipped_at
+FROM orders
+WHERE shipped_at &lt; ordered_at;          <span class="c">-- NULL shipped_at is not a failure</span></code></pre>
+
+        <pre class="code" data-lang="yaml"><code><span class="c"># dbt: the same rules as declarative tests (models/schema.yml)</span>
+models:
+  - name: orders
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships: {to: ref('customers'), field: customer_id}
+      - name: status
+        data_tests:
+          - accepted_values: {values: ['paid', 'shipped', 'refunded', 'cancelled']}</code></pre>
+
+        <h3>Run a checklist on a table</h3>
+        <p>This 11-row orders table hides five planted problems across six rows. Row 9 is a legitimate refund with a negative amount. Turn checks on and off. A good set of checks catches every bad row and raises no false alarms.</p>
+
+        <div class="widget" id="quality-demo">
+          <div class="widget-head">
+            <span class="widget-title">Data-quality checklist runner</span>
+            <span class="eyebrow">Try it</span>
+          </div>
+          <div class="widget-controls">
+            <label for="quality-c-null"><input type="checkbox" id="quality-c-null" checked> customer_id not null</label>
+            <label for="quality-c-unique"><input type="checkbox" id="quality-c-unique" checked> order_id unique</label>
+            <label for="quality-c-pos"><input type="checkbox" id="quality-c-pos"> amount ≥ 0</label>
+            <label for="quality-c-posref"><input type="checkbox" id="quality-c-posref"> amount ≥ 0 unless refunded</label>
+            <label for="quality-c-status"><input type="checkbox" id="quality-c-status"> status in allowed set</label>
+            <label for="quality-c-ship"><input type="checkbox" id="quality-c-ship"> shipped ≥ ordered</label>
+          </div>
+          <svg id="quality-plot" viewBox="0 0 660 330" role="img" aria-label="An orders table with eleven rows. Rows failing an enabled check are highlighted with the name of the check; a summary shows how many bad rows were caught and how many false alarms were raised."></svg>
+          <p class="readout" id="quality-readout"></p>
+        </div>
+
+        <h3>Checks as a gate</h3>
+        <p>Run checks between loading and publishing. Errors block the publish and move failing rows to a <strong>quarantine</strong> table; warnings publish but alert the owner. Either way, someone named gets told.</p>
+
+        <figure>
+          <div class="diagram">
+            <svg viewBox="0 0 680 210" role="img" aria-label="Raw data loads into a staging table, checks run, passing data publishes to the clean table and dashboard, failing rows go to a quarantine table and an alert is sent to the table owner.">
+              <defs>
+                <marker id="quality-checks-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/>
+                </marker>
+                <marker id="quality-checks-arrow-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/>
+                </marker>
+              </defs>
+              <rect class="d-fill" x="20" y="60" width="100" height="56" rx="8"/>
+              <text class="d-title" x="70" y="84" text-anchor="middle">Load</text>
+              <text class="d-label" x="70" y="102" text-anchor="middle">daily export</text>
+              <line class="d-line-accent" x1="120" y1="88" x2="158" y2="88" marker-end="url(#quality-checks-arrow)"/>
+              <rect class="d-box" x="160" y="60" width="110" height="56" rx="8"/>
+              <text class="d-title" x="215" y="84" text-anchor="middle">Staging</text>
+              <text class="d-label" x="215" y="102" text-anchor="middle">cleaned rows</text>
+              <line class="d-line-accent" x1="270" y1="88" x2="308" y2="88" marker-end="url(#quality-checks-arrow)"/>
+              <rect class="d-accent" x="310" y="54" width="110" height="68" rx="8"/>
+              <text class="d-title" x="365" y="82" text-anchor="middle">Checks</text>
+              <text class="d-label" x="365" y="100" text-anchor="middle">6 rules</text>
+              <line class="d-line-accent" x1="420" y1="74" x2="498" y2="40" marker-end="url(#quality-checks-arrow)"/>
+              <text class="d-label d-text-good" x="455" y="46" text-anchor="middle">pass</text>
+              <rect class="d-good" x="500" y="16" width="160" height="50" rx="8"/>
+              <text class="d-title" x="580" y="38" text-anchor="middle">Publish</text>
+              <text class="d-label" x="580" y="55" text-anchor="middle">clean table → dashboard</text>
+              <line class="d-line-signal" x1="420" y1="104" x2="498" y2="138" marker-end="url(#quality-checks-arrow-s)"/>
+              <text class="d-label d-text-signal" x="452" y="138" text-anchor="middle">fail</text>
+              <rect class="d-signal" x="500" y="112" width="160" height="50" rx="8"/>
+              <text class="d-title" x="580" y="134" text-anchor="middle">Quarantine</text>
+              <text class="d-label" x="580" y="151" text-anchor="middle">bad rows kept, not used</text>
+              <line class="d-line-signal d-dash" x1="580" y1="162" x2="580" y2="182"/>
+              <text class="d-label d-text-signal" x="580" y="198" text-anchor="middle">alert the owner: rule, count, sample rows</text>
+            </svg>
+          </div>
+          <figcaption>A failing check should stop bad data quietly and loudly at the same time: quietly for dashboard users, loudly for the table's owner.</figcaption>
+        </figure>
+
+        <div class="keyideas">
+          <span class="callout-title">Key ideas</span>
+          <ul>
+            <li>A check is a rule plus a query that returns the rows breaking it; zero rows means pass.</li>
+            <li>Start with unique and not-null on keys, then add validity, consistency, freshness and volume.</li>
+            <li>Encode real business exceptions (refunds) so checks do not cry wolf.</li>
+            <li>Run checks before publishing, quarantine failures and alert a named owner.</li>
+          </ul>
+        </div>
+
+        <div class="callout pitfall">
+          <span class="callout-title">Common mistakes</span>
+          <ul>
+            <li>Writing checks so strict that they fail every day, until everyone ignores the alerts.</li>
+            <li>Checking only the final dashboard numbers, which tells you something is wrong but not where.</li>
+            <li>Deleting failing rows instead of quarantining them, which loses the evidence.</li>
+            <li>Never adding a check after an incident, so the same bug returns.</li>
+          </ul>
+        </div>
+
+        <h4>Check yourself</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="quality-checks-1"><span>Name the six check families and give an example rule for each</span></label></li>
+          <li><label><input type="checkbox" data-key="quality-checks-2"><span>Write a SQL check that returns failing rows for a cross-column rule</span></label></li>
+          <li><label><input type="checkbox" data-key="quality-checks-3"><span>Declare unique, not_null and accepted_values tests in dbt</span></label></li>
+          <li><label><input type="checkbox" data-key="quality-checks-4"><span>Design a gate that quarantines failures and alerts an owner</span></label></li>
+        </ul>
+
+        <h4>Go deeper</h4>
+        <ul class="resources">
+          <li><span class="kind">Docs</span><a href="https://docs.getdbt.com/docs/build/data-tests">dbt: Add data tests to your DAG</a></li>
+          <li><span class="kind">Tool</span><a href="https://greatexpectations.io/">Great Expectations</a></li>
+        </ul>
+      </section>
+
+      <div class="capstone">
+        <p class="eyebrow">Put it together</p>
+        <h2>Projects for this area</h2>
+        <div class="projects">
+          <div class="project"><span class="level">Starter</span><h4>Profile and fix one messy CSV</h4><p>Take a public dataset with known problems (a city's 311 requests or a messy survey) and write a one-page profile: blanks per column, duplicate keys, odd values. Then fix the three worst issues with a short pandas script and show before-and-after counts.</p></div>
+          <div class="project"><span class="level">Intermediate</span><h4>A rerunnable cleaning script</h4><p>Build a <code>clean_customers()</code> function that takes a raw CRM export and returns a clean table plus a log of every rule it applied and how many rows each rule touched. Run it on two different months and compare the logs.</p></div>
+          <div class="project"><span class="level">Stretch</span><h4>Quality gate with alerts</h4><p>Write SQL or dbt tests for uniqueness, nulls, accepted values, cross-field rules and freshness on an orders table. Wire them so a failing test quarantines bad rows and posts a short summary, and document what each test protects.</p></div>
+        </div>
+        <h4>You've mastered this area when you can…</h4>
+        <ul class="checklist">
+          <li><label><input type="checkbox" data-key="final-1"><span>Profile a new export in 15 minutes and list its problems by severity</span></label></li>
+          <li><label><input type="checkbox" data-key="final-2"><span>Pick and defend a missing-value strategy for a business-critical column</span></label></li>
+          <li><label><input type="checkbox" data-key="final-3"><span>Define the grain and key of a table and deduplicate it with a window function</span></label></li>
+          <li><label><input type="checkbox" data-key="final-4"><span>Parse mixed date formats and time zones into one UTC column</span></label></li>
+          <li><label><input type="checkbox" data-key="final-5"><span>Normalize a messy category column with a reviewed mapping table</span></label></li>
+          <li><label><input type="checkbox" data-key="final-6"><span>Write automated checks that stop a bad table from reaching a dashboard</span></label></li>
+        </ul>
+      </div>
+
+      <nav class="pager" data-fill="pager" aria-label="Previous and next areas"></nav>
+    </main>
+  </div>
+</div>
+
+<footer class="site-foot"><div class="wrap">Data Analyst Atlas · progress is saved in this browser only.</div></footer>
+
+<script>
+/* Page-local widget code for Area 05. Shared helpers first, then one IIFE per widget. */
+var ATLAS05 = (function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function svg(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function text(parent, x, y, str, cls, anchor) {
+    var t = svg("text", { x: x, y: y, "class": cls || "d-label", "text-anchor": anchor || "start" }, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function fmt(n, d) { return Number(n).toLocaleString("en-US", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+  function mean(a) { var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return a.length ? s / a.length : NaN; }
+  function median(a) { var s = a.slice().sort(function (x, y) { return x - y; }), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
+  function sd(a) { var m = mean(a), s = 0; for (var i = 0; i < a.length; i++) s += (a[i] - m) * (a[i] - m); return Math.sqrt(s / (a.length - 1)); }
+  function quantile(sorted, p) { var h = (sorted.length - 1) * p, l = Math.floor(h); return l + 1 < sorted.length ? sorted[l] + (sorted[l + 1] - sorted[l]) * (h - l) : sorted[l]; }
+  function vis(s) { return String(s).replace(/^ +| +$/g, function (m) { return m.replace(/ /g, "␣"); }); }
+  return { svg: svg, text: text, clear: clear, rng: rng, fmt: fmt, mean: mean, median: median, sd: sd, quantile: quantile, vis: vis };
+})();
+
+/* ---------- 05.1 missing-value strategy comparer ---------- */
+(function () {
+  var w = document.getElementById("missing-demo");
+  if (!w) return;
+  var H = ATLAS05, S = H.svg, T = H.text;
+  var plot = document.getElementById("missing-plot"), readout = document.getElementById("missing-readout");
+  var sel = document.getElementById("missing-strategy"), flag = document.getElementById("missing-flag");
+  /* [plan, true annual spend, missing in the export?] Illustrative data. */
+  var rows = [
+    ["Basic", 420, 0], ["Basic", 510, 0], ["Basic", 380, 0], ["Basic", 620, 0], ["Basic", 560, 1], ["Basic", 450, 0],
+    ["Basic", 700, 0], ["Basic", 480, 0], ["Basic", 530, 0], ["Basic", 590, 0], ["Basic", 410, 0], ["Basic", 650, 0],
+    ["Pro", 1800, 0], ["Pro", 2200, 1], ["Pro", 1650, 0], ["Pro", 2400, 0], ["Pro", 1950, 0], ["Pro", 2100, 0], ["Pro", 1700, 0], ["Pro", 2300, 0],
+    ["Enterprise", 10900, 0], ["Enterprise", 11600, 0], ["Enterprise", 11200, 1], ["Enterprise", 10400, 1], ["Enterprise", 12600, 1]
+  ];
+  var plans = ["Basic", "Pro", "Enterprise"], PY = { Basic: 52, Pro: 96, Enterprise: 140 };
+  var r = H.rng(11); rows.forEach(function (q) { q.j = (r() - 0.5) * 16; });
+  var truth = rows.map(function (q) { return q[1]; });
+  var obs = rows.filter(function (q) { return !q[2]; }).map(function (q) { return q[1]; });
+  var X0 = 128, X1 = 620, LMIN = Math.log10(300), LMAX = Math.log10(15000);
+  function px(v) { return v <= 0 ? 104 : X0 + (Math.log10(v) - LMIN) / (LMAX - LMIN) * (X1 - X0); }
+  var NAMES = { drop: "Drop rows", zero: "Fill with 0", mean: "Overall mean", median: "Overall median", group: "Plan median" };
+  function fillValue(q, s) {
+    if (s === "zero") return 0;
+    if (s === "mean") return H.mean(obs);
+    if (s === "median") return H.median(obs);
+    if (s === "group") return H.median(rows.filter(function (o) { return o[0] === q[0] && !o[2]; }).map(function (o) { return o[1]; }));
+    return null;
+  }
+  function draw() {
+    var s = sel.value, vals = [], i;
+    H.clear(plot);
+    [500, 1000, 2000, 5000, 10000].forEach(function (t) {
+      S("line", { x1: px(t), y1: 30, x2: px(t), y2: 160, "class": "d-grid" }, plot);
+      T(plot, px(t), 176, H.fmt(t), "d-label", "middle");
+    });
+    S("line", { x1: X0 - 30, y1: 162, x2: X1, y2: 162, "class": "d-line" }, plot);
+    T(plot, 104, 176, "0", "d-label", "middle");
+    T(plot, X1, 20, "annual spend (log scale)", "d-label", "end");
+    plans.forEach(function (p) { T(plot, 14, PY[p] + 4, p, "d-label"); });
+    rows.forEach(function (q) {
+      var y = PY[q[0]] + q.j;
+      if (!q[2]) { vals.push(q[1]); S("circle", { cx: px(q[1]), cy: y, r: 5, "class": "d-dot" }, plot); return; }
+      var v = fillValue(q, s);
+      if (v === null) { T(plot, px(q[1]), y + 4, "×", "d-label d-text-signal", "middle"); return; }
+      vals.push(v);
+      S("circle", { cx: px(v), cy: y, r: 6.5, "class": "d-line-signal", fill: "none", "stroke-width": 2.2 }, plot);
+      if (flag.checked) T(plot, px(v) + 8, y - 6, "flag", "d-label d-text-signal");
+    });
+    var tm = H.mean(truth), em = H.mean(vals);
+    S("line", { x1: px(tm), y1: 30, x2: px(tm), y2: 160, "class": "d-line d-dash" }, plot);
+    T(plot, px(tm) + 4, 40, "true mean", "d-label");
+    S("line", { x1: px(em), y1: 30, x2: px(em), y2: 160, "class": "d-line-accent", "stroke-width": 2 }, plot);
+    T(plot, px(em) - 4, 40, "estimate", "d-label d-text-accent", "end");
+    /* stats table */
+    var y0 = 200, cols = [180, 290, 400, 510, 620];
+    ["", "Rows", "Mean", "Median", "Std dev"].forEach(function (h, k) { if (k) T(plot, cols[k], y0, h, "d-label", "end"); });
+    var est = [vals.length, em, H.median(vals), H.sd(vals)], tru = [truth.length, tm, H.median(truth), H.sd(truth)];
+    T(plot, 14, y0 + 24, "Truth (unknown in real life)", "d-label");
+    T(plot, 14, y0 + 48, "Your estimate: " + NAMES[s], "d-label d-text-accent");
+    T(plot, 14, y0 + 72, "Error vs truth", "d-label");
+    for (i = 0; i < 4; i++) {
+      T(plot, cols[i + 1], y0 + 24, H.fmt(tru[i]), "d-mono", "end");
+      T(plot, cols[i + 1], y0 + 48, H.fmt(est[i]), "d-mono d-text-accent", "end");
+      var e = (est[i] - tru[i]) / tru[i] * 100;
+      T(plot, cols[i + 1], y0 + 72, (e > 0 ? "+" : "") + e.toFixed(0) + "%", Math.abs(e) > 5 ? "d-mono d-text-signal" : "d-mono d-text-good", "end");
+    }
+    S("line", { x1: 14, y1: y0 + 8, x2: 626, y2: y0 + 8, "class": "d-grid" }, plot);
+    var err = (em - tm) / tm * 100;
+    w.dataset.meanError = err.toFixed(2);
+    w.dataset.rows = String(vals.length);
+    var msg = NAMES[s] + ": mean " + H.fmt(em) + " vs true " + H.fmt(tm) + " (" + (err > 0 ? "+" : "") + err.toFixed(1) + "%), " + vals.length + " of 25 rows kept.";
+    if (s === "drop") msg += " The 5 dropped rows include 3 of the 5 Enterprise accounts, so the mean falls.";
+    if (s === "mean" || s === "median" || s === "zero") msg += " The rings pile onto one value and the spread shrinks.";
+    if (s === "group") msg += " Missingness depends on plan (MAR), so filling within each plan lands close to the truth.";
+    if (flag.checked) msg += " A was_missing flag marks the 5 filled rows so anyone can exclude or check them.";
+    readout.textContent = msg;
+  }
+  sel.addEventListener("change", draw);
+  flag.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 05.2 dedupe-key chooser ---------- */
+(function () {
+  var w = document.getElementById("dupes-demo");
+  if (!w) return;
+  var H = ATLAS05, S = H.svg, T = H.text;
+  var plot = document.getElementById("dupes-plot"), readout = document.getElementById("dupes-readout");
+  var keys = ["id", "email", "name", "phone"], boxes = {};
+  keys.forEach(function (k) { boxes[k] = document.getElementById("dupes-k-" + k); });
+  var norm = document.getElementById("dupes-norm");
+  /* person = ground truth (which real customer the row describes) */
+  var rows = [
+    { id: "101", name: "Ana Lopez", email: "ana.lopez@mail.com", phone: "555-0101", person: "A" },
+    { id: "102", name: "ana lopez ", email: "ANA.LOPEZ@mail.com", phone: "555-0101", person: "A" },
+    { id: "103", name: "Ben Ode", email: "ben@shop.io", phone: "555-0199", person: "B" },
+    { id: "103", name: "Ben Ode", email: "ben@shop.io", phone: "555-0199", person: "B" },
+    { id: "104", name: "Alex Kim", email: "alex.kim@corp.com", phone: "555-0142", person: "C" },
+    { id: "105", name: "Alex Kim", email: "akim@studio.net", phone: "555-0177", person: "D" },
+    { id: "106", name: "Chloe Park", email: "chloe@park.dev", phone: "555-0123", person: "E" },
+    { id: "107", name: "Chloe Park", email: "Chloe@Park.dev", phone: "", person: "E" },
+    { id: "108", name: "Dev Rao", email: "dev.rao@mail.com", phone: "555-0150", person: "F" },
+    { id: "109", name: "Dev Rao", email: "dev.rao@mail.com ", phone: "555-0150", person: "F" }
+  ];
+  var COLS = [["#", 14], ["customer_id", 40], ["name", 132], ["email", 250], ["phone", 440], ["group", 540]];
+  function draw() {
+    H.clear(plot);
+    var sel = keys.filter(function (k) { return boxes[k].checked; }), nz = norm.checked;
+    var gid = {}, groups = [], i;
+    rows.forEach(function (q, i) {
+      var parts = [], blank = false;
+      sel.forEach(function (k) { var v = q[k]; if (nz) v = v.trim().toLowerCase(); if (v === "") blank = true; parts.push(v); });
+      var key = (sel.length && !blank) ? parts.join("|") : "row" + i;
+      if (!(key in gid)) { gid[key] = groups.length; groups.push([]); }
+      q.g = gid[key]; groups[q.g].push(i);
+    });
+    var falseMerge = 0, bad = {};
+    groups.forEach(function (g, k) {
+      var ps = {}; g.forEach(function (i) { ps[rows[i].person] = 1; });
+      if (Object.keys(ps).length > 1) { falseMerge++; bad[k] = 1; }
+    });
+    var persons = {}; rows.forEach(function (q) { (persons[q.person] = persons[q.person] || {})[q.g] = 1; });
+    var missed = 0, missedP = {};
+    Object.keys(persons).forEach(function (p) { var n = Object.keys(persons[p]).length; if (n > 1) { missed += n - 1; missedP[p] = 1; } });
+    COLS.forEach(function (c) { T(plot, c[1], 24, c[0], "d-label"); });
+    S("line", { x1: 8, y1: 32, x2: 652, y2: 32, "class": "d-grid" }, plot);
+    var letters = "ABCDEFGHIJ";
+    rows.forEach(function (q, i) {
+      var y = 52 + i * 24, multi = groups[q.g].length > 1;
+      if (multi) S("rect", { x: 8, y: y - 16, width: 600, height: 22, rx: 4, "class": bad[q.g] ? "d-signal" : "d-accent" }, plot);
+      T(plot, 14, y, String(i + 1), "d-label");
+      T(plot, 40, y, q.id, "d-mono");
+      T(plot, 132, y, H.vis(q.name), "d-mono");
+      T(plot, 250, y, H.vis(q.email), "d-mono");
+      T(plot, 440, y, q.phone || "(blank)", q.phone ? "d-mono" : "d-label");
+      T(plot, 552, y, "G" + (q.g + 1), multi ? (bad[q.g] ? "d-mono d-text-signal" : "d-mono d-text-accent") : "d-mono", "middle");
+      if (missedP[q.person]) T(plot, 620, y, "missed", "d-label d-text-signal");
+    });
+    var yb = 52 + rows.length * 24 + 10;
+    S("line", { x1: 8, y1: yb - 8, x2: 652, y2: yb - 8, "class": "d-grid" }, plot);
+    var ok = falseMerge === 0 && missed === 0;
+    T(plot, 14, yb + 14, "10 rows → " + groups.length + " groups · truth: 6 real people", "d-title");
+    T(plot, 14, yb + 34, "false merges: " + falseMerge + " · missed duplicates: " + missed, falseMerge || missed ? "d-label d-text-signal" : "d-label d-text-good");
+    if (ok) T(plot, 652, yb + 34, "✓ key matches the real customers", "d-label d-text-good", "end");
+    w.dataset.groups = String(groups.length);
+    w.dataset.correct = ok ? "1" : "0";
+    var keyTxt = sel.length ? sel.join(" + ") + (nz ? " (normalized)" : " (raw)") : "no key";
+    readout.textContent = "Key: " + keyTxt + ". " + groups.length + " groups, " + falseMerge + " false merge" + (falseMerge === 1 ? "" : "s") + ", " + missed + " missed duplicate" + (missed === 1 ? "" : "s") + "." +
+      (groups.length === 6 && !ok ? " Six groups, but not the right six: count alone does not prove the key is right." : "") +
+      (ok ? " Every true duplicate merges and no two people share a group." : "");
+  }
+  keys.forEach(function (k) { boxes[k].addEventListener("change", draw); });
+  norm.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 05.3 outlier rule switcher ---------- */
+(function () {
+  var w = document.getElementById("outliers-demo");
+  if (!w) return;
+  var H = ATLAS05, S = H.svg, T = H.text;
+  var plot = document.getElementById("outliers-plot"), readout = document.getElementById("outliers-readout");
+  var rule = document.getElementById("outliers-rule"), k = document.getElementById("outliers-k"), kout = document.getElementById("outliers-k-out");
+  var kname = document.getElementById("outliers-k-name"), action = document.getElementById("outliers-action");
+  var data = [34, 42, 48, 55, 58, 59, 61, 63, 67, 70, 72, 75, 78, 80, 82, 85, 88, 90, 93, 95, 98, 102, 105, 110, 115, 120, 126, 132, 140, 148, 155, 165, 178, 190, 210, 235, 268, 1850, 2400, 12500];
+  var sorted = data.slice().sort(function (a, b) { return a - b; });
+  var NOTE = { 1850: "B2B", 2400: "B2B", 12500: "cents bug?" };
+  var r = H.rng(5), jit = data.map(function () { return (r() - 0.5) * 34; });
+  var RANGE = { iqr: [1, 3, 0.25, 1.5, "k"], z: [1, 4, 0.25, 3, "|z| >"], pct: [90, 99.5, 0.5, 99, "pct"] };
+  var X0 = 40, X1 = 620, L0 = Math.log10(20), L1 = Math.log10(20000);
+  function px(v) { return X0 + (Math.log10(Math.max(v, 20)) - L0) / (L1 - L0) * (X1 - X0); }
+  function setRange() {
+    var g = RANGE[rule.value];
+    k.min = g[0]; k.max = g[1]; k.step = g[2]; k.value = g[3]; kname.textContent = g[4];
+  }
+  function cutoffs() {
+    var t = parseFloat(k.value), s = rule.value;
+    if (s === "iqr") { var q1 = H.quantile(sorted, 0.25), q3 = H.quantile(sorted, 0.75), i = q3 - q1; return [q1 - t * i, q3 + t * i]; }
+    if (s === "z") { var m = H.mean(data), d = H.sd(data); return [m - t * d, m + t * d]; }
+    return [-Infinity, H.quantile(sorted, t / 100)];
+  }
+  function draw() {
+    var t = parseFloat(k.value);
+    kout.textContent = rule.value === "pct" ? t.toFixed(1) + "th" : t.toFixed(2);
+    H.clear(plot);
+    var c = cutoffs(), lo = c[0], hi = c[1], act = action.value;
+    [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000].forEach(function (v) {
+      S("line", { x1: px(v), y1: 40, x2: px(v), y2: 170, "class": "d-grid" }, plot);
+      T(plot, px(v), 188, v >= 1000 ? (v / 1000) + "k" : String(v), "d-label", "middle");
+    });
+    S("line", { x1: X0, y1: 172, x2: X1, y2: 172, "class": "d-line" }, plot);
+    T(plot, X1, 206, "order amount (log scale)", "d-label", "end");
+    if (hi < 20000) {
+      S("line", { x1: px(hi), y1: 34, x2: px(hi), y2: 172, "class": "d-line-signal d-dash" }, plot);
+      T(plot, px(hi) + 4, 30, "cut-off " + H.fmt(hi), "d-label d-text-signal");
+    }
+    if (lo > 20) S("line", { x1: px(lo), y1: 34, x2: px(lo), y2: 172, "class": "d-line-signal d-dash" }, plot);
+    var flagged = [], kept = [];
+    data.forEach(function (v, i) {
+      var out = v > hi || v < lo, y = 108 + jit[i];
+      if (!out) { kept.push(v); S("circle", { cx: px(v), cy: y, r: 4.5, "class": "d-dot" }, plot); }
+      else {
+        flagged.push(v);
+        if (act === "cap") {
+          var cv = v > hi ? hi : lo; kept.push(cv);
+          S("circle", { cx: px(v), cy: y, r: 4.5, "class": "d-dot-muted" }, plot);
+          S("line", { x1: px(v), y1: y, x2: px(cv), y2: y, "class": "d-line d-dash" }, plot);
+          S("circle", { cx: px(cv), cy: y, r: 5, "class": "d-dot-signal" }, plot);
+        } else if (act === "drop") {
+          T(plot, px(v), y + 4, "×", "d-label d-text-signal", "middle");
+        } else { kept.push(v); S("circle", { cx: px(v), cy: y, r: 6, "class": "d-dot-signal" }, plot); }
+      }
+      if (NOTE[v]) T(plot, px(v), y - 12, NOTE[v], "d-label", "middle");
+    });
+    var normalFlagged = flagged.filter(function (v) { return !NOTE[v]; }).length;
+    var specials = flagged.filter(function (v) { return NOTE[v]; }).length;
+    w.dataset.flagged = flagged.sort(function (a, b) { return a - b; }).join(",");
+    var m0 = H.mean(data), m1 = H.mean(kept);
+    readout.textContent = "Flagged " + flagged.length + " order" + (flagged.length === 1 ? "" : "s") + (flagged.length ? " (" + flagged.map(H.fmt).join(", ") + ")" : "") +
+      ". Mean " + H.fmt(m0, 1) + (act === "flag" ? "" : " → " + H.fmt(m1, 1) + " after " + (act === "cap" ? "capping" : "dropping")) + "; median " + H.fmt(H.median(data), 1) + "." +
+      (specials < 3 && rule.value === "z" ? " The 12,500 order inflates the standard deviation to " + H.fmt(H.sd(data)) + ", which masks the B2B orders." : "") +
+      (normalFlagged ? " " + normalFlagged + " ordinary order" + (normalFlagged === 1 ? " is" : "s are") + " caught too." : "");
+  }
+  rule.addEventListener("change", function () { setRange(); draw(); });
+  k.addEventListener("input", draw);
+  action.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 05.4 messy-date parser ---------- */
+(function () {
+  var w = document.getElementById("dates-demo");
+  if (!w) return;
+  var H = ATLAS05, S = H.svg, T = H.text;
+  var plot = document.getElementById("dates-plot"), readout = document.getElementById("dates-readout");
+  var order = document.getElementById("dates-order"), tz = document.getElementById("dates-tz");
+  var raw = ["03/03/2026 21:30", "03/04/2026 08:10", "03/04/2026 12:45", "03/04/2026 17:30", "03/04/2026 20:15", "03/04/2026 22:40",
+    "03/05/2026 01:20", "03/05/2026 09:05", "03/05/2026 14:50", "03/05/2026 19:35", "03/06/2026 11:20", "02/27/2026 10:00"];
+  var DAYS = ["2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06"], LBL = ["Mar 3", "Mar 4", "Mar 5", "Mar 6"];
+  function parse(s, o, off) {
+    var p = s.match(/^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/);
+    if (!p) return null;
+    var a = +p[1], b = +p[2], y = +p[3], m = o === "mdy" ? a : b, d = o === "mdy" ? b : a;
+    if (m < 1 || m > 12) return null;
+    if (d < 1 || d > new Date(Date.UTC(y, m, 0)).getUTCDate()) return null;
+    return new Date(Date.UTC(y, m - 1, d, +p[4], +p[5]) - off * 60000);
+  }
+  function draw() {
+    H.clear(plot);
+    var o = order.value, off = parseInt(tz.value, 10), counts = [0, 0, 0, 0], other = 0, fail = 0;
+    T(plot, 14, 22, "raw text", "d-label"); T(plot, 150, 22, "parsed (UTC)", "d-label"); T(plot, 318, 22, "UTC day", "d-label");
+    S("line", { x1: 8, y1: 30, x2: 395, y2: 30, "class": "d-grid" }, plot);
+    raw.forEach(function (s, i) {
+      var y = 48 + i * 20, dt = parse(s, o, off);
+      T(plot, 14, y, s, "d-mono");
+      if (!dt) { fail++; T(plot, 150, y, "parse error", "d-label d-text-signal"); return; }
+      var iso = dt.toISOString(), day = iso.slice(0, 10), k = DAYS.indexOf(day);
+      T(plot, 150, y, iso.slice(0, 16).replace("T", " "), "d-mono");
+      T(plot, 318, y, day.slice(5), k === 2 ? "d-mono d-text-accent" : "d-mono");
+      if (k >= 0) counts[k]++; else other++;
+    });
+    /* bar chart */
+    var bx = 430, base = 250, top = 60, maxN = 7, bw = 34;
+    S("line", { x1: bx - 8, y1: base, x2: 652, y2: base, "class": "d-line" }, plot);
+    T(plot, 540, 22, "orders per UTC day", "d-label", "middle");
+    var tgtY = base - 5 / maxN * (base - top);
+    S("line", { x1: bx - 8, y1: tgtY, x2: 652, y2: tgtY, "class": "d-line-signal d-dash" }, plot);
+    T(plot, 652, tgtY - 6, "finance: Mar 5 = 5", "d-label d-text-signal", "end");
+    counts.forEach(function (n, i) {
+      var x = bx + i * 44, h = n / maxN * (base - top);
+      S("rect", { x: x, y: base - h, width: bw, height: Math.max(h, 0.5), rx: 3, "class": i === 2 ? "d-accent" : "d-box" }, plot);
+      T(plot, x + bw / 2, base - h - 5, String(n), "d-mono", "middle");
+      T(plot, x + bw / 2, base + 16, LBL[i], "d-label", "middle");
+    });
+    var ox = bx + 4 * 44;
+    T(plot, ox + 10, base + 16, "other", "d-label", "middle");
+    T(plot, ox + 10, base - 6, String(other), "d-mono", "middle");
+    T(plot, bx - 8, 282, "parse errors: " + fail, fail ? "d-label d-text-signal" : "d-label d-text-good");
+    w.dataset.fail = String(fail);
+    w.dataset.mar5 = String(counts[2]);
+    var ok = fail === 0 && counts[2] === 5;
+    readout.textContent = (o === "mdy" ? "Month first" : "Day first") + ", source " + tz.options[tz.selectedIndex].text + ": " + fail + " parse error" + (fail === 1 ? "" : "s") + ", " + counts[2] + " order" + (counts[2] === 1 ? "" : "s") + " on Mar 5 UTC." +
+      (fail ? " A failure means the format guess is wrong: 02/27 cannot be day-first." : "") +
+      (!fail && !ok ? " Every row parses, but the day totals depend on the zone you assume." : "") +
+      (ok ? " Matches finance: the CRM writes US month-first dates in New York time, so late-evening orders move to the next UTC day." : "");
+  }
+  order.addEventListener("change", draw);
+  tz.addEventListener("change", draw);
+  draw();
+})();
+
+/* ---------- 05.5 category normalizer ---------- */
+(function () {
+  var w = document.getElementById("text-demo");
+  if (!w) return;
+  var H = ATLAS05, S = H.svg, T = H.text;
+  var plot = document.getElementById("text-plot"), readout = document.getElementById("text-readout");
+  var steps = ["trim", "lower", "punct", "alias"], box = {};
+  steps.forEach(function (s) { box[s] = document.getElementById("text-" + s); });
+  var fz = document.getElementById("text-fuzzy"), fzOut = document.getElementById("text-fuzzy-out");
+  /* [raw value, count, true city] */
+  var raw = [
+    ["Los Angeles", 35, "LA"], ["San Francisco", 30, "SF"], ["New York", 28, "NY"], ["NYC", 18, "NY"], ["new york", 12, "NY"],
+    ["SF", 11, "SF"], ["LA", 9, "LA"], [" New York ", 9, "NY"], ["Newark", 7, "NK"], ["N.Y.", 6, "NY"], ["los angeles", 6, "LA"],
+    ["san francisco ", 5, "SF"], ["L.A.", 4, "LA"], ["New Yrok", 3, "NY"], ["San Fransisco", 3, "SF"], ["Los Angelos", 2, "LA"]
+  ];
+  var ALIAS = { ny: "new york", nyc: "new york", la: "los angeles", sf: "san francisco" };
+  function lev(a, b) {
+    var m = a.length, n = b.length, prev = [], cur, i, j;
+    for (j = 0; j <= n; j++) prev[j] = j;
+    for (i = 1; i <= m; i++) {
+      cur = [i];
+      for (j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[n];
+  }
+  function sim(a, b) { return 1 - lev(a, b) / Math.max(a.length, b.length, 1); }
+  function draw() {
+    H.clear(plot);
+    var t = parseFloat(fz.value);
+    fzOut.textContent = t >= 1 ? "off" : t.toFixed(2);
+    var cats = {}, order = [];
+    raw.forEach(function (q) {
+      var v = q[0];
+      if (box.trim.checked) v = v.trim();
+      if (box.lower.checked) v = v.toLowerCase();
+      if (box.punct.checked) v = v.replace(/[.,\-]/g, "");
+      if (box.alias.checked && ALIAS[v]) v = ALIAS[v];
+      if (!cats[v]) { cats[v] = { label: v, n: 0, truth: {} }; order.push(v); }
+      cats[v].n += q[1]; cats[v].truth[q[2]] = (cats[v].truth[q[2]] || 0) + q[1];
+    });
+    var list = order.map(function (k) { return cats[k]; }).sort(function (a, b) { return b.n - a.n; });
+    if (t < 1) {
+      var merged = [];
+      list.forEach(function (c) {
+        var tgt = null;
+        for (var i = 0; i < merged.length; i++) { if (sim(c.label, merged[i].label) >= t - 1e-9) { tgt = merged[i]; break; } }
+        if (tgt) { tgt.n += c.n; for (var k in c.truth) tgt.truth[k] = (tgt.truth[k] || 0) + c.truth[k]; tgt.absorbed = (tgt.absorbed || 0) + 1; }
+        else merged.push({ label: c.label, n: c.n, truth: Object.assign({}, c.truth) });
+      });
+      list = merged.sort(function (a, b) { return b.n - a.n; });
+    }
+    var TOTAL = { NY: 76, LA: 56, SF: 49, NK: 7 }, pure = true;
+    list.forEach(function (c) {
+      var ks = Object.keys(c.truth);
+      c.mixed = ks.length > 1;
+      c.complete = !c.mixed && c.n === TOTAL[ks[0]];
+      if (!c.complete) pure = false;
+    });
+    var rowH = 19, LX = 168, BX = 176, K = 5;
+    list.forEach(function (c, i) {
+      var y = 24 + i * rowH;
+      T(plot, LX, y + 4, "“" + H.vis(c.label) + "”", "d-mono", "end");
+      S("rect", { x: BX, y: y - 7, width: Math.max(2, c.n * K), height: 13, rx: 3, "class": c.mixed ? "d-signal" : (c.complete ? "d-good" : "d-box") }, plot);
+      T(plot, BX + c.n * K + 6, y + 4, String(c.n) + (c.mixed ? "  mixes different cities!" : ""), c.mixed ? "d-label d-text-signal" : "d-label");
+    });
+    w.dataset.categories = String(list.length);
+    w.dataset.pure = pure ? "1" : "0";
+    var top = list[0];
+    readout.textContent = list.length + " distinct value" + (list.length === 1 ? "" : "s") + " (truth: 4 cities). Top: “" + top.label.trim() + "” with " + top.n + "." +
+      (list.some(function (c) { return c.mixed; }) ? " A red bar merged two different cities: the fuzzy threshold is too loose." : "") +
+      (pure ? " Every city is one clean category." : "");
+  }
+  steps.forEach(function (s) { box[s].addEventListener("change", draw); });
+  fz.addEventListener("input", draw);
+  draw();
+})();
+
+/* ---------- 05.6 data-quality checklist runner ---------- */
+(function () {
+  var w = document.getElementById("quality-demo");
+  if (!w) return;
+  var H = ATLAS05, S = H.svg, T = H.text;
+  var plot = document.getElementById("quality-plot"), readout = document.getElementById("quality-readout");
+  var rows = [
+    { id: 1001, cust: "C17", amt: 59, st: "shipped", o: 2, s: 3, bad: 0 },
+    { id: 1002, cust: "C08", amt: 120, st: "paid", o: 2, s: null, bad: 0 },
+    { id: 1003, cust: null, amt: 35.5, st: "shipped", o: 2, s: 4, bad: 1 },
+    { id: 1004, cust: "C22", amt: -49, st: "paid", o: 3, s: null, bad: 1 },
+    { id: 1005, cust: "C05", amt: 89, st: "shiped", o: 3, s: 5, bad: 1 },
+    { id: 1006, cust: "C11", amt: 240, st: "shipped", o: 4, s: 2, bad: 1 },
+    { id: 1007, cust: "C14", amt: 15, st: "paid", o: 4, s: null, bad: 1 },
+    { id: 1007, cust: "C14", amt: 15, st: "paid", o: 4, s: null, bad: 1 },
+    { id: 1008, cust: "C09", amt: -25, st: "refunded", o: 5, s: null, bad: 0 },
+    { id: 1009, cust: "C30", amt: 310, st: "shipped", o: 5, s: 6, bad: 0 },
+    { id: 1010, cust: "C02", amt: 72, st: "cancelled", o: 6, s: null, bad: 0 }
+  ];
+  var ALLOWED = { paid: 1, shipped: 1, refunded: 1, cancelled: 1 };
+  var idCount = {}; rows.forEach(function (q) { idCount[q.id] = (idCount[q.id] || 0) + 1; });
+  var CHECKS = {
+    "null": ["not null", function (q) { return q.cust === null; }],
+    unique: ["unique", function (q) { return idCount[q.id] > 1; }],
+    pos: ["amount ≥ 0", function (q) { return q.amt < 0; }],
+    posref: ["amount rule", function (q) { return q.amt < 0 && q.st !== "refunded"; }],
+    status: ["status", function (q) { return !ALLOWED[q.st]; }],
+    ship: ["ship date", function (q) { return q.s !== null && q.s < q.o; }]
+  };
+  var ids = Object.keys(CHECKS), box = {};
+  ids.forEach(function (k) { box[k] = document.getElementById("quality-c-" + k); });
+  var COLS = [["#", 14], ["order_id", 36], ["customer", 110], ["amount", 236], ["status", 252], ["ordered", 336], ["shipped", 400], ["failed checks", 470]];
+  function draw() {
+    H.clear(plot);
+    var caught = 0, falseAlarm = 0, perCheck = {};
+    COLS.forEach(function (c) { T(plot, c[1], 22, c[0], "d-label", c[0] === "amount" ? "end" : "start"); });
+    S("line", { x1: 8, y1: 30, x2: 652, y2: 30, "class": "d-grid" }, plot);
+    rows.forEach(function (q, i) {
+      var y = 50 + i * 23, fails = [];
+      ids.forEach(function (k) { if (box[k].checked && CHECKS[k][1](q)) { fails.push(CHECKS[k][0]); perCheck[k] = (perCheck[k] || 0) + 1; } });
+      if (fails.length) {
+        if (q.bad) caught++; else falseAlarm++;
+        S("rect", { x: 8, y: y - 15, width: 644, height: 21, rx: 4, "class": q.bad ? "d-signal" : "d-accent" }, plot);
+      }
+      T(plot, 14, y, String(i + 1), "d-label");
+      T(plot, 36, y, String(q.id), "d-mono");
+      T(plot, 110, y, q.cust === null ? "NULL" : q.cust, q.cust === null ? "d-label" : "d-mono");
+      T(plot, 236, y, q.amt.toFixed(2), "d-mono", "end");
+      T(plot, 252, y, q.st, "d-mono");
+      T(plot, 336, y, "Mar " + q.o, "d-mono");
+      T(plot, 400, y, q.s === null ? "NULL" : "Mar " + q.s, q.s === null ? "d-label" : "d-mono");
+      if (fails.length) T(plot, 470, y, fails.join(", ") + (q.bad ? "" : "  (false alarm)"), q.bad ? "d-label d-text-signal" : "d-label d-text-accent");
+    });
+    var yb = 50 + rows.length * 23 + 6;
+    S("line", { x1: 8, y1: yb - 10, x2: 652, y2: yb - 10, "class": "d-grid" }, plot);
+    var ok = caught === 6 && falseAlarm === 0;
+    T(plot, 14, yb + 14, "bad rows caught: " + caught + " / 6 · false alarms: " + falseAlarm, ok ? "d-title d-text-good" : "d-title");
+    w.dataset.caught = String(caught);
+    w.dataset.falseAlarms = String(falseAlarm);
+    var on = ids.filter(function (k) { return box[k].checked; }).length;
+    readout.textContent = on + " check" + (on === 1 ? "" : "s") + " on. Caught " + caught + " of 6 bad rows with " + falseAlarm + " false alarm" + (falseAlarm === 1 ? "" : "s") + "." +
+      (falseAlarm ? " The refund row is legitimate: encode the business exception instead of a blanket rule." : "") +
+      (ok ? " Every planted problem is caught and the refund passes." : "");
+  }
+  ids.forEach(function (k) { box[k].addEventListener("change", draw); });
+  draw();
+})();
+</script>
+</body>
+</html>

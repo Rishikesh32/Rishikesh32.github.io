@@ -445,8 +445,12 @@
       a: "Rishikesh starts from a reference architecture: interfaces → guardrails → a supervisor agent (LangGraph state machine with checkpoints) → specialist agents → tools via MCP → vector + graph knowledge and memory → a model gateway that routes between frontier and open-weight models. Security runs down one side and observability and evals down the other.\n\nPrinciples: workflows before agents, evals are the spec, tools through MCP, humans approve anything irreversible, and route for cost." },
     { keys: ["alphadesk", "flagship", "quant", "quantitative", "stock", "stocks", "trading", "backtest"],
       a: "AlphaDesk is the flagship: a multi-agent quant research platform. A LangGraph supervisor delegates to a market-data agent (MCP servers), a research agent (GraphRAG over filings and news), a quant agent that writes and runs backtests in a sandbox, and a risk agent. Frontier models plan, small open-weight models extract, everything is traced in Langfuse, and a human approves before any signal leaves. It evolved from an earlier regression and time-series stock prediction project." },
-    { keys: ["atlas", "ai-engineer-atlas", "engineer-atlas", "study", "map", "curriculum", "learning", "sites", "site", "interactive"],
-      a: "The AI Engineer Atlas is an interactive study platform and knowledge map hosted live at https://rishikesh32.github.io/ai-engineer-atlas/.\n\n▹ 16 core areas across 5 curriculum tiers (from math foundations to production agents)\n▹ 106 subtopics with deep dives, KaTeX math, and code labs\n▹ Three.js interactive 3D learning graph\n▹ Progress tracker and spaced-repetition daily review" },
+    { keys: ["atlas", "ai-engineer-atlas", "engineer-atlas", "study", "map", "curriculum", "learning", "sites", "site", "interactive", "atlases"],
+      a: "Rishikesh has built three flagship interactive 3D study atlases deployed live:\n\n1. AI Engineer Atlas (https://rishikesh32.github.io/ai-engineer-atlas/):\n   ▹ 16 core areas across 5 curriculum tiers (from math foundations to production agents)\n   ▹ 106 subtopics with deep dives, KaTeX math, and code labs\n   ▹ Three.js interactive 3D learning graph & daily spaced repetition review\n\n2. Data Analyst Atlas (https://rishikesh32.github.io/data-analyst-atlas/):\n   ▹ 16 core areas from Statistics & SQL to A/B testing, Time Series, BI, and Storytelling\n   ▹ 106 subtopics with interactive code simulations & daily review engine\n\n3. Psychology Atlas (https://rishikesh32.github.io/psychology-atlas/):\n   ▹ 9 core areas across 3 tiers (Learning, Work dynamics, and Well-being)\n   ▹ 36 deep-dive lessons with 3D models and behavioral habit loops" },
+    { keys: ["data-analyst-atlas", "data-analyst", "data-analytics", "analytics-atlas", "analyst", "sql-atlas"],
+      a: "The Data Analyst Atlas is an interactive study platform and knowledge map hosted live at https://rishikesh32.github.io/data-analyst-atlas/.\n\n▹ 16 core areas across 5 curriculum tiers (Statistics, Spreadsheets, SQL, Python, EDA, Metrics, Experiments, Regression, Forecasting, ML, BI, Data Eng, Storytelling, and Career)\n▹ 106 subtopics with step-by-step isometric scenes and KaTeX formulas\n▹ Three.js interactive 3D learning graph\n▹ Spaced-repetition daily review app at https://rishikesh32.github.io/data-analyst-atlas/review.html" },
+    { keys: ["psychology-atlas", "psychology", "behavior", "cognitive", "psych"],
+      a: "The Psychology Atlas is an interactive knowledge map of applied behavioral and cognitive science hosted live at https://rishikesh32.github.io/psychology-atlas/.\n\n▹ 9 core areas across 3 tiers (Foundational Theories, Applied in Work, and Life & Well-being)\n▹ 36 subtopics exploring conditioning, memory models, intrinsic motivation (SDT), Cialdini persuasion, negotiation (BATNA/ZOPA), psychological safety, flow states, and the PERMA model\n▹ Three.js interactive 3D concept graph\n▹ Spaced-repetition daily review app at https://rishikesh32.github.io/psychology-atlas/review.html" },
     { keys: ["skill", "skills", "stack", "tech", "tools", "know", "languages", "framework", "frameworks", "cloud"],
       a: "Agents: LangGraph, CrewAI, OpenAI Agents SDK, Claude Agent SDK, multi-agent systems, MCP servers, A2A, computer use, human-in-the-loop.\nKnowledge: RAG and GraphRAG, hybrid search and reranking, vector databases, knowledge graphs, agent memory, context engineering.\nModels: Claude, GPT, Gemini, Llama, Qwen, DeepSeek, model routing, LoRA/QLoRA/DPO fine-tuning, multimodal.\nSpeech: Whisper, streaming speech-to-text and text-to-speech, speaker diarization, voice agents, video dubbing.\nLLMOps: Ragas, DeepEval, Langfuse, LangSmith, guardrails, prompt-injection defence.\nPlatform: vLLM, Ollama, Docker, Kubernetes, AWS Bedrock, Azure AI Foundry, Vertex AI." },
     { keys: ["voice", "speech", "call", "calls", "phone", "echoagent", "conversational", "stt", "tts", "audio"],
@@ -582,38 +586,46 @@
      Sites & Atlas inline preview toggle
      ================================================================ */
   function initSitesPreview() {
-    const toggleBtn = $("#toggle-atlas-preview");
-    const container = $("#atlas-preview-container");
-    const closeBtn = $("#close-atlas-preview");
-    const iframe = $("#atlas-iframe");
-    const btnText = $("#preview-btn-text");
+    const setups = [
+      { toggleId: "toggle-atlas-preview", containerId: "atlas-preview-container", closeId: "close-atlas-preview", iframeId: "atlas-iframe", textId: "preview-btn-text" },
+      { toggleId: "toggle-data-atlas-preview", containerId: "data-atlas-preview-container", closeId: "close-data-atlas-preview", iframeId: "data-atlas-iframe", textId: "data-preview-btn-text" },
+      { toggleId: "toggle-psych-atlas-preview", containerId: "psych-atlas-preview-container", closeId: "close-psych-atlas-preview", iframeId: "psych-atlas-iframe", textId: "psych-preview-btn-text" }
+    ];
 
-    if (!toggleBtn || !container || !iframe) return;
+    setups.forEach(({ toggleId, containerId, closeId, iframeId, textId }) => {
+      const toggleBtn = $("#" + toggleId);
+      const container = $("#" + containerId);
+      const closeBtn = $("#" + closeId);
+      const iframe = $("#" + iframeId);
+      const btnText = $("#" + textId);
 
-    function setPreviewState(open) {
-      container.hidden = !open;
-      toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      if (btnText) btnText.textContent = open ? "Hide Preview" : "Preview Inline";
+      if (!toggleBtn || !container || !iframe) return;
 
-      if (open) {
-        if (!iframe.src && iframe.dataset.src) {
-          iframe.src = iframe.dataset.src;
+      function setPreviewState(open) {
+        container.hidden = !open;
+        toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        if (btnText) btnText.textContent = open ? "Hide Preview" : "Preview Inline";
+
+        if (open) {
+          if (!iframe.src && iframe.dataset.src) {
+            iframe.src = iframe.dataset.src;
+          }
+          setTimeout(() => {
+            container.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }, 80);
         }
-        setTimeout(() => {
-          container.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 80);
       }
-    }
 
-    toggleBtn.addEventListener("click", () => {
-      setPreviewState(container.hidden);
-    });
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
-        setPreviewState(false);
+      toggleBtn.addEventListener("click", () => {
+        setPreviewState(container.hidden);
       });
-    }
+
+      if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+          setPreviewState(false);
+        });
+      }
+    });
   }
 
   /* ================================================================
