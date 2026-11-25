@@ -707,7 +707,7 @@
     const scene = step.scene || { entities: [], links: [], flows: [] };
     const entMap = {};
 
-    // 1. Entities
+    // 1. Entities Map & HTML
     let entsHtml = "";
     scene.entities.forEach((ent) => {
       const [sx, sy] = j(ent.x, ent.y, ent.lift || 0);
@@ -719,22 +719,22 @@
       const secLabel = Array.isArray(ent.label) ? (ent.label[1] || "") : "";
 
       if (ent.type === "block") {
-        // Dynamic prism width based on label
+        // Dynamic prism width
         const maxLen = Math.max(mainLabel.length, secLabel.length);
-        const bw = maxLen > 8 ? 44 : 36;
+        const bw = maxLen > 9 ? 44 : 36;
 
         entsHtml += `
           <g class="ent-block" transform="translate(${sx}, ${sy})">
             <!-- Shadow -->
             <ellipse cx="0" cy="18" rx="${bw + 4}" ry="16" fill="#1c1a17" opacity="0.25" filter="url(#blur-md)"/>
-            <!-- 3D Prism Base -->
-            <path d="M-${bw} 0 L0 16 L${bw} 0 L${bw} 25 L0 41 L-${bw} 25 Z" fill="url(#g-${color}-side)" stroke="${k}" stroke-width="1.8" stroke-linejoin="round"/>
+            <!-- 3D Prism Base (solid opaque fill) -->
+            <path d="M-${bw} 0 L0 18 L${bw} 0 L${bw} 28 L0 46 L-${bw} 28 Z" fill="url(#g-${color}-side)" stroke="${k}" stroke-width="1.8" stroke-linejoin="round"/>
             <path d="M0 18 L0 46" stroke="${k}" stroke-width="1.8"/>
             <!-- Top Face -->
-            <path d="M-${bw} 0 L0 -16 L${bw} 0 L0 16 Z" fill="url(#g-${color}-top)" stroke="${k}" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M-${bw} 0 L0 -18 L${bw} 0 L0 18 Z" fill="url(#g-${color}-top)" stroke="${k}" stroke-width="1.8" stroke-linejoin="round"/>
             <!-- Bevel Highlight -->
-            <path d="M-${bw - 2} 0 L0 14 L${bw - 2} 0" fill="none" stroke="#ffffff" stroke-opacity="0.75" stroke-width="1.5" stroke-linecap="round"/>
-            <!-- Label -->
+            <path d="M-${bw - 2} 0 L0 16 L${bw - 2} 0" fill="none" stroke="#ffffff" stroke-opacity="0.75" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Single centered label at y=3.5 -->
             <text x="0" y="3.5" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" font-weight="700" fill="${k}">${mainLabel}</text>
             <!-- Subtitle Pill -->
             ${ent.sub ? (() => {
@@ -764,8 +764,8 @@
           </g>
         `;
       } else {
-        // Device / Client / Exchange Node with dynamic sizing
-        const dw = Math.max(54, Math.round(mainLabel.length * 7) + 18);
+        // Device Node with solid opaque background
+        const dw = Math.max(56, Math.round(mainLabel.length * 7) + 18);
         const hdw = Math.round(dw / 2);
         entsHtml += `
           <g class="ent-device" transform="translate(${sx}, ${sy})">
@@ -788,39 +788,72 @@
       }
     });
 
-    // 2. Links
+    // 2. Links & Link Labels (Edge-to-Edge Trimmed)
     let linksHtml = "";
-    (scene.links || []).forEach((link) => {
+    let linkLabelsHtml = "";
+    const trimmedPathMap = {};
+
+    (scene.links || []).forEach((link, idx) => {
       const p1 = entMap[link.from] || [0, 0];
       const p2 = entMap[link.to] || [50, 50];
-      const mx = (p1[0] + p2[0]) / 2;
-      const my = (p1[1] + p2[1]) / 2;
+      const dx = p2[0] - p1[0];
+      const dy = p2[1] - p1[1];
+      const dist = Math.hypot(dx, dy);
+
+      // Trim start and end by node boundaries so lines & packets do NOT intersect labels
+      const trimStart = 30;
+      const trimEnd = 30;
+      let x1 = p1[0], y1 = p1[1], x2 = p2[0], y2 = p2[1];
+
+      if (dist > trimStart + trimEnd + 10) {
+        const ux = dx / dist;
+        const uy = dy / dist;
+        x1 = p1[0] + ux * trimStart;
+        y1 = p1[1] + uy * trimStart;
+        x2 = p2[0] - ux * trimEnd;
+        y2 = p2[1] - uy * trimEnd;
+      }
+
+      const key = `${link.from}->${link.to}`;
+      trimmedPathMap[key] = { x1, y1, x2, y2 };
 
       linksHtml += `
         <g class="link-group">
-          <line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" stroke="${k}" stroke-width="1.8" stroke-dasharray="4 4" opacity="0.65" marker-end="url(#arrow)"/>
-          ${link.label ? (() => {
-            const lw = Math.max(54, Math.round(link.label.length * 6.5) + 16);
-            const hlw = Math.round(lw / 2);
-            return `
-              <g transform="translate(${mx}, ${my - 8})">
-                <rect x="-${hlw}" y="2" width="${lw}" height="16" rx="8" fill="${_r}"/>
-                <rect x="-${hlw}" y="0" width="${lw}" height="16" rx="8" fill="#fbf6ef" stroke="${k}" stroke-width="1"/>
-                <text x="0" y="11" text-anchor="middle" font-family="JetBrains Mono" font-size="8.8" font-weight="700" fill="${k}">${link.label}</text>
-              </g>
-            `;
-          })() : ""}
+          <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${k}" stroke-width="1.8" stroke-dasharray="4 4" opacity="0.6" marker-end="url(#arrow)"/>
         </g>
       `;
+
+      if (link.label) {
+        const mx = (x1 + x2) / 2;
+        const my = (y1 + y2) / 2;
+        const lw = Math.max(54, Math.round(link.label.length * 6.5) + 16);
+        const hlw = Math.round(lw / 2);
+
+        // Label pill positioned slightly offset above path with solid backing
+        linkLabelsHtml += `
+          <g transform="translate(${mx}, ${my - 10})">
+            <rect x="-${hlw}" y="1.5" width="${lw}" height="16" rx="8" fill="${_r}"/>
+            <rect x="-${hlw}" y="0" width="${lw}" height="16" rx="8" fill="#fbf6ef" stroke="${k}" stroke-width="1"/>
+            <text x="0" y="11" text-anchor="middle" font-family="JetBrains Mono" font-size="8.8" font-weight="700" fill="${k}">${link.label}</text>
+          </g>
+        `;
+      }
     });
 
-    // 3. Traffic Packets
+    // 3. Traffic Packets (Travel along trimmed edge-to-edge paths)
     let packetsHtml = "";
     if (!state.paused) {
       (scene.flows || []).forEach((flow, i) => {
-        const p1 = entMap[flow.from] || [0, 0];
-        const p2 = entMap[flow.to] || [50, 50];
-        const d = `M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}`;
+        const key = `${flow.from}->${flow.to}`;
+        const pathData = trimmedPathMap[key];
+        let d;
+        if (pathData) {
+          d = `M${pathData.x1},${pathData.y1} L${pathData.x2},${pathData.y2}`;
+        } else {
+          const p1 = entMap[flow.from] || [0, 0];
+          const p2 = entMap[flow.to] || [50, 50];
+          d = `M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}`;
+        }
         const color = flow.color || "#10b981";
 
         packetsHtml += `
@@ -834,7 +867,7 @@
     }
 
     return `
-      <svg class="stage-svg" viewBox="-290 -135 580 270" xmlns="http://www.w3.org/2000/svg" role="img">
+      <svg class="stage-svg" viewBox="-310 -140 620 280" xmlns="http://www.w3.org/2000/svg" role="img">
         <defs>
           ${Object.entries(vr).map(([t, n]) => `
             <linearGradient id="g-${t}-top" x1="0" y1="0" x2="0.35" y2="1">
@@ -865,21 +898,24 @@
             <stop offset="1" stop-color="#fff" stop-opacity="0"/>
           </radialGradient>
           <mask id="grid-mask">
-            <rect x="-300" y="-150" width="600" height="300" fill="url(#grid-fade)"/>
+            <rect x="-320" y="-150" width="640" height="300" fill="url(#grid-fade)"/>
           </mask>
         </defs>
 
-        <!-- Centered Isometric Diamond Grid with Radial Vignette -->
-        <rect x="-300" y="-150" width="600" height="300" fill="url(#iso-grid)" mask="url(#grid-mask)"/>
+        <!-- 1. Centered Isometric Diamond Grid with Radial Vignette -->
+        <rect x="-320" y="-150" width="640" height="300" fill="url(#iso-grid)" mask="url(#grid-mask)"/>
 
-        <!-- Links -->
+        <!-- 2. Connection Links (Edge to Edge) -->
         <g class="layer-links">${linksHtml}</g>
 
-        <!-- Entities -->
-        <g class="layer-entities">${entsHtml}</g>
-
-        <!-- Moving Traffic Packets -->
+        <!-- 3. Moving Traffic Packets (Travel between nodes underneath entities) -->
         <g class="layer-packets">${packetsHtml}</g>
+
+        <!-- 4. Link Label Pills (Offset above path line) -->
+        <g class="layer-link-labels">${linkLabelsHtml}</g>
+
+        <!-- 5. Entities (Solid opaque prisms, cylinders, and devices) -->
+        <g class="layer-entities">${entsHtml}</g>
       </svg>
     `;
   }
