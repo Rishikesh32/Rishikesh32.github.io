@@ -232,6 +232,7 @@ function getStudioUrl(areaId) {
     if (!G || !G.length) return;
     var ci = [], cs = [], map = {};
     G.forEach(function (g, i) {
+      if (!g || !g.match) return;
       g.match.split("|").forEach(function (p) {
         var key = g.cs ? p : p.toLowerCase();
         map[(g.cs ? "C:" : "I:") + key] = i;
@@ -408,8 +409,8 @@ function getStudioUrl(areaId) {
     var la = last && areaById(last.area); if (la && !la.live) la = null;
     var firstLive = A.areas.find(function (x) { return x.live; }) || A.areas[0];
     var cont = la
-      ? '<a class="eg-card eg-continue" href="' + getStudioUrl(la.id) + '"><span class="eyebrow" style="color:#ffffff;font-weight:800;">Motions</span><strong>' + At.pad(la.n) + " · " + esc(subTitle(la, last.sub)) + "</strong><span class=\"muted\">" + esc(la.title) + "</span><span class=\"eg-go\" style=\"color:#ffffff;font-weight:700;\">Start Motions " + ICON.arrow + "</span></a>"
-      : '<a class="eg-card eg-continue" href="studio.html#/lob-mechanics"><span class="eyebrow" style="color:#ffffff;font-weight:800;">Motions</span><strong>01 · Market Microstructure & Order Book</strong><span class="muted">Interactive step-by-step motion simulations</span><span class="eg-go" style="color:#ffffff;font-weight:700;">Start Motions ' + ICON.arrow + "</span></a>";
+      ? '<a class="eg-card eg-continue" href="topics/' + la.file + '#' + esc(last.sub) + '"><span class="eyebrow" style="color:#ffffff;font-weight:800;">Motions</span><strong>' + At.pad(la.n) + " · " + esc(subTitle(la, last.sub)) + "</strong><span class=\"muted\">" + esc(la.title) + "</span><span class=\"eg-go\" style=\"color:#ffffff;font-weight:700;\">Start Motions " + ICON.arrow + "</span></a>"
+      : '<a class="eg-card eg-continue" href="topics/01-math-foundations.html"><span class="eyebrow" style="color:#ffffff;font-weight:800;">Motions</span><strong>01 · Market Microstructure & Order Book</strong><span class="muted">Interactive step-by-step motion simulations</span><span class="eg-go" style="color:#ffffff;font-weight:700;">Start Motions ' + ICON.arrow + "</span></a>";
     var week = "";
     for (var i = 6; i >= 0; i--) { var d = new Date(); d.setDate(d.getDate() - i); var on = si.days[dayKey(d)]; week += '<span class="wk' + (on ? " on" : "") + '" title="' + d.toLocaleDateString(undefined, { weekday: "long" }) + '">' + d.toLocaleDateString(undefined, { weekday: "narrow" }) + "</span>"; }
     var streakCard = '<div class="eg-card eg-streak"><span class="eyebrow">Streak</span><div class="eg-big"><span class="flame' + (si.activeToday ? " lit" : "") + '">' + ICON.flame + '</span><span class="num">' + si.current + "</span><span class=\"muted\">day" + (si.current === 1 ? "" : "s") + "</span></div><div class=\"week\">" + week + "</div><span class=\"muted small\">" +

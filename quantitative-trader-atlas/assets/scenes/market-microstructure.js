@@ -3,17 +3,17 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
 window.ATLAS_SCENES["market-microstructure/overview"] = {
   unit: 34,
   metrics: [
-    { id: "signal", label: "Alpha / Efficiency", tone: "accent" },
-    { id: "risk", label: "Tail Volatility (VaR)", tone: "signal" },
-    { id: "sharpe", label: "Risk-Adjusted Ratio", tone: "good" }
+    { id: "signal", label: "Alpha / Effici", tone: "accent" },
+    { id: "risk", label: "Tail Volatilit", tone: "signal" },
+    { id: "sharpe", label: "Risk-Adjusted", tone: "good" }
   ],
   legend: { req: "market stream", data: "alpha model", res: "execution order", miss: "tail risk / friction" },
   nodes: {
-    feed:    { type: "cyl",   x: 0,    y: 3.8,  r: 1.4, h: 1.5, color: "t1", label: "Market Data L2/L3", sub: "Tick & Book Feed" },
-    engine:  { type: "slab",  x: 4.5,  y: 3.8,  w: 1.8, d: 2.2, h: 0.6, color: "accent", label: "Market Microstruct", sub: "Quantitative Core" },
-    riskctl: { type: "block", x: 9.0,  y: 1.5,  w: 1.6, d: 1.6, h: 1.0, color: "t4", label: "Barra Risk / VaR", sub: "Drawdown Guard" },
-    alpha:   { type: "block", x: 9.0,  y: 6.0,  w: 1.6, d: 1.6, h: 1.0, color: "t3", label: "Alpha Signal", sub: "IC Optimization" },
-    venue:   { type: "block", x: 13.5, y: 3.8,  w: 2.0, d: 2.0, h: 1.2, color: "good", label: "Execution Venue", sub: "Smart Order Router" }
+    feed:    { type: "cyl",   x: 0,    y: 3.8,  r: 1.4, h: 1.5, color: "t1", label: "Market Data L2", sub: "Tick & Book Feed" },
+    engine:  { type: "slab",  x: 4.5,  y: 3.8,  w: 2.4, d: 2.6, h: 0.6, color: "accent", label: "Market Microst", sub: "Quantitative Core" },
+    riskctl: { type: "block", x: 9.0,  y: 1.5,  w: 2.4, d: 1.6, h: 1.0, color: "t4", label: "Barra Risk / V", sub: "Drawdown Guard" },
+    alpha:   { type: "block", x: 9.0,  y: 6.0,  w: 2.4, d: 1.6, h: 1.0, color: "t3", label: "Alpha Signal", sub: "IC Optimization" },
+    venue:   { type: "block", x: 13.5, y: 3.8,  w: 2.0, d: 2.6, h: 1.2, color: "good", label: "Execution Venu", sub: "Smart Order Router" }
   },
   steps: [
     {

@@ -515,7 +515,7 @@ var MAP_SHORT_TITLES = {
               '</h3><span class="muted" style="font-size:.92rem">' + t.blurb + '</span></div><div class="cards">';
       areas.forEach(function (a) {
         var d = areaDone(a), pct = Math.round(d / a.subs.length * 100);
-        html += '<a class="area-card" href="' + getStudioUrl(a.id) + '">' +
+        html += '<a class="area-card" href="topics/' + a.file + '"><div class="top"><span class="n">' + pad(a.n) + '</span><span class="eyebrow" style="font-size:.68rem">' + a.weeks + '</span></div>'
           '<div class="top"><span class="n">' + pad(a.n) + '</span><span class="eyebrow" style="font-size:.68rem;color:#059669;font-weight:700;">▶ Launch Motion</span></div>' +
           "<h4>" + a.title + "</h4>" +
           "<p>" + a.summary + "</p>" +
@@ -586,7 +586,7 @@ var MAP_SHORT_TITLES = {
       var lines = MAP_SHORT_TITLES[a.n] || [a.title.slice(0, 20), a.title.slice(20)];
       var targetUrl = getStudioUrl(a.id);
 
-      s += '<a class="map-node" href="' + targetUrl + '" data-n="' + a.n + '" style="cursor:pointer;">' +
+      s += '<a class="map-node" href="topics/' + a.file + '" data-n="' + a.n + '" style="cursor:pointer;">' +
         '<title>' + a.title + " — Click to launch motion simulation" + '</title>' +
         '<rect class="node-bg" x="' + p.x + '" y="' + p.y + '" width="' + colW + '" height="' + nodeH + '" rx="9"/>' +
         '<rect x="' + p.x + '" y="' + (p.y + 12) + '" width="3.5" height="' + (nodeH - 24) + '" rx="1.5" fill="' + p.tier.color + '"/>' +

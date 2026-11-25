@@ -1,35 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>
-  // Immediate redirect to Interactive Motion Studio
-  (function() {
-    var AREA_TO_STUDIO = {
-      "math-foundations": "prob-spaces",
-      "stochastic-calculus": "stochastic-calculus",
-      "time-series-econometrics": "brownian-motion",
-      "market-microstructure": "lob-mechanics",
-      "derivatives-pricing": "black-scholes",
-      "alpha-research-factor-investing": "factor-investing",
-      "statistical-arbitrage": "pairs-trading",
-      "machine-learning-finance": "financial-ml",
-      "portfolio-optimization": "the-greeks",
-      "risk-management": "vol-surface",
-      "backtesting-simulation": "order-flow-toxicity",
-      "high-frequency-trading": "latency-fpga",
-      "crypto-defi-quant": "execution-algos",
-      "execution-algorithms": "market-impact",
-      "quant-tech-stack": "quant-tech-stack",
-      "career-interview-prep": "svd-pca",
-      "llms-alternative-data": "llm-earnings-nlp",
-      "autonomous-agents-copilots": "autonomous-swarms"
-    };
-    var file = location.pathname.split("/").pop().replace(".html", "").replace(/^[0-9]+-/, "");
-    var target = AREA_TO_STUDIO[file] || "lob-mechanics";
-    location.replace("../studio.html#/" + target);
-  })();
-</script>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Market Microstructure & Order Book Mechanics · Quantitative Trader Atlas</title>

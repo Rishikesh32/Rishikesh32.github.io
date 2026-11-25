@@ -232,7 +232,7 @@ function getStudioUrl(areaId) {
     host.addEventListener("pointerdown", function (ev) { drag = { x: ev.clientX, az: az, moved: false }; host.setPointerCapture && host.setPointerCapture(ev.pointerId); host.style.cursor = "grabbing"; });
     host.addEventListener("pointerup", function (ev) {
       var wasDrag = drag && drag.moved; drag = null; host.style.cursor = "grab";
-      if (!wasDrag) { var b = pick(ev); if (b && b.a.live) location.href = getStudioUrl(b.a.id); }
+      if (!wasDrag) { var b = pick(ev); if (b && b.a.live) location.href = "topics/" + b.a.file; }
     });
 
     /* ---- intro: blocks rise in, camera dollies in ---- */
