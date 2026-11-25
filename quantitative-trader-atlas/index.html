@@ -1,89 +1,314 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Quantitative Trader Atlas</title>
-<meta name="description" content="Every mathematical, algorithmic, and operational skill a quantitative trader and researcher needs, mapped with interactive simulations, KaTeX derivations, and daily review.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="assets/style.css">
-<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
-<script src="assets/data.js"></script>
-<script src="assets/app.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Quantitative Trader Atlas — Interactive Motion & Systems Curriculum</title>
+  <meta name="description" content="An interactive quantitative finance and algorithmic trading platform: each core concept is an animated isometric diagram you step through — limit order book dynamics, market making, stochastic calculus, factor alphas, HFT execution, and autonomous LLM trading agents.">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23059669%22/%3E%3Cpolyline points=%226,21 12,13 18,17 26,8%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%223%22/%3E%3Ccircle cx=%2226%22 cy=%228%22 r=%223%22 fill=%22%23F59E0B%22/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#f4ebe0">
+
+  <script>
+    // Apply saved dark theme before first paint
+    try {
+      if (localStorage.getItem("quant_theme") === "dark") {
+        document.documentElement.dataset.theme = "dark";
+      }
+    } catch (e) {}
+
+    // Responsive layout detection (desktop / tablet / stack)
+    function fitWindow() {
+      var w = innerWidth, h = innerHeight;
+      document.documentElement.dataset.layout = w >= 1200 && h >= 560 ? "desktop" : w >= 960 && h >= 600 ? "tablet" : "stack";
+    }
+    fitWindow();
+    window.addEventListener("resize", fitWindow);
+  </script>
+
+  <link rel="stylesheet" href="assets/designed_to_scale.css">
+  <style>
+    /* Search Dialog Modal Styles */
+    .search-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(29, 27, 24, 0.45);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 12vh;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+    .search-modal.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .search-dialog {
+      width: 100%;
+      max-width: 580px;
+      background: var(--paper-2, #fbf6ef);
+      border: 1.5px solid var(--line-strong, #c6bbac);
+      border-radius: 12px;
+      box-shadow: 0 16px 40px -10px rgba(0,0,0,0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .search-input-wrap {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line, #ddd3c5);
+      gap: 12px;
+    }
+    .search-input-wrap input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 1.05rem;
+      width: 100%;
+      color: var(--ink, #1d1b18);
+    }
+    .search-results {
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 8px;
+      list-style: none;
+      margin: 0;
+    }
+    .search-result-item {
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .search-result-item:hover, .search-result-item.is-selected {
+      background: var(--green, #cfe3b2);
+    }
+    .search-result-item .item-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--ink, #1d1b18);
+    }
+    .search-result-item .item-mod {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.75rem;
+      color: #6f6961;
+    }
+  </style>
+
+  <style>
+    .brand__name { font-size: 1.05rem; letter-spacing: -0.01em; }
+    .stage__hud { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px; padding-bottom: 2px; max-width: calc(100% - 190px); }
+    .stage__hud::-webkit-scrollbar { display: none; }
+    
+    
+    
+    .card.guide { display: flex; flex-direction: column; max-height: calc(100vh - 120px); overflow: hidden; }
+    .guide__content { flex: 1; overflow-y: auto; padding-right: 6px; }
+    .guide__content::-webkit-scrollbar { width: 4px; }
+    .guide__content::-webkit-scrollbar-thumb { background: var(--line-strong, #c6bbac); border-radius: 2px; }
+    .guide__nav { flex-shrink: 0; padding-top: 10px; border-top: 1px solid var(--line, #ddd3c5); background: var(--paper-2, #fbf6ef); }
+    .guide__hint { flex-shrink: 0; padding-top: 6px; }
+    .math { font-family: "JetBrains Mono", monospace; font-size: 0.9em; background: rgba(0,0,0,0.05); padding: 1px 4px; border-radius: 4px; }
+  </style>
+
+  <style id="hud-override">
+    .stage__hud {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 7px;
+      max-width: calc(100% - 215px);
+      overflow-x: auto;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    .stage__hud::-webkit-scrollbar { display: none; }
+    .chip {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      background: var(--paper-2, #fbf6ef) !important;
+      border: 1px solid var(--line-strong, #c6bbac) !important;
+      border-radius: 7px !important;
+      padding: 4px 8px 4px 10px !important;
+      min-width: 76px !important;
+      max-width: 110px !important;
+      height: auto !important;
+      flex-shrink: 0 !important;
+      position: relative !important;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06) !important;
+    }
+    .chip::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 5px;
+      bottom: 5px;
+      width: 3px;
+      border-radius: 0 2px 2px 0;
+      background: #10b981;
+    }
+    .chip__label {
+      display: flex !important;
+      align-items: center !important;
+      gap: 3px !important;
+      font-family: "JetBrains Mono", monospace !important;
+      font-size: 8.5px !important;
+      font-weight: 700 !important;
+      color: var(--muted, #6f6961) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.04em !important;
+      white-space: nowrap !important;
+      line-height: 1 !important;
+      margin-bottom: 2px !important;
+    }
+    .chip__label svg { width: 10px; height: 10px; }
+    .chip__value {
+      display: block !important;
+      font-family: "JetBrains Mono", monospace !important;
+      font-size: 12.5px !important;
+      font-weight: 800 !important;
+      color: var(--ink, #1d1b18) !important;
+      white-space: nowrap !important;
+      line-height: 1.2 !important;
+    }
+  </style>
 </head>
-<body data-page="home">
+<body>
+  <div id="app">
+    <div class="window">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <button class="menu-btn" id="menu-btn" type="button" aria-label="Open course curriculum" aria-expanded="false" aria-controls="sidebar">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
 
-<header class="topbar">
-  <div class="wrap">
-    <a class="brand" href="index.html">
-      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
-        <rect x="1" y="1" width="24" height="24" rx="6" fill="#059669"/>
-        <polyline points="5,17 10,11 15,14 21,7" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="21" cy="7" r="2" fill="#F59E0B"/>
-      </svg>
-      Quantitative Trader Atlas
-    </a>
-    <span class="spacer"></span>
-    <a class="nav-link" href="review.html" style="margin-right: 14px; font-size: 0.9rem; font-weight: 500; color: var(--ink-2);">Daily Review ↗</a>
-    <div class="topbar-progress"><span class="label">Mastered</span><span class="bar"><i data-fill="overall-bar"></i></span><span class="num" data-fill="pct">0%</span></div>
-    <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark theme">
-      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="4"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6L16 16M4 16l1.4-1.4M14.6 5.4L16 4"/></svg>
-    </button>
+        <a class="brand" href="#/" aria-label="Quantitative Trader Atlas">
+          <svg class="logo" width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+            <rect x="2" y="2" width="28" height="28" rx="6" fill="#059669"/>
+            <polyline points="6,21 12,13 18,17 26,8" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="26" cy="8" r="2.8" fill="#F59E0B"/>
+          </svg>
+          <span class="brand__name">Quant <span>Atlas</span></span>
+        </a>
+
+        <nav class="nav">
+          <button class="nav__item btn-pop is-active" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+            <span>Interactive Atlas</span>
+          </button>
+          <a class="nav__item" href="../index.html" style="text-decoration: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span>Main Portfolio ↗</span>
+          </a>
+        </nav>
+
+        <button class="search" id="search-open" type="button" aria-label="Search lessons and equations" aria-keyshortcuts="Meta+K">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span class="search__hint">Search 18 quant lessons, models & flows…</span>
+          <kbd>⌘K</kbd>
+        </button>
+
+        <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </button>
+      </header>
+
+      <!-- Main Layout Body (3-panel) -->
+      <div class="body">
+        <!-- 1. Left Sidebar: Curriculum Navigation -->
+        <aside class="sidebar" id="sidebar" aria-label="Quant Course Navigation">
+          <nav class="drawer-nav">
+            <button class="nav__item btn-pop is-active" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+              <span>Interactive Curriculum</span>
+            </button>
+          </nav>
+          <div class="tree-root">
+            <svg width="22" height="18" viewBox="0 0 20 16" aria-hidden="true" fill="currentColor"><path d="M1 3a2 2 0 0 1 2-2h4.3l2 2.2H17a2 2 0 0 1 2 2V13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2Z"/></svg>
+            <span>Quant Modules</span>
+            <span class="tree-root__meta">18 lessons</span>
+            <button class="drawer-close" id="drawer-close" type="button" aria-label="Close menu">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <nav class="course" id="course"></nav>
+
+          <section class="card progress" id="progress">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="eyebrow" style="font-size: 11px; font-weight: 800;">TOTAL PROGRESS</span>
+              <span id="progress-pct" style="font-family: JetBrains Mono; font-weight: 700; font-size: 12px; color: #059669;">100% Active</span>
+            </div>
+            <div style="background: var(--line, #ddd3c5); height: 6px; border-radius: 3px; overflow: hidden;">
+              <div id="progress-bar-fill" style="background: #10b981; height: 100%; width: 100%; border-radius: 3px;"></div>
+            </div>
+          </section>
+        </aside>
+        <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+        <!-- 2. Center Stage: Interactive Motion Engine -->
+        <main class="sheet">
+          <div class="lesson-head" id="head"></div>
+
+          <section class="card stage">
+            <div class="stage__hud" id="hud"></div>
+
+            <div class="stage__tools">
+              <button class="tool" id="replay" title="Replay this step (R)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                <span>Replay</span>
+              </button>
+              <button class="tool" id="pause" title="Pause traffic (Space)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                <span>Pause</span>
+              </button>
+              <button class="tool tool--expand" id="expand" title="Full screen">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+              </button>
+            </div>
+
+            <div class="stage__canvas" id="canvas"></div>
+            <div class="stage__legend" id="legend"></div>
+          </section>
+
+          <!-- Horizontal Stepper Timeline -->
+          <section class="card timeline" id="timeline"></section>
+        </main>
+
+        <!-- 3. Right Rail: Narrative Guide & Goals -->
+        <aside class="rail">
+          <section class="card guide" id="guide"></section>
+          <section class="card goals" id="goals"></section>
+        </aside>
+      </div>
+    </div>
   </div>
-</header>
 
-<main>
-  <section class="home-hero">
-    <div class="wrap">
-      <div class="hero-copy">
-        <p class="eyebrow" style="color: #059669; font-weight: 600;">The Complete Mathematical & Algorithmic Curriculum</p>
-        <h1>What a quantitative trader needs to master</h1>
-        <p class="lede">Eighteen core disciplines, from measure theory, Itô calculus, and order book microstructure to high-frequency execution, factor investing, crypto DeFi, and cutting-edge LLM-driven alpha swarms. Interactive simulations, rigorous derivations, and daily spaced repetition review.</p>
-        <div class="stats" aria-label="Atlas totals">
-          <div><span class="big" data-fill="n-areas">18</span><span class="eyebrow">Areas</span></div>
-          <div><span class="big" data-fill="n-subs">108</span><span class="eyebrow">Subtopics</span></div>
-          <div><span class="big" data-fill="n-done">0</span><span class="eyebrow">Mastered</span></div>
-          <div class="overall"><span>Overall</span><span class="bar"><i data-fill="overall-bar"></i></span><span class="num" data-fill="pct">0%</span></div>
-        </div>
+  <!-- Search Modal -->
+  <div class="search-modal" id="search-modal">
+    <div class="search-dialog">
+      <div class="search-input-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search 18 quantitative lessons, algorithms, models..." autofocus>
+        <kbd style="font-family: JetBrains Mono; font-size: 11px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px;">ESC</kbd>
       </div>
-      <div class="atlas3d" id="atlas3d" role="img" aria-label="3D map of the 18 quant areas, grouped into six tiers, with packets flowing along the learning path.">
-        <div class="a3-hud"><span class="a3-badge">3D</span><span>Drag to rotate · click an area node to launch</span></div>
-        <div class="a3-tip" hidden></div>
-        <div class="a3-labels" aria-hidden="true"></div>
-      </div>
+      <ul class="search-results" id="search-results"></ul>
     </div>
-  </section>
+  </div>
 
-  <section class="map-section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>The Quant Learning Path</h2>
-        <span class="muted" style="font-size:.92rem">Arrows show the flow across foundational math, asset modeling, alpha discovery, and execution. Hover an area to trace prerequisites.</span>
-      </div>
-      <div class="map-frame" id="map" aria-live="polite"></div>
-      <div class="map-legend">
-        <span>Green bar in each node = subtopics you've marked as mastered</span>
-        <span>Tier 6 (AI & LLMs) integrates directly after ML and Alpha Research</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="cards-section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Curriculum Areas & Syllabi</h2>
-        <button class="reset-btn" id="reset-progress" type="button">Reset progress</button>
-      </div>
-      <div id="cards"></div>
-    </div>
-  </section>
-</main>
-
-<footer class="site-foot">
-  <div class="wrap">Quantitative Trader Atlas · Rigorous open-source curriculum for quantitative researchers, traders, and software engineers. Progress is persisted locally in your browser.</div>
-</footer>
-<script src="assets/hero3d.js"></script>
+  <script src="assets/designed_engine.js"></script>
 </body>
 </html>
