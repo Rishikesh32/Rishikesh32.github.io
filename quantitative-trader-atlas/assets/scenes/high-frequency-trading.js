@@ -1,49 +1,75 @@
-/* Interactive quantitative simulation scene for High-Frequency Trading & Market Making */
+/* Interactive quantitative simulation scene for High-Frequency Trading & Ultra-Low Latency */
 window.ATLAS_SCENES = window.ATLAS_SCENES || {};
-window.ATLAS_SCENES["high-frequency-trading/overview"] = {
-  unit: 34,
-  metrics: [
-    { id: "signal", label: "Alpha / Effici", tone: "accent" },
-    { id: "risk", label: "Tail Volatilit", tone: "signal" },
-    { id: "sharpe", label: "Risk-Adjusted", tone: "good" }
-  ],
-  legend: { req: "market stream", data: "alpha model", res: "execution order", miss: "tail risk / friction" },
-  nodes: {
-    feed:    { type: "cyl",   x: 0,    y: 3.8,  r: 1.4, h: 1.5, color: "t1", label: "Market Data L2", sub: "Tick & Book Feed" },
-    engine:  { type: "slab",  x: 4.5,  y: 3.8,  w: 2.4, d: 2.6, h: 0.6, color: "accent", label: "High-Frequency", sub: "Quantitative Core" },
-    riskctl: { type: "block", x: 9.0,  y: 1.5,  w: 2.4, d: 1.6, h: 1.0, color: "t4", label: "Barra Risk / V", sub: "Drawdown Guard" },
-    alpha:   { type: "block", x: 9.0,  y: 6.0,  w: 2.4, d: 1.6, h: 1.0, color: "t3", label: "Alpha Signal", sub: "IC Optimization" },
-    venue:   { type: "block", x: 13.5, y: 3.8,  w: 2.0, d: 2.6, h: 1.2, color: "good", label: "Execution Venu", sub: "Smart Order Router" }
-  },
-  steps: [
-    {
-      title: "Market data ingestion & signal calibration",
-      tag: "Data Ingestion",
-      add: ["feed", "engine"],
-      links: [["feed", "engine"]],
-      flows: [["feed", "engine", "req", { label: "100k ticks/sec" }]],
-      text: "<p>Continuous microsecond feeds stream into the High-Frequency Trading & Market Making calculation pipeline. Parameters are dynamically calibrated under rigorous statistical bounds.</p>",
-      metrics: { signal: "+0.042 IC", risk: "2.1% σ", sharpe: "1.42" }
+(function () {
+  function at(s, t, n) {
+    var cyl = n.type === "cyl", w = cyl ? 0 : (n.w || 1.6), d = cyl ? 0 : (n.d || 1.6);
+    n.x = s + t - w / 2;
+    n.y = t - s - d / 2;
+    return n;
+  }
+
+  window.ATLAS_SCENES["high-frequency-trading/overview"] = {
+    unit: 34,
+    metrics: [
+      {
+            "id": "lat",
+            "label": "Tick-to-Trade",
+            "tone": "accent"
+      },
+      {
+            "id": "drop",
+            "label": "Packet Drop",
+            "tone": "signal"
+      },
+      {
+            "id": "fill",
+            "label": "Queue Hit Rate",
+            "tone": "good"
+      }
+],
+    legend: {"req": "10GbE packet", "data": "FPGA book", "res": "OUCH order", "miss": "stale race"},
+    nodes: {
+      feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "FPGA Kernel", sub: "10GbE Solarflare" }),
+      engine:  at(-1.0, 0,    { type: "block", w: 1.6, d: 1.6, h: 1.2, color: "accent", label: "C++20 Engine", sub: "Lock-Free Ring" }),
+      riskctl: at(2.8, -3.0,  { type: "block", w: 1.6, d: 1.6, h: 1.0, color: "t4", label: "Pre-Trade Guard", sub: "FPGA Risk Gate" }),
+      alpha:   at(2.8, 3.0,   { type: "block", w: 1.6, d: 1.6, h: 1.0, color: "t3", label: "Sub-Microsec", sub: "Queue Jump" }),
+      venue:   at(6.6, 0,     { type: "block", w: 1.6, d: 1.6, h: 1.2, color: "good", label: "Co-Lo Venue", sub: "Direct Market" })
     },
-    {
-      title: "Factor optimization & risk gating",
-      tag: "Risk Gating",
-      add: ["riskctl", "alpha"],
-      links: [["engine", "alpha"], ["engine", "riskctl"]],
-      flows: [["engine", "alpha", "data", { label: "Factor tilt" }], ["engine", "riskctl", "miss", { label: "VaR constraint" }]],
-      text: "<p>The algorithm isolates genuine predictive alpha while projecting portfolio exposures onto orthogonal risk factors to immunize against market beta.</p>",
-      metrics: { signal: "+0.068 IC", risk: "1.4% σ", sharpe: "2.18" },
-      changed: ["+ Factor signals extracted", "⚡ Volatility constrained via covariance cleaning"]
-    },
-    {
-      title: "Optimal execution & slippage minimization",
-      tag: "Execution",
-      add: ["venue"],
-      links: [["alpha", "venue"], ["riskctl", "venue"]],
-      flows: [["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Child orders" }]],
-      text: "<p>Smart order routing slices trades across dark pools and lit books, minimizing Almgren-Chriss market impact and realizing positive net alpha.</p>",
-      metrics: { signal: "+0.065 Net IC", risk: "1.2% σ", sharpe: "2.45" },
-      changed: ["✓ Execution slippage reduced by 42%", "✓ Drawdown strictly bound within 99% CVaR", "✓ System live in production"]
-    }
-  ]
-};
+    steps: [
+      {
+        title: "Kernel bypass packet capture & FPGA book building",
+        tag: "Kernel Bypass",
+        add: ["feed", "engine"],
+        links: [["feed", "engine", "req", { lift: 30 }]],
+        flows: [["feed", "engine", "req", { label: "10GbE packets", lift: 30 }]],
+        text: "<p>Solarflare OpenOnload and FPGA NICs bypass the operating system kernel entirely, streaming raw UDP market packets directly into CPU L1/L2 caches without context switches.</p>",
+        metrics: {"lat": "420 ns", "drop": "0.000%", "fill": "84.2%"}
+      },
+      {
+        title: "Lock-free ring buffers & hardware pre-trade risk",
+        tag: "Hardware Risk",
+        add: ["riskctl", "alpha"],
+        links: [["engine", "alpha", "data", { lift: 28 }], ["engine", "riskctl", "miss", { lift: 28 }]],
+        flows: [
+          ["engine", "alpha", "data", { label: "Sub-microsec signal", lift: 28, pos: 0.42, dy: -6 }],
+          ["engine", "riskctl", "miss", { label: "FPGA risk pass", lift: 28, pos: 0.58, dy: -6 }]
+        ],
+        text: "<p>Orders pass through hardware-enforced SEC Rule 15c3-5 pre-trade risk gates in under 20 nanoseconds, checking price bands and credit limits in silicon.</p>",
+        metrics: {"lat": "280 ns", "drop": "0.000%", "fill": "92.8%"},
+        changed: ["+ In-silicon price band validation active", "\u26a1 Zero-allocation C++ memory layout locked in cache"]
+      },
+      {
+        title: "Deterministic OUCH order injection & queue priority capture",
+        tag: "Order Injection",
+        add: ["venue"],
+        links: [["alpha", "venue", "res", { lift: 26 }], ["riskctl", "venue", "res", { lift: 26 }]],
+        flows: [
+          ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Direct OUCH order", lift: 26, pos: 0.5, dy: -6 }]
+        ],
+        text: "<p>Deterministic fiber cross-connects inject cancel-and-replace packets into matching engines, winning queue priority races at the inside spread.</p>",
+        metrics: {"lat": "190 ns", "drop": "0.000%", "fill": "97.4%"},
+        changed: ["\u2713 Sub-200ns tick-to-trade latency confirmed", "\u2713 Queue position capture rate exceeds 95%", "\u2713 Production co-location active"]
+      }
+    ]
+  };
+})();

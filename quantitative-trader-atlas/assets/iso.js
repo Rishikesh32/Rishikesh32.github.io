@@ -93,12 +93,20 @@
       var it = el("text", { x: q[0], y: q[1] + 5, "text-anchor": "middle", class: "iso-icon" }, g); it.textContent = n.icon;
     }
     var top = nodeTop(n), p = P(top.x, top.y, top.z);
-    if (t === "slab") {
+    if (t === "slab" && (n.w || 4) >= 5) {
       var corner = P(n.x + 0.15, n.y + (n.d || 3) - 0.15, z + 0.15);
       if (n.label) { var lt = el("text", { x: corner[0] + 6, y: corner[1] + 16, class: "slab-label" }, lg); lt.textContent = n.label + (n.sub ? " · " + n.sub : ""); }
     } else {
-      var ly = t === "pill" ? p[1] : p[1] - (n.labelGap || 26);
-      if (n.label) pill(lg, p[0], ly, n.label + (n.sub ? " · " + n.sub : ""), { cls: n.focusLabel ? "strong" : "" });
+      var autoGap = 26;
+      if (t === "cyl") {
+        autoGap = Math.round((n.r || 0.8) * U * 0.707 + 36);
+      } else if (t === "block" || t === "stack" || t === "slab") {
+        var nw = n.w || (t === "slab" ? 4 : 1.6), nd = n.d || (t === "slab" ? 3 : 1.6);
+        autoGap = Math.round((nw + nd) * 0.25 * U + 36);
+      }
+      var ly = t === "pill" ? p[1] : p[1] - (n.labelGap || autoGap);
+      var labelTxt = n.label ? (n.label + (n.sub ? " · " + n.sub : "")) : "";
+      if (labelTxt) pill(lg, p[0], ly, labelTxt, { cls: n.focusLabel ? "strong" : "" });
       if (badge != null && badge !== "") pill(lg, p[0], ly - 26, String(badge), { small: true, stroke: c, color: c, cls: "badge" });
     }
     return [g, lg];
@@ -134,7 +142,7 @@
       var w = n.w || (t === "slab" ? 4 : 1.6), d = n.d || (t === "slab" ? 3 : 1.6), r = n.r || 0.8;
       var corners = t === "cyl" ? [[n.x - r, n.y - r], [n.x + r, n.y + r], [n.x - r, n.y + r], [n.x + r, n.y - r]] : t === "pill" ? [[n.x, n.y]] : [[n.x, n.y], [n.x + w, n.y], [n.x + w, n.y + d], [n.x, n.y + d]];
       corners.forEach(function (c) { var a = P(c[0], c[1], n.z || 0); xs.push(a[0]); ys.push(a[1]); });
-      var tp = anchor(P, n); xs.push(tp[0] - 70, tp[0] + 70); ys.push(tp[1] - (n.label ? 70 : 10));
+      var tp = anchor(P, n); xs.push(tp[0] - 85, tp[0] + 85); ys.push(tp[1] - (n.label ? 95 : 10));
     });
     return { x: Math.min.apply(null, xs) - 24, y: Math.min.apply(null, ys) - 10, w: Math.max.apply(null, xs) - Math.min.apply(null, xs) + 48, h: Math.max.apply(null, ys) - Math.min.apply(null, ys) + 44 };
   }
@@ -195,9 +203,45 @@
     var focus = st.focus && st.focus.length ? st.focus : null;
     var dim = function (id) { return focus && focus.indexOf(id) < 0; };
 
+    var placedLabels = [];
+    function placeLabelPill(layer, x, y, text, opts) {
+      opts = opts || {};
+      var testY = y;
+      var testX = x;
+      var pad = opts.small ? 55 : 70;
+      var hpad = opts.small ? 19 : 24;
+      for (var attempt = 0; attempt < 8; attempt++) {
+        var collides = false;
+        for (var i = 0; i < placedLabels.length; i++) {
+          var pl = placedLabels[i];
+          if (Math.abs(pl.x - testX) < pad && Math.abs(pl.y - testY) < hpad) {
+            collides = true;
+            break;
+          }
+        }
+        if (!collides) break;
+        testY += (attempt % 2 === 0 ? 22 : -40);
+      }
+      placedLabels.push({ x: testX, y: testY });
+      return pill(layer, testX, testY, text, opts);
+    }
+
     var ids = Object.keys(now.shown).filter(function (id) { return scene.nodes[id]; }).sort(function (a, b) { return depth(scene.nodes[a]) - depth(scene.nodes[b]); });
     var k = 0;
     ids.forEach(function (id) {
+      var nodeObj = scene.nodes[id];
+      if (nodeObj.label) {
+        var top = nodeTop(nodeObj), p = P(top.x, top.y, top.z);
+        var t = nodeObj.type || "block";
+        var autoGap = 26;
+        if (t === "cyl") autoGap = Math.round((nodeObj.r || 0.8) * U * 0.707 + 36);
+        else if (t === "block" || t === "stack" || t === "slab") {
+          var nw = nodeObj.w || (t === "slab" ? 4 : 1.6), nd = nodeObj.d || (t === "slab" ? 3 : 1.6);
+          autoGap = Math.round((nw + nd) * 0.25 * U + 36);
+        }
+        var ly = t === "pill" ? p[1] : p[1] - (nodeObj.labelGap || autoGap);
+        placedLabels.push({ x: p[0], y: ly });
+      }
       var pair = drawNode(gNodes, P, scene.nodes[id], id, U, now.badges[id], gLabels), d0 = 80 * k;
       pair[0].style.color = col(scene.nodes[id].color);
       var isNew = !prev.shown[id] && !REDUCED;
@@ -215,7 +259,14 @@
       if (!a || !b || !now.shown[l[0]] || !now.shown[l[1]]) return;
       var o = l[3] || {};
       var path = el("path", { d: linkPath(P, a, b, o), class: "iso-link" + (o.dashed ? " dashed" : "") + (dim(l[0]) && dim(l[1]) ? " dim" : ""), style: l[2] && KIND[l[2]] ? "stroke:" + KIND[l[2]].c : null }, gLinks);
-      if (o.label) { var len = path.getTotalLength ? path.getTotalLength() : 0; var mp = len ? path.getPointAtLength(len / 2) : { x: 0, y: 0 }; pill(gLabels, mp.x, mp.y - 2, o.label, { small: true }); }
+      if (o.label) {
+        var pos = o.pos != null ? o.pos : 0.5;
+        var len = path.getTotalLength ? path.getTotalLength() : 0;
+        var mp = len ? path.getPointAtLength(len * pos) : { x: 0, y: 0 };
+        var lx = mp.x + (o.dx || 0);
+        var ly = mp.y - 2 + (o.dy || 0);
+        placeLabelPill(gLabels, lx, ly, o.label, { small: true });
+      }
     });
 
     var tl = gsapOK() ? gsap.timeline() : null;
@@ -232,7 +283,16 @@
         if (tl) tl.call(ui.onFlow, [i, f], t0 + (o.dur || 1.6) * 0.85);
         else setTimeout(function () { ui.onFlow(i, f); }, (REDUCED ? i * 120 : (t0 + (o.dur || 1.6) * 0.85) * 1000));
       }
-      if (o.label) { var tmp = el("path", { d: d }, gLinks); var L2 = tmp.getTotalLength(); var mid = tmp.getPointAtLength(L2 / 2); tmp.remove(); pill(gLabels, mid.x, mid.y - 4, o.label, { small: true, stroke: KIND[kind].c, color: KIND[kind].c }); }
+      if (o.label) {
+        var pos = o.pos != null ? o.pos : 0.5;
+        var tmp = el("path", { d: d }, gLinks);
+        var L2 = tmp.getTotalLength();
+        var mid = tmp.getPointAtLength(L2 * pos);
+        tmp.remove();
+        var lx = mid.x + (o.dx || 0);
+        var ly = mid.y - 4 + (o.dy || 0);
+        placeLabelPill(gLabels, lx, ly, o.label, { small: true, stroke: KIND[kind].c, color: KIND[kind].c });
+      }
       if (REDUCED) return;
       var count = o.count || 2, dur = o.dur || 1.6;
       for (var j = 0; j < count; j++) {

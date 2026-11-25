@@ -846,7 +846,7 @@ body.lesson-mode .topbar .crumb { display: none; }
 .stage-card:has(.flowlog:not([hidden])) { grid-template-rows: minmax(0, 1fr) auto auto; }
 .stage-card:has(.stage-bar.has-metrics):has(.flowlog:not([hidden])) { grid-template-rows: auto minmax(0, 1fr) auto auto; }
 .flowlog { border-top: 1.5px solid var(--line); background: color-mix(in srgb, var(--surface) 92%, transparent); font: 500 .72rem var(--font-mono); }
-.fl-head, .fl-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr) minmax(0, .9fr) minmax(0, 1.6fr); gap: 10px; align-items: center; padding: 4px 14px; }
+.fl-head, .fl-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1.5fr); gap: 10px; align-items: center; padding: 4px 14px; }
 .fl-head { color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; font-size: .62rem; font-weight: 700; padding-top: 7px; }
 .fl-rows { max-height: 86px; overflow-y: auto; scrollbar-width: thin; }
 .fl-row { color: var(--ink-2); border-top: 1px dashed color-mix(in srgb, var(--line) 70%, transparent); }

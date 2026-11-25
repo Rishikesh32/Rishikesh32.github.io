@@ -1,49 +1,75 @@
-/* Interactive quantitative simulation scene for Execution Algorithms & Smart Order Routing (SOR) */
+/* Interactive quantitative simulation scene for Optimal Execution & Market Impact */
 window.ATLAS_SCENES = window.ATLAS_SCENES || {};
-window.ATLAS_SCENES["execution-algorithms/overview"] = {
-  unit: 34,
-  metrics: [
-    { id: "signal", label: "Alpha / Effici", tone: "accent" },
-    { id: "risk", label: "Tail Volatilit", tone: "signal" },
-    { id: "sharpe", label: "Risk-Adjusted", tone: "good" }
-  ],
-  legend: { req: "market stream", data: "alpha model", res: "execution order", miss: "tail risk / friction" },
-  nodes: {
-    feed:    { type: "cyl",   x: 0,    y: 3.8,  r: 1.4, h: 1.5, color: "t1", label: "Market Data L2", sub: "Tick & Book Feed" },
-    engine:  { type: "slab",  x: 4.5,  y: 3.8,  w: 2.4, d: 2.6, h: 0.6, color: "accent", label: "Execution Algo", sub: "Quantitative Core" },
-    riskctl: { type: "block", x: 9.0,  y: 1.5,  w: 2.4, d: 1.6, h: 1.0, color: "t4", label: "Barra Risk / V", sub: "Drawdown Guard" },
-    alpha:   { type: "block", x: 9.0,  y: 6.0,  w: 2.4, d: 1.6, h: 1.0, color: "t3", label: "Alpha Signal", sub: "IC Optimization" },
-    venue:   { type: "block", x: 13.5, y: 3.8,  w: 2.0, d: 2.6, h: 1.2, color: "good", label: "Execution Venu", sub: "Smart Order Router" }
-  },
-  steps: [
-    {
-      title: "Market data ingestion & signal calibration",
-      tag: "Data Ingestion",
-      add: ["feed", "engine"],
-      links: [["feed", "engine"]],
-      flows: [["feed", "engine", "req", { label: "100k ticks/sec" }]],
-      text: "<p>Continuous microsecond feeds stream into the Execution Algorithms & Smart Order Routing (SOR) calculation pipeline. Parameters are dynamically calibrated under rigorous statistical bounds.</p>",
-      metrics: { signal: "+0.042 IC", risk: "2.1% σ", sharpe: "1.42" }
+(function () {
+  function at(s, t, n) {
+    var cyl = n.type === "cyl", w = cyl ? 0 : (n.w || 1.6), d = cyl ? 0 : (n.d || 1.6);
+    n.x = s + t - w / 2;
+    n.y = t - s - d / 2;
+    return n;
+  }
+
+  window.ATLAS_SCENES["execution-algorithms/overview"] = {
+    unit: 34,
+    metrics: [
+      {
+            "id": "slip",
+            "label": "Arrival Slippage",
+            "tone": "accent"
+      },
+      {
+            "id": "imp",
+            "label": "Market Impact",
+            "tone": "signal"
+      },
+      {
+            "id": "save",
+            "label": "Cost Savings",
+            "tone": "good"
+      }
+],
+    legend: {"req": "parent order", "data": "Almgren-Chriss", "res": "child slice", "miss": "urgency slip"},
+    nodes: {
+      feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Parent Order", sub: "Volume Profile" }),
+      engine:  at(-1.0, 0,    { type: "block", w: 1.6, d: 1.6, h: 1.2, color: "accent", label: "TWAP / VWAP", sub: "Optimal Slicer" }),
+      riskctl: at(2.8, -3.0,  { type: "block", w: 1.6, d: 1.6, h: 1.0, color: "t4", label: "Impact Guard", sub: "Urgency Limit" }),
+      alpha:   at(2.8, 3.0,   { type: "block", w: 1.6, d: 1.6, h: 1.0, color: "t3", label: "Schedule Alg", sub: "Dynamic Pace" }),
+      venue:   at(6.6, 0,     { type: "block", w: 1.6, d: 1.6, h: 1.2, color: "good", label: "Smart Venue", sub: "Hidden / Lit" })
     },
-    {
-      title: "Factor optimization & risk gating",
-      tag: "Risk Gating",
-      add: ["riskctl", "alpha"],
-      links: [["engine", "alpha"], ["engine", "riskctl"]],
-      flows: [["engine", "alpha", "data", { label: "Factor tilt" }], ["engine", "riskctl", "miss", { label: "VaR constraint" }]],
-      text: "<p>The algorithm isolates genuine predictive alpha while projecting portfolio exposures onto orthogonal risk factors to immunize against market beta.</p>",
-      metrics: { signal: "+0.068 IC", risk: "1.4% σ", sharpe: "2.18" },
-      changed: ["+ Factor signals extracted", "⚡ Volatility constrained via covariance cleaning"]
-    },
-    {
-      title: "Optimal execution & slippage minimization",
-      tag: "Execution",
-      add: ["venue"],
-      links: [["alpha", "venue"], ["riskctl", "venue"]],
-      flows: [["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Child orders" }]],
-      text: "<p>Smart order routing slices trades across dark pools and lit books, minimizing Almgren-Chriss market impact and realizing positive net alpha.</p>",
-      metrics: { signal: "+0.065 Net IC", risk: "1.2% σ", sharpe: "2.45" },
-      changed: ["✓ Execution slippage reduced by 42%", "✓ Drawdown strictly bound within 99% CVaR", "✓ System live in production"]
-    }
-  ]
-};
+    steps: [
+      {
+        title: "Intraday volume forecasting & order slicing",
+        tag: "Volume Profile",
+        add: ["feed", "engine"],
+        links: [["feed", "engine", "req", { lift: 30 }]],
+        flows: [["feed", "engine", "req", { label: "Parent order", lift: 30 }]],
+        text: "<p>U-shaped intraday volume curves and real-time order book liquidity are projected to create optimal child order schedules that minimize overall market impact.</p>",
+        metrics: {"slip": "3.8 bps", "imp": "2.4 bps", "save": "$12.4k"}
+      },
+      {
+        title: "Almgren-Chriss optimal trajectory & risk aversion parameterization",
+        tag: "Trajectory Solver",
+        add: ["riskctl", "alpha"],
+        links: [["engine", "alpha", "data", { lift: 28 }], ["engine", "riskctl", "miss", { lift: 28 }]],
+        flows: [
+          ["engine", "alpha", "data", { label: "Optimal child pace", lift: 28, pos: 0.42, dy: -6 }],
+          ["engine", "riskctl", "miss", { label: "Price drift guard", lift: 28, pos: 0.58, dy: -6 }]
+        ],
+        text: "<p>Euler-Lagrange equations balance permanent market impact against volatility risk over the execution horizon, dynamically speeding up or slowing down trading pace.</p>",
+        metrics: {"slip": "2.1 bps", "imp": "1.4 bps", "save": "$28.6k"},
+        changed: ["+ Dynamic risk-aversion parameter calibrated", "\u26a1 Dark pool resting orders prioritize non-displayed liquidity"]
+      },
+      {
+        title: "Smart Order Routing across lit and dark liquidity pools",
+        tag: "Smart Routing",
+        add: ["venue"],
+        links: [["alpha", "venue", "res", { lift: 26 }], ["riskctl", "venue", "res", { lift: 26 }]],
+        flows: [
+          ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Discreet child fill", lift: 26, pos: 0.5, dy: -6 }]
+        ],
+        text: "<p>Smart order routing sprays child slices across midpoint dark venues and lit order books, capturing spread rebates and eliminating information leakage.</p>",
+        metrics: {"slip": "0.9 bps", "imp": "0.6 bps", "save": "$46.8k"},
+        changed: ["\u2713 Slippage reduced by 76% vs baseline VWAP", "\u2713 Information footprint minimized", "\u2713 Execution complete"]
+      }
+    ]
+  };
+})();

@@ -1,30 +1,5 @@
 
-var AREA_TO_STUDIO_MAP = {
-  "math-foundations": "prob-spaces",
-  "stochastic-calculus": "stochastic-calculus",
-  "time-series-econometrics": "brownian-motion",
-  "market-microstructure": "lob-mechanics",
-  "derivatives-pricing": "black-scholes",
-  "alpha-research-factor-investing": "factor-investing",
-  "statistical-arbitrage": "pairs-trading",
-  "machine-learning-finance": "financial-ml",
-  "portfolio-optimization": "the-greeks",
-  "risk-management": "vol-surface",
-  "backtesting-simulation": "order-flow-toxicity",
-  "high-frequency-trading": "latency-fpga",
-  "crypto-defi-quant": "execution-algos",
-  "execution-algorithms": "market-impact",
-  "quant-tech-stack": "quant-tech-stack",
-  "career-interview-prep": "svd-pca",
-  "llms-alternative-data": "llm-earnings-nlp",
-  "autonomous-agents-copilots": "autonomous-swarms"
-};
-function getStudioUrl(areaId) {
-  var id = AREA_TO_STUDIO_MAP[areaId] || "lob-mechanics";
-  return "studio.html#/" + id;
-}
-
-/* Data Analyst Atlas — learning layer:
+/* Quantitative Trader Atlas — learning layer:
    reading-level switch, glossary tooltips, time estimates, quick-check quizzes,
    demo challenges, spaced review, streaks, badges and "continue where you left off". */
 (function () {
