@@ -456,7 +456,7 @@
     var CDN = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/";
     var gsapReady = loadScript(CDN + "gsap.min.js").then(function (ok) { return ok ? loadScript(CDN + "MotionPathPlugin.min.js") : false; })
       .then(function () { if (window.gsap && window.MotionPathPlugin) window.gsap.registerPlugin(window.MotionPathPlugin); });
-    var gsapSoon = Promise.race([gsapReady, new Promise(function (r) { setTimeout(r, 450); })]);
+    var gsapSoon = Promise.resolve();
     Promise.all((hasScene ? [loadScript(At.base + "iso.js"), loadScript(At.base + "scenes/" + AREA + ".js")] : []).concat([gsapSoon])).then(function () {
       if (!collect()) { document.documentElement.classList.remove("app-loading"); return; }
       build();

@@ -9,7 +9,7 @@
   window.AtlasStore = store;
   if (/\/topics\/[^/]+\.html$/.test(location.pathname)) {
     document.documentElement.classList.add("app-loading");
-    setTimeout(function () { document.documentElement.classList.remove("app-loading"); }, 6000);
+    setTimeout(function () { document.documentElement.classList.remove("app-loading"); }, 1200);
   }
   var BASE = ((document.currentScript && document.currentScript.src) || "").replace(/app\.js(\?.*)?$/, "");
 
@@ -566,9 +566,12 @@
     var areaId = document.body.getAttribute("data-area");
     if (areaId) initTopic(areaId);
     if (document.body.getAttribute("data-page") === "home") initHome();
+    if (BASE) {
+      if (document.body.getAttribute("data-area")) { var ls = document.createElement("script"); ls.src = BASE + "lesson.js"; ls.async = false; document.body.appendChild(ls); }
+      var es = document.createElement("script"); es.src = BASE + "engage.js"; es.async = false; document.body.appendChild(es); }
     initCode();
     initAnimations();
-    if (BASE) {
+    if (false) {
       if (document.body.getAttribute("data-area")) { var ls = document.createElement("script"); ls.src = BASE + "lesson.js"; ls.async = false; document.body.appendChild(ls); }
       var es = document.createElement("script"); es.src = BASE + "engage.js"; es.async = false; document.body.appendChild(es);
     }
