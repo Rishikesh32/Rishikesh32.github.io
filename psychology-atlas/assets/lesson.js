@@ -30,7 +30,7 @@
   function is(n, sel) { return n.nodeType === 1 && n.matches(sel); }
 
   /* ---------------- step building ---------------- */
-  var VIS = "figure, .widget, pre.code, .formula, .table-wrap, .grid-2, .grid-3, .projects";
+  var VIS = "figure, .diagram, .formula-card, .widget, pre.code, .formula, .table-wrap, .grid-2, .grid-3, .projects";
   var DEEP_ONLY = "pre.code, .formula, .table-wrap";
   var RECAP = ".keyideas, .callout.pitfall, .callout.tip";
   function visKind(n) {
