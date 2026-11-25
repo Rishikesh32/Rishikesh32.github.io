@@ -117,7 +117,30 @@
             <li>Multi-dimensional Itô Lemma accounts for cross-asset correlations $\rho_{ij} dt = dW_i dW_j$.</li>
           </ul>
         </div>
-      </section>
+      
+      <figure style="margin: 22px 0;">
+        <div class="diagram">
+          <svg viewBox="0 0 740 200" role="img" aria-label="Itô's Lemma flow: non-zero quadratic variation creates second-order drift correction.">
+        <defs><marker id="ito-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker></defs>
+        <rect class="d-box" x="20" y="30" width="180" height="55" rx="8"/>
+        <text class="d-title" x="110" y="56" text-anchor="middle">Brownian Motion W_t</text>
+        <text class="d-mono" x="110" y="74" text-anchor="middle">(dW_t)² = dt</text>
+        <line class="d-line-accent" x1="200" y1="57" x2="278" y2="57" marker-end="url(#ito-arr)"/>
+        <rect class="d-accent" x="280" y="30" width="200" height="55" rx="8"/>
+        <text class="d-title" x="380" y="56" text-anchor="middle">Itô Stochastic Chain Rule</text>
+        <text class="d-mono" x="380" y="74" text-anchor="middle">½σ² f''(x) dt Drift</text>
+        <line class="d-line-accent" x1="480" y1="57" x2="538" y2="57" marker-end="url(#ito-arr)"/>
+        <rect class="d-good" x="540" y="30" width="180" height="55" rx="8"/>
+        <text class="d-title" x="630" y="56" text-anchor="middle">Non-Linear Asset Payoff</text>
+        <text class="d-mono" x="630" y="74" text-anchor="middle">Gamma &amp; Convexity</text>
+        <rect class="d-fill" x="20" y="115" width="700" height="60" rx="8"/>
+        <text class="d-label" x="40" y="140">Classical Newton-Leibniz fails because sample paths have infinite total variation.</text>
+        <text class="d-mono" x="40" y="160">df = (f_t + μf_x + ½σ²f_xx)dt + σf_x dW</text>
+      </svg>
+        </div>
+        <figcaption>Itô calculus mechanics: second-order quadratic variation term producing option Gamma convexity.</figcaption>
+      </figure>
+    </section>
 
       <section class="topic" id="girsanov-theorem">
         <div class="topic-head">

@@ -97,7 +97,30 @@
             <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
           </ul>
         </div>
-      </section>
+      
+      <figure style="margin: 22px 0;">
+        <div class="diagram">
+          <svg viewBox="0 0 740 210" role="img" aria-label="LLM pipeline for unstructured financial filings and earnings transcripts.">
+        <defs><marker id="llm-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker></defs>
+        <rect class="d-box" x="20" y="30" width="160" height="55" rx="8"/>
+        <text class="d-title" x="100" y="55" text-anchor="middle">SEC EDGAR / Transcripts</text>
+        <text class="d-mono" x="100" y="73" text-anchor="middle">Raw Text &amp; 10-K Filings</text>
+        <line class="d-line-accent" x1="180" y1="57" x2="248" y2="57" marker-end="url(#llm-a)"/>
+        <rect class="d-accent" x="250" y="30" width="190" height="55" rx="8"/>
+        <text class="d-title" x="345" y="55" text-anchor="middle">FinBERT / LLM Parser</text>
+        <text class="d-mono" x="345" y="73" text-anchor="middle">Guidance Tonal Delta</text>
+        <line class="d-line-accent" x1="440" y1="57" x2="508" y2="57" marker-end="url(#llm-a)"/>
+        <rect class="d-good" x="510" y="30" width="200" height="55" rx="8"/>
+        <text class="d-title" x="610" y="55" text-anchor="middle">Quantitative Factor</text>
+        <text class="d-mono" x="610" y="73" text-anchor="middle">Earnings Surprise Score</text>
+        <rect class="d-fill" x="20" y="115" width="690" height="65" rx="8"/>
+        <text class="d-label" x="40" y="140">Point-in-time enforcement: Filings are timestamped strictly to the microsecond of SEC public release</text>
+        <text class="d-mono" x="40" y="160">to eliminate temporal lookahead leakage during backtesting.</text>
+      </svg>
+        </div>
+        <figcaption>Alternative data ingestion: NLP distillation of qualitative executive disclosures into orthogonal factor alphas.</figcaption>
+      </figure>
+    </section>
 
       <section class="topic" id="financial-foundation-models">
         <div class="topic-head">

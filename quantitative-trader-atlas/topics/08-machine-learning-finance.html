@@ -97,7 +97,31 @@
             <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
           </ul>
         </div>
-      </section>
+      
+      <figure style="margin: 22px 0;">
+        <div class="diagram">
+          <svg viewBox="0 0 740 220" role="img" aria-label="Purged and embargoed cross-validation timeline preventing lookahead leakage.">
+        <defs><marker id="cv-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker></defs>
+        <rect class="d-box" x="20" y="30" width="220" height="55" rx="8"/>
+        <text class="d-title" x="130" y="55" text-anchor="middle">Training Fold (T_train)</text>
+        <text class="d-mono" x="130" y="73" text-anchor="middle">Historical Features</text>
+        <rect class="d-signal" x="250" y="30" width="120" height="55" rx="8"/>
+        <text class="d-title" x="310" y="55" text-anchor="middle">Purged Zone</text>
+        <text class="d-mono" x="310" y="73" text-anchor="middle">Overlapping Labels</text>
+        <rect class="d-good" x="380" y="30" width="180" height="55" rx="8"/>
+        <text class="d-title" x="470" y="55" text-anchor="middle">Testing Fold (T_test)</text>
+        <text class="d-mono" x="470" y="73" text-anchor="middle">Out-of-Sample Eval</text>
+        <rect class="d-accent" x="570" y="30" width="140" height="55" rx="8"/>
+        <text class="d-title" x="640" y="55" text-anchor="middle">Embargo</text>
+        <text class="d-mono" x="640" y="73" text-anchor="middle">Auto-regressive buffer</text>
+        <rect class="d-fill" x="20" y="115" width="690" height="75" rx="8"/>
+        <text class="d-label" x="40" y="140">Standard K-Fold leaks future label information due to overlapping holding periods.</text>
+        <text class="d-mono" x="40" y="165">Purging strips labels overlapping testing periods; embargoing eliminates serial correlation.</text>
+      </svg>
+        </div>
+        <figcaption>López de Prado's cross-validation protocol: rigorous prevention of temporal information leakage in financial ML.</figcaption>
+      </figure>
+    </section>
 
       <section class="topic" id="feature-engineering-ml">
         <div class="topic-head">

@@ -97,7 +97,36 @@
             <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
           </ul>
         </div>
-      </section>
+      
+      <figure style="margin: 22px 0;">
+        <div class="diagram">
+          <svg viewBox="0 0 740 220" role="img" aria-label="Limit Order Book and Matching Engine Flow: incoming market and limit orders are processed against bid and ask queues.">
+        <defs>
+          <marker id="lob-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+          <marker id="lob-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/></marker>
+        </defs>
+        <rect class="d-box" x="20" y="30" width="160" height="45" rx="8"/>
+        <text class="d-title" x="100" y="58" text-anchor="middle">Market Orders (Aggressor)</text>
+        <rect class="d-box" x="20" y="95" width="160" height="45" rx="8"/>
+        <text class="d-title" x="100" y="123" text-anchor="middle">Limit Orders (Passive)</text>
+        <line class="d-line-signal" x1="180" y1="52" x2="258" y2="85" marker-end="url(#lob-s)"/>
+        <line class="d-line-accent" x1="180" y1="117" x2="258" y2="95" marker-end="url(#lob-a)"/>
+        <rect class="d-accent" x="260" y="60" width="180" height="65" rx="10"/>
+        <text class="d-title" x="350" y="92" text-anchor="middle">Matching Engine</text>
+        <text class="d-mono" x="350" y="112" text-anchor="middle">Price-Time FIFO</text>
+        <line class="d-line-accent" x1="440" y1="75" x2="508" y2="45" marker-end="url(#lob-a)"/>
+        <line class="d-line-accent" x1="440" y1="110" x2="508" y2="135" marker-end="url(#lob-a)"/>
+        <rect class="d-signal" x="510" y="20" width="200" height="45" rx="8"/>
+        <text class="d-title" x="610" y="44" text-anchor="middle">Asks Queue ($100.02)</text>
+        <rect class="d-good" x="510" y="115" width="200" height="45" rx="8"/>
+        <text class="d-title" x="610" y="139" text-anchor="middle">Bids Queue ($100.00)</text>
+        <rect class="d-fill" x="20" y="175" width="690" height="35" rx="6"/>
+        <text class="d-mono" x="365" y="198" text-anchor="middle">Bid-Ask Spread: 2¢ · Queue Priority: First in, First executed</text>
+      </svg>
+        </div>
+        <figcaption>Matching engine queue mechanics: passive limit orders provide depth while market orders consume liquidity.</figcaption>
+      </figure>
+    </section>
 
       <section class="topic" id="order-types">
         <div class="topic-head">

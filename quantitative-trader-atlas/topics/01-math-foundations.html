@@ -97,7 +97,30 @@
             <li>Radon-Nikodym derivatives $\frac{d\mathbb{Q}}{d\mathbb{P}}$ allow switching from physical reality $\mathbb{P}$ to risk-neutral pricing $\mathbb{Q}$.</li>
           </ul>
         </div>
-      </section>
+      
+      <figure style="margin: 22px 0;">
+        <div class="diagram">
+          <svg viewBox="0 0 740 200" role="img" aria-label="Probability space filtration tree: information flows from sample space Omega into increasing sigma-algebras F_t over time.">
+        <defs>
+          <marker id="m-arr-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+          <marker id="m-arr-sig" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-signal"/></marker>
+        </defs>
+        <rect class="d-accent" x="20" y="30" width="160" height="50" rx="8"/>
+        <text class="d-title" x="100" y="58" text-anchor="middle">Sample Space (Ω)</text>
+        <line class="d-line-accent" x1="180" y1="55" x2="258" y2="55" marker-end="url(#m-arr-acc)"/>
+        <rect class="d-box" x="260" y="30" width="160" height="50" rx="8"/>
+        <text class="d-title" x="340" y="58" text-anchor="middle">Filtration (F_t)</text>
+        <line class="d-line-accent" x1="420" y1="55" x2="498" y2="55" marker-end="url(#m-arr-acc)"/>
+        <rect class="d-good" x="500" y="30" width="200" height="50" rx="8"/>
+        <text class="d-title" x="600" y="58" text-anchor="middle">Observable Martingale M_t</text>
+        <rect class="d-fill" x="20" y="110" width="680" height="60" rx="8"/>
+        <text class="d-label" x="40" y="135">Non-anticipating property: Trading decisions at time t can only access information in F_t.</text>
+        <text class="d-mono" x="40" y="155">P(Ω) = 1.000 · Radon-Nikodym measure shift dQ/dP</text>
+      </svg>
+        </div>
+        <figcaption>Information filtration architecture: continuous information updates preserving causality without lookahead bias.</figcaption>
+      </figure>
+    </section>
 
       <section class="topic" id="conditional-expectation">
         <div class="topic-head">
@@ -137,7 +160,32 @@
             <li>Statistical arbitrage strategies trade mean-reverting residual spreads constructed by stripping out the top 3-5 PCA market components.</li>
           </ul>
         </div>
-      </section>
+      
+      <figure style="margin: 22px 0;">
+        <div class="diagram">
+          <svg viewBox="0 0 740 210" role="img" aria-label="SVD Eigenmode Spectrum: Separating dominant market beta from idiosyncratic noise via random matrix theory.">
+        <defs>
+          <marker id="svd-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker>
+        </defs>
+        <rect class="d-box" x="20" y="25" width="180" height="60" rx="8"/>
+        <text class="d-title" x="110" y="52" text-anchor="middle">Raw Matrix X (NxT)</text>
+        <text class="d-mono" x="110" y="72" text-anchor="middle">Empirical Returns</text>
+        <line class="d-line-accent" x1="200" y1="55" x2="278" y2="55" marker-end="url(#svd-arr)"/>
+        <rect class="d-accent" x="280" y="25" width="190" height="60" rx="8"/>
+        <text class="d-title" x="375" y="52" text-anchor="middle">SVD Decomposition</text>
+        <text class="d-mono" x="375" y="72" text-anchor="middle">X = U · Σ · V^T</text>
+        <line class="d-line-accent" x1="470" y1="55" x2="538" y2="55" marker-end="url(#svd-arr)"/>
+        <rect class="d-good" x="540" y="25" width="180" height="60" rx="8"/>
+        <text class="d-title" x="630" y="52" text-anchor="middle">Filtered Factors</text>
+        <text class="d-mono" x="630" y="72" text-anchor="middle">Top 3 PCs (Market/Sector)</text>
+        <rect class="d-fill" x="20" y="110" width="700" height="70" rx="8"/>
+        <text class="d-label" x="40" y="135">Random Matrix Threshold: λ_max = σ²(1 + √(N/T))²</text>
+        <text class="d-mono" x="40" y="160">Eigenvalues within bulk [λ_-, λ_+] represent pure noise and are clipped.</text>
+      </svg>
+        </div>
+        <figcaption>SVD noise filtering: isolating macro and sector eigenmodes from random empirical correlation noise.</figcaption>
+      </figure>
+    </section>
 
       <section class="topic" id="covariance-matrices">
         <div class="topic-head">

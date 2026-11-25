@@ -157,7 +157,30 @@
             <li>Production execution: Deploy vectorized research code into low-latency C++ or lock-free asynchronous execution pipelines.</li>
           </ul>
         </div>
-      </section>
+      
+      <figure style="margin: 22px 0;">
+        <div class="diagram">
+          <svg viewBox="0 0 740 210" role="img" aria-label="Volatility Smile and Skew surface across moneyness and expiration.">
+        <defs><marker id="vol-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head-accent"/></marker></defs>
+        <rect class="d-signal" x="20" y="30" width="180" height="55" rx="8"/>
+        <text class="d-title" x="110" y="55" text-anchor="middle">Deep OTM Puts (K &lt; S)</text>
+        <text class="d-mono" x="110" y="73" text-anchor="middle">High Vol (Crash Risk)</text>
+        <line class="d-line-accent" x1="200" y1="57" x2="268" y2="57" marker-end="url(#vol-a)"/>
+        <rect class="d-box" x="270" y="30" width="180" height="55" rx="8"/>
+        <text class="d-title" x="360" y="55" text-anchor="middle">ATM Options (K = S)</text>
+        <text class="d-mono" x="360" y="73" text-anchor="middle">Base Implied Vol</text>
+        <line class="d-line-accent" x1="450" y1="57" x2="528" y2="57" marker-end="url(#vol-a)"/>
+        <rect class="d-good" x="530" y="30" width="180" height="55" rx="8"/>
+        <text class="d-title" x="620" y="55" text-anchor="middle">OTM Calls (K &gt; S)</text>
+        <text class="d-mono" x="620" y="73" text-anchor="middle">Moderate Vol Skew</text>
+        <rect class="d-fill" x="20" y="115" width="690" height="65" rx="8"/>
+        <text class="d-label" x="40" y="140">Black-Scholes assumes constant σ. Real markets exhibit steep left-tail skew</text>
+        <text class="d-mono" x="40" y="160">due to crash-phobia and leverage constraints, requiring Dupire local vol calibration.</text>
+      </svg>
+        </div>
+        <figcaption>Volatility smile anatomy: empirical implied volatility across strikes reflecting market tail risk expectations.</figcaption>
+      </figure>
+    </section>
 
       <section class="topic" id="local-stochastic-vol">
         <div class="topic-head">

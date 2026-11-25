@@ -957,3 +957,66 @@ html.app-loading body::after {
 .interactive-lab-card {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
+
+/* ==================================================================
+   Designed-to-scale Motion & Blueprint Enhancements
+   ================================================================== */
+.diagram {
+  position: relative;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: color-mix(in srgb, var(--surface-2) 45%, var(--surface));
+  padding: 16px;
+  overflow: hidden;
+  box-shadow: 1.5px 2.5px 0 var(--line-strong, var(--line));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.diagram:hover {
+  box-shadow: 3px 5px 0 var(--line-strong, var(--line));
+}
+.replay-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 1.5px 2px 0 var(--line);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  z-index: 2;
+}
+.replay-btn:hover {
+  background: var(--surface-2);
+  transform: translate(-1px, -1px);
+  box-shadow: 2.5px 3px 0 var(--line);
+}
+.replay-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--line);
+}
+.flow-dot {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 4px var(--accent));
+}
+.flow-dot-signal {
+  fill: var(--signal);
+  filter: drop-shadow(0 0 4px var(--signal));
+}
+figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
