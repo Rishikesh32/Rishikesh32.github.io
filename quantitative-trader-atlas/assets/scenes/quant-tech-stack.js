@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "ipc",
             "label": "IPC Latency",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "IPC message", "data": "Arrow buffer", "res": "market packet", "miss": "memory stall"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Kafka / Redpanda", sub: "Arrow Flight" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "10M rows/s", lift: 30 }]],
         text: "<p>Apache Arrow zero-copy memory layouts enable high-throughput SIMD vectorization across millions of financial time-series observations without deserialization overhead.</p>",
-        metrics: {"tp": "4.2M rows/s", "cache": "94.2%", "ipc": "1.4 \u03bcs"}
+        metrics: {"tp": "4.2M rows/s", "cache": "94.2%", "ipc": "1.4 \u03bcs", pnl: "+$0 (Zero-Copy)"}
       },
       {
         title: "Shared memory IPC & lock-free queue architecture",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Ring buffer check", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>Single-Producer Single-Consumer (SPSC) lock-free ring buffers in POSIX shared memory allow Python research models and C++ execution engines to exchange orders in sub-microseconds.</p>",
-        metrics: {"tp": "12.8M rows/s", "cache": "98.1%", "ipc": "420 ns"},
+        metrics: {"tp": "12.8M rows/s", "cache": "98.1%", "ipc": "420 ns", pnl: "+$14,800 (+4.9%)"},
         changed: ["+ Zero-copy shared memory queues active", "\u26a1 CPU core pinning and NUMA affinity set"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Async gateway order", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>High-performance asynchronous gateways connect parallel Ray clusters to exchange co-location facilities, achieving deterministic low latency under extreme market volatility.</p>",
-        metrics: {"tp": "28.5M rows/s", "cache": "99.4%", "ipc": "180 ns"},
+        metrics: {"tp": "28.5M rows/s", "cache": "99.4%", "ipc": "180 ns", pnl: "+$39,400 (+13.1%)"},
         changed: ["\u2713 Sub-microsecond IPC validated", "\u2713 Memory allocation zero in hot path", "\u2713 Distributed pipeline operational"]
       }
     ]

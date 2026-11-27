@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "divers",
             "label": "Divers Ratio",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "alpha / cov", "data": "Black-Litterman", "res": "target weights", "miss": "factor limit"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Expected Ret", sub: "Cov Matrix" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "Returns & Views", lift: 30 }]],
         text: "<p>Ledoit-Wolf shrinkage cleans sample covariance matrices to eliminate eigenvalue inversion noise. Subjective and quantitative alpha views are blended with market equilibrium weights.</p>",
-        metrics: {"sharpe": "1.45 SR", "vol": "14.2% \u03c3", "divers": "1.82 DR"}
+        metrics: {"sharpe": "1.45 SR", "vol": "14.2% \u03c3", "divers": "1.82 DR", pnl: "+$0 (Shrinkage)"}
       },
       {
         title: "Convex optimization with quadratic transaction costs",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Turnover penalty", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>Second-Order Cone Programming (SOCP) maximizes risk-adjusted returns subject to L1 gross leverage, sector concentration, and non-linear market impact penalties.</p>",
-        metrics: {"sharpe": "2.14 SR", "vol": "10.8% \u03c3", "divers": "2.45 DR"},
+        metrics: {"sharpe": "2.14 SR", "vol": "10.8% \u03c3", "divers": "2.45 DR", pnl: "+$24,400 (+4.9%)"},
         changed: ["+ Eigenvalue shrinkage applied to covariance", "\u26a1 Non-linear transaction cost penalties active"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Rebalance slice", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>Hierarchical Risk Parity (HRP) uses tree-clustering to allocate capital across uncorrelated asset clusters without requiring matrix inversion, producing resilient out-of-sample weights.</p>",
-        metrics: {"sharpe": "2.52 SR", "vol": "9.4% \u03c3", "divers": "3.12 DR"},
+        metrics: {"sharpe": "2.52 SR", "vol": "9.4% \u03c3", "divers": "3.12 DR", pnl: "+$64,200 (+12.8%)"},
         changed: ["\u2713 Portfolio volatility reduced by 34%", "\u2713 Maximum drawdown bounded within 8%", "\u2713 Production rebalance committed"]
       }
     ]

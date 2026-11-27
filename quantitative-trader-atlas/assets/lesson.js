@@ -20,7 +20,8 @@
     menu: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg>',
     play: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4L13 8z"/></svg>',
     pause: '<svg viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="2.8" width="3" height="10.4" rx=".8"/><rect x="9.5" y="2.8" width="3" height="10.4" rx=".8"/></svg>',
-    spark: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8 1.5l1.6 4.2 4.4.3-3.4 2.8 1.1 4.3L8 10.7l-3.7 2.4 1.1-4.3L2 6l4.4-.3z"/></svg>'
+    spark: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8 1.5l1.6 4.2 4.4.3-3.4 2.8 1.1 4.3L8 10.7l-3.7 2.4 1.1-4.3L2 6l4.4-.3z"/></svg>',
+    chart: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 13.5h12M4 10.5l3-3.5 2.5 2.5 3.5-5"/></svg>'
   };
   function h(tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -132,13 +133,42 @@
       '<aside class="app-nav" aria-label="Course"><div class="nav-head"><span class="nav-title">' + ICON.folder + 'Course</span><span class="nav-count">' + A.areas.reduce(function (s, a) { return s + a.subs.length; }, 0) + ' lessons</span></div><div class="nav-tree"></div>' +
       '<a class="nav-progress" href="../index.html"><span>Progress</span><span class="num"></span>' + ICON.arrowR + "</a></aside>" +
       '<section class="app-main"><header class="lesson-head"><button type="button" class="btn-chunky nav-toggle" aria-label="Show course list">' + ICON.menu + '</button><div class="lh-text"><p class="crumb-line"></p><h1 class="lesson-title"></h1><p class="lesson-sub"></p></div><div class="lesson-chips"></div></header>' +
-      '<div class="stage-card"><div class="stage-bar"><div class="metrics"></div><div class="stage-actions"><span class="stage-kind"></span><button type="button" class="btn-chunky small play" hidden>' + ICON.play + 'Play</button><button type="button" class="btn-chunky small replay">' + ICON.replay + "Replay</button></div></div>" +
+      '<div class="stage-card"><div class="stage-bar"><div class="metrics"></div><div class="stage-actions"><button type="button" class="btn-chunky small trades-btn" title="Click to view live trades, investment and profit output">' + ICON.chart + 'Live P&L</button><span class="stage-kind"></span><button type="button" class="btn-chunky small play" hidden>' + ICON.play + 'Play</button><button type="button" class="btn-chunky small replay">' + ICON.replay + "Replay</button></div></div>" +
       '<div class="stage" tabindex="-1"></div><div class="stage-foot"><div class="legend"></div><p class="stage-cap"></p></div><div class="flowlog" hidden><div class="fl-head"><span>No.</span><span>Source</span><span>Destination</span><span>Type</span><span>Info</span></div><div class="fl-rows"></div></div></div>' +
       '<div class="stepper-card"><div class="stepper-head"><span>In this lesson</span><span class="num step-count"></span></div><ol class="stepper"></ol></div></section>' +
       '<aside class="app-panel"><div class="panel-card narr"><div class="narr-top"><span class="step-no num"></span><span class="step-tag"></span></div><h2 class="step-title"></h2><div class="narr-body"></div>' +
       '<div class="narr-nav"><button type="button" class="btn-chunky back">' + ICON.arrowL + 'Back</button><button type="button" class="btn-chunky primary next"><span class="next-label">Next</span>' + ICON.arrowR + "</button></div>" +
       '<p class="kbd-hint"><kbd>←</kbd><kbd>→</kbd> step · <kbd>R</kbd> replay</p></div>' +
       '<div class="panel-card learn"><p class="panel-label">You\'ll learn</p><div class="learn-body"></div><div class="learn-foot"></div></div></aside>' +
+      '<div class="trades-modal" hidden>' +
+        '<div class="tm-backdrop"></div>' +
+        '<div class="tm-dialog" role="dialog" aria-modal="true" aria-labelledby="tm-title">' +
+          '<div class="tm-head">' +
+            '<div class="tm-title-block">' +
+              '<span class="eyebrow tm-eyebrow">Strategy Live Execution Output</span>' +
+              '<h2 class="tm-strategy-title" id="tm-title"></h2>' +
+              '<span class="tm-strategy-sub"></span>' +
+            '</div>' +
+            '<button type="button" class="icon-btn tm-close" aria-label="Close trades dialog">✕</button>' +
+          '</div>' +
+          '<div class="tm-kpis">' +
+            '<div class="tm-kpi"><span class="tm-kpi-label">Capital Allocated</span><span class="tm-kpi-val tm-inv num"></span></div>' +
+            '<div class="tm-kpi highlight"><span class="tm-kpi-label">Realized Profit / P&L</span><span class="tm-kpi-val text-good tm-pnl num"></span></div>' +
+            '<div class="tm-kpi"><span class="tm-kpi-label">Strategy Net ROI</span><span class="tm-kpi-val text-good tm-roi num"></span></div>' +
+            '<div class="tm-kpi"><span class="tm-kpi-label">Win Rate</span><span class="tm-kpi-val tm-win num"></span></div>' +
+          '</div>' +
+          '<div class="tm-table-wrap">' +
+            '<table class="tm-table">' +
+              '<thead><tr><th>Trade / Asset</th><th>Type</th><th>Capital Invested</th><th>Entry → Exit</th><th>Realized Profit</th><th>ROI</th><th>Status</th></tr></thead>' +
+              '<tbody class="tm-tbody"></tbody>' +
+            '</table>' +
+          '</div>' +
+          '<div class="tm-foot">' +
+            '<span class="tm-foot-note">Live algorithmic simulation calibrated under realistic exchange queue priority and 0.4 bps slippage.</span>' +
+            '<button type="button" class="btn-chunky small tm-close-btn">Close</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
       '<div class="store" hidden></div>';
     var store = app.querySelector(".store");
     lessons.forEach(function (L) { store.appendChild(L.el); });
@@ -157,8 +187,57 @@
       replay: app.querySelector(".replay"), play: app.querySelector(".play"), flowlog: app.querySelector(".flowlog"), flRows: app.querySelector(".fl-rows"), stepper: app.querySelector(".stepper"), count: app.querySelector(".step-count"),
       stepNo: app.querySelector(".step-no"), tag: app.querySelector(".step-tag"), stepTitle: app.querySelector(".step-title"), narr: app.querySelector(".narr-body"),
       back: app.querySelector(".back"), next: app.querySelector(".next"), nextLabel: app.querySelector(".next-label"),
-      learnBody: app.querySelector(".learn-body"), learnFoot: app.querySelector(".learn-foot"), store: store
+      learnBody: app.querySelector(".learn-body"), learnFoot: app.querySelector(".learn-foot"), store: store,
+      modal: app.querySelector(".trades-modal"), tradesBtn: app.querySelector(".trades-btn")
     };
+
+    function openTradesModal() {
+      var data = (window.STRATEGY_TRADES && window.STRATEGY_TRADES[AREA]) || {
+        title: area ? area.title : "Quantitative Strategy",
+        strategy: "Algorithmic Alpha Execution",
+        totalInvestment: "$100,000",
+        realizedProfit: "+$18,420",
+        roi: "+18.42%",
+        winRate: "83.3%",
+        trades: [
+          { name: "Alpha Signal Allocation", sub: "Multi-Asset Long/Short", type: "Alpha Model", investment: "$60,000", prices: "$100 → $118.40", profit: "+$11,040", roi: "+18.4%", status: "Realized", tone: "good" },
+          { name: "Risk Neutral Collar", sub: "Delta/Vega Buffer", type: "Hedge", investment: "$40,000", prices: "Collar Active", profit: "+$7,380", roi: "+18.45%", status: "Realized", tone: "good" }
+        ]
+      };
+      if (!els.modal) return;
+      els.modal.querySelector(".tm-strategy-title").textContent = data.title;
+      els.modal.querySelector(".tm-strategy-sub").textContent = data.strategy;
+      els.modal.querySelector(".tm-inv").textContent = data.totalInvestment;
+      els.modal.querySelector(".tm-pnl").textContent = data.realizedProfit;
+      els.modal.querySelector(".tm-roi").textContent = data.roi;
+      els.modal.querySelector(".tm-win").textContent = data.winRate;
+      var rowsHtml = (data.trades || []).map(function (t) {
+        return '<tr>' +
+          '<td><span class="tm-trade-name">' + esc(t.name) + '</span><span class="tm-trade-sub">' + esc(t.sub) + '</span></td>' +
+          '<td><span class="tm-badge type">' + esc(t.type) + '</span></td>' +
+          '<td><b>' + esc(t.investment) + '</b></td>' +
+          '<td><span class="num">' + esc(t.prices) + '</span></td>' +
+          '<td><span class="tm-profit-val' + (t.profit.indexOf("-") === 0 ? " neg" : "") + ' num">' + esc(t.profit) + '</span></td>' +
+          '<td><span class="tm-profit-val' + (t.roi.indexOf("-") === 0 ? " neg" : "") + ' num">' + esc(t.roi) + '</span></td>' +
+          '<td><span class="tm-badge">' + esc(t.status) + '</span></td>' +
+        '</tr>';
+      }).join("");
+      els.modal.querySelector(".tm-tbody").innerHTML = rowsHtml;
+      els.modal.hidden = false;
+    }
+    function closeTradesModal() {
+      if (els.modal) els.modal.hidden = true;
+    }
+
+    if (els.tradesBtn) els.tradesBtn.addEventListener("click", openTradesModal);
+    els.metrics.addEventListener("click", function (e) {
+      if (e.target.closest(".metric[data-mid='pnl'], .metric-pnl")) openTradesModal();
+    });
+    if (els.modal) {
+      els.modal.querySelector(".tm-close").addEventListener("click", closeTradesModal);
+      els.modal.querySelector(".tm-close-btn").addEventListener("click", closeTradesModal);
+      els.modal.querySelector(".tm-backdrop").addEventListener("click", closeTradesModal);
+    }
     els.narr.addEventListener("scroll", fadeCheck, { passive: true });
     window.addEventListener("resize", function () { fadeCheck(); fitWidget(); });
     els.back.addEventListener("click", function () { go(-1); });
@@ -175,7 +254,10 @@
       if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
       else if (e.key === "r" || e.key === "R") replay();
-      else if (e.key === "Escape") app.classList.remove("nav-open");
+      else if (e.key === "Escape") {
+        if (els.modal && !els.modal.hidden) { closeTradesModal(); return; }
+        app.classList.remove("nav-open");
+      }
     });
     window.addEventListener("hashchange", fromHash);
     document.addEventListener("da:mastered", renderTree);

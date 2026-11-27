@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "auto",
             "label": "Agent Autonomy",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "agent prompt", "data": "tool execution", "res": "sandbox code", "miss": "safety critic"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Agent Swarm", sub: "Multi-Agent Team" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "Agent task brief", lift: 30 }]],
         text: "<p>A swarm of specialized LLM agents reviews market literature, inspects historical anomalies, and synthesizes novel mathematical factor formulations automatically.</p>",
-        metrics: {"hypo": "120 Ideas / hr", "eval": "2.4% Fail", "auto": "85%"}
+        metrics: {"hypo": "120 Ideas / hr", "eval": "2.4% Fail", "auto": "85%", pnl: "+$0 (Hypothesis)"}
       },
       {
         title: "Automated code synthesis & safety critic verification",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Safety audit", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>A code generation agent translates mathematical formulas into vectorized Python, while a safety critic agent audits for lookahead leakage and data mining artifacts.</p>",
-        metrics: {"hypo": "84 Audited", "eval": "1.2% Fail", "auto": "92%"},
+        metrics: {"hypo": "84 Audited", "eval": "1.2% Fail", "auto": "92%", pnl: "+$15,900 (+6.4%)"},
         changed: ["+ 18 viable non-linear factors synthesized", "\u26a1 12 candidates rejected due to collinearity or data mining"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Validated strategy", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>The autonomous pipeline runs out-of-sample backtests in sandboxed Docker containers, preparing complete statistical dossiers for portfolio manager approval.</p>",
-        metrics: {"hypo": "4 Flagship", "eval": "0.4% Fail", "auto": "98%"},
+        metrics: {"hypo": "4 Flagship", "eval": "0.4% Fail", "auto": "98%", pnl: "+$42,800 (+17.1%)"},
         changed: ["\u2713 Autonomous factor pipeline operational", "\u2713 Strategies verified with out-of-sample Sharpe > 2.0", "\u2713 Dossiers submitted to trading desk"]
       }
     ]

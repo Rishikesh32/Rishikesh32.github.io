@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "front",
             "label": "MEV Shield",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "mempool tx", "data": "AMM curve", "res": "bundle tx", "miss": "sandwich slip"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "RPC Node", sub: "Mempool / DEX" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "Pending tx stream", lift: 30 }]],
         text: "<p>Pending decentralized exchange swaps are simulated against Uniswap v2/v3 concentrated liquidity curves to identify deterministic cross-venue price discrepancies.</p>",
-        metrics: {"gas": "18 Gwei", "arb": "$1,450 / hr", "front": "Protected"}
+        metrics: {"gas": "18 Gwei", "arb": "$1,450 / hr", "front": "Protected", pnl: "+$0 (Mempool Scan)"}
       },
       {
         title: "Convex arbitrage sizing & slippage bounding",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Slippage check", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>Closed-form convex optimization calculates the exact input token amount that maximizes net profit after gas fees and price impact across multi-hop pools.</p>",
-        metrics: {"gas": "24 Gwei", "arb": "$3,820 / hr", "front": "Shielded"},
+        metrics: {"gas": "24 Gwei", "arb": "$3,820 / hr", "front": "Shielded", pnl: "+$12,400 (+8.3%)"},
         changed: ["+ Multi-hop arbitrage path verified", "\u26a1 Maximum slippage bound to 0.05%"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Private bundle", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>Transactions are bundled directly to Ethereum block builders via private RPC relays, guaranteeing atomic inclusion at the top of the block with zero revert risk.</p>",
-        metrics: {"gas": "22 Gwei", "arb": "$6,140 / hr", "front": "100% MEV Shield"},
+        metrics: {"gas": "22 Gwei", "arb": "$6,140 / hr", "front": "100% MEV Shield", pnl: "+$34,200 (+22.8%)"},
         changed: ["\u2713 Private bundle mined at top of block", "\u2713 Zero failed-transaction gas burned", "\u2713 Cross-DEX arbitrage completed"]
       }
     ]

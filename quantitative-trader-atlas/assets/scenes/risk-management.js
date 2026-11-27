@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "liq",
             "label": "Liquidity Days",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "live positions", "data": "MC scenario", "res": "de-risk order", "miss": "circuit breaker"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Position Book", sub: "Real-Time P&L" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "Live exposures", lift: 30 }]],
         text: "<p>Multi-asset positions across global venues are aggregated into factor exposures. Full revaluation under 10 years of historical returns computes empirical Value-at-Risk quantiles.</p>",
-        metrics: {"var": "$1.42M VaR", "cvar": "$2.15M CVaR", "liq": "2.4 Days"}
+        metrics: {"var": "$1.42M VaR", "cvar": "$2.15M CVaR", "liq": "2.4 Days", pnl: "+$0 (Aggregating)"}
       },
       {
         title: "Extreme Value Theory & Monte Carlo stress testing",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Breaker monitor", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>Generalized Pareto distributions fit the fat tails of the loss distribution via Peak-Over-Threshold EVT. Severe macroeconomic and liquidity shocks test solvency.</p>",
-        metrics: {"var": "$1.18M VaR", "cvar": "$1.62M CVaR", "liq": "1.8 Days"},
+        metrics: {"var": "$1.18M VaR", "cvar": "$1.62M CVaR", "liq": "1.8 Days", pnl: "+$14,300 (+3.6%)"},
         changed: ["+ Extreme Value Theory tail estimates active", "\u26a1 Automated de-risking triggers calibrated at 99% CVaR"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "De-risk order", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>When tail losses approach predefined capital buffers, automated liquidation algorithms slice illiquid positions across venues, preserving fund solvency without causing fire-sale slippage.</p>",
-        metrics: {"var": "$0.84M VaR", "cvar": "$1.12M CVaR", "liq": "0.9 Days"},
+        metrics: {"var": "$0.84M VaR", "cvar": "$1.12M CVaR", "liq": "0.9 Days", pnl: "+$41,800 (+10.5%)"},
         changed: ["\u2713 Portfolio tail risk strictly bounded", "\u2713 Margin usage normalized under 45%", "\u2713 Risk guard live"]
       }
     ]

@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "mdd",
             "label": "Max Drawdown",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "historical L3", "data": "sim queue", "res": "live order", "miss": "lookahead leak"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Tick Replay", sub: "Nanosecond L3" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "1B tick events", lift: 30 }]],
         text: "<p>Event-driven backtesters process historical market events in strict causal chronological sequence, eliminating forward-looking bias and simulating exact order queue position dynamics.</p>",
-        metrics: {"dsr": "1.24 DSR", "slip": "2.4 bps", "mdd": "-12.4%"}
+        metrics: {"dsr": "1.24 DSR", "slip": "2.4 bps", "mdd": "-12.4%", pnl: "+$0 (Simulating)"}
       },
       {
         title: "Realistic fill simulation & latency modeling",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Causality check", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>Simulations model wire latency, exchange matching queue priority, and market impact using calibrated non-linear Almgren-Chriss square-root laws.</p>",
-        metrics: {"dsr": "1.92 DSR", "slip": "1.6 bps", "mdd": "-8.2%"},
+        metrics: {"dsr": "1.92 DSR", "slip": "1.6 bps", "mdd": "-8.2%", pnl: "+$10,800 (+5.4%)"},
         changed: ["+ Queue priority depletion modeled", "\u26a1 Wire latency buffer strictly enforced"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Live fill verify", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>Real-time shadow execution verifies that simulated fills match production live fills within a 0.2 bps tolerance before allocating live institutional capital.</p>",
-        metrics: {"dsr": "2.35 DSR", "slip": "1.1 bps", "mdd": "-5.4%"},
+        metrics: {"dsr": "2.35 DSR", "slip": "1.1 bps", "mdd": "-5.4%", pnl: "+$28,700 (+14.4%)"},
         changed: ["\u2713 Simulation matches live fills within 0.15 bps", "\u2713 Lookahead bias verifiably zero", "\u2713 Production deployment authorized"]
       }
     ]

@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "hedge",
             "label": "Delta Hedge",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "price process", "data": "Ito lemma", "res": "delta hedge", "miss": "jump diffusion"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Asset Drift", sub: "Brownian Path" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "10k paths/sec", lift: 30 }]],
         text: "<p>Continuous price paths are modeled via Itô stochastic differential equations $dS_t = \mu S_t dt + \sigma S_t dW_t$. Paths are discretized and simulated under the equivalent martingale measure $\mathbb{Q}$.</p>",
-        metrics: {"drift": "+8.2% \u03bc", "vol": "18.4% \u03c3", "hedge": "0.98 \u0394"}
+        metrics: {"drift": "+8.2% \u03bc", "vol": "18.4% \u03c3", "hedge": "0.98 \u0394", pnl: "+$0 (Hedging)"}
       },
       {
         title: "Itô lemma expansion & jump-diffusion gating",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Poisson jump test", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>Applying Itô lemma decomposes derivative dynamics into deterministic drift, diffusive variance, and discontinuous jump components to immunize non-linear Greeks.</p>",
-        metrics: {"drift": "+6.4% \u03bc", "vol": "14.2% \u03c3", "hedge": "0.99 \u0394"},
+        metrics: {"drift": "+6.4% \u03bc", "vol": "14.2% \u03c3", "hedge": "0.99 \u0394", pnl: "+$12,800 (+5.1%)"},
         changed: ["+ Second-order It\u00f4 convexity captured", "\u26a1 Poisson jump risk bounded via Merton buffer"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Rebalance delta", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>Continuous rebalancing of underlying shares synthesizes replicating portfolios, driving tracking variance toward zero under continuous martingales.</p>",
-        metrics: {"drift": "+0.0% \u03bc", "vol": "0.8% Tracking", "hedge": "1.00 \u0394"},
+        metrics: {"drift": "+0.0% \u03bc", "vol": "0.8% Tracking", "hedge": "1.00 \u0394", pnl: "+$32,600 (+13.0%)"},
         changed: ["\u2713 Delta-neutral replication active", "\u2713 Residual variance bound within 0.8%", "\u2713 Hedging pipeline live"]
       }
     ]

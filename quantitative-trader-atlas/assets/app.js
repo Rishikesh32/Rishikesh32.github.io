@@ -623,7 +623,10 @@ var MAP_SHORT_TITLES = {
     if (areaId) initTopic(areaId);
     if (document.body.getAttribute("data-page") === "home") initHome();
     if (BASE) {
-      if (document.body.getAttribute("data-area")) { var ls = document.createElement("script"); ls.src = BASE + "lesson.js"; ls.async = false; document.body.appendChild(ls); }
+      if (document.body.getAttribute("data-area")) {
+        var tl = document.createElement("script"); tl.src = BASE + "trade_ledger.js"; tl.async = false; document.body.appendChild(tl);
+        var ls = document.createElement("script"); ls.src = BASE + "lesson.js"; ls.async = false; document.body.appendChild(ls);
+      }
       var es = document.createElement("script"); es.src = BASE + "engage.js"; es.async = false; document.body.appendChild(es);
     }
     initCode();

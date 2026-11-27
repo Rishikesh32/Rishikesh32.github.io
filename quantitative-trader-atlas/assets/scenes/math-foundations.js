@@ -13,7 +13,8 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
     metrics: [
       { id: "signal", label: "Math Core", tone: "accent" },
       { id: "risk", label: "Tail Volatility", tone: "signal" },
-      { id: "sharpe", label: "Risk-Adjusted", tone: "good" }
+      { id: "sharpe", label: "Risk-Adjusted", tone: "good" },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
     ],
     legend: { req: "market stream", data: "alpha model", res: "execution order", miss: "tail risk / friction" },
     nodes: {
@@ -31,7 +32,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "100k ticks/sec", lift: 30 }]],
         text: "<p>Continuous microsecond feeds stream into the Mathematical & Probabilistic Foundations calculation pipeline. Parameters are dynamically calibrated under rigorous statistical bounds.</p>",
-        metrics: { signal: "+0.042 IC", risk: "2.1% σ", sharpe: "1.42" }
+        metrics: { signal: "+0.042 IC", risk: "2.1% σ", sharpe: "1.42" , pnl: "+$0 (Calibrating)"}
       },
       {
         title: "Factor optimization & risk gating",
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "VaR constraint", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>The algorithm isolates genuine predictive alpha while projecting portfolio exposures onto orthogonal risk factors to immunize against market beta.</p>",
-        metrics: { signal: "+0.068 IC", risk: "1.4% σ", sharpe: "2.18" },
+        metrics: { signal: "+0.068 IC", risk: "1.4% σ", sharpe: "2.18", pnl: "+$7,840 (+7.8%)"},
         changed: ["+ Factor signals extracted", "⚡ Volatility constrained via covariance cleaning"]
       },
       {
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "Child orders", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>Smart order routing slices trades across dark pools and lit books, minimizing Almgren-Chriss market impact and realizing positive net alpha.</p>",
-        metrics: { signal: "+0.065 Net IC", risk: "1.2% σ", sharpe: "2.45" },
+        metrics: { signal: "+0.065 Net IC", risk: "1.2% σ", sharpe: "2.45", pnl: "+$18,420 (+18.4%)"},
         changed: ["✓ Execution slippage reduced by 42%", "✓ Drawdown strictly bound within 99% CVaR", "✓ System live in production"]
       }
     ]

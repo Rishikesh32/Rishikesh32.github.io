@@ -320,7 +320,8 @@
     if (ui.metrics) {
       ui.metrics.innerHTML = (scene.metrics || []).map(function (m) {
         var v = now.metrics[m.id], changed = prev.metrics && prev.metrics[m.id] !== undefined && prev.metrics[m.id] !== v;
-        return '<div class="metric' + (changed ? " changed" : "") + (m.tone ? " tone-" + m.tone : "") + '" data-mid="' + esc(m.id) + '"><span class="m-label">' + esc(m.label) + '</span><span class="m-val num">' + (v == null ? "—" : esc(v)) + "</span></div>";
+        var isPnl = m.id === "pnl";
+        return '<div class="metric' + (changed ? " changed" : "") + (m.tone ? " tone-" + m.tone : "") + (isPnl ? " metric-pnl" : "") + '" data-mid="' + esc(m.id) + '"' + (isPnl ? ' title="Click to view strategy trades, capital and profit output"' : '') + '><span class="m-label">' + esc(m.label) + '</span><span class="m-val num">' + (v == null ? "—" : esc(v)) + "</span></div>";
       }).join("");
       if (window.gsap && !REDUCED) (scene.metrics || []).forEach(function (m) {
         var a2 = numParts(prev.metrics && prev.metrics[m.id]), b2 = numParts(now.metrics[m.id]);

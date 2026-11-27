@@ -606,7 +606,7 @@
           ],
           callout: { kind: "insight", text: "In quantitative trading, theory without empirical validation is fantasy, and empirical patterns without risk controls fail when regimes shift." },
           changes: [`+ Model initialized for ${meta.title}`, "+ Benchmark tracking active"],
-          metrics: { signal: "+0.042 IC", risk: "2.1% σ", sharpe: "1.45", latency: "1.8 μs" },
+          metrics: { signal: "+0.042 IC", risk: "2.1% σ", sharpe: "1.45", latency: "1.8 μs", pnl: "+$0 (Calibrating)" },
           scene: {
             entities: [
               { id: "data", type: "device", x: -8, y: 0, label: "Market Data", sub: "Tick & Book Feed" },
@@ -633,7 +633,7 @@
           ],
           callout: { kind: "tip", text: "Always verify performance using Deflated Sharpe Ratio (DSR) to correct for multiple testing selection bias." },
           changes: ["~ Slippage modeled: 1.2 bps", "~ Lookahead leakage purged", "+ Deflated Sharpe: 2.14"],
-          metrics: { signal: "+0.068 IC", risk: "1.4% σ", sharpe: "2.14", latency: "1.2 μs" },
+          metrics: { signal: "+0.068 IC", risk: "1.4% σ", sharpe: "2.14", latency: "1.2 μs", pnl: "+$8,420 (+8.4%)" },
           scene: {
             entities: [
               { id: "engine", type: "block", x: -4, y: 0, color: "orange", glyph: "server", label: [meta.title.slice(0, 10), "Engine"], sub: "Simulating" },
@@ -657,7 +657,7 @@
           ],
           callout: { kind: "insight", text: "Institutional quant platforms survive because risk management has total veto power over trading signals." },
           changes: ["✓ Live in production", "✓ Tail risk bound within 99% CVaR"],
-          metrics: { signal: "+0.065 Net IC", risk: "1.1% σ", sharpe: "2.42", latency: "0.8 μs" },
+          metrics: { signal: "+0.065 Net IC", risk: "1.1% σ", sharpe: "2.42", latency: "0.8 μs", pnl: "+$24,850 (+24.9%)" },
           scene: {
             entities: [
               { id: "engine", type: "block", x: 0, y: 0, color: "green", glyph: "server", label: [meta.title.slice(0, 10), "Live"], sub: "Executing" }

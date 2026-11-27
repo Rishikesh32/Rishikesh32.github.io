@@ -25,8 +25,9 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
             "id": "ret",
             "label": "Net Alpha",
             "tone": "good"
-      }
-],
+      },
+      {"id": "pnl", "label": "Profit / P&L", "tone": "good"}
+    ],
     legend: {"req": "feature matrix", "data": "ML inference", "res": "target weights", "miss": "label leakage"},
     nodes: {
       feed:    at(-5.6, 0,    { type: "cyl",   r: 1.1, h: 1.4, color: "t1", label: "Feature Store", sub: "Engineered Ticks" }),
@@ -43,7 +44,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
         links: [["feed", "engine", "req", { lift: 30 }]],
         flows: [["feed", "engine", "req", { label: "Order-flow features", lift: 30 }]],
         text: "<p>Fractional differentiation preserves memory in price series while achieving stationarity. Events are labeled using the Lopez de Prado Triple-Barrier method with dynamic volatility horizontal bounds.</p>",
-        metrics: {"auc": "0.542 AUC", "overfit": "1.21 DSR", "ret": "+2.4% Annual"}
+        metrics: {"auc": "0.542 AUC", "overfit": "1.21 DSR", "ret": "+2.4% Annual", pnl: "+$0 (Training)"}
       },
       {
         title: "Combinatorial purged cross-validation & feature importance",
@@ -55,7 +56,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["engine", "riskctl", "miss", { label: "Overfitting gate", lift: 28, pos: 0.58, dy: -6 }]
         ],
         text: "<p>Combinatorial Purged Cross-Validation (CPCV) eliminates serial information leakage. Mean Decrease Impurity (MDI) isolates genuinely predictive non-linear interactions.</p>",
-        metrics: {"auc": "0.598 AUC", "overfit": "2.18 DSR", "ret": "+8.9% Annual"},
+        metrics: {"auc": "0.598 AUC", "overfit": "2.18 DSR", "ret": "+8.9% Annual", pnl: "+$14,300 (+5.7%)"},
         changed: ["+ Non-linear feature interactions mapped", "\u26a1 Information leakage eliminated via CPCV embargo"]
       },
       {
@@ -67,7 +68,7 @@ window.ATLAS_SCENES = window.ATLAS_SCENES || {};
           ["alpha", "venue", "res", { count: 3, dur: 0.7, label: "ML target order", lift: 26, pos: 0.5, dy: -6 }]
         ],
         text: "<p>Calibrated probability outputs are passed to an optimal sizing Kelly criterion, executing orders only when expected returns exceed transaction cost hurdles.</p>",
-        metrics: {"auc": "0.589 Live AUC", "overfit": "2.45 DSR", "ret": "+14.6% Net"},
+        metrics: {"auc": "0.589 Live AUC", "overfit": "2.45 DSR", "ret": "+14.6% Net", pnl: "+$38,400 (+15.4%)"},
         changed: ["\u2713 Model deployed to microsecond inference engine", "\u2713 Transaction cost hurdle applied", "\u2713 Out-of-sample alpha confirmed"]
       }
     ]
